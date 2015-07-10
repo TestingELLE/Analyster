@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -28,8 +27,6 @@ public class JTableFilter {
     private int columnIndex = -1;
     
     private Collection <DistinctColumnItem> itemChecked;
-    
-    private final Set<IFilterChangeListener> listeners = Collections.synchronizedSet(new HashSet<IFilterChangeListener>());
 
     private final Map<Integer, Collection<DistinctColumnItem>> distinctItemCache
             = Collections.synchronizedMap(new HashMap<Integer, Collection<DistinctColumnItem>>());
@@ -116,13 +113,9 @@ public class JTableFilter {
         // this points to the table filter
         drs.setRowFilter(filter);
 
-        // there always seems to be only one iteration
-        // all this seems to do is highlight the header green
-        for (IFilterChangeListener l : listeners) {
-            //l.filterChanged(this); 
-            table.getTableHeader().repaint();
-            table.getModel().getRowCount();
-        }
+        // this was the IFilterChangeListener implementation
+        table.getTableHeader().repaint();
+        table.getModel().getRowCount();
     }
 
     /**
@@ -182,17 +175,6 @@ public class JTableFilter {
      */
     public JTable getTable() {
         return table;
-    }
-
-    /**
-     * addChangeListener
-     * this method is called once from TableRowFilterSupport
-     * @param listener 
-     */
-    public final void addChangeListener(IFilterChangeListener listener) {
-        if (listener != null) {
-            listeners.add(listener);
-        }
     }
 
     /**

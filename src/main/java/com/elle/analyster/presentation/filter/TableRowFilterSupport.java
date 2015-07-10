@@ -79,18 +79,6 @@ public class TableRowFilterSupport {
 
         JTable table = filter.getTable();
         
-
-        // not sure of the point of this code but at least it is implemented
-        filter.addChangeListener(new IFilterChangeListener() {
-
-            @Override
-            public void filterChanged(JTableFilter filter) {
-                table.getTableHeader().repaint();
-                table.getModel().getRowCount();
-            }
-        });
-        
-
         FilterTableHeaderRenderer headerRenderer =
                 new FilterTableHeaderRenderer(filter, filterIconPlacement);
         
