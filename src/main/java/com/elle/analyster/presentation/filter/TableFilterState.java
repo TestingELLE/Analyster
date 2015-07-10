@@ -71,7 +71,7 @@ class TableFilterState implements Serializable {
         data.remove(column); // remove this column key from map
         
         // if values is not empty
-        if ( !(CollectionUtils.isEmpty(values))) {
+        if ( !CollectionUtils.isEmpty(values)) {
             
             // create a column map key and add this collection
             prepareValueSet(column).addAll(values);
