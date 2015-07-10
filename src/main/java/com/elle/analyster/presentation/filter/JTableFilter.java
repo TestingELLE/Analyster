@@ -116,11 +116,12 @@ public class JTableFilter {
         // this points to the table filter
         drs.setRowFilter(filter);
 
-        // IFilterChangeListener is an interface
-        // it is calling an abstract method
-        // I am not sure where the implementation is if there even is any
+        // there always seems to be only one iteration
+        // all this seems to do is highlight the header green
         for (IFilterChangeListener l : listeners) {
-            l.filterChanged((JTableFilter) this); 
+            //l.filterChanged(this); 
+            table.getTableHeader().repaint();
+            table.getModel().getRowCount();
         }
     }
 

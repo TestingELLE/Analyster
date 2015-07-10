@@ -80,6 +80,7 @@ public class TableRowFilterSupport {
         JTable table = filter.getTable();
         
 
+        // not sure of the point of this code but at least it is implemented
         filter.addChangeListener(new IFilterChangeListener() {
 
             @Override
