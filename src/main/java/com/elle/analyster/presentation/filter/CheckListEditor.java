@@ -17,24 +17,36 @@ import javax.swing.SwingUtilities;
 // *
 // */
 final class CheckListEditor extends MouseAdapter {
+    
+    // this is just one method that listens for when the check List is clicked
     @Override
     public void mouseClicked(MouseEvent e) {
 
+        // if left mouse click then stop here
         if (!SwingUtilities.isLeftMouseButton(e)) return;
 
         JList list = (JList) e.getSource();
-        if ( !list.isEnabled() || (!(list.getModel() instanceof ICheckListModel<?>))) return;
+        
+        // if list is not enabled or list model is not an instance of ICheckListModel
+        if ( !list.isEnabled() || (!(list.getModel() instanceof ICheckListModel<?>))) 
+            return; // then stop here 
 
+        // else continue
         int index = list.locationToIndex(e.getPoint());
-        if (index < 0) return;
+        
+        // if mouse location index less then 0, stop here.
+        if (index < 0) return; 
 
+        // another check to see if the mouse is in the cell bounds
         Rectangle bounds = list.getCellBounds(index, index);
 
+        // if mouse is in the cell bounds
         if ( bounds.contains(e.getPoint()) ) {
             
             @SuppressWarnings("unchecked")
             ICheckListModel<Object> model = (ICheckListModel<Object>) list.getModel();
             
+            // set the checked items for the model
             if ( e.getClickCount() > 1 ) {
                 // clear all and check selected for more then 1 clicks
                 model.setCheckedItems( Arrays.asList( model.getElementAt(index)));
@@ -42,6 +54,7 @@ final class CheckListEditor extends MouseAdapter {
                 // simple toggle for 1 click
                 model.setCheckedIndex(index, !model.isCheckedIndex(index));
             }
+            
             e.consume();
         }
 
