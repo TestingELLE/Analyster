@@ -76,9 +76,8 @@ public class JTableFilter {
      * called twice from Analyster methods (filterBySearch & filterByDoubleClick)
      * @param col
      * @param selectField
-     * @return 
      */
-    public boolean apply(int col, Object selectField) { //Create Collection from selected fields 
+    public void apply(int col, Object selectField) { //Create Collection from selected fields 
         Collection<DistinctColumnItem> item = new ArrayList<>();
         
         // handle null exceptions
@@ -86,7 +85,7 @@ public class JTableFilter {
         
         DistinctColumnItem distinctColumnItem =new DistinctColumnItem(selectField, col);
         item.add(distinctColumnItem);
-        return apply(col, item);
+        apply(col, item);
     }
     
     /**
@@ -94,53 +93,35 @@ public class JTableFilter {
      * Called from Analyster, LoadTables, this, TableFilterColumnPopup
      * @param col
      * @param items
-     * @return 
      */
-    public boolean apply(int col, Collection<DistinctColumnItem> items) {
+    public void apply(int col, Collection<DistinctColumnItem> items) {
         
         // create a column map key and add this collection
         filterState.setValues(col, items); 
         
-        boolean result = false;
-        
         // get the table RowSorter
         RowSorter<?> rs = getTable().getRowSorter();
 
-        // if rs is not an instance of the DefaultRowSorter
-        if (!(rs instanceof DefaultRowSorter)) {
-            result = false;
-        }else{
+        // new DRS instance of the Table's RowSorter
+        DefaultRowSorter<?, ?> drs = (DefaultRowSorter<?, ?>) rs;
 
-            // new DRS instance of the Table's RowSorter
-            DefaultRowSorter<?, ?> drs = (DefaultRowSorter<?, ?>) rs;
+        // get RowFilter of DRS and store as prevFilter
+        RowFilter<Object, Object> prevFilter = (RowFilter<Object, Object>) drs.getRowFilter();
 
-            // get RowFilter of DRS and store as prevFilter
-            RowFilter<Object, Object> prevFilter = (RowFilter<Object, Object>) drs.getRowFilter();
-            
-            // if prevFilter is not an instance of TableRowFilter
-            // could this ever not be true since we did just create the instance as RowFilter?
-            if (!(prevFilter instanceof TableRowFilter)) { 
-                
-                // pass filter to TableRowFilter nested class 
-                // set that filter to prevFilter
-                filter.setParentFilter(prevFilter);
-            }
+        // pass filter to TableRowFilter nested class 
+        // set that filter to prevFilter
+        filter.setParentFilter(prevFilter);
 
-            // DRS is not passed this filter to be set
-            // however it does not look like it is used after this?
-            drs.setRowFilter(filter);
-            
-            result = true;
-            
-            // IFilterChangeListener is an interface
-            // it is calling an abstract method
-            // I am not sure where the implementation is if there even is any
-            for (IFilterChangeListener l : listeners) {
-                l.filterChanged((JTableFilter) this); 
-            }
+        // DRS is now passed this filter to be set
+        // this points to the table filter
+        drs.setRowFilter(filter);
+
+        // IFilterChangeListener is an interface
+        // it is calling an abstract method
+        // I am not sure where the implementation is if there even is any
+        for (IFilterChangeListener l : listeners) {
+            l.filterChanged((JTableFilter) this); 
         }
-        
-        return result; // why is this returned?
     }
 
     /**
