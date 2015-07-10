@@ -73,7 +73,7 @@ public class JTableFilter {
 
     /**
      * apply
-     * called from Analyster
+     * called twice from Analyster methods (filterBySearch & filterByDoubleClick)
      * @param col
      * @param selectField
      * @return 
@@ -98,30 +98,49 @@ public class JTableFilter {
      */
     public boolean apply(int col, Collection<DistinctColumnItem> items) {
         
+        // create a column map key and add this collection
         filterState.setValues(col, items); 
+        
         boolean result = false;
         
+        // get the table RowSorter
         RowSorter<?> rs = getTable().getRowSorter();
 
+        // if rs is not an instance of the DefaultRowSorter
         if (!(rs instanceof DefaultRowSorter)) {
             result = false;
         }else{
 
+            // new DRS instance of the Table's RowSorter
             DefaultRowSorter<?, ?> drs = (DefaultRowSorter<?, ?>) rs;
 
-            @SuppressWarnings("unchecked")
+            // get RowFilter of DRS and store as prevFilter
             RowFilter<Object, Object> prevFilter = (RowFilter<Object, Object>) drs.getRowFilter();
-            if (!(prevFilter instanceof TableRowFilter)) {
+            
+            // if prevFilter is not an instance of TableRowFilter
+            // could this ever not be true since we did just create the instance as RowFilter?
+            if (!(prevFilter instanceof TableRowFilter)) { 
+                
+                // pass filter to TableRowFilter nested class 
+                // set that filter to prevFilter
                 filter.setParentFilter(prevFilter);
             }
 
+            // DRS is not passed this filter to be set
+            // however it does not look like it is used after this?
             drs.setRowFilter(filter);
+            
             result = true;
+            
+            // IFilterChangeListener is an interface
+            // it is calling an abstract method
+            // I am not sure where the implementation is if there even is any
             for (IFilterChangeListener l : listeners) {
                 l.filterChanged((JTableFilter) this); 
             }
         }
-        return result;
+        
+        return result; // why is this returned?
     }
 
     /**

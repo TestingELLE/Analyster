@@ -25,6 +25,13 @@ class TableFilterState implements Serializable {
         data.clear();
     }
     
+    /**
+     * prepareValueSet
+     * creates an array of data for a column if one doesn't exist
+     * then adds the array to the data map and the column index is the key
+     * @param column
+     * @return Set<DistinctColumnItem> // the array of data for that column
+     */
     private Set<DistinctColumnItem> prepareValueSet( int column ) {
         Set<DistinctColumnItem> vals =  data.get(column);
         if ( vals == null ) {
@@ -37,8 +44,8 @@ class TableFilterState implements Serializable {
     
     /**
      * Adds filter value for specified column 
-     * @param column
-     * @param value
+     * @param column // int column index
+     * @param value // DistinctColumnItem
      */
     public void addValue( int column, DistinctColumnItem value ) {
         prepareValueSet(column).add(value);
@@ -60,12 +67,22 @@ class TableFilterState implements Serializable {
      * @param values
      */
     public void setValues( int column, Collection<DistinctColumnItem> values ) {
-        data.remove(column);
+        
+        data.remove(column); // remove this column key from map
+        
+        // if values is not empty
         if ( !(CollectionUtils.isEmpty(values))) {
+            
+            // create a column map key and add this collection
             prepareValueSet(column).addAll(values);
         }
     }
     
+    /**
+     * 
+     * @param column
+     * @return 
+     */
     public Collection<DistinctColumnItem> getValues( int column ) {
         Set<DistinctColumnItem> vals =  data.get(column);
         return vals == null? Collections.<DistinctColumnItem>emptySet(): vals;
