@@ -95,12 +95,9 @@ public class JTableFilter {
         
         // create a column map key and add this collection
         filterState.setValues(col, items); 
-        
-        // get the table RowSorter
-        RowSorter<?> rs = getTable().getRowSorter();
 
         // new DRS instance of the Table's RowSorter
-        DefaultRowSorter<?, ?> drs = (DefaultRowSorter<?, ?>) rs;
+        DefaultRowSorter<?, ?> drs = (DefaultRowSorter<?, ?>) getTable().getRowSorter();
 
         // get RowFilter of DRS and store as prevFilter
         RowFilter<Object, Object> prevFilter = (RowFilter<Object, Object>) drs.getRowFilter();
