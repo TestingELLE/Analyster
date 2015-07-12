@@ -9,7 +9,6 @@ package com.elle.analyster.presentation.filter;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.util.Collection;
 
@@ -22,9 +21,14 @@ import java.util.Collection;
  */
 public class CheckList<T> {
 
+    // class components and objects
     private final JList list;
-    private static final MouseAdapter checkBoxEditor = new CheckListEditor();
+    private static final CheckListEditor checkBoxEditor = new CheckListEditor();
     
+    /**
+     * Nested class
+     * Builder
+     */
     public static class Builder {
         
         private JList list;
