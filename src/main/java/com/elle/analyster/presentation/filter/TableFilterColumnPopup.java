@@ -165,19 +165,21 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
         this.enabled = enabled;
     }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-        if (enabled && e.isPopupTrigger()) {
-            showFilterPopup(e);
-        }
-    }
     
     // HERE excecute popup windows
     // Popup menus are triggered differently on different platforms
     // Therefore, isPopupTrigger should be checked in both mousePressed and mouseReleased
     // events for for proper cross-platform functionality
     //
-    //
+    // This is the mouselistener for the check list window
+    // this window is right-click on table header or ctrl-click depending on platform
+    
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (enabled && e.isPopupTrigger()) {
+            showFilterPopup(e);
+        }
+    }
 
     @Override
     public void mouseReleased(MouseEvent e) {
