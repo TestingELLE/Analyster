@@ -121,16 +121,19 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemViewAssig">
               <Properties>
                 <Property name="text" type="java.lang.String" value="View Assignments Columns"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemViewReports">
               <Properties>
                 <Property name="text" type="java.lang.String" value="View Reports Columns"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemViewAllAssig">
               <Properties>
                 <Property name="text" type="java.lang.String" value="View All Assignments"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemViewAllAssigActionPerformed"/>
@@ -139,6 +142,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemViewActiveAssig">
               <Properties>
                 <Property name="text" type="java.lang.String" value="View Active Assigments"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemViewActiveAssigActionPerformed"/>
@@ -247,11 +251,11 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="searchPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="recordsLabel" min="-2" pref="328" max="-2" attributes="0"/>
+                          <Component id="labelRecords" min="-2" pref="328" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="258" max="-2" attributes="0"/>
-                          <Component id="jTimeLastUpdate" min="-2" max="-2" attributes="0"/>
+                          <Component id="labelTimeLastUpdate" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace pref="84" max="32767" attributes="0"/>
@@ -264,17 +268,17 @@
                   <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="searchPanel" min="-2" max="-2" attributes="0"/>
-                      <Component id="recordsLabel" min="-2" pref="36" max="-2" attributes="0"/>
+                      <Component id="labelRecords" min="-2" pref="36" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jTimeLastUpdate" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelTimeLastUpdate" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jTimeLastUpdate">
+        <Component class="javax.swing.JLabel" name="labelTimeLastUpdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Last updated: "/>
           </Properties>
@@ -288,15 +292,15 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jButtonClearAllFilter" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnClearAllFilter" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jField" min="-2" max="-2" attributes="0"/>
+                              <Component id="comboBoxSearch" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="202" max="-2" attributes="0"/>
-                              <Component id="textForSearch" min="-2" pref="141" max="-2" attributes="0"/>
+                              <Component id="textFieldForSearch" min="-2" pref="141" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="search" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnSearch" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace pref="17" max="32767" attributes="0"/>
@@ -308,10 +312,10 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="textForSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="search" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButtonClearAllFilter" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="textFieldForSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="comboBoxSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnClearAllFilter" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -319,47 +323,47 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="search">
+            <Component class="javax.swing.JButton" name="btnSearch">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Search"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSearchActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JTextField" name="textForSearch">
+            <Component class="javax.swing.JTextField" name="textFieldForSearch">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Enter Symbol name"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="textForSearchMouseClicked"/>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textForSearchKeyPressed"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="textFieldForSearchMouseClicked"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textFieldForSearchKeyPressed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JComboBox" name="jField">
+            <Component class="javax.swing.JComboBox" name="comboBoxSearch">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="2">
                     <StringItem index="0" value="symbol"/>
-                    <StringItem index="1" value="analyster"/>
+                    <StringItem index="1" value="analyst"/>
                   </StringArray>
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButtonClearAllFilter">
+            <Component class="javax.swing.JButton" name="btnClearAllFilter">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Clear All Filters"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonClearAllFilterActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearAllFilterActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JLabel" name="recordsLabel">
+        <Component class="javax.swing.JLabel" name="labelRecords">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="jLabel1"/>
+            <Property name="text" type="java.lang.String" value="labelRecords"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -369,7 +373,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jTabbedPanel1" pref="894" max="32767" attributes="0"/>
+              <Component id="tabbedPanel" pref="894" max="32767" attributes="0"/>
               <Component id="jPanelEdit" alignment="0" pref="894" max="32767" attributes="0"/>
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jPanelSQL" max="32767" attributes="0"/>
@@ -380,7 +384,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="jTabbedPanel1" min="-2" pref="361" max="-2" attributes="0"/>
+                  <Component id="tabbedPanel" min="-2" pref="361" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanelEdit" min="-2" pref="37" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
@@ -390,7 +394,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JTabbedPane" name="jTabbedPanel1">
+        <Container class="javax.swing.JTabbedPane" name="tabbedPanel">
           <Properties>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[800, 584]"/>
@@ -399,11 +403,11 @@
           <AccessibilityProperties>
             <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Reports"/>
             <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="jTabbedPanel1"/>
+              <ComponentRef name="tabbedPanel"/>
             </Property>
           </AccessibilityProperties>
           <Events>
-            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jTabbedPanel1StateChanged"/>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="tabbedPanelStateChanged"/>
           </Events>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
@@ -594,7 +598,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="archiveAssignTable">
+                <Component class="javax.swing.JTable" name="archiveTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="7" rowCount="15">
@@ -633,15 +637,15 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabelEdit" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jSwitchEditMode" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnSwitchEditMode" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButtonCancel" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnCancelEditMode" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jUpload" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnUploadChanges" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jBatchAdd" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnAddRecords" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jBatchEdit" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBatchEdit" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -651,13 +655,13 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jUpload" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnUploadChanges" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jSwitchEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSwitchEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabelEdit" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButtonCancel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jBatchEdit" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jBatchAdd" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnCancelEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBatchEdit" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnAddRecords" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                   </Group>
@@ -665,23 +669,23 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="jBatchEdit">
+            <Component class="javax.swing.JButton" name="btnBatchEdit">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Batch Edit"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBatchEditActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBatchEditActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jBatchAdd">
+            <Component class="javax.swing.JButton" name="btnAddRecords">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Add Record(s)"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBatchAddActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddRecordsActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jUpload">
+            <Component class="javax.swing.JButton" name="btnUploadChanges">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Upload Changes"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -692,23 +696,23 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jUploadActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUploadChangesActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButtonCancel">
+            <Component class="javax.swing.JButton" name="btnCancelEditMode">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cancel"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCancelActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelEditModeActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jSwitchEditMode">
+            <Component class="javax.swing.JButton" name="btnSwitchEditMode">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Switch"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jSwitchEditModeActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSwitchEditModeActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelEdit">
@@ -731,9 +735,9 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jDebugCancel" max="32767" attributes="0"/>
-                          <Component id="jDebugEnter" alignment="0" max="32767" attributes="0"/>
-                          <Component id="closeDebugPanelBtn" max="32767" attributes="0"/>
+                          <Component id="btnCancelSQL" max="32767" attributes="0"/>
+                          <Component id="btnEnterSQL" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnCloseSQL" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                       <Component id="jScrollPane2" pref="810" max="32767" attributes="0"/>
@@ -747,11 +751,11 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jScrollPane2" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="jDebugEnter" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnEnterSQL" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                              <Component id="jDebugCancel" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnCancelSQL" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                              <Component id="closeDebugPanelBtn" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnCloseSQL" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -773,7 +777,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTextArea" name="jTextArea">
+                <Component class="javax.swing.JTextArea" name="jTextAreaSQL">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="66" green="99" red="0" type="rgb"/>
@@ -781,7 +785,7 @@
                     <Property name="columns" type="int" value="20"/>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="Please input an SQL statement:\u005cn&gt;&gt;" postCode="((AbstractDocument) jTextArea.getDocument())&#xa;    .setDocumentFilter(new CreateDocumentFilter(33));" containsInvalidXMLChars="true"/>
+                    <Property name="text" type="java.lang.String" value="Please input an SQL statement:\u005cn&gt;&gt;" postCode="((AbstractDocument) jTextAreaSQL.getDocument())&#xa;    .setDocumentFilter(new CreateDocumentFilter(33));" containsInvalidXMLChars="true"/>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[1590, 150]"/>
@@ -793,28 +797,28 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="jDebugEnter">
+            <Component class="javax.swing.JButton" name="btnEnterSQL">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Enter"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jDebugEnterActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEnterSQLActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jDebugCancel">
+            <Component class="javax.swing.JButton" name="btnCancelSQL">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cancel"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jDebugCancelActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelSQLActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="closeDebugPanelBtn">
+            <Component class="javax.swing.JButton" name="btnCloseSQL">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Close"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeDebugPanelBtnActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCloseSQLActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

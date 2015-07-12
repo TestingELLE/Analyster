@@ -19,10 +19,10 @@ class FilterTableHeaderRenderer extends TableHeaderRenderer {
 
     private ImageIcon icon;
     private final int filterIconPlacement;
-    private final ITableFilter<?> tableFilter;
+    private final JTableFilter tableFilter;
 
     
-    public FilterTableHeaderRenderer(ITableFilter<?> tableFilter,
+    public FilterTableHeaderRenderer(JTableFilter tableFilter,
             int filterIconPlacement) {
         this.tableFilter = tableFilter;
         this.filterIconPlacement = filterIconPlacement;

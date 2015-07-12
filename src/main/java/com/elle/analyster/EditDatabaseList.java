@@ -38,7 +38,7 @@ public class EditDatabaseList extends javax.swing.JFrame {
         initComponents();
         L = l;
         flag = true;
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(L);
         loadList();
     }
 
@@ -162,6 +162,9 @@ public class EditDatabaseList extends javax.swing.JFrame {
         loadList();
     }//GEN-LAST:event_jServerActionPerformed
     
+    /**
+     *  This looks like the same method in LoginWindow class
+     */
     private void loadList() {
         File dbFile = new File("database.txt");
 //        String server = jServer.getSelectedItem().toString();
@@ -291,7 +294,7 @@ public class EditDatabaseList extends javax.swing.JFrame {
         
         
         if (flag == true)   // go back to log in window
-            L.loadList();   
+            L.loadDBList();   
         dispose();
     }
     

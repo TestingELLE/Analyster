@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.elle.analyster.presentation.filter;
 
 /**
@@ -29,11 +25,16 @@ import java.util.Map;
 
 class TableFilterColumnPopup extends PopupWindow implements MouseListener {
 
+    // this calls the build method
     private final CheckList<DistinctColumnItem> filterList = new CheckList.Builder().build();
+    
+    // column Attributes?
     private final Map<Integer, ColumnAttrs> colAttrs = new HashMap<Integer, ColumnAttrs>();
+    
+    
     private boolean enabled = false;
     private int mColumnIndex = -1;
-    private ITableFilter<?> filter;
+    private JTableFilter filter;
     private IObjectToStringTranslator translator;
     private boolean actionsVisible = true;
     private boolean useTableRenderers = false;
@@ -41,29 +42,36 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
     private GUI gui = new GUI();
 
     @SuppressWarnings("static-access")
-    public TableFilterColumnPopup(ITableFilter<?> filter) {
+    public TableFilterColumnPopup(JTableFilter filter) {
 
-        super(true);
+        super(true); // PopupWindow( resizable = true )
 
         this.filter = filter;
-        filterList.getList().setVisibleRowCount(6);
+        
+        // CheckList<DistinctColumnItem>
+        // returns a JList and sets its visible row count to 6
+        filterList.getList().setVisibleRowCount(6); 
 
+        // set up the table header of the table from the filter
+        // and add a mouselistener
         setupTableHeader();
+        
+        // add property change listener to setup the table header
         filter.getTable().addPropertyChangeListener("tableHeader", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 setupTableHeader();
             }
-        }
-        );
+        });
+        
+        // add property change listener to clear the colAttrs hash map
         filter.getTable().addPropertyChangeListener("model", new PropertyChangeListener() {
 
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                colAttrs.clear();
+                colAttrs.clear(); // clear hash map
             }
-        }
-        );
+        });
 
     }
 
@@ -110,6 +118,7 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
                 return applyColumnFilter();
             }
         });
+        
         commands.add(apply);
 
         commands.add(Box.createHorizontalStrut(5));
@@ -130,7 +139,6 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
         myTableModelInitial = filter.getTable().getModel();
         model.filter("", translator, CheckListFilterType.CONTAINS); // clear filter to get true results
         filter.apply(mColumnIndex, checked);
-        filter.saveTableState();
         filter.saveFilterCriteria(checked);
         filter.setColumnIndex(mColumnIndex);
         gui.columnFilterStatus(mColumnIndex, filter.getTable());
@@ -141,11 +149,11 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
         return myTableModelInitial;
     }
 
-    public ITableFilter<?> getFilter() {
+    public JTableFilter getFilter() {
         return filter;
     }
 
-    public JTable getTable() { ///
+    public JTable getTable() { 
         return filter.getTable();
     }
 
@@ -163,7 +171,8 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
             showFilterPopup(e);
         }
     }
-//HERE excecute popup windows
+    
+    // HERE excecute popup windows
     // Popup menus are triggered differently on different platforms
     // Therefore, isPopupTrigger should be checked in both mousePressed and mouseReleased
     // events for for proper cross-platform functionality

@@ -3,7 +3,7 @@ package com.elle.analyster;
 import com.elle.analyster.db.ExecuteSQLStatement;
 import com.elle.analyster.domain.ModifiedData;
 import com.elle.analyster.presentation.filter.CreateDocumentFilter;
-import com.elle.analyster.presentation.filter.ITableFilter;
+import com.elle.analyster.presentation.filter.JTableFilter;
 import com.elle.analyster.presentation.filter.TableRowFilterSupport;
 import static com.elle.analyster.service.Connection.connection;
 import com.elle.analyster.service.DeleteRecord;
@@ -41,6 +41,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
 
     private final TableService tableService = new TableService();
+    private TableRowFilterSupport tableRowFilterSupport;
     private LoadTables loadTables;
     private JTableHeader header;
     
@@ -79,39 +80,49 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         // set names to tables (this was in tabbedPanelChanged method)
         assignmentTable.setName(ASSIGNMENTS_TABLE_NAME);
         reportTable.setName(REPORTS_TABLE_NAME);
-        archiveAssignTable.setName(ARCHIVE_TABLE_NAME);
+        archiveTable.setName(ARCHIVE_TABLE_NAME);
         
         // I COMMENTED THESE OUT AND IT WORKED FINE !!
         tableService.setAssignmentTable(assignmentTable);
         tableService.setReportTable(reportTable);
-        tableService.setArchiveAssignTable(archiveAssignTable);
+        tableService.setArchiveAssignTable(archiveTable);
         tableService.setViewerTable(assignmentTable);
         
         // set tables to tab objects
         tabs.get(ASSIGNMENTS_TABLE_NAME).setTable(assignmentTable);
         tabs.get(REPORTS_TABLE_NAME).setTable(reportTable);
-        tabs.get(ARCHIVE_TABLE_NAME).setTable(archiveAssignTable);
+        tabs.get(ARCHIVE_TABLE_NAME).setTable(archiveTable);
         
         // set table states to tab objects
         tabs.get(ASSIGNMENTS_TABLE_NAME).setTableState(new TableState(assignmentTable));
         tabs.get(REPORTS_TABLE_NAME).setTableState(new TableState(reportTable));
-        tabs.get(ARCHIVE_TABLE_NAME).setTableState(new TableState(archiveAssignTable));
+        tabs.get(ARCHIVE_TABLE_NAME).setTableState(new TableState(archiveTable));
         
         // set column width percents to tables of the tab objects
         tabs.get(ASSIGNMENTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
         tabs.get(REPORTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_REPORTS);
         tabs.get(ARCHIVE_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ARCHIVE);
         
+        // set Activate Records menu item enabled for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setActivateRecordMenuItemEnabled(false);
+        tabs.get(REPORTS_TABLE_NAME).setActivateRecordMenuItemEnabled(false);
+        tabs.get(ARCHIVE_TABLE_NAME).setActivateRecordMenuItemEnabled(true);
+        
+        // set Archive Records menu item enabled for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(true);
+        tabs.get(REPORTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
+        tabs.get(ARCHIVE_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
+        
         setKeyboardFocusManager();
 
         // show and hide components
-        jUpload.setVisible(false);
+        btnUploadChanges.setVisible(false);
         jPanelSQL.setVisible(false); 
-        jDebugEnter.setVisible(true);
-        jDebugCancel.setVisible(true);
-        jButtonCancel.setVisible(false);
-        jBatchEdit.setVisible(true);
-        jTextArea.setVisible(true);
+        btnEnterSQL.setVisible(true);
+        btnCancelSQL.setVisible(true);
+        btnCancelEditMode.setVisible(false);
+        btnBatchEdit.setVisible(true);
+        jTextAreaSQL.setVisible(true);
 
         // set title of window to Analyster
         this.setTitle("Analyster");
@@ -134,35 +145,35 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     private void initComponents() {
 
         addPanel_control = new javax.swing.JPanel();
-        jTimeLastUpdate = new javax.swing.JLabel();
+        labelTimeLastUpdate = new javax.swing.JLabel();
         searchPanel = new javax.swing.JPanel();
-        search = new javax.swing.JButton();
-        textForSearch = new javax.swing.JTextField();
-        jField = new javax.swing.JComboBox();
-        jButtonClearAllFilter = new javax.swing.JButton();
-        recordsLabel = new javax.swing.JLabel();
+        btnSearch = new javax.swing.JButton();
+        textFieldForSearch = new javax.swing.JTextField();
+        comboBoxSearch = new javax.swing.JComboBox();
+        btnClearAllFilter = new javax.swing.JButton();
+        labelRecords = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
-        jTabbedPanel1 = new javax.swing.JTabbedPane();
+        tabbedPanel = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         assignmentTable = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         reportTable = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        archiveAssignTable = new javax.swing.JTable();
+        archiveTable = new javax.swing.JTable();
         jPanelEdit = new javax.swing.JPanel();
-        jBatchEdit = new javax.swing.JButton();
-        jBatchAdd = new javax.swing.JButton();
-        jUpload = new javax.swing.JButton();
-        jButtonCancel = new javax.swing.JButton();
-        jSwitchEditMode = new javax.swing.JButton();
+        btnBatchEdit = new javax.swing.JButton();
+        btnAddRecords = new javax.swing.JButton();
+        btnUploadChanges = new javax.swing.JButton();
+        btnCancelEditMode = new javax.swing.JButton();
+        btnSwitchEditMode = new javax.swing.JButton();
         jLabelEdit = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jPanelSQL = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea = new javax.swing.JTextArea();
-        jDebugEnter = new javax.swing.JButton();
-        jDebugCancel = new javax.swing.JButton();
-        closeDebugPanelBtn = new javax.swing.JButton();
+        jTextAreaSQL = new javax.swing.JTextArea();
+        btnEnterSQL = new javax.swing.JButton();
+        btnCancelSQL = new javax.swing.JButton();
+        btnCloseSQL = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemFileVersion = new javax.swing.JMenuItem();
@@ -195,33 +206,33 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(894, 560));
 
-        jTimeLastUpdate.setText("Last updated: ");
+        labelTimeLastUpdate.setText("Last updated: ");
 
-        search.setText("Search");
-        search.addActionListener(new java.awt.event.ActionListener() {
+        btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchActionPerformed(evt);
+                btnSearchActionPerformed(evt);
             }
         });
 
-        textForSearch.setText("Enter Symbol name");
-        textForSearch.addMouseListener(new java.awt.event.MouseAdapter() {
+        textFieldForSearch.setText("Enter Symbol name");
+        textFieldForSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                textForSearchMouseClicked(evt);
+                textFieldForSearchMouseClicked(evt);
             }
         });
-        textForSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+        textFieldForSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                textForSearchKeyPressed(evt);
+                textFieldForSearchKeyPressed(evt);
             }
         });
 
-        jField.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "symbol", "analyster" }));
+        comboBoxSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "symbol", "analyst" }));
 
-        jButtonClearAllFilter.setText("Clear All Filters");
-        jButtonClearAllFilter.addActionListener(new java.awt.event.ActionListener() {
+        btnClearAllFilter.setText("Clear All Filters");
+        btnClearAllFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonClearAllFilterActionPerformed(evt);
+                btnClearAllFilterActionPerformed(evt);
             }
         });
 
@@ -233,14 +244,14 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
                 .addContainerGap()
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addComponent(jButtonClearAllFilter)
+                        .addComponent(btnClearAllFilter)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(comboBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(searchPanelLayout.createSequentialGroup()
                         .addGap(202, 202, 202)
-                        .addComponent(textForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textFieldForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(search)))
+                        .addComponent(btnSearch)))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
         searchPanelLayout.setVerticalGroup(
@@ -248,15 +259,15 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
             .addGroup(searchPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(search)
-                    .addComponent(jField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonClearAllFilter))
+                    .addComponent(textFieldForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch)
+                    .addComponent(comboBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClearAllFilter))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        recordsLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        recordsLabel.setText("jLabel1");
+        labelRecords.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelRecords.setText("labelRecords");
 
         javax.swing.GroupLayout addPanel_controlLayout = new javax.swing.GroupLayout(addPanel_control);
         addPanel_control.setLayout(addPanel_controlLayout);
@@ -268,11 +279,11 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
                         .addContainerGap()
                         .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(recordsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(labelRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(addPanel_controlLayout.createSequentialGroup()
                         .addGap(258, 258, 258)
-                        .addComponent(jTimeLastUpdate)))
-                .addContainerGap(86, Short.MAX_VALUE))
+                        .addComponent(labelTimeLastUpdate)))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
         addPanel_controlLayout.setVerticalGroup(
             addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,16 +291,16 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
                 .addGap(14, 14, 14)
                 .addGroup(addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(recordsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTimeLastUpdate)
+                .addComponent(labelTimeLastUpdate)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPanel1.setPreferredSize(new java.awt.Dimension(800, 584));
-        jTabbedPanel1.addChangeListener(new javax.swing.event.ChangeListener() {
+        tabbedPanel.setPreferredSize(new java.awt.Dimension(800, 584));
+        tabbedPanel.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jTabbedPanel1StateChanged(evt);
+                tabbedPanelStateChanged(evt);
             }
         });
 
@@ -339,7 +350,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         assignmentTable.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(assignmentTable);
 
-        jTabbedPanel1.addTab("Assignments", jScrollPane1);
+        tabbedPanel.addTab("Assignments", jScrollPane1);
 
         jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -377,9 +388,9 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         reportTable.setMinimumSize(new java.awt.Dimension(10, 240));
         jScrollPane4.setViewportView(reportTable);
 
-        jTabbedPanel1.addTab("Reports", jScrollPane4);
+        tabbedPanel.addTab("Reports", jScrollPane4);
 
-        archiveAssignTable.setModel(new javax.swing.table.DefaultTableModel(
+        archiveTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -416,48 +427,48 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
                 return canEdit [columnIndex];
             }
         });
-        archiveAssignTable.setAutoscrolls(false);
-        archiveAssignTable.setMinimumSize(new java.awt.Dimension(10, 240));
-        jScrollPane3.setViewportView(archiveAssignTable);
+        archiveTable.setAutoscrolls(false);
+        archiveTable.setMinimumSize(new java.awt.Dimension(10, 240));
+        jScrollPane3.setViewportView(archiveTable);
 
-        jTabbedPanel1.addTab("Assignments_Archived", jScrollPane3);
+        tabbedPanel.addTab("Assignments_Archived", jScrollPane3);
 
         jPanelEdit.setPreferredSize(new java.awt.Dimension(636, 180));
 
-        jBatchEdit.setText("Batch Edit");
-        jBatchEdit.addActionListener(new java.awt.event.ActionListener() {
+        btnBatchEdit.setText("Batch Edit");
+        btnBatchEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBatchEditActionPerformed(evt);
+                btnBatchEditActionPerformed(evt);
             }
         });
 
-        jBatchAdd.setText("Add Record(s)");
-        jBatchAdd.addActionListener(new java.awt.event.ActionListener() {
+        btnAddRecords.setText("Add Record(s)");
+        btnAddRecords.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBatchAddActionPerformed(evt);
+                btnAddRecordsActionPerformed(evt);
             }
         });
 
-        jUpload.setText("Upload Changes");
-        jUpload.setMaximumSize(new java.awt.Dimension(95, 30));
-        jUpload.setMinimumSize(new java.awt.Dimension(95, 30));
-        jUpload.addActionListener(new java.awt.event.ActionListener() {
+        btnUploadChanges.setText("Upload Changes");
+        btnUploadChanges.setMaximumSize(new java.awt.Dimension(95, 30));
+        btnUploadChanges.setMinimumSize(new java.awt.Dimension(95, 30));
+        btnUploadChanges.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jUploadActionPerformed(evt);
+                btnUploadChangesActionPerformed(evt);
             }
         });
 
-        jButtonCancel.setText("Cancel");
-        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelEditMode.setText("Cancel");
+        btnCancelEditMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCancelActionPerformed(evt);
+                btnCancelEditModeActionPerformed(evt);
             }
         });
 
-        jSwitchEditMode.setText("Switch");
-        jSwitchEditMode.addActionListener(new java.awt.event.ActionListener() {
+        btnSwitchEditMode.setText("Switch");
+        btnSwitchEditMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jSwitchEditModeActionPerformed(evt);
+                btnSwitchEditModeActionPerformed(evt);
             }
         });
 
@@ -475,15 +486,15 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelEdit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSwitchEditMode)
+                .addComponent(btnSwitchEditMode)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonCancel)
+                .addComponent(btnCancelEditMode)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jUpload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jBatchAdd)
+                .addComponent(btnAddRecords)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBatchEdit)
+                .addComponent(btnBatchEdit)
                 .addGap(26, 26, 26))
         );
         jPanelEditLayout.setVerticalGroup(
@@ -491,48 +502,48 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
             .addGroup(jPanelEditLayout.createSequentialGroup()
                 .addGap(4, 4, 4)
                 .addGroup(jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jUpload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jSwitchEditMode)
+                    .addComponent(btnSwitchEditMode)
                     .addComponent(jLabelEdit)
-                    .addComponent(jButtonCancel)
-                    .addComponent(jBatchEdit)
-                    .addComponent(jBatchAdd))
+                    .addComponent(btnCancelEditMode)
+                    .addComponent(btnBatchEdit)
+                    .addComponent(btnAddRecords))
                 .addGap(4, 4, 4))
         );
 
         jScrollPane2.setBorder(null);
 
-        jTextArea.setBackground(new java.awt.Color(0, 153, 102));
-        jTextArea.setColumns(20);
-        jTextArea.setLineWrap(true);
-        jTextArea.setRows(5);
-        jTextArea.setText("Please input an SQL statement:\\n>>");
-        ((AbstractDocument) jTextArea.getDocument())
+        jTextAreaSQL.setBackground(new java.awt.Color(0, 153, 102));
+        jTextAreaSQL.setColumns(20);
+        jTextAreaSQL.setLineWrap(true);
+        jTextAreaSQL.setRows(5);
+        jTextAreaSQL.setText("Please input an SQL statement:\\n>>");
+        ((AbstractDocument) jTextAreaSQL.getDocument())
         .setDocumentFilter(new CreateDocumentFilter(33));
-        jTextArea.setWrapStyleWord(true);
-        jTextArea.setMaximumSize(new java.awt.Dimension(1590, 150));
-        jTextArea.setMinimumSize(new java.awt.Dimension(1590, 150));
-        jScrollPane2.setViewportView(jTextArea);
+        jTextAreaSQL.setWrapStyleWord(true);
+        jTextAreaSQL.setMaximumSize(new java.awt.Dimension(1590, 150));
+        jTextAreaSQL.setMinimumSize(new java.awt.Dimension(1590, 150));
+        jScrollPane2.setViewportView(jTextAreaSQL);
 
-        jDebugEnter.setText("Enter");
-        jDebugEnter.addActionListener(new java.awt.event.ActionListener() {
+        btnEnterSQL.setText("Enter");
+        btnEnterSQL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jDebugEnterActionPerformed(evt);
+                btnEnterSQLActionPerformed(evt);
             }
         });
 
-        jDebugCancel.setText("Cancel");
-        jDebugCancel.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelSQL.setText("Cancel");
+        btnCancelSQL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jDebugCancelActionPerformed(evt);
+                btnCancelSQLActionPerformed(evt);
             }
         });
 
-        closeDebugPanelBtn.setText("Close");
-        closeDebugPanelBtn.addActionListener(new java.awt.event.ActionListener() {
+        btnCloseSQL.setText("Close");
+        btnCloseSQL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeDebugPanelBtnActionPerformed(evt);
+                btnCloseSQLActionPerformed(evt);
             }
         });
 
@@ -543,11 +554,11 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
             .addGroup(jPanelSQLLayout.createSequentialGroup()
                 .addGap(4, 4, 4)
                 .addGroup(jPanelSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jDebugCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jDebugEnter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(closeDebugPanelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnCancelSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEnterSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCloseSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(4, 4, 4)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 810, Short.MAX_VALUE))
         );
         jPanelSQLLayout.setVerticalGroup(
             jPanelSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -556,11 +567,11 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
                 .addGroup(jPanelSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
                     .addGroup(jPanelSQLLayout.createSequentialGroup()
-                        .addComponent(jDebugEnter)
+                        .addComponent(btnEnterSQL)
                         .addGap(4, 4, 4)
-                        .addComponent(jDebugCancel)
+                        .addComponent(btnCancelSQL)
                         .addGap(4, 4, 4)
-                        .addComponent(closeDebugPanelBtn)
+                        .addComponent(btnCloseSQL)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(4, 4, 4))
         );
@@ -569,8 +580,8 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 896, Short.MAX_VALUE)
-            .addComponent(jPanelEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 896, Short.MAX_VALUE)
+            .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
+            .addComponent(jPanelEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jPanelSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(4, 4, 4))
@@ -578,15 +589,15 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jTabbedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
                 .addComponent(jPanelSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPanel1.getAccessibleContext().setAccessibleName("Reports");
-        jTabbedPanel1.getAccessibleContext().setAccessibleParent(jTabbedPanel1);
+        tabbedPanel.getAccessibleContext().setAccessibleName("Reports");
+        tabbedPanel.getAccessibleContext().setAccessibleParent(tabbedPanel);
 
         jMenuFile.setText("File");
 
@@ -678,12 +689,15 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         jMenuView.setText("View");
 
         jMenuItemViewAssig.setText("View Assignments Columns");
+        jMenuItemViewAssig.setEnabled(false);
         jMenuView.add(jMenuItemViewAssig);
 
         jMenuItemViewReports.setText("View Reports Columns");
+        jMenuItemViewReports.setEnabled(false);
         jMenuView.add(jMenuItemViewReports);
 
         jMenuItemViewAllAssig.setText("View All Assignments");
+        jMenuItemViewAllAssig.setEnabled(false);
         jMenuItemViewAllAssig.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemViewAllAssigActionPerformed(evt);
@@ -692,6 +706,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         jMenuView.add(jMenuItemViewAllAssig);
 
         jMenuItemViewActiveAssig.setText("View Active Assigments");
+        jMenuItemViewActiveAssig.setEnabled(false);
         jMenuItemViewActiveAssig.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemViewActiveAssigActionPerformed(evt);
@@ -764,22 +779,22 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     private void jMenuItemFileVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFileVersionActionPerformed
 
         JOptionPane.showMessageDialog(this, "Creation Date: "
-                + "2015-07-2" + "\n"
-                + "Version: " + "0.6.5d");
+                + "2015-07-9" + "\n"
+                + "Version: " + "0.6.6c");
     }//GEN-LAST:event_jMenuItemFileVersionActionPerformed
 
-    private void textForSearchMouseClicked(MouseEvent evt) {//GEN-FIRST:event_textForSearchMouseClicked
+    private void textFieldForSearchMouseClicked(MouseEvent evt) {//GEN-FIRST:event_textFieldForSearchMouseClicked
 
-        textForSearch.setText(null);
-    }//GEN-LAST:event_textForSearchMouseClicked
+        textFieldForSearch.setText(null);
+    }//GEN-LAST:event_textFieldForSearchMouseClicked
 
     /**
      * This method is called when the search button is pressed
      * @param evt 
      */
-    private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
        filterBySearch();
-    }//GEN-LAST:event_searchActionPerformed
+    }//GEN-LAST:event_btnSearchActionPerformed
     
     /**
      * This method is called by the searchActionPerformed method
@@ -791,19 +806,33 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         
         int columnIndex; // the column of the table
         
-        if (jField.getSelectedItem().toString().equals(SYMBOL_COLUMN_NAME)) {
+        if (comboBoxSearch.getSelectedItem().toString().equals(SYMBOL_COLUMN_NAME)) {
             columnIndex = 1; // first column is the symbol column
         } else {
             columnIndex = 2; // the second column is the analyst column
         }
         
-        String selectedField = textForSearch.getText();  // store string from text box
+        String selectedField = textFieldForSearch.getText();  // store string from text box
         
         try{
-            TableRowFilterSupport.forTable(tabs.get(selectedTab).getTable()).actions(true).apply().apply(columnIndex, selectedField);
+
+            // new tableRowFilterSupport instance and takes table to set filter
+            tableRowFilterSupport = new TableRowFilterSupport(tabs.get(selectedTab).getTable());
+            
+            // set actions visible to true
+            tableRowFilterSupport.setActionsVisible(true);
+            
+            // apply changes to tableRowFilterSupport
+            // This method still needs refactoring -> legacy code
+            tableRowFilterSupport.apply();
+            
+            // apply changes to filter
+            tableRowFilterSupport.getFilter().apply(columnIndex, selectedField);
+            
+            
             GUI.columnFilterStatus(columnIndex, tabs.get(selectedTab).getFilter().getTable());
             // set label record information
-            recordsLabel.setText(tabs.get(selectedTab).getRecordsLabel()); 
+            labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
             
         }catch(NullPointerException e){
             throwUnknownTableException(selectedTab, e);
@@ -826,8 +855,21 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
 
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void jUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUploadActionPerformed
-        // upload two tables separately
+    private void btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadChangesActionPerformed
+
+        uploadChanges();
+    }//GEN-LAST:event_btnUploadChangesActionPerformed
+
+    /**
+     * This uploads changes made by editing and saves the changes
+     * by uploading them to the database.
+     * This method is called by:
+     * btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) 
+     * and also a keylistener when editing mode is on and enter is pressed
+     */
+    public void uploadChanges(){
+        
+         // upload two tables separately
         
         String selectedTab = getSelectedTab();
         
@@ -841,69 +883,68 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         getModifiedDataList().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();    // update time
         makeTableEditable();
-
-    }//GEN-LAST:event_jUploadActionPerformed
-
+    }
+    
     private void jMenuItemOtherReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOtherReportActionPerformed
 //        new ReportWin();// Create Report
     }//GEN-LAST:event_jMenuItemOtherReportActionPerformed
 
-    private void jDebugEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDebugEnterActionPerformed
-        if (enterButton.isCreateTable(jTextArea)) {
+    private void btnEnterSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterSQLActionPerformed
+        if (enterButton.isCreateTable(jTextAreaSQL)) {
             try {
-                connection(enterButton.getCommand(jTextArea), assignmentTable);
+                connection(enterButton.getCommand(jTextAreaSQL), assignmentTable);
             } catch (SQLException e) {
                 logwind.sendMessages(e.getMessage());  //To change body of catch statement use File | Settings | File Templates.
             }
         } else {
             ExecuteSQLStatement.updateDatabase(GUI.con,
-                    enterButton.getCommand(jTextArea));
+                    enterButton.getCommand(jTextAreaSQL));
         }
-    }//GEN-LAST:event_jDebugEnterActionPerformed
+    }//GEN-LAST:event_btnEnterSQLActionPerformed
 
-    private void jDebugCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDebugCancelActionPerformed
-        ((AbstractDocument) jTextArea.getDocument())
+    private void btnCancelSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelSQLActionPerformed
+        ((AbstractDocument) jTextAreaSQL.getDocument())
                 .setDocumentFilter(new CreateDocumentFilter(0));
-        jTextArea.setText("Please input an SQL statement:\n>>");
-        ((AbstractDocument) jTextArea.getDocument())
+        jTextAreaSQL.setText("Please input an SQL statement:\n>>");
+        ((AbstractDocument) jTextAreaSQL.getDocument())
                 .setDocumentFilter(new CreateDocumentFilter(33));
-    }//GEN-LAST:event_jDebugCancelActionPerformed
+    }//GEN-LAST:event_btnCancelSQLActionPerformed
 
-    private void closeDebugPanelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeDebugPanelBtnActionPerformed
+    private void btnCloseSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseSQLActionPerformed
 
         jPanelSQL.setVisible(false);
         jCheckBoxMenuItemViewSQL.setSelected(false);
-    }//GEN-LAST:event_closeDebugPanelBtnActionPerformed
+    }//GEN-LAST:event_btnCloseSQLActionPerformed
 
-    private void jSwitchEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSwitchEditModeActionPerformed
+    private void btnSwitchEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchEditModeActionPerformed
 
         makeTableEditable();
 
-    }//GEN-LAST:event_jSwitchEditModeActionPerformed
+    }//GEN-LAST:event_btnSwitchEditModeActionPerformed
     //Make the table Editable or Read Only
 
     public void makeTableEditable() {
         if (jLabelEdit.getText().equals("OFF")) {
             jLabelEdit.setText("ON ");
-            jSwitchEditMode.setVisible(false);
-            jUpload.setVisible(true);
-            jButtonCancel.setVisible(true);
-            jBatchEdit.setVisible(true);
+            btnSwitchEditMode.setVisible(false);
+            btnUploadChanges.setVisible(true);
+            btnCancelEditMode.setVisible(true);
+            btnBatchEdit.setVisible(true);
             isFiltering = false;
             makeEditable(assignmentTable.getModel());
             makeEditable(reportTable.getModel());
-            makeEditable(archiveAssignTable.getModel());
+            makeEditable(archiveTable.getModel());
 
         } else {
             jLabelEdit.setText("OFF");
-            jSwitchEditMode.setVisible(true);
-            jUpload.setVisible(false);
-            jButtonCancel.setVisible(false);
-            jBatchEdit.setVisible(true);
+            btnSwitchEditMode.setVisible(true);
+            btnUploadChanges.setVisible(false);
+            btnCancelEditMode.setVisible(false);
+            btnBatchEdit.setVisible(true);
             isFiltering = true;
-            ((MyTableModel) assignmentTable.getModel()).setReadOnly(true);
+            ((MyTableModel)assignmentTable.getModel()).setReadOnly(true);
             ((MyTableModel) reportTable.getModel()).setReadOnly(true);
-            ((MyTableModel) archiveAssignTable.getModel()).setReadOnly(true);
+            ((MyTableModel) archiveTable.getModel()).setReadOnly(true);
 //            ((MyTableModel) viewerTable.getModel()).setReadOnly(true);
         }
     }
@@ -916,8 +957,8 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
              
         }
     }
-    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        String selectedTab = jTabbedPanel1.getTitleAt(jTabbedPanel1.getSelectedIndex());
+    private void btnCancelEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelEditModeActionPerformed
+        String selectedTab = tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
         if (GUI.isIsFiltering()) {
             loadPrevious(selectedTab);
         } else {
@@ -925,7 +966,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         }
         makeTableEditable();
 
-    }//GEN-LAST:event_jButtonCancelActionPerformed
+    }//GEN-LAST:event_btnCancelEditModeActionPerformed
     public void loadPrevious(String selectedTab) {
 
         // TODO check that the selectedTab is actually needed to be passed in.
@@ -935,7 +976,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
             setColumnFormat(tabs.get(selectedTab).getColWidthPercent(), tabs.get(selectedTab).getTable());
             GUI.columnFilterStatus(tabs.get(selectedTab).getFilter().getColumnIndex(), tabs.get(selectedTab).getTable());
             // set label record information
-            recordsLabel.setText(tabs.get(selectedTab).getRecordsLabel()); 
+            labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
         }catch(NullPointerException e){
             throwUnknownTableException(selectedTab, e);
         }
@@ -948,22 +989,20 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         // pointers to information
         boolean isFilterActive = false;
         
+        // this enables or disables the menu components for this tab
+        jActivateRecord.setEnabled(tabs.get(selectedTab).isActivateRecordMenuItemEnabled()); 
+        jArchiveRecord.setEnabled(tabs.get(selectedTab).isArchiveRecordMenuItemEnabled()); 
+        
         switch (selectedTab) {
             case ASSIGNMENTS_TABLE_NAME:
-                jActivateRecord.setEnabled(false);
-                jArchiveRecord.setEnabled(true);
                 isFilterActive = GUI.filterAssignmentIsActive;
                 break;
                 
             case REPORTS_TABLE_NAME:
-                jActivateRecord.setEnabled(false);
-                jArchiveRecord.setEnabled(false);
                 isFilterActive = GUI.filterReportIstActive;
                 break;
                 
             case ARCHIVE_TABLE_NAME:
-                jActivateRecord.setEnabled(true);
-                jArchiveRecord.setEnabled(false);
                 isFilterActive = GUI.filterArchiveIsActive;
                 break;
 
@@ -976,30 +1015,46 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
             if (isFilterActive) {
             tabs.get(selectedTab).setTable(tabs.get(selectedTab).getFilteredTable());
             } else {
-                tabs.get(selectedTab).setFilter(TableRowFilterSupport.forTable(tabs.get(selectedTab).getTable()).actions(true).apply());
+                
+                // new tableRowFilterSupport instance and takes table to set filter
+                tableRowFilterSupport = new TableRowFilterSupport(tabs.get(selectedTab).getTable());
+
+                // set actions visible to true
+                tableRowFilterSupport.setActionsVisible(true);
+
+                // apply changes to tableRowFilterSupport
+                // This method still needs refactoring -> legacy code
+                tableRowFilterSupport.apply();
+
+                // set filter to tabs table
+                tabs.get(selectedTab).setFilter(tableRowFilterSupport.getFilter());
+                
+                // set filtered table in tabs using the filter to filter and return table
                 tabs.get(selectedTab).setFilteredTable(tabs.get(selectedTab).getFilter().getTable());
             }
             
             // set label record information
-            recordsLabel.setText(tabs.get(selectedTab).getRecordsLabel()); 
+            labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
         }catch(NullPointerException e){
             throwUnknownTableException(selectedTab, e);
         }
     }
 
-    private void jBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBatchEditActionPerformed
-        TableEditor tableEditor = new TableEditor(jTabbedPanel1.getTitleAt(jTabbedPanel1.getSelectedIndex()), this);
+    private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
+        TableEditor tableEditor = new TableEditor(tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex()), this);
         tableEditor.setVisible(true);
 
-    }//GEN-LAST:event_jBatchEditActionPerformed
+    }//GEN-LAST:event_btnBatchEditActionPerformed
 
     private void jMenuEditDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuEditDBActionPerformed
-        new EditDatabaseList().setVisible(true);
+        EditDatabaseList editDBWindow = new EditDatabaseList();
+        editDBWindow.setLocationRelativeTo(this);
+        editDBWindow.setVisible(true);
     }//GEN-LAST:event_jMenuEditDBActionPerformed
 
-    private void jBatchAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBatchAddActionPerformed
+    private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
         new AddRecords(this, logwind).setVisible(true);
-    }//GEN-LAST:event_jBatchAddActionPerformed
+    }//GEN-LAST:event_btnAddRecordsActionPerformed
 
     /**
      * This method listens if the enter key was pressed in the search text box.
@@ -1007,13 +1062,13 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
      * search button.
      * @param evt 
      */
-    private void textForSearchKeyPressed(KeyEvent evt) {//GEN-FIRST:event_textForSearchKeyPressed
+    private void textFieldForSearchKeyPressed(KeyEvent evt) {//GEN-FIRST:event_textFieldForSearchKeyPressed
         
         // if the enter key is pressed call the filterBySearch method.
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             filterBySearch();
         }
-    }//GEN-LAST:event_textForSearchKeyPressed
+    }//GEN-LAST:event_textFieldForSearchKeyPressed
 
     private void jMenuItemLogOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLogOffActionPerformed
         Object[] options = {"Reconnect", "Log Out"};  // the titles of buttons
@@ -1051,7 +1106,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
             
             // set label record information
             tabs.get(selectedTab).subtractFromTotalRowCount(1); // update total row count
-            recordsLabel.setText(tabs.get(selectedTab).getRecordsLabel()); // update label
+            labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); // update label
             
         }catch(NullPointerException e){
             throwUnknownTableException(selectedTab, e);
@@ -1076,10 +1131,10 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
         tabs.get(ASSIGNMENTS_TABLE_NAME).getTableState().init(assignmentTable, new String[]{"Symbol", "Analyst"});
         // set label record information
-        recordsLabel.setText(tabs.get(ASSIGNMENTS_TABLE_NAME).getRecordsLabel()); 
+        labelRecords.setText(tabs.get(ASSIGNMENTS_TABLE_NAME).getRecordsLabel()); 
     }//GEN-LAST:event_jMenuItemViewActiveAssigActionPerformed
 
-    private void jButtonClearAllFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearAllFilterActionPerformed
+    private void btnClearAllFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllFilterActionPerformed
 
         String selectedTab = getSelectedTab();
         
@@ -1098,11 +1153,11 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         loadTables.loadTable(tabs.get(selectedTab).getTable());
         GUI.cleanAllColumnFilterStatus(tabs.get(selectedTab).getTable());
         // set label record information
-        recordsLabel.setText(tabs.get(selectedTab).getRecordsLabel()); 
+        labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
                 
         modifiedDataList.clear();
 
-    }//GEN-LAST:event_jButtonClearAllFilterActionPerformed
+    }//GEN-LAST:event_btnClearAllFilterActionPerformed
 
 
     private void jMenuItemOthersLoadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOthersLoadDataActionPerformed
@@ -1111,7 +1166,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         
         loadTables.loadTable(tabs.get(selectedTab).getTable());
         // set label record information
-        recordsLabel.setText(tabs.get(selectedTab).getRecordsLabel()); 
+        labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
     }//GEN-LAST:event_jMenuItemOthersLoadDataActionPerformed
 
     private void jArchiveRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jArchiveRecordActionPerformed
@@ -1125,24 +1180,25 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     }//GEN-LAST:event_jActivateRecordActionPerformed
 
 //Filter is generated everytime that table is selected.
-    private void jTabbedPanel1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPanel1StateChanged
+    private void tabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelStateChanged
 
         TableState ts = getTableState();
         changeTabbedPanelState();
         String[] field = ts.getSearchFields();
         if (field == null) {
-            jField.setModel(new DefaultComboBoxModel(new String[]{"Symbol", "Analyst"}));
+            comboBoxSearch.setModel(new DefaultComboBoxModel(new String[]{"Symbol", "Analyst"}));
         } else {
-            jField.setModel(new DefaultComboBoxModel(field));
+            comboBoxSearch.setModel(new DefaultComboBoxModel(field));
         }
 
         modifiedDataList.clear();    // when selected table changed, clear former edit history
-    }//GEN-LAST:event_jTabbedPanel1StateChanged
+    }//GEN-LAST:event_tabbedPanelStateChanged
 
     private void jCheckBoxMenuItemViewLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemViewLogActionPerformed
 
         if(jCheckBoxMenuItemViewLog.isSelected()){
             
+            logwind.setLocationRelativeTo(this);
             logwind.setVisible(true); // show log window
             
             // remove check if window is closed from the window
@@ -1216,7 +1272,13 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         loadTables.loadTables(tabs);
     }
 
-    public void setTerminalsFunction(final JTable table) { //set all listenner for JTable.
+    /**
+     * This adds mouselisteners and keylisteners to tables.
+     * @param table 
+     */
+    public void setTerminalsFunction(final JTable table) { 
+        
+        // this adds a mouselistener to the table header
         header = table.getTableHeader();
         if (header != null) {
             header.addMouseListener(new MouseAdapter() {
@@ -1227,34 +1289,121 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
                             clearFilterDoubleClick(e, table);
                         }
                     } else if (e.getClickCount() == 1) {
-
+                        // why is nothing here?
+                        // Shouldnt this order the columns?
+                        // or perhaps it is already a built in feature to the JTable?
                     }
                 }
             });
         }
+        
         table.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_F2) {
                     makeTableEditable();
-                } else if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-//                    GUI.isChangesUploaded=true;
+                } 
+                
+                // in editing mode this should ask to upload changes when enter key press
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    
+                    // make sure in editing mode
+                    if(jLabelEdit.getText().equals("ON ")){
+
+                        // if finished display dialog box
+                        // Upload Changes? Yes or No?
+                        Object[] options = {"Commit", "Revert"};  // the titles of buttons
+
+                        int selectedOption = JOptionPane.showOptionDialog(Analyster.getInstance(), 
+                                "Would you like to upload changes?", "Upload Changes",
+                                JOptionPane.YES_NO_OPTION, 
+                                JOptionPane.QUESTION_MESSAGE,
+                                null, //do not use a custom Icon
+                                options, //the titles of buttons
+                                options[0]); //default button title
+
+                        switch (selectedOption) {
+                            case 0:            
+                                // if Commit, upload changes and return to editing
+                                uploadChanges();
+                                break;
+                            case 1:
+                                // if Revert, revert changes
+                                
+                                //TODO
+                                // there is still no easy way to work with the tables
+                                // refactoring first would be ideal for a feasible solution
+                                
+                                break;
+                            default:
+                                // do nothing -> cancel
+                                break;
+                        }   
+                        
+                        // return to edit mode for next cell
+                        
+                        // get selected cell
+                        int columnIndex = table.getSelectedColumn(); // this returns the column index
+                        int rowIndex = table.getSelectedRow() + 1; // this returns the next row index
+                        if (rowIndex != -1 && columnIndex != -1) {
+
+                            // this highlights the next row
+                            table.changeSelection(rowIndex, columnIndex, false, false);
+
+                            // this starts editing the next cell
+                            table.editCellAt(rowIndex, columnIndex);
+                            
+                            // this selects all the text in the editing cell
+                            JTextField selectCom = (JTextField) table.getEditorComponent();
+                            if (selectCom != null) {
+                                selectCom.requestFocusInWindow();
+                                selectCom.selectAll();
+                            }
+                        }
+                    }
                 }
             }
-        }
-        );
+        });
+        
         table.addMouseListener(
                 new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        if (e.getClickCount() == 2) {
-                            filterByDoubleClick(table);
-                        } else if (e.getClickCount() == 1) {
-                            if (jLabelEdit.getText().equals("ON ")) {
-                                selectAllText(e);
+                        
+                        // if left mouse clicks
+                        if(SwingUtilities.isLeftMouseButton(e)){
+                            if (e.getClickCount() == 2 ) {
+                                filterByDoubleClick(table);
+                            } else if (e.getClickCount() == 1) {
+                                if (jLabelEdit.getText().equals("ON ")) {
+                                    selectAllText(e);
+                                }
                             }
-                        }
-                    }
+                        } // end if left mouse clicks
+                        
+                        // if right mouse clicks
+                        else if(SwingUtilities.isRightMouseButton(e)){
+                            if (e.getClickCount() == 2 ) {
+                                
+                                // make table editable
+                                makeTableEditable();
+                                
+                                // get selected cell
+                                int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
+                                int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the row index
+                                if (rowIndex != -1 && columnIndex != -1) {
+                                    
+                                    // make it the active editing cell
+                                    table.changeSelection(rowIndex, columnIndex, false, false);
+                                    
+                                    selectAllText(e);
+
+                                } // end not null condition
+                                
+                            } // end if 2 clicks 
+                        } // end if right mouse clicks
+                        
+                    }// end mouseClicked
 
                     private void selectAllText(MouseEvent e) {// Select all text inside jTextField
 
@@ -1279,15 +1428,15 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
 
     public void filterByDoubleClick(JTable table) {
         
-        int[] columnIndex = table.getColumnModel().getSelectedColumns();
-        int rowIndex = table.getSelectedRow();
+        int columnIndex = table.getSelectedColumn(); // this returns the column index
+        int rowIndex = table.getSelectedRow(); // this returns the row index
         if (rowIndex != -1) {
-            Object selectedField = table.getValueAt(rowIndex, columnIndex[0]);
+            Object selectedField = table.getValueAt(rowIndex, columnIndex);
             // apply filter
-            tabs.get(table.getName()).getFilter().apply(columnIndex[0], selectedField);
-            GUI.columnFilterStatus(columnIndex[0], tabs.get(table.getName()).getFilter().getTable());
+            tabs.get(table.getName()).getFilter().apply(columnIndex, selectedField);
+            GUI.columnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());
             // set label record information
-            recordsLabel.setText(tabs.get(table.getName()).getRecordsLabel()); 
+            labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
         }
     }
 
@@ -1301,7 +1450,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         tabs.get(table.getName()).getFilter().apply(columnIndex, tabs.get(table.getName()).getFilter().getDistinctColumnItems(columnIndex));
         GUI.cleanColumnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());// clean green background
         // set label record information
-        recordsLabel.setText(tabs.get(table.getName()).getRecordsLabel()); 
+        labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
     }
 
     public String sqlQuery(String tableName) { //Creat Query to select * from DB.
@@ -1325,7 +1474,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         table.setRowSorter(sorter);
         setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
         setColumnFormat(tabs.get(REPORTS_TABLE_NAME).getColWidthPercent(), reportTable);
-        setColumnFormat(tabs.get(ARCHIVE_TABLE_NAME).getColWidthPercent(), archiveAssignTable);
+        setColumnFormat(tabs.get(ARCHIVE_TABLE_NAME).getColWidthPercent(), archiveTable);
     }
 
     void setColumnFormat(float[] width, JTable table) {
@@ -1438,10 +1587,10 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
             String uploadQuery = uploadRecordService.uploadRecord(table, modifiedDataList);
             loadPrevious(table.getName());
 
-            JOptionPane.showMessageDialog(null, "Edits uploaded!");
+            JOptionPane.showMessageDialog(this, "Edits uploaded!");
             logwind.sendMessages(uploadQuery);
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Upload failed!");
+            JOptionPane.showMessageDialog(this, "Upload failed!");
             logwind.sendMessages(e.getMessage());
             logwind.sendMessages(e.getSQLState() + "\n");
         }
@@ -1464,7 +1613,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     public void setLastUpdateTime() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = dateFormat.format(new Date());
-        jTimeLastUpdate.setText("Last updated: " + time);
+        labelTimeLastUpdate.setText("Last updated: " + time);
     }
     
     private void setKeyboardFocusManager() {
@@ -1522,23 +1671,23 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         this.uploadRecordService = uploadRecordService;
     }
 
-    public ITableFilter<?> getFilterTempArchive() {
+    public JTableFilter getFilterTempArchive() {
         return tabs.get(ARCHIVE_TABLE_NAME).getFilter();
     }
 
-    public void setFilterTempArchive(ITableFilter<?> filterTempArchive) {
+    public void setFilterTempArchive(JTableFilter filterTempArchive) {
         tabs.get(ARCHIVE_TABLE_NAME).setFilter(filterTempArchive);
     }
 
-    public ITableFilter<?> getFilterTempReport() {
+    public JTableFilter getFilterTempReport() {
         return tabs.get(REPORTS_TABLE_NAME).getFilter();
     }
 
-    public void setFilterTempReport(ITableFilter<?> filterTempReport) {
+    public void setFilterTempReport(JTableFilter filterTempReport) {
         tabs.get(REPORTS_TABLE_NAME).setFilter(filterTempReport);
     }
 
-    public void setFilterTempAssignment(ITableFilter<?> filterTempAssignment) {
+    public void setFilterTempAssignment(JTableFilter filterTempAssignment) {
         tabs.get(ASSIGNMENTS_TABLE_NAME).setFilter(filterTempAssignment);
     }
 
@@ -1582,11 +1731,11 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     }
 
     public JTable getArchiveAssignTable() {
-        return archiveAssignTable;
+        return archiveTable;
     }
 
     public JTabbedPane getjTabbedPanel1() {
-        return jTabbedPanel1;
+        return tabbedPanel;
     }
 
     public JMenuItem getjActivateRecord() {
@@ -1598,7 +1747,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     }
 
     public JLabel getRecordsLabel() {
-        return recordsLabel;
+        return labelRecords;
     }
 
     public LogWindow getLogwind() {
@@ -1621,7 +1770,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         return tabs.get(ARCHIVE_TABLE_NAME).getTableState();
     }
 
-    public ITableFilter<?> getFilterTempAssignment() {
+    public JTableFilter getFilterTempAssignment() {
         return tabs.get(ASSIGNMENTS_TABLE_NAME).getFilter();
     }
     
@@ -1634,7 +1783,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     }
     
     private String getSelectedTab() {
-        return jTabbedPanel1.getTitleAt(jTabbedPanel1.getSelectedIndex());
+        return tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
     }
 
     public LoadTables getLoadTables() {
@@ -1646,21 +1795,24 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel addPanel_control;
-    private javax.swing.JTable archiveAssignTable;
+    private javax.swing.JTable archiveTable;
     private javax.swing.JTable assignmentTable;
-    private javax.swing.JButton closeDebugPanelBtn;
+    private javax.swing.JButton btnAddRecords;
+    private javax.swing.JButton btnBatchEdit;
+    private javax.swing.JButton btnCancelEditMode;
+    private javax.swing.JButton btnCancelSQL;
+    private javax.swing.JButton btnClearAllFilter;
+    private javax.swing.JButton btnCloseSQL;
+    private javax.swing.JButton btnEnterSQL;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnSwitchEditMode;
+    private javax.swing.JButton btnUploadChanges;
+    private javax.swing.JComboBox comboBoxSearch;
     private javax.swing.JMenuItem jActivateRecord;
     private javax.swing.JMenuItem jArchiveRecord;
-    private javax.swing.JButton jBatchAdd;
-    private javax.swing.JButton jBatchEdit;
-    private javax.swing.JButton jButtonCancel;
-    private javax.swing.JButton jButtonClearAllFilter;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItemViewLog;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItemViewSQL;
-    private javax.swing.JButton jDebugCancel;
-    private javax.swing.JButton jDebugEnter;
     private javax.swing.JMenuItem jDeleteRecord;
-    private javax.swing.JComboBox jField;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabelEdit;
     private javax.swing.JMenu jMenuEdit;
@@ -1692,17 +1844,14 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JButton jSwitchEditMode;
-    private javax.swing.JTabbedPane jTabbedPanel1;
-    private javax.swing.JTextArea jTextArea;
-    private javax.swing.JLabel jTimeLastUpdate;
-    private javax.swing.JButton jUpload;
+    private javax.swing.JTextArea jTextAreaSQL;
+    private javax.swing.JLabel labelRecords;
+    private javax.swing.JLabel labelTimeLastUpdate;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JLabel recordsLabel;
     private javax.swing.JTable reportTable;
-    private javax.swing.JButton search;
     private javax.swing.JPanel searchPanel;
-    private javax.swing.JTextField textForSearch;
+    private javax.swing.JTabbedPane tabbedPanel;
+    private javax.swing.JTextField textFieldForSearch;
     // End of variables declaration//GEN-END:variables
     // @formatter:on
 

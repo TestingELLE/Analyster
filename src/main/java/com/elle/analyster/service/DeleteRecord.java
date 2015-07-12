@@ -42,7 +42,7 @@ public class DeleteRecord {
             new LoadTables().loadTable(Analyster.getInstance().getTabs().get(tableName).getTable());
 
             // output pop up dialog that a record was deleted 
-            JOptionPane.showMessageDialog(null, rowsSelected + " Record(s) Deleted");
+            JOptionPane.showMessageDialog(Analyster.getInstance(), rowsSelected + " Record(s) Deleted");
         }
         return sqlDelete;
     }

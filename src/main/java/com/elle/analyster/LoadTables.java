@@ -11,7 +11,7 @@
 package com.elle.analyster;
 
 import com.elle.analyster.presentation.filter.DistinctColumnItem;
-import com.elle.analyster.presentation.filter.ITableFilter;
+import com.elle.analyster.presentation.filter.JTableFilter;
 import com.elle.analyster.presentation.filter.TableRowFilterSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +36,8 @@ public class LoadTables implements ITableNameConstants{
     JTable assignmentTable = tabs.get(ASSIGNMENTS_TABLE_NAME).getTable();
     JTable reportTable = tabs.get(REPORTS_TABLE_NAME).getTable();
     JTable archiveAssignTable = tabs.get(ARCHIVE_TABLE_NAME).getTable();
+    
+    TableRowFilterSupport tableRowFilterSupport;
 
 
     /**
@@ -102,19 +104,25 @@ public class LoadTables implements ITableNameConstants{
         ana.setColumnFormat(ana.getTabs().get(table.getName()).getColWidthPercent(), table);
         ana.getTabs().get(table.getName()).getTableState().init(table, new String[]{"Symbol", "Analyst"});
           
-        // I am thinking that these filters should be set here and not in analyster
-        // they had it mixed up some here and some in analyster
-        // this will make refactoring much better
-        // the code will be in one place rather than many places.
-        tabs.get(table.getName()).setFilter(TableRowFilterSupport.forTable(tabs.get(table.getName()).getTable()).actions(true).apply());
+        // new tableRowFilterSupport instance and takes table to set filter
+        tableRowFilterSupport = new TableRowFilterSupport(tabs.get(table.getName()).getTable());
+
+        // set actions visible to true
+        tableRowFilterSupport.setActionsVisible(true);
+
+        // apply changes to tableRowFilterSupport
+        // This method still needs refactoring -> legacy code
+        tableRowFilterSupport.apply();
+
+        // set filter to tabs table
+        tabs.get(table.getName()).setFilter(tableRowFilterSupport.getFilter());
+
+        // set filtered table in tabs using the filter to filter and return table
         tabs.get(table.getName()).setFilteredTable(tabs.get(table.getName()).getFilter().getTable());
             
         // this enables or disables the menu components for this tab
-        // this code still needs to be refactored.
-        if(table.getName().equals(ASSIGNMENTS_TABLE_NAME)){
-            ana.getjActivateRecord().setEnabled(false); 
-            ana.getjArchiveRecord().setEnabled(true); 
-        }
+        ana.getjActivateRecord().setEnabled(tabs.get(table.getName()).isActivateRecordMenuItemEnabled()); 
+        ana.getjArchiveRecord().setEnabled(tabs.get(table.getName()).isArchiveRecordMenuItemEnabled()); 
         
         return table;
     }
@@ -134,10 +142,21 @@ public class LoadTables implements ITableNameConstants{
         }
         ana.setColumnFormat(ana.getTabs().get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
         ana.getAssignments().init(assignmentTable, new String[]{"Symbol", "Analyst"});
-        ITableFilter<?> filter = TableRowFilterSupport
-                                        .forTable(assignmentTable)
-                                        .actions(true)
-                                        .apply();
+        
+        // new tableRowFilterSupport instance and takes table to set filter
+        tableRowFilterSupport = new TableRowFilterSupport(tabs.get(assignmentTable.getName()).getTable());
+
+        // set actions visible to true
+        tableRowFilterSupport.setActionsVisible(true);
+
+        // apply changes to tableRowFilterSupport
+        // This method still needs refactoring -> legacy code
+        tableRowFilterSupport.apply();
+        
+        // get filter and store it in a new variable
+        JTableFilter filter = tableRowFilterSupport.getFilter();
+        
+        // apply filter changes -> not sure / legacy code / still refactoring
         ana.setFilterTempAssignment(filter);
         ana.getFilterTempAssignment().getTable();   // create filter when the table is loaded.
         //ana.setNumberAssignmentInit(assignmentTable.getRowCount());
@@ -154,7 +173,6 @@ public class LoadTables implements ITableNameConstants{
 
         // why is this code here?
         filter.apply(columnIndex, filterCriteria);
-        filter.saveTableState();
         filter.saveFilterCriteria(filterCriteria);
         filter.setColumnIndex(columnIndex);
 

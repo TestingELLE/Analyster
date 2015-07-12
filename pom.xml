@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elle</groupId>
     <artifactId>Analyster</artifactId>
-    <version>0.6.5d</version>
+    <version>0.6.6c</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -60,4 +60,8 @@
             </plugin>
         </plugins>
     </build>
+    <description>Spring Boot Starter Parent
+- new archive Analyster_0.6.6c released
+  - Removed 11 methods, two class variables, and one import
+  - Reduced a lot of code, the program should be more efficient and I fixed an error in the combo box option value for the search method</description>
 </project>

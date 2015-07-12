@@ -31,7 +31,7 @@ public class LoginWindow extends JFrame {
         initComponents();
         this.analyster = analyster;
         
-        loadList();    // did not find suitable event
+        loadDBList();    // did not find suitable event
  
         // show window
         this.setTitle("Log in");
@@ -310,7 +310,10 @@ public class LoginWindow extends JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordActionPerformed
 
-    public void loadList() {
+    /**
+     *  Loads the names of the databases from a text file
+     */
+    public void loadDBList() {
         String temp = null;
         List<String> dbList = new ArrayList<String>();
         String dbFile = "database.txt";
