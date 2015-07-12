@@ -1,6 +1,5 @@
 package com.elle.analyster;
 
-import com.elle.analyster.db.ExecuteSQLStatement;
 import com.elle.analyster.domain.ModifiedData;
 import com.elle.analyster.presentation.filter.CreateDocumentFilter;
 import com.elle.analyster.presentation.filter.JTableFilter;
@@ -26,6 +25,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -897,8 +897,15 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
                 logwind.sendMessages(e.getMessage());  //To change body of catch statement use File | Settings | File Templates.
             }
         } else {
-            ExecuteSQLStatement.updateDatabase(GUI.con,
-                    enterButton.getCommand(jTextAreaSQL));
+            
+            try {
+                    Statement state = GUI.con.createStatement();
+                    state.executeUpdate(enterButton.getCommand(jTextAreaSQL));
+            } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+            } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+            }
         }
     }//GEN-LAST:event_btnEnterSQLActionPerformed
 
