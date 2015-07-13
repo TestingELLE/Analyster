@@ -32,6 +32,9 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
     // column Attributes?
     private final Map<Integer, ColumnAttrs> colAttrs = new HashMap<Integer, ColumnAttrs>();
     
+    // this is the actions for the buttons (Apply & Cancel)
+    CommandAction commandAction;
+    
     
     private boolean enabled = false;
     private int mColumnIndex = -1;
@@ -107,7 +110,7 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
         commands.add(Box.createHorizontalGlue());
         
         // create apply action performed and set menu
-        CommandAction applyBtnCommandAction = new CommandAction("Apply"){
+        commandAction = new CommandAction("Apply"){
 
             @Override
             protected boolean perform() {
@@ -115,18 +118,18 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
             }
         };
         
-        applyBtnCommandAction.setMenu(this.getMenu());
+        commandAction.setMenu(this.getMenu());
 
-        JButton apply = new JButton(applyBtnCommandAction);
+        JButton apply = new JButton(commandAction);
         
         commands.add(apply);
         
         // add commandAction for the cancel button and set the menu
-        CommandAction cancelBtnCommandAction = new CommandAction("Cancel");
-        cancelBtnCommandAction.setMenu(this.getMenu());
+        commandAction = new CommandAction("Cancel");
+        commandAction.setMenu(this.getMenu());
 
         commands.add(Box.createHorizontalStrut(5));
-        commands.add(new JButton(cancelBtnCommandAction));
+        commands.add(new JButton(commandAction));
         commands.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
         commands.setBackground(UIManager.getColor("Panel.background"));
         commands.setOpaque(true);

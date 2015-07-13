@@ -22,9 +22,6 @@ public abstract class PopupWindow {
     // class variables
     private JPopupMenu menu;
     private Dimension defaultSize = new Dimension(100,100);
-    
-    // add new components
-    CommandAction commandAction;
 
     /**
      * CONSTRUCTOR
@@ -99,10 +96,6 @@ public abstract class PopupWindow {
     protected void beforeShow() {}
 
     protected void beforeHide() {}
-
-    public CommandAction getCommandAction() {
-        return commandAction;
-    }
 
     public JPopupMenu getMenu() {
         return menu;
