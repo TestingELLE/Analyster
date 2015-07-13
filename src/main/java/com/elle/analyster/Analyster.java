@@ -37,6 +37,9 @@ import java.util.Vector;
 
 public class Analyster extends JFrame implements ITableNameConstants, IColumnConstants{
     
+    // Edit the version and date it was created for new archives and jars
+    String creationDate = "2015-07-13";  
+    String version = "0.6.6d";   
     
     Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
 
@@ -780,8 +783,8 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     private void jMenuItemFileVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFileVersionActionPerformed
 
         JOptionPane.showMessageDialog(this, "Creation Date: "
-                + "2015-07-9" + "\n"
-                + "Version: " + "0.6.6c");
+                + creationDate + "\n"
+                + "Version: " + version);
     }//GEN-LAST:event_jMenuItemFileVersionActionPerformed
 
     private void textFieldForSearchMouseClicked(MouseEvent evt) {//GEN-FIRST:event_textFieldForSearchMouseClicked
