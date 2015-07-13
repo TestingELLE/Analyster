@@ -15,8 +15,6 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
 
     private static final long serialVersionUID = 1L;
 
-    public static IObjectToStringTranslator DEFAULT_TRANSLATOR = new DefaultObjectToStringTranslator();
-
     private Set<T> checks = new HashSet<T>();
     private final List<T> dataList = new ArrayList<T>();
     private final Set<T> dataSet = new HashSet<T>();
@@ -99,7 +97,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
         fireContentsChanged(this, 0, checks.size()-1);
     }
 
-    public void filter( String pattern, IObjectToStringTranslator translator, IListFilter listFilter ) {
+    public void filter( String pattern, IListFilter listFilter ) {
 
         if ( pattern == null || pattern.trim().length() == 0 ) {
             filteredDataList = null;
@@ -108,7 +106,6 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
 
             IListFilter filter = listFilter == null? CheckListFilterType.CONTAINS: listFilter;
 
-            IObjectToStringTranslator t = translator == null? DEFAULT_TRANSLATOR: translator;
             String p = pattern.toLowerCase();
 
             List<T> fDataList = new ArrayList<T>();
@@ -117,7 +114,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
             Object value;
             for (T o : dataList) {
                 value = o;
-                if ( filter.include(t.translate(value), p)) {
+                if ( filter.include(value.toString(), p)) {
                     fDataList.add(o);
                     fDataSet.add(o);
                 }

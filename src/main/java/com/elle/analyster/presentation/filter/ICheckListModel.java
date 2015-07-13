@@ -38,6 +38,6 @@ public interface ICheckListModel<T> extends ListModel{
      * @param pattern the pattern the filter will match on
      * @param translator object to string translator to aid the search
      */
-    void filter(String pattern, IObjectToStringTranslator translator, IListFilter listFilter);
+    void filter(String pattern, IListFilter listFilter);
 
 }

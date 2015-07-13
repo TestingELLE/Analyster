@@ -35,7 +35,6 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
     private boolean enabled = false;
     private int mColumnIndex = -1;
     private JTableFilter filter;
-    private IObjectToStringTranslator translator;
     private boolean actionsVisible = true;
     private boolean useTableRenderers = false;
     private TableModel myTableModelInitial;
@@ -73,11 +72,6 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
             }
         });
 
-    }
-
-    @SuppressWarnings("static-access")
-    public void setSearchTranslator(IObjectToStringTranslator tranlsator) {
-        this.translator = tranlsator;
     }
 
     public void setActionsVisible(boolean actionsVisible) {
@@ -137,7 +131,7 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
         Collection<DistinctColumnItem> checked = filterList.getCheckedItems();
         ICheckListModel<DistinctColumnItem> model = filterList.getModel();
         myTableModelInitial = filter.getTable().getModel();
-        model.filter("", translator, CheckListFilterType.CONTAINS); // clear filter to get true results
+        model.filter("", CheckListFilterType.CONTAINS); // clear filter to get true results
         filter.apply(mColumnIndex, checked);
         filter.saveFilterCriteria(checked);
         filter.setColumnIndex(mColumnIndex);

@@ -132,8 +132,8 @@ public class CheckList<T> {
      * @param pattern
      * @param translator
      */
-    public void filter( String pattern, IObjectToStringTranslator translator, IListFilter listFilter ) {
-        getModel().filter(pattern, translator, listFilter);
+    public void filter( String pattern, IListFilter listFilter ) {
+        getModel().filter(pattern, listFilter);
     }
     
     public void toggleIndex( int index ) {
