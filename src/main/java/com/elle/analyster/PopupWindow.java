@@ -20,7 +20,7 @@ import javax.swing.event.PopupMenuEvent;
 public abstract class PopupWindow {
 
     // class variables
-    private JPopupMenu menu;
+    private ResizablePopupMenu menu;
     private Dimension defaultSize = new Dimension(100,100);
 
     /**
