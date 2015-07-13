@@ -23,12 +23,13 @@ public class ResizablePopupMenu extends JPopupMenu implements PopupMenuListener 
     private static final int DOT_START = 2;
     private static final int DOT_STEP = 4;
     private final boolean resizable;
+    private PopupMenuResizer popupMenuResizer;
 
     // CONSTRUCTOR
     public ResizablePopupMenu( boolean resizable ) {
         super();
         this.resizable = resizable;
-        if ( resizable ) PopupMenuResizer.decorate(this);
+        if ( resizable ) popupMenuResizer.decorate(this);
         addPopupMenuListener(this);
     }
 
