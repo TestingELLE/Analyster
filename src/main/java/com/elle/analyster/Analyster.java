@@ -38,12 +38,12 @@ import java.util.Vector;
 public class Analyster extends JFrame implements ITableNameConstants, IColumnConstants{
     
     // Edit the version and date it was created for new archives and jars
-    String creationDate = "2015-07-13";  
-    String version = "0.6.6d";   
+    private final String CREATION_DATE = "2015-07-13";  
+    private final String VERSION = "0.6.6d";   
     
     Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
 
-    private final TableService tableService = new TableService();
+    private TableService tableService = new TableService();
     private TableRowFilterSupport tableRowFilterSupport;
     private LoadTables loadTables;
     private JTableHeader header;
@@ -783,8 +783,8 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     private void jMenuItemFileVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFileVersionActionPerformed
 
         JOptionPane.showMessageDialog(this, "Creation Date: "
-                + creationDate + "\n"
-                + "Version: " + version);
+                + CREATION_DATE + "\n"
+                + "Version: " + VERSION);
     }//GEN-LAST:event_jMenuItemFileVersionActionPerformed
 
     private void textFieldForSearchMouseClicked(MouseEvent evt) {//GEN-FIRST:event_textFieldForSearchMouseClicked
