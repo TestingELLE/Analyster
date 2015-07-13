@@ -7,6 +7,7 @@ package com.elle.analyster.presentation.filter;
  */
 
 
+import com.elle.analyster.CommandAction;
 import com.elle.analyster.GUI;
 import com.elle.analyster.PopupWindow;
 
@@ -104,19 +105,28 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
         commands.add(toolbar);
 
         commands.add(Box.createHorizontalGlue());
-
-        JButton apply = new JButton(new PopupWindow.CommandAction("Apply") {
+        
+        // create apply action performed and set menu
+        CommandAction applyBtnCommandAction = new CommandAction("Apply"){
 
             @Override
             protected boolean perform() {
                 return applyColumnFilter();
             }
-        });
+        };
+        
+        applyBtnCommandAction.setMenu(this.getMenu());
+
+        JButton apply = new JButton(applyBtnCommandAction);
         
         commands.add(apply);
+        
+        // add commandAction for the cancel button and set the menu
+        CommandAction cancelBtnCommandAction = new CommandAction("Cancel");
+        cancelBtnCommandAction.setMenu(this.getMenu());
 
         commands.add(Box.createHorizontalStrut(5));
-        commands.add(new JButton(new PopupWindow.CommandAction("Cancel")));
+        commands.add(new JButton(cancelBtnCommandAction));
         commands.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
         commands.setBackground(UIManager.getColor("Panel.background"));
         commands.setOpaque(true);
