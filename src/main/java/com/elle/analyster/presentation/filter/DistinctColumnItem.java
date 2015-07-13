@@ -2,7 +2,7 @@ package com.elle.analyster.presentation.filter;
 
 import java.math.BigDecimal;
 
-public class DistinctColumnItem implements Comparable<DistinctColumnItem>, IValueWrapper<Object> {
+public class DistinctColumnItem implements Comparable<DistinctColumnItem> {
 
     private final Object value;
     private final int row;
@@ -12,7 +12,6 @@ public class DistinctColumnItem implements Comparable<DistinctColumnItem>, IValu
         this.row = row;
     }
 
-    @Override
     public Object getValue() {
         return value;
     }

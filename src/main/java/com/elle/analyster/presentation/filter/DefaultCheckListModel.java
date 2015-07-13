@@ -116,8 +116,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
 
             Object value;
             for (T o : dataList) {
-                //if ( t.translate(o).startsWith(f)) {
-                value = o instanceof IValueWrapper? ((IValueWrapper<?>)o).getValue(): o;
+                value = o;
                 if ( filter.include(t.translate(value), p)) {
                     fDataList.add(o);
                     fDataSet.add(o);
