@@ -32,10 +32,18 @@ import javax.swing.event.PopupMenuListener;
 
 public abstract class PopupWindow {
 
-    private final JPopupMenu menu;
+    // class variables
+    private JPopupMenu menu;
     private Dimension defaultSize = new Dimension(100,100);
 
+    /**
+     * CONSTRUCTOR
+     * PopupWindow
+     * @param resizable 
+     */
     public PopupWindow( boolean resizable ) {
+        
+        // ResizablePopupMenu is a JPopupMenu
         menu = new ResizablePopupMenu( resizable ) {
 
             private static final long serialVersionUID = 1L;
@@ -59,7 +67,75 @@ public abstract class PopupWindow {
 
         };
     }
+    
+    /**************************************************************************
+     * *************** ResizablePopupMenu Class ****** ************************
+     **************************************************************************/
 
+    class ResizablePopupMenu extends JPopupMenu implements PopupMenuListener {
+
+        private static final long serialVersionUID = 1L;
+
+        private static final int DOT_SIZE = 2;
+        private static final int DOT_START = 2;
+        private static final int DOT_STEP = 4;
+
+        private final boolean resizable;
+
+        public ResizablePopupMenu( boolean resizable ) {
+            super();
+            this.resizable = resizable;
+            if ( resizable ) PopupMenuResizer.decorate(this);
+            //addPopupMenuListener(this);
+        }
+
+        @Override
+        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+
+        @Override
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+
+        @Override
+        public  void popupMenuCanceled(PopupMenuEvent e) {}
+
+        @Override
+        public void paintChildren(Graphics g) {
+            super.paintChildren(g);
+            if ( resizable ) drawResizer(g);
+        }
+
+        private void drawResizer(Graphics g) {
+
+            int x = getWidth()-2;
+            int y = getHeight()-2;
+
+            Graphics g2 = g.create();
+
+            try {
+                for ( int dy = DOT_START, j = 2; j > 0; j--, dy += DOT_STEP ) {
+                    for( int dx = DOT_START, i = 0; i < j; i++, dx += DOT_STEP ) {
+                        drawDot( g2, x-dx, y-dy );
+                    }
+                }
+            } finally {
+                g2.dispose();
+            }
+
+        };
+
+        private void drawDot( Graphics g, int x, int y) {
+            g.setColor(Color.WHITE);
+            g.fillRect( x, y, DOT_SIZE, DOT_SIZE);
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect( x-1, y-1, DOT_SIZE, DOT_SIZE);
+        }
+
+    }
+
+
+    /**************************************************************************
+     * *************** PopupWindow Class methods ******************************
+     **************************************************************************/
     public final Dimension getDefaultSize() {
         return defaultSize;
     }
@@ -110,6 +186,10 @@ public abstract class PopupWindow {
     protected void beforeHide() {}
     
     
+    /**************************************************************************
+     * *************** CommandAction Class ****** ******************************
+     **************************************************************************/
+    
     /**
      * Simple action to for the popup window.
      * To use - override perform method. 
@@ -117,6 +197,7 @@ public abstract class PopupWindow {
      * Created on Feb 4, 2011
      * @author Eugene Ryzhikov
      *
+     * This class is used in TableFilterColumnPopup
      */
     public class CommandAction extends AbstractAction {
 
@@ -150,65 +231,10 @@ public abstract class PopupWindow {
     }
 }
 
-class ResizablePopupMenu extends JPopupMenu implements PopupMenuListener {
 
-    private static final long serialVersionUID = 1L;
-
-    private static final int DOT_SIZE = 2;
-    private static final int DOT_START = 2;
-    private static final int DOT_STEP = 4;
-
-    private final boolean resizable;
-
-    public ResizablePopupMenu( boolean resizable ) {
-        super();
-        this.resizable = resizable;
-        if ( resizable ) PopupMenuResizer.decorate(this);
-        addPopupMenuListener(this);
-    }
-
-    @Override
-    public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
-
-    @Override
-    public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
-
-    @Override
-    public  void popupMenuCanceled(PopupMenuEvent e) {}
-
-    @Override
-    public void paintChildren(Graphics g) {
-        super.paintChildren(g);
-        if ( resizable ) drawResizer(g);
-    }
-
-    private void drawResizer(Graphics g) {
-
-        int x = getWidth()-2;
-        int y = getHeight()-2;
-
-        Graphics g2 = g.create();
-        
-        try {
-            for ( int dy = DOT_START, j = 2; j > 0; j--, dy += DOT_STEP ) {
-                for( int dx = DOT_START, i = 0; i < j; i++, dx += DOT_STEP ) {
-                    drawDot( g2, x-dx, y-dy );
-                }
-            }
-        } finally {
-            g2.dispose();
-        }
-
-    };
-
-    private void drawDot( Graphics g, int x, int y) {
-        g.setColor(Color.WHITE);
-        g.fillRect( x, y, DOT_SIZE, DOT_SIZE);
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect( x-1, y-1, DOT_SIZE, DOT_SIZE);
-    }
-
-}
+/**************************************************************************
+ * *************** PopupMenuResizer Class ****** ************************
+ **************************************************************************/
 
 /**
  * Allows to resize popup with the mouse.
@@ -219,21 +245,15 @@ class ResizablePopupMenu extends JPopupMenu implements PopupMenuListener {
  */
 final class PopupMenuResizer extends MouseAdapter {
 
+    // class attributes
     private final JPopupMenu menu;
-
     private static final int REZSIZE_SPOT_SIZE = 10;
-
     private Point mouseStart = new Point( Integer.MIN_VALUE, Integer.MIN_VALUE );
-
     private Dimension startSize;
-
     private boolean isResizing = false;
 
 
-    public static void decorate( JPopupMenu menu ) {
-        new PopupMenuResizer( menu );
-    }
-
+    // CONSTRUCTOR
     private PopupMenuResizer( JPopupMenu menu ) {
         this.menu = menu;
         this.menu.setLightWeightPopupEnabled(true);
@@ -241,6 +261,10 @@ final class PopupMenuResizer extends MouseAdapter {
         menu.addMouseMotionListener(this);
     }
 
+    public static void decorate( JPopupMenu menu ) {
+        new PopupMenuResizer( menu );
+    }
+    
     private boolean isInResizeSpot( Point point ) {
 
         if ( point == null ) return false;
