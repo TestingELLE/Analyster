@@ -44,6 +44,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     private TableRowFilterSupport tableRowFilterSupport;
     private LoadTables loadTables;
     private JTableHeader header;
+    private DeleteRecord deleteRecord;
     
     private static Analyster instance;
     private Logger log = LoggerFactory.getLogger(Analyster.class);
@@ -1103,7 +1104,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     }//GEN-LAST:event_jMenuItemLogOffActionPerformed
 
     private void jDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
-        DeleteRecord deleteRecord = new DeleteRecord();
+        deleteRecord = new DeleteRecord();
         String selectedTab = getSelectedTab();
         String sqlDelete;
 
