@@ -44,11 +44,13 @@ public class CommandAction extends AbstractAction {
 
     @Override
     public final void actionPerformed(ActionEvent e) {
-        if ( perform() ) hide();
+        if ( perform() ) hide(); // always returns true
     }
     /**
      * Preforms action
      * @return true if popup should be closed
+     * 
+     * This method is overriden in TableFilterColumnPopup
      */
     protected boolean perform(){
         return true;
