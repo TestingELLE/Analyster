@@ -44,7 +44,7 @@ public class PopupMenuResizer extends MouseAdapter {
         menu.addMouseMotionListener(this);
     }
 
-    public void decorate( JPopupMenu menu ) {
+    public static void decorate( JPopupMenu menu ) {
         new PopupMenuResizer( menu );
     }
     
