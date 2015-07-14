@@ -7,6 +7,7 @@ package com.elle.analyster.presentation.filter;
  */
 
 
+import com.elle.analyster.Analyster;
 import com.elle.analyster.CommandAction;
 import com.elle.analyster.GUI;
 import com.elle.analyster.ResizablePopupMenu;
@@ -133,6 +134,8 @@ class TableFilterColumnPopup implements MouseListener {
     /**
      * buildContent
      * @return 
+     * 
+     * This sets the buttons and actions for the popup menu
      */
     protected JComponent buildContent() {
         JPanel owner = new JPanel(new BorderLayout(3, 3));
@@ -182,8 +185,12 @@ class TableFilterColumnPopup implements MouseListener {
     /**
      * applyColumnFilter
      * @return 
+     * 
+     * This is the action performed for apply button
      */
     public boolean applyColumnFilter() {
+        
+        // apply filter
         Collection<DistinctColumnItem> checked = filterList.getCheckedItems();
         ICheckListModel<DistinctColumnItem> model = filterList.getModel();
         myTableModelInitial = filter.getTable().getModel();
@@ -192,6 +199,13 @@ class TableFilterColumnPopup implements MouseListener {
         filter.saveFilterCriteria(checked);
         filter.setColumnIndex(mColumnIndex);
         gui.columnFilterStatus(mColumnIndex, filter.getTable());
+        
+        // update records
+        Analyster analyster = Analyster.getInstance();
+        String selectedTab = analyster.getSelectedTab();
+        String labelMsg = analyster.getTabs().get(selectedTab).getRecordsLabel();
+        analyster.getRecordsLabel().setText(labelMsg);
+        
         return true;
     }
 
