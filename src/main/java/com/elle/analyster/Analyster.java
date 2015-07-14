@@ -1793,7 +1793,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         this.tabs = tabs;
     }
     
-    private String getSelectedTab() {
+    public String getSelectedTab() {
         return tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
     }
 
