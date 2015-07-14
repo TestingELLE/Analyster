@@ -9,7 +9,7 @@ package com.elle.analyster.presentation.filter;
 
 import com.elle.analyster.CommandAction;
 import com.elle.analyster.GUI;
-import com.elle.analyster.PopupWindow;
+import com.elle.analyster.ResizablePopupMenu;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
@@ -23,8 +23,9 @@ import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.event.PopupMenuEvent;
 
-class TableFilterColumnPopup extends PopupWindow implements MouseListener {
+class TableFilterColumnPopup implements MouseListener {
 
     // this calls the build method
     private final CheckList<DistinctColumnItem> filterList = new CheckList.Builder().build();
@@ -43,11 +44,39 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
     private boolean useTableRenderers = false;
     private TableModel myTableModelInitial;
     private GUI gui = new GUI();
+    
+    // class variables
+    private ResizablePopupMenu menu;
+    private Dimension defaultSize = new Dimension(100,100);
+    
 
     @SuppressWarnings("static-access")
     public TableFilterColumnPopup(JTableFilter filter) {
 
-        super(true); // PopupWindow( resizable = true )
+        //super(true); // PopupWindow( resizable = true )
+        // ResizablePopupMenu is a JPopupMenu
+        menu = new ResizablePopupMenu( true ) {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                if ( menu.getComponentCount() == 0 ) {
+                    JComponent content = buildContent();
+                    defaultSize = content.getPreferredSize();
+                    
+                    menu.add( content );
+
+                }
+                beforeShow();
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                beforeHide();
+            }
+
+        };
 
         this.filter = filter;
         
@@ -93,8 +122,6 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
         }
     }
 
-    @SuppressWarnings("serial")
-    @Override
     protected JComponent buildContent() {
         JPanel owner = new JPanel(new BorderLayout(3, 3));
         owner.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -250,7 +277,6 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
         return attrs;
     }
 
-    @Override
     public void beforeHide() {
         // save pop-up's dimensions before pop-up becomes hidden
         getColumnAttrs(mColumnIndex).preferredSize = getPreferredSize();
@@ -273,4 +299,46 @@ class TableFilterColumnPopup extends PopupWindow implements MouseListener {
         public Dimension preferredSize;
     }
 
+    
+    /**************************************************************************
+     * ******************** PopupWindow Methods *******************************
+     **************************************************************************/
+    
+    public final Dimension getDefaultSize() {
+        return defaultSize;
+    }
+
+    public final Dimension getPreferredSize() {
+        return menu.getPreferredSize();
+    }
+
+    public final void setPreferredSize( Dimension preferredSize ) {
+        menu.setPreferredSize(preferredSize);
+    }
+
+
+    /**
+     * Shows Popup in predefined location
+     * @param invoker
+     * @param x
+     * @param y
+     */
+    public void show( Component invoker, int x, int y ) {
+        menu.show( invoker, x, y );
+    }
+
+    /**
+     * Shows popup in predefined location
+     * @param invoker
+     * @param location
+     */
+    public void show( Component invoker, Point location ) {
+        show( invoker, location.x, location.y );
+    }
+
+    protected void beforeShow() {}
+
+    public JPopupMenu getMenu() {
+        return menu;
+    }
 }
