@@ -85,7 +85,7 @@ public class TableRowFilterSupport {
         FilterTableHeaderRenderer headerRenderer =
                 new FilterTableHeaderRenderer(filter, filterIconPlacement);
         
-        filter.modelChanged( table.getModel() ); 
+        filter.modelChanged( table.getModel() );  // wouldn't this be the same filter?
 
         for( TableColumn c:  Collections.list( table.getColumnModel().getColumns()) ) {
             c.setHeaderRenderer( headerRenderer );
