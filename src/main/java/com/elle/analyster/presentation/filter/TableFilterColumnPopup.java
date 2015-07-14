@@ -27,33 +27,30 @@ import javax.swing.event.PopupMenuEvent;
 
 class TableFilterColumnPopup implements MouseListener {
 
-    // this calls the build method
-    private final CheckList<DistinctColumnItem> filterList = new CheckList.Builder().build();
-    
-    // column Attributes?
-    private final Map<Integer, ColumnAttrs> colAttrs = new HashMap<Integer, ColumnAttrs>();
-    
-    // this is the actions for the buttons (Apply & Cancel)
-    CommandAction commandAction;
-    
-    
+    // class attributes
+    private final CheckList<DistinctColumnItem> filterList = new CheckList.Builder().build(); // this calls the build method
+    private final Map<Integer, ColumnAttrs> colAttrs = new HashMap<Integer, ColumnAttrs>(); // column Attributes?
+    private Dimension defaultSize = new Dimension(100,100);
     private boolean enabled = false;
     private int mColumnIndex = -1;
-    private JTableFilter filter;
     private boolean actionsVisible = true;
     private boolean useTableRenderers = false;
-    private TableModel myTableModelInitial;
-    private GUI gui = new GUI();
     
-    // class variables
-    private ResizablePopupMenu menu;
-    private Dimension defaultSize = new Dimension(100,100);
+    // components
+    private JTableFilter filter; // JTable filter
+    private TableModel myTableModelInitial; // initial table model
+    private GUI gui = new GUI(); // this is usually static and an instance is usually not used
+    private CommandAction commandAction; // this is the actions for the buttons (Apply & Cancel)
+    private ResizablePopupMenu menu; // JPopupMenu
     
 
-    @SuppressWarnings("static-access")
+    /**
+     * CONSTRUCTOR
+     * TableFilterColumnPopup
+     * @param filter 
+     */
     public TableFilterColumnPopup(JTableFilter filter) {
 
-        //super(true); // PopupWindow( resizable = true )
         // ResizablePopupMenu is a JPopupMenu
         menu = new ResizablePopupMenu( true ) {
 
@@ -107,14 +104,25 @@ class TableFilterColumnPopup implements MouseListener {
 
     }
 
+    /**
+     * setActionsVisible
+     * @param actionsVisible 
+     */
     public void setActionsVisible(boolean actionsVisible) {
         this.actionsVisible = actionsVisible;
     }
 
+    /**
+     * setUseTableRenderers
+     * @param reuseRenderers 
+     */
     public void setUseTableRenderers(boolean reuseRenderers) {
         this.useTableRenderers = reuseRenderers;
     }
 
+    /**
+     * setupTableHeader
+     */
     private void setupTableHeader() {
         JTableHeader header = filter.getTable().getTableHeader();
         if (header != null) {
@@ -122,6 +130,10 @@ class TableFilterColumnPopup implements MouseListener {
         }
     }
 
+    /**
+     * buildContent
+     * @return 
+     */
     protected JComponent buildContent() {
         JPanel owner = new JPanel(new BorderLayout(3, 3));
         owner.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -167,6 +179,10 @@ class TableFilterColumnPopup implements MouseListener {
 
     }
 
+    /**
+     * applyColumnFilter
+     * @return 
+     */
     public boolean applyColumnFilter() {
         Collection<DistinctColumnItem> checked = filterList.getCheckedItems();
         ICheckListModel<DistinctColumnItem> model = filterList.getModel();
@@ -179,22 +195,42 @@ class TableFilterColumnPopup implements MouseListener {
         return true;
     }
 
+    /**
+     * getMyTableModelInitial
+     * @return 
+     */
     TableModel getMyTableModelInitial() {
         return myTableModelInitial;
     }
 
+    /**
+     * getFilter
+     * @return 
+     */
     public JTableFilter getFilter() {
         return filter;
     }
 
+    /**
+     * getTable
+     * @return 
+     */
     public JTable getTable() { 
         return filter.getTable();
     }
 
+    /**
+     * isEnabled
+     * @return 
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * setEnabled
+     * @param enabled 
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -208,6 +244,10 @@ class TableFilterColumnPopup implements MouseListener {
     // This is the mouselistener for the check list window
     // this window is right-click on table header or ctrl-click depending on platform
     
+    /**
+     * mousePressed
+     * @param e 
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         if (enabled && e.isPopupTrigger()) {
@@ -215,6 +255,10 @@ class TableFilterColumnPopup implements MouseListener {
         }
     }
 
+    /**
+     * mouseReleased
+     * @param e 
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         if (enabled && e.isPopupTrigger()) {
@@ -222,7 +266,11 @@ class TableFilterColumnPopup implements MouseListener {
         }
     }
 
-    @SuppressWarnings("unchecked")
+
+    /**
+     * showFilterPopup
+     * @param e 
+     */
     private void showFilterPopup(MouseEvent e) {
         JTableHeader header = (JTableHeader) (e.getSource());
         TableColumnModel colModel = filter.getTable().getColumnModel();
@@ -267,6 +315,11 @@ class TableFilterColumnPopup implements MouseListener {
         show(header, headerRect.x, header.getHeight());
     }
 
+    /**
+     * getColumnAttrs
+     * @param column
+     * @return 
+     */
     private ColumnAttrs getColumnAttrs(int column) {
         ColumnAttrs attrs = colAttrs.get(column);
         if (attrs == null) {
@@ -277,26 +330,45 @@ class TableFilterColumnPopup implements MouseListener {
         return attrs;
     }
 
+    /**
+     * beforeHide
+     */
     public void beforeHide() {
         // save pop-up's dimensions before pop-up becomes hidden
         getColumnAttrs(mColumnIndex).preferredSize = getPreferredSize();
     }
 
+    /**
+     * mouseClicked
+     * @param e 
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
     }
 
+    /**
+     * mouseEntered
+     * @param e 
+     */
     @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    /**
+     * mouseExited
+     * @param e 
+     */
     @Override
     public void mouseExited(MouseEvent e) {
     }
 
+    /**
+     * CLASS
+     * ColumnAttrs
+     */
     static class ColumnAttrs {
 
-        public Dimension preferredSize;
+        public Dimension preferredSize; // No methods?
     }
 
     
@@ -304,14 +376,26 @@ class TableFilterColumnPopup implements MouseListener {
      * ******************** PopupWindow Methods *******************************
      **************************************************************************/
     
+    /**
+     * getDefaultSize
+     * @return 
+     */
     public final Dimension getDefaultSize() {
         return defaultSize;
     }
 
+    /**
+     * getPreferredSize
+     * @return 
+     */
     public final Dimension getPreferredSize() {
         return menu.getPreferredSize();
     }
 
+    /**
+     * setPreferredSize
+     * @param preferredSize 
+     */
     public final void setPreferredSize( Dimension preferredSize ) {
         menu.setPreferredSize(preferredSize);
     }
@@ -336,8 +420,15 @@ class TableFilterColumnPopup implements MouseListener {
         show( invoker, location.x, location.y );
     }
 
+    /**
+     * beforeShow
+     */
     protected void beforeShow() {}
 
+    /**
+     * getMenu
+     * @return 
+     */
     public JPopupMenu getMenu() {
         return menu;
     }
