@@ -60,10 +60,10 @@ class TableFilterColumnPopup implements MouseListener {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 if ( menu.getComponentCount() == 0 ) {
-                    JComponent content = buildContent();
+                    JComponent content = buildContent(); // this builds the window JPanel
                     defaultSize = content.getPreferredSize();
                     
-                    menu.add( content );
+                    menu.add( content ); //add JPanel with content to the JPopupMenu
 
                 }
                 beforeShow();
@@ -135,7 +135,8 @@ class TableFilterColumnPopup implements MouseListener {
      * buildContent
      * @return 
      * 
-     * This sets the buttons and actions for the popup menu
+     * This builds the JPanel that has a list for the checkbox items
+     * and a command box for the command buttons apply & cancel
      */
     protected JComponent buildContent() {
         JPanel owner = new JPanel(new BorderLayout(3, 3));
@@ -168,17 +169,18 @@ class TableFilterColumnPopup implements MouseListener {
         
         // add commandAction for the cancel button and set the menu
         commandAction = new CommandAction("Cancel");
-        commandAction.setMenu(this.getMenu());
+        commandAction.setMenu(this.getMenu()); // pass this menu reference
 
         commands.add(Box.createHorizontalStrut(5));
         commands.add(new JButton(commandAction));
         commands.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
         commands.setBackground(UIManager.getColor("Panel.background"));
         commands.setOpaque(true);
-        owner.add(new JScrollPane(filterList.getList()), BorderLayout.CENTER);
-        owner.add(commands, BorderLayout.SOUTH);
+        // owner is the JPanel
+        owner.add(new JScrollPane(filterList.getList()), BorderLayout.CENTER); // add list to center
+        owner.add(commands, BorderLayout.SOUTH); // add command buttons to south of panel
 
-        return owner;
+        return owner; // return JPanel
 
     }
 
