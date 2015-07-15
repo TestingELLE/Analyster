@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 // * Created on Feb 4, 2011
 // * @author Eugene Ryzhikov
 // *
+// * This is called from CheckList
 // */
 final class CheckListEditor extends MouseAdapter {
     
