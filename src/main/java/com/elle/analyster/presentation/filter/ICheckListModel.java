@@ -3,6 +3,12 @@ package com.elle.analyster.presentation.filter;
 import javax.swing.*;
 import java.util.Collection;
 
+/**
+ * INTERFACE ICheckListModel<T> 
+ * this is implemented in 
+ * ActionCheckListModel & DefaultCheckListModel
+ * @param <T> 
+ */
 public interface ICheckListModel<T> extends ListModel{
 
     /**
