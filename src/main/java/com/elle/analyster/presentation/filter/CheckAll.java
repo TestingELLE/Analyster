@@ -13,15 +13,23 @@ import java.util.Collection;
  * 1 usage from ActionCheckListModel
  * @param <T> 
  */
-public class CheckAll<T> implements ICheckListAction<T> {
+public class CheckAll<T> {
 
+    /**
+     * toString
+     * @return 
+     */
     @Override
     public String toString() {
         return "(All)";
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
+    /**
+     * check
+     * 0 usages
+     * @param model
+     * @param value 
+     */
     public void check(ICheckListModel<T> model, boolean value) {
         Collection<T> items = new ArrayList<>();
         if (value) {

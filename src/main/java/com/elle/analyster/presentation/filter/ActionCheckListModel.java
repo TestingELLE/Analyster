@@ -9,11 +9,11 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
     private final List<ListDataListener> listeners = Collections.synchronizedList( new ArrayList<ListDataListener>());
     private final ICheckListModel<T> originalModel;
     
-    private final ICheckListAction<T> actionCheckAll = new CheckAll<T>();
+    private final CheckAll<T> actionCheckAll = new CheckAll<T>();
     
     @SuppressWarnings("unchecked")
-    private final List<ICheckListAction<T>> actionItems = Arrays.asList( actionCheckAll );
-    private final Set<ICheckListAction<T>> checks = new HashSet<ICheckListAction<T>>();
+    private final List<CheckAll<T>> actionItems = Arrays.asList( actionCheckAll );
+    private final Set<CheckAll<T>> checks = new HashSet<CheckAll<T>>();
     
     public ActionCheckListModel( final ICheckListModel<T> originalModel ) {
         
@@ -121,7 +121,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
     @Override
     public void setCheckedIndex(int index, boolean value) {
         if ( isDecoratedIndex(index)) {
-            ICheckListAction<T> item = actionItems.get(index);
+            CheckAll<T> item = actionItems.get(index);
             item.check(originalModel, value);
             if ( value ) checks.add(item); else checks.remove(item);
             fireListDataChanged();
