@@ -12,6 +12,8 @@ import javax.swing.table.TableCellRenderer;
  * @author cigreja
  * This class has one method and extends CheckListRenderer
  * Maybe it can just be added to the CheckListRenderer?
+ * I tried to merge it but it didn't work,
+ * It can be tricky because this method is overriding the method in CheckListRenderer
  */
 public class TableAwareCheckListRenderer extends CheckListRenderer {
     
