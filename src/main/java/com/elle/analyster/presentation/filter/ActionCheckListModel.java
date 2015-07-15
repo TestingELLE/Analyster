@@ -9,7 +9,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
     private final List<ListDataListener> listeners = Collections.synchronizedList( new ArrayList<ListDataListener>());
     private final ICheckListModel<T> originalModel;
     
-    private final ICheckListAction<T> actionCheckAll = new ICheckListAction.CheckAll<T>();
+    private final ICheckListAction<T> actionCheckAll = new CheckAll<T>();
     
     @SuppressWarnings("unchecked")
     private final List<ICheckListAction<T>> actionItems = Arrays.asList( actionCheckAll );
