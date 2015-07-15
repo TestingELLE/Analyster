@@ -65,6 +65,10 @@ public class CheckList<T> {
 
     }
 
+    /**
+     * setupKeyboardActions
+     * @param list 
+     */
     @SuppressWarnings("serial")
     private void setupKeyboardActions(final JList list) {
         String actionKey = "toggle-check";
@@ -76,7 +80,12 @@ public class CheckList<T> {
                 toggleIndex(list.getSelectedIndex());
             }});
     }
-    
+    /**
+     * isEditorAttached
+     * the editor is actually a mouselistener
+     * this checks if the mouselistener is attached to the Jlist
+     * @return 
+     */
     private boolean isEditorAttached() {
         
         for( MouseListener ml: list.getMouseListeners() ) {
@@ -86,11 +95,16 @@ public class CheckList<T> {
         
     }
     
+    /**
+     * getList
+     * @return 
+     */
     public JList getList() {
         return list;
     }
     
     /**
+     * setData
      * Sets data to a check list. Simplification for setting new the model 
      * @param data
      */
@@ -99,6 +113,7 @@ public class CheckList<T> {
     }
     
     /**
+     * setModel
      * Sets the model for check list.
      * @param model
      */
@@ -106,12 +121,17 @@ public class CheckList<T> {
         list.setModel(model);
     }
     
+    /**
+     * getModel
+     * @return 
+     */
     @SuppressWarnings("unchecked")
     public ICheckListModel<T> getModel() {
         return (ICheckListModel<T>) list.getModel();
     }
 
     /**
+     * getCheckedItems
      * Returns a collection of checked items. 
      * @return collection of checked items. Empty collection if nothing is selected
      */
@@ -120,6 +140,7 @@ public class CheckList<T> {
     }
 
     /**
+     * setCheckedItems
      * Resets checked elements 
      * @param elements
      */
@@ -128,6 +149,7 @@ public class CheckList<T> {
     }
     
     /**
+     * filter
      * Filters list view without losing actual data
      * @param pattern
      * @param translator
@@ -136,6 +158,10 @@ public class CheckList<T> {
         getModel().filter(pattern, listFilter);
     }
     
+    /**
+     * toggleIndex
+     * @param index 
+     */
     public void toggleIndex( int index ) {
         if ( index >= 0 && index < list.getModel().getSize()) {
             ICheckListModel<T> model = getModel();
