@@ -95,7 +95,10 @@ class TableFilterState implements Serializable {
      */
     public boolean include( JTableFilter.Row entry ) {                 //////////////// Include in new data
     
+        // check every column
         for( int col=0; col< entry.getValueCount(); col++ ) {
+            
+            // get filter values
             Collection<DistinctColumnItem> values = getValues(col);
             if ( CollectionUtils.isEmpty(values) ) continue; // no filtering for this column
             
@@ -105,8 +108,12 @@ class TableFilterState implements Serializable {
             // handle null exception
             if(entry.getValue(col) == null) value = "";
             
-            if ( !values.contains( new DistinctColumnItem( value, 0))) {return false;}
+            
+            if ( !values.contains( new DistinctColumnItem( value, 0))) {
+                return false;
+            } 
         }
+
         return true;
         
     }

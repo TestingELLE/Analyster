@@ -22,6 +22,7 @@ import javax.swing.event.TableModelListener;
  */
 public class JTableFilter {
 
+    // this is a nested class here
     private TableRowFilter filter = new TableRowFilter();
     
     private int columnIndex = -1;
@@ -75,6 +76,11 @@ public class JTableFilter {
      * @param selectField
      */
     public void apply(int col, Object selectField) { //Create Collection from selected fields 
+        
+        // set the column and string to match to the TableRowFilter
+        filter.setCol(col);
+        filter.setStr(selectField.toString());
+        
         Collection<DistinctColumnItem> item = new ArrayList<>();
         
         // handle null exceptions
@@ -108,11 +114,11 @@ public class JTableFilter {
 
         // DRS is now passed this filter to be set
         // this points to the table filter
-        drs.setRowFilter(filter);
+        drs.setRowFilter(filter); // this calls the equals method in DistinctColumnItem
 
         // this was the IFilterChangeListener implementation
         table.getTableHeader().repaint();
-        table.getModel().getRowCount();
+        table.getModel().getRowCount(); // not sure if this is needed
     }
 
     /**
@@ -251,6 +257,8 @@ public class JTableFilter {
     class TableRowFilter extends RowFilter<Object, Object>  {
 
         private RowFilter<Object, Object> parentFilter; // extend and then make one?
+        private int col; // the column index
+        private String str; // the string to match
 
         /**
          * setParentFilter
@@ -262,6 +270,24 @@ public class JTableFilter {
         }
 
         /**
+         * setCol
+         * @param col 
+         */
+        public void setCol(int col) {
+            this.col = col;
+        }
+
+        /**
+         * setStr
+         * @param str 
+         */
+        public void setStr(String str) {
+            this.str = str;
+        }
+        
+        
+
+        /**
          * include
          * this method is only called once from itself
          * @param entry
@@ -270,6 +296,13 @@ public class JTableFilter {
         @Override
         public boolean include(final Entry<? extends Object, ? extends Object> entry) {
 
+            // test
+            // this code only appears to work for the search text box
+//            
+//            if(entry.getStringValue(col).equalsIgnoreCase(str)){
+//                return true;
+//            }
+//            
             // use parent filter condition
             if (parentFilter != null && !parentFilter.include(entry)) {
                 return false;

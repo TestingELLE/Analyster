@@ -833,8 +833,9 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
             // apply changes to filter
             tableRowFilterSupport.getFilter().apply(columnIndex, selectedField);
             
-            
+            // this sets the column header green
             GUI.columnFilterStatus(columnIndex, tabs.get(selectedTab).getFilter().getTable());
+            
             // set label record information
             labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
             
