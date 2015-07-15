@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elle</groupId>
     <artifactId>Analyster</artifactId>
-    <version>0.6.6d</version>
+    <version>0.6.6e</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
