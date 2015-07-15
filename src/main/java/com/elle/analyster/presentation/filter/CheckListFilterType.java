@@ -2,6 +2,10 @@ package com.elle.analyster.presentation.filter;
 
 import java.util.regex.PatternSyntaxException;
 
+/**
+ * ENUM CheckListFilterType
+ * This is called from TableFilterColumnPopup & DefaultCheckListModel
+ */
 public enum CheckListFilterType implements IListFilter {
 
     STARTS_WITH {
