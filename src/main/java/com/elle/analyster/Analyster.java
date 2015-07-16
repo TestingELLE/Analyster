@@ -6,7 +6,6 @@ import com.elle.analyster.presentation.filter.JTableFilter;
 import com.elle.analyster.presentation.filter.TableRowFilterSupport;
 import static com.elle.analyster.service.Connection.connection;
 import com.elle.analyster.service.DeleteRecord;
-import com.elle.analyster.service.TableService;
 import com.elle.analyster.service.UploadRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +43,6 @@ public class Analyster extends JFrame implements ITableConstants{
     
     Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
 
-    private TableService tableService = new TableService();
     private TableRowFilterSupport tableRowFilterSupport;
     private LoadTables loadTables;
     private JTableHeader header;
@@ -87,12 +85,6 @@ public class Analyster extends JFrame implements ITableConstants{
         assignmentTable.setName(ASSIGNMENTS_TABLE_NAME);
         reportTable.setName(REPORTS_TABLE_NAME);
         archiveTable.setName(ARCHIVE_TABLE_NAME);
-        
-        // I COMMENTED THESE OUT AND IT WORKED FINE !!
-        tableService.setAssignmentTable(assignmentTable);
-        tableService.setReportTable(reportTable);
-        tableService.setArchiveAssignTable(archiveTable);
-        tableService.setViewerTable(assignmentTable);
         
         // set tables to tab objects
         tabs.get(ASSIGNMENTS_TABLE_NAME).setTable(assignmentTable);
@@ -1202,13 +1194,107 @@ public class Analyster extends JFrame implements ITableConstants{
     }//GEN-LAST:event_jMenuItemOthersLoadDataActionPerformed
 
     private void jArchiveRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jArchiveRecordActionPerformed
-        tableService.archiveRecords();
 
+        int rowSelected = assignmentTable.getSelectedRows().length;
+        int[] rowsSelected = assignmentTable.getSelectedRows();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String today = dateFormat.format(date);
+
+        // Delete Selected Records from Assignments
+        if (rowSelected != -1) {
+            for (int i = 0; i < rowSelected; i++) {
+                String analyst = (String) assignmentTable.getValueAt(rowsSelected[i], 2);
+                Integer selectedTask = (Integer) assignmentTable.getValueAt(rowsSelected[i], 0); // Add Note to selected taskID
+                String sqlDelete = "UPDATE " + GUI.getDatabase() + "." + assignmentTable.getName() + " SET analyst = \"\",\n"
+                        + " priority=null,\n"
+                        + " dateAssigned= '" + today + "',"
+                        + " dateDone=null,\n"
+                        + " notes= \'Previous " + analyst + "' " + "where ID=" + selectedTask;
+                try {
+                    GUI.getStmt().executeUpdate(sqlDelete);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please, select one task!");
+        }
+        // Archive Selected Records in Assignments Archive
+        if (rowSelected != -1) {
+
+            for (int i = 0; i < rowSelected; i++) {
+                String sqlInsert = "INSERT INTO " + GUI.getDatabase() + "." + archiveTable.getName() + " (symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES (";
+                int numRow = rowsSelected[i];
+                for (int j = 1; j < assignmentTable.getColumnCount() - 1; j++) {
+                    if (assignmentTable.getValueAt(numRow, j) == null) {
+                        sqlInsert += null + ",";
+                    } else {
+                        sqlInsert += "'" + assignmentTable.getValueAt(numRow, j) + "',";
+                    }
+                }
+                if (assignmentTable.getValueAt(numRow, assignmentTable.getColumnCount() - 1) == null) {
+                    sqlInsert += null + ")";
+                } else {
+                    sqlInsert += "'" + assignmentTable.getValueAt(numRow, assignmentTable.getColumnCount() - 1) + "')";
+                }
+                try {
+                    GUI.getStmt().executeUpdate(sqlInsert);
+//                    logwind.sendMessages(sqlInsert);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            loadTables.loadTable(assignmentTable);
+            loadTables.loadTable(archiveTable);
+            assignmentTable.setRowSelectionInterval(rowsSelected[0], rowsSelected[rowSelected - 1]);
+            JOptionPane.showMessageDialog(null, rowSelected + " Record(s) Archived!");
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Please, select one task!");
+        }
     }//GEN-LAST:event_jArchiveRecordActionPerformed
 
     private void jActivateRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jActivateRecordActionPerformed
-        tableService.activateRecords();
+       
+        int rowSelected = archiveTable.getSelectedRows().length;
+        int[] rowsSelected = archiveTable.getSelectedRows();
+        // Archive Selected Records in Assignments Archive
+        if (rowSelected != -1) {
 
+            for (int i = 0; i < rowSelected; i++) {
+                String sqlInsert = "INSERT INTO " + GUI.getDatabase() + "." + assignmentTable.getName() + "(symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES ( ";
+                int numRow = rowsSelected[i];
+                for (int j = 1; j < archiveTable.getColumnCount() - 1; j++) {
+                    if (archiveTable.getValueAt(numRow, j) == null) {
+                        sqlInsert += null + ",";
+                    } else {
+                        sqlInsert += "'" + archiveTable.getValueAt(numRow, j) + "',";
+                    }
+                }
+                if (archiveTable.getValueAt(numRow, archiveTable.getColumnCount() - 1) == null) {
+                    sqlInsert += null + ")";
+                } else {
+                    sqlInsert += "'" + archiveTable.getValueAt(numRow, archiveTable.getColumnCount() - 1) + "')";
+                }
+                try {
+                    GUI.getStmt().executeUpdate(sqlInsert);
+//                    ana.getLogwind().sendMessages(sqlInsert);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    System.out.println(e.toString());
+                }
+            }
+
+            archiveTable.setRowSelectionInterval(rowsSelected[0], rowsSelected[0]);
+            loadTables.loadTable(archiveTable);
+            loadTables.loadTable(assignmentTable);
+
+            JOptionPane.showMessageDialog(null, rowSelected + " Record(s) Activated!");
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Please, select one task!");
+        }
     }//GEN-LAST:event_jActivateRecordActionPerformed
 
 //Filter is generated everytime that table is selected.
