@@ -30,7 +30,6 @@ public class AddRecords extends JFrame {
     private LogWindow log = new LogWindow();
     private String[] columnNames;
     private String tableName;
-    private AddRecordsTable info = new AddRecordsTable();
     private Logger logger = LoggerFactory.getLogger(AddRecords.class);
     private GUI gui = new GUI();
     private int numRowsAdded;  // number of rows added counter
