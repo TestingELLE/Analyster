@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.elle.analyster;
 
 import java.awt.Color;
@@ -25,7 +21,11 @@ public class ResizablePopupMenu extends JPopupMenu implements PopupMenuListener 
     private final boolean resizable;
     //private PopupMenuResizer popupMenuResizer;
 
-    // CONSTRUCTOR
+    /**
+     * CONSTRUCTOR
+     * ResizablePopupMenu
+     * @param resizable 
+     */
     public ResizablePopupMenu( boolean resizable ) {
         super();
         this.resizable = resizable;
@@ -33,21 +33,41 @@ public class ResizablePopupMenu extends JPopupMenu implements PopupMenuListener 
         addPopupMenuListener(this);
     }
 
+    /**
+     * popupMenuWillBecomeVisible
+     * @param e 
+     */
     @Override
     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
 
+    /**
+     * popupMenuWillBecomeInvisible
+     * @param e 
+     */
     @Override
     public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
 
+    /**
+     * popupMenuCanceled
+     * @param e 
+     */
     @Override
     public  void popupMenuCanceled(PopupMenuEvent e) {}
 
+    /**
+     * paintChildren
+     * @param g 
+     */
     @Override
     public void paintChildren(Graphics g) {
         super.paintChildren(g);
         if ( resizable ) drawResizer(g);
     }
 
+    /**
+     * drawResizer
+     * @param g 
+     */
     private void drawResizer(Graphics g) {
 
         int x = getWidth()-2;
@@ -67,6 +87,12 @@ public class ResizablePopupMenu extends JPopupMenu implements PopupMenuListener 
 
     };
 
+    /**
+     * drawDot
+     * @param g
+     * @param x
+     * @param y 
+     */
     private void drawDot( Graphics g, int x, int y) {
         g.setColor(Color.WHITE);
         g.fillRect( x, y, DOT_SIZE, DOT_SIZE);
