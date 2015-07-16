@@ -24,12 +24,29 @@ public class Tab implements ITableConstants{
     private boolean activateRecordMenuItemEnabled;
     private boolean archiveRecordMenuItemEnabled;
 
+    
     /**
-     * CONSTRUCTOR
+     * 
      */
     public Tab() {
         tableName = "";
         table = new JTable();
+        filteredTable = new JTable();
+        totalRecords = 0;
+        recordsShown = 0;
+        // filter is an instance and does not get initialized
+    }
+    
+    /**
+     * CONSTRUCTOR
+     * This would be the ideal constructor, but there are issues with 
+     * the initcomponents in Analyster so the tab must be initialized first
+     * then the table can be added
+     * @param table 
+     */
+    public Tab(JTable table) {
+        tableName = "";
+        this.table = table;
         filteredTable = new JTable();
         totalRecords = 0;
         recordsShown = 0;
@@ -119,6 +136,12 @@ public class Tab implements ITableConstants{
 
     public void setTableColNames(String[] tableColNames) {
         this.tableColNames = tableColNames;
+    }
+    
+    public void setTableColNames(JTable table) {
+        tableColNames = new String[table.getColumnCount()];
+        for (int i = 0; i < table.getColumnCount(); i++) 
+            tableColNames[i] = table.getColumnName(i);
     }
 
 

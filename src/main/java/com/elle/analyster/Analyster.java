@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+
 public class Analyster extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars
@@ -61,7 +62,7 @@ public class Analyster extends JFrame implements ITableConstants{
     @Autowired
     private UploadRecord uploadRecordService;
     
-    LoginWindow loginWindow;
+    private LoginWindow loginWindow;
     
     /**
      * CONSTRUCTOR
@@ -97,6 +98,14 @@ public class Analyster extends JFrame implements ITableConstants{
         tabs.get(ASSIGNMENTS_TABLE_NAME).setTable(assignmentTable);
         tabs.get(REPORTS_TABLE_NAME).setTable(reportTable);
         tabs.get(ARCHIVE_TABLE_NAME).setTable(archiveTable);
+        
+        // set array variable of stored column names of the tables
+        // this is just to store and use the information
+        // to actually change the table names it should be done
+        // through properties in the gui design tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableColNames(assignmentTable);
+        tabs.get(REPORTS_TABLE_NAME).setTableColNames(reportTable);
+        tabs.get(ARCHIVE_TABLE_NAME).setTableColNames(archiveTable);
         
         // set column width percents to tables of the tab objects
         tabs.get(ASSIGNMENTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
