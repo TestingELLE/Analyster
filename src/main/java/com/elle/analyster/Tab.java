@@ -18,6 +18,7 @@ public class Tab implements ITableConstants{
     private float[] colWidthPercent;
     private int totalRecords;
     private String[] tableColNames;
+    private String[] searchFields;
     private int recordsShown;
     
     // these menu items are enabled differently for each tab
@@ -143,6 +144,16 @@ public class Tab implements ITableConstants{
         for (int i = 0; i < table.getColumnCount(); i++) 
             tableColNames[i] = table.getColumnName(i);
     }
+
+    public String[] getSearchFields() {
+        return searchFields;
+    }
+
+    public void setSearchFields(String[] searchFields) {
+        this.searchFields = searchFields;
+    }
+    
+    
 
 
     /**************************************************************************

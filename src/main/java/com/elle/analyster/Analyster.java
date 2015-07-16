@@ -107,6 +107,17 @@ public class Analyster extends JFrame implements ITableConstants{
         tabs.get(REPORTS_TABLE_NAME).setTableColNames(reportTable);
         tabs.get(ARCHIVE_TABLE_NAME).setTableColNames(archiveTable);
         
+        // set the search fields for the comboBox for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setSearchFields(ASSIGNMENTS_SEARCH_FIELDS);
+        tabs.get(REPORTS_TABLE_NAME).setSearchFields(REPORTS_SEARCH_FIELDS);
+        tabs.get(ARCHIVE_TABLE_NAME).setSearchFields(ARCHIVE_SEARCH_FIELDS);
+        
+        // this initializes the comboBox for the first tab
+        // this overrides the properties one because we need to change the 
+        // values for each tab so the constants should be used in this case.
+        // To make changes, the constants are in ITableConstants
+        comboBoxSearch.setModel(new DefaultComboBoxModel(ASSIGNMENTS_SEARCH_FIELDS));
+        
         // set column width percents to tables of the tab objects
         tabs.get(ASSIGNMENTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
         tabs.get(REPORTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_REPORTS);
@@ -1205,8 +1216,10 @@ public class Analyster extends JFrame implements ITableConstants{
 
         changeTabbedPanelState();
 
-        // this could probably be set once, not everytime the tabpane is changed
-        comboBoxSearch.setModel(new DefaultComboBoxModel(new String[]{"Symbol", "Analyst"}));
+        // this changes the search fields for the comboBox for each tab
+        // this event is fired from initCompnents hence the null condition
+        if(tabs.get(getSelectedTab()).getSearchFields() != null)
+            comboBoxSearch.setModel(new DefaultComboBoxModel(tabs.get(getSelectedTab()).getSearchFields()));
 
         modifiedDataList.clear();    // when selected table changed, clear former edit history
     }//GEN-LAST:event_tabbedPanelStateChanged

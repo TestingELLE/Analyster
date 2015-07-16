@@ -25,4 +25,9 @@ public interface ITableConstants {
     public static final float[] COL_WIDTH_PER_REPORTS = {35, 65, 80, 100, 160, 120, 123};
     public static final float[] COL_WIDTH_PER_ARCHIVE = {35, 65, 80, 70, 99, 99};
     
+    // search fields for the comboBox for each table
+    public static final String[] ASSIGNMENTS_SEARCH_FIELDS = {"Symbol","Analyst"};
+    public static final String[] REPORTS_SEARCH_FIELDS = {"Symbol","Author"};
+    public static final String[] ARCHIVE_SEARCH_FIELDS = {"Symbol","Analyst"};
+    
 }
