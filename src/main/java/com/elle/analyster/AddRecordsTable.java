@@ -74,6 +74,8 @@ public class AddRecordsTable {
         }
     }
     
+    // call yet another class just to return this?
+    // why not just call that class then?
     public String[] getColumnTitles() {
 
         if (tableName.equals("Assignments")) {

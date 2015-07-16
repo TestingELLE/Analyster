@@ -23,12 +23,12 @@ import java.util.List;
  *
  * @author Louis W.
  */
-public class AddRecords extends javax.swing.JFrame {
+public class AddRecords extends JFrame {
 
     @Autowired
     private Analyster ana;
     private LogWindow log = new LogWindow();
-    private Vector columnNames = new Vector();
+    private String[] columnNames;
     private String tableName;
     private AddRecordsTable info = new AddRecordsTable();
     private Logger logger = LoggerFactory.getLogger(AddRecords.class);
@@ -46,31 +46,21 @@ public class AddRecords extends javax.swing.JFrame {
         this.setLocationRelativeTo(a);
         info.update(comboBoxTableSelect.getSelectedItem().toString(), ana); // sets tableservice tables - useless
         
-        //initTable(6);   // without this, date column in assignments will be object with no type (instead of string object)
-        // agian tableName? this was just set in update ?
-        // this is never used
-        tableName = comboBoxTableSelect.getSelectedItem().toString();
+        // initialize the table with 7 empty rows
+        Object[][] data = {{},{},{},{},{},{},{}}; 
         
-        // looks like declaring two vectors
-        Vector tableDefault, table0;    // default content of table which includes empty rows
-        List list = new ArrayList();
-
-        int i = 6;
-        // adds 6 empty rows
-        while (i-- > 0) {    // add new empty rows
-            String[] aaa = info.getEmptyRow();
-            table0 = new Vector(Arrays.asList(aaa)); // initialize this vector
-            list.add(table0);
-        }
+        // get column names for selected Analyster table
+        columnNames = ana.getTabs().get(ana.getSelectedTab()).getTableColNames();
         
-        // finally what I was looking for !
-        columnNames = new Vector(Arrays.asList(info.getColumnTitles()));
-
-        tableDefault = new Vector(list); //initialize this vector
-
-        // finally set the table
-        DefaultTableModel model = new DefaultTableModel(tableDefault, columnNames);
-        table.setModel(model);
+        System.out.println("Before: " + columnNames[0]); // testing
+        
+        // we don't want the ID column 
+        columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
+        
+        System.out.println("After: " + columnNames[0]); // testing
+        
+        // set the table model
+        table.setModel(new DefaultTableModel(data, columnNames));
         
         setKeyboardFocusManager(); // sets the keyboard focus manager
         
@@ -227,9 +217,9 @@ public class AddRecords extends javax.swing.JFrame {
         int colNum = table.getColumnCount();
 
         for (i = 0; i < colNum - 1; i++) {
-            title += columnNames.get(i).toString() + ",";
+            title += columnNames[i] + ",";
         }
-        title += columnNames.get(colNum - 1).toString() + ") ";
+        title += columnNames[colNum - 1] + ") ";
 
         // rows comprise all the new information for inserting
         i = 0;
@@ -240,7 +230,7 @@ public class AddRecords extends javax.swing.JFrame {
             rowData = "(";
 
             while (j < colNum - 1) {
-                if (columnNames.get(j).toString().equals(info.getDateName())) {     // first, check date format if it's date column
+                if (columnNames[j].equals(info.getDateName())) {     // first, check date format if it's date column
                     if (table.getValueAt(i, j).toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")) {
                         rowData += "'" + table.getValueAt(i, j).toString() + "',";
                     } else if (table.getValueAt(i, j).toString() == null) {

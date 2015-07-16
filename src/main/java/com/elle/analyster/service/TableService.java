@@ -34,6 +34,7 @@ public class TableService {
      * @return 
      */
     public String[] getColumnNames(int number) {
+        
         JTable table = assignmentTable;  // use this method cause table1 and table2 are private
         switch (number) {
             case 1:
@@ -52,6 +53,7 @@ public class TableService {
         ArrayList<String> col = new ArrayList<>();
         int i, num = table.getColumnCount();
 
+        // we do not want the id col - got it
         for (i = 1; i < num; i++) { // start from 1 to eliminate the ID column
             col.add(table.getColumnName(i));
         }
