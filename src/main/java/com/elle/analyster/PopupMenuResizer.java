@@ -36,7 +36,11 @@ public class PopupMenuResizer extends MouseAdapter {
     private boolean isResizing = false;
 
 
-    // CONSTRUCTOR
+    /**
+     * CONSTRUCTOR
+     * PopupMenuResizer
+     * @param menu 
+     */
     private PopupMenuResizer( JPopupMenu menu ) {
         this.menu = menu;
         this.menu.setLightWeightPopupEnabled(true);
@@ -44,10 +48,19 @@ public class PopupMenuResizer extends MouseAdapter {
         menu.addMouseMotionListener(this);
     }
 
+    /**
+     * decorate
+     * @param menu 
+     */
     public static void decorate( JPopupMenu menu ) {
         new PopupMenuResizer( menu );
     }
     
+    /**
+     * isInResizeSpot
+     * @param point
+     * @return 
+     */
     private boolean isInResizeSpot( Point point ) {
 
         if ( point == null ) return false;
@@ -62,6 +75,10 @@ public class PopupMenuResizer extends MouseAdapter {
 
     }
 
+    /**
+     * mouseMoved
+     * @param e 
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
 
@@ -70,6 +87,11 @@ public class PopupMenuResizer extends MouseAdapter {
               isInResizeSpot( e.getPoint() )? Cursor.SE_RESIZE_CURSOR: Cursor.DEFAULT_CURSOR ));
     }
 
+    /**
+     * toScreen
+     * @param e
+     * @return 
+     */
     private Point toScreen( MouseEvent e ) {
         
         Point p = e.getPoint();
@@ -78,6 +100,10 @@ public class PopupMenuResizer extends MouseAdapter {
         
     }
     
+    /**
+     * mousePressed
+     * @param e 
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         mouseStart = toScreen(e);
@@ -85,12 +111,20 @@ public class PopupMenuResizer extends MouseAdapter {
         isResizing = isInResizeSpot(e.getPoint());
     }
 
+    /**
+     * mouseReleased
+     * @param e 
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         mouseStart = new Point( Integer.MIN_VALUE, Integer.MIN_VALUE );
         isResizing = false;
     }
 
+    /**
+     * mouseDragged
+     * @param e 
+     */
     @Override
     public void mouseDragged(MouseEvent e) {
 
