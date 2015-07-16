@@ -46,9 +46,33 @@ public class AddRecords extends javax.swing.JFrame {
         this.setLocationRelativeTo(a);
         info.update(comboBoxTableSelect.getSelectedItem().toString(), ana); // sets tableservice tables - useless
         
-        initTable(6);   // without this, date column in assignments will be object with no type (instead of string object)
+        //initTable(6);   // without this, date column in assignments will be object with no type (instead of string object)
+        // agian tableName? this was just set in update ?
+        // this is never used
+        tableName = comboBoxTableSelect.getSelectedItem().toString();
         
-        setKeyboardFocusManager();
+        // looks like declaring two vectors
+        Vector tableDefault, table0;    // default content of table which includes empty rows
+        List list = new ArrayList();
+
+        int i = 6;
+        // adds 6 empty rows
+        while (i-- > 0) {    // add new empty rows
+            String[] aaa = info.getEmptyRow();
+            table0 = new Vector(Arrays.asList(aaa)); // initialize this vector
+            list.add(table0);
+        }
+        
+        // finally what I was looking for !
+        columnNames = new Vector(Arrays.asList(info.getColumnTitles()));
+
+        tableDefault = new Vector(list); //initialize this vector
+
+        // finally set the table
+        DefaultTableModel model = new DefaultTableModel(tableDefault, columnNames);
+        table.setModel(model);
+        
+        setKeyboardFocusManager(); // sets the keyboard focus manager
         
     }
 
@@ -302,33 +326,12 @@ public class AddRecords extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tableKeyPressed
 
-    private void initTable(int rows) {
-        
-        // agian tableName? this was just set in update ?
-        // this is never used
-        tableName = comboBoxTableSelect.getSelectedItem().toString();
-        
-        // looks like declaring two vectors
-        Vector tableDefault, table0;    // default content of table which includes empty rows
-        List list = new ArrayList();
-
-        // adds 6 empty rows
-        while (rows-- > 0) {    // add new empty rows
-            String[] aaa = info.getEmptyRow();
-            table0 = new Vector(Arrays.asList(aaa)); // initialize this vector
-            list.add(table0);
-        }
-        
-        // finally what I was looking for !
-        columnNames = new Vector(Arrays.asList(info.getColumnTitles()));
-
-        tableDefault = new Vector(list); //initialize this vector
-
-        // finally set the table
-        DefaultTableModel model = new DefaultTableModel(tableDefault, columnNames);
-        table.setModel(model);
-
-    }
+    /**
+     * This method is called by netbeans components?
+     * I will have to investigate this
+     * @param rows 
+     */
+    private void initTable(int rows) {}
     
     /**
      * setKeyboardFocusManager
