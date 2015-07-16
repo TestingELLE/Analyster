@@ -48,6 +48,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     private LoadTables loadTables;
     private JTableHeader header;
     private DeleteRecord deleteRecord;
+    private AddRecords  addRecords;
     
     private static Analyster instance;
     private Logger log = LoggerFactory.getLogger(Analyster.class);
@@ -1060,7 +1061,11 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     }//GEN-LAST:event_jMenuEditDBActionPerformed
 
     private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
-        new AddRecords(this, logwind).setVisible(true);
+        addRecords = new AddRecords(this, logwind);
+        addRecords.setVisible(true);
+        
+        // update records
+        getRecordsLabel().setText(tabs.get(getSelectedTab()).getRecordsLabel());
     }//GEN-LAST:event_btnAddRecordsActionPerformed
 
     /**

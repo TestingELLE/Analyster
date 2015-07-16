@@ -123,6 +123,15 @@ public class Tab implements ITableNameConstants{
     }
     
     /**
+     * This method subtracts an amount from the totalRecords value
+     * This is used when records are deleted to update the totalRecords value
+     * @param amountOfRecordsDeleted 
+     */
+    public void addToTotalRowCount(int amountOfRecordsAdded) {
+        this.totalRecords = this.totalRecords + amountOfRecordsAdded;
+    }
+    
+    /**
      * This method returns a string that displays the records.
      * @return String This returns a string that has the records for both total and shown
      */

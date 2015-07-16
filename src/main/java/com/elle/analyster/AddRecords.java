@@ -25,8 +25,16 @@ import java.util.List;
  */
 public class AddRecords extends javax.swing.JFrame {
 
+    @Autowired
+    private Analyster ana;
+    private LogWindow log = new LogWindow();
+    private Vector columnNames = new Vector();
+    private String tableName;
+    private AddRecordsTable info = new AddRecordsTable();
     private Logger logger = LoggerFactory.getLogger(AddRecords.class);
     private GUI gui = new GUI();
+    private int numRowsAdded;  // number of rows added counter
+    private String selectedTable;
 
     /**
      * Creates new form ReportWin
@@ -36,7 +44,7 @@ public class AddRecords extends javax.swing.JFrame {
         log = l;
         initComponents();
         this.setLocationRelativeTo(a);
-        info.update(jTables.getSelectedItem().toString(), ana);
+        info.update(comboBoxTableSelect.getSelectedItem().toString(), ana);
         initTable(6);   // without this, date column in assignments will be object with no type (instead of string object)
         /*
          No Tab key-pressed or key-released events are received by the key event listener. This is because the focus subsystem 
@@ -101,7 +109,7 @@ public class AddRecords extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         scrollpane = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
-        jTables = new javax.swing.JComboBox();
+        comboBoxTableSelect = new javax.swing.JComboBox();
         jSubmit = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jCancel = new javax.swing.JButton();
@@ -146,10 +154,10 @@ public class AddRecords extends javax.swing.JFrame {
         });
         scrollpane.setViewportView(table);
 
-        jTables.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Assignments", "Reports" }));
-        jTables.addActionListener(new java.awt.event.ActionListener() {
+        comboBoxTableSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Assignments", "Reports" }));
+        comboBoxTableSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTablesActionPerformed(evt);
+                comboBoxTableSelectActionPerformed(evt);
             }
         });
 
@@ -187,7 +195,7 @@ public class AddRecords extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTables, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboBoxTableSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jAddRow)
@@ -202,7 +210,7 @@ public class AddRecords extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTables, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboBoxTableSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(scrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -247,6 +255,8 @@ public class AddRecords extends javax.swing.JFrame {
         // rows comprise all the new information for inserting
         i = 0;
 
+        numRowsAdded = 0; // reset numRowsAdded counter
+        
         while (i != table.getRowCount() && !table.getValueAt(i, 0).equals("")) {    // within accessible rows && not null next line
             rowData = "(";
 
@@ -273,6 +283,7 @@ public class AddRecords extends javax.swing.JFrame {
                 rowData += "'" + table.getValueAt(i, j).toString() + "')";
             }
             rows.add(rowData);
+            numRowsAdded++; // increment a row added to row added counter
             i++;
             j = 0;
         }
@@ -300,6 +311,16 @@ public class AddRecords extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Add successfully!");
             ana.loadData();
             ana.setLastUpdateTime();
+            
+            // Code to get the table selected
+            selectedTable = comboBoxTableSelect.getSelectedItem().toString();
+            if(selectedTable.equals("Assignments"))
+                selectedTable = ana.ASSIGNMENTS_TABLE_NAME;
+            else
+                selectedTable = ana.REPORTS_TABLE_NAME;
+            
+            // update total records with new records added
+            ana.getTabs().get(selectedTable).addToTotalRowCount(numRowsAdded);
         }
         this.dispose();
     }//GEN-LAST:event_jSubmitActionPerformed
@@ -308,10 +329,10 @@ public class AddRecords extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tableMouseClicked
 
-    private void jTablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTablesActionPerformed
-        info.update(jTables.getSelectedItem().toString(), ana);
+    private void comboBoxTableSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxTableSelectActionPerformed
+        info.update(comboBoxTableSelect.getSelectedItem().toString(), ana);
         initTable(4);
-    }//GEN-LAST:event_jTablesActionPerformed
+    }//GEN-LAST:event_comboBoxTableSelectActionPerformed
 
     private void jCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCancelActionPerformed
         this.dispose();
@@ -327,7 +348,7 @@ public class AddRecords extends javax.swing.JFrame {
     }//GEN-LAST:event_tableKeyPressed
 
     private void initTable(int rows) {
-        tableName = jTables.getSelectedItem().toString();
+        tableName = comboBoxTableSelect.getSelectedItem().toString();
         Vector tableDefault, table0;    // default content of table which includes empty rows
         List list = new ArrayList();
 
@@ -344,19 +365,13 @@ public class AddRecords extends javax.swing.JFrame {
         table.setModel(model);
 
     }
-    @Autowired
-    private Analyster ana;
-    private LogWindow log = new LogWindow();
-    private Vector columnNames = new Vector();
-    private String tableName;
-    private AddRecordsTable info = new AddRecordsTable();
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox comboBoxTableSelect;
     private javax.swing.JButton jAddRow;
     private javax.swing.JButton jCancel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton jSubmit;
-    private javax.swing.JComboBox jTables;
     private javax.swing.JScrollPane scrollpane;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
