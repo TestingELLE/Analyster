@@ -28,6 +28,11 @@ public class TableService {
     JTable archiveAssignTable;
     JTable viewerTable;
 
+    /**
+     * getColumnNames
+     * @param number
+     * @return 
+     */
     public String[] getColumnNames(int number) {
         JTable table = assignmentTable;  // use this method cause table1 and table2 are private
         switch (number) {
@@ -55,36 +60,67 @@ public class TableService {
         return columnNames;
     }
 
+    /**
+     * setAssignmentTable
+     * @param table 
+     */
     public void setAssignmentTable(JTable table) {
         assignmentTable = table;
     }
 
+    /**
+     * setReportTable
+     * @param table 
+     */
     public void setReportTable(JTable table) {
         reportTable = table;
     }
 
+    /**
+     * setArchiveAssignTable
+     * @param table 
+     */
     public void setArchiveAssignTable(JTable table) {
         archiveAssignTable = table;
     }
 
+    /**
+     * setViewerTable
+     * @param table 
+     */
     public void setViewerTable(JTable table) {
         viewerTable =table;
     }
 
+    /**
+     * textToNumOfRecords
+     * @param num
+     * @return 
+     */
     public String textToNumOfRecords(int num) { // Set text to element numofRecords2
         String setTextNumofRecords2 = "Number of records shown: " + num;
         return setTextNumofRecords2;
     }
 
+    /**
+     * loadArchiveAssignTable
+     */
     private void loadArchiveAssignTable() {
         new LoadTables().loadTable(Analyster.getInstance().getArchiveAssignTable());
 
     }
 
+    /**
+     * loadAssignmentTable
+     */
     private void loadAssignmentTable() {
         new LoadTables().loadTable(Analyster.getInstance().getassignmentTable());
     }
 
+    /**
+     * activateRecords
+     * This method is probably for the activateRecords menu item
+     */
     public void activateRecords() {
 
         int rowSelected = archiveAssignTable.getSelectedRows().length;
@@ -127,6 +163,10 @@ public class TableService {
 
     }
 
+    /**
+     * archiveRecords
+     * This method is probably for the archiveRecords menu item
+     */
     public void archiveRecords() {
         JTable table = assignmentTable;
 
