@@ -15,19 +15,27 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class AddRecordsTable {
     
+    // attributes
     private String tableName;
     @Autowired
-    private Analyster ana;
+    private Analyster ana; // never used
     private TableService tableService;
 
+    /**
+     * update
+     * called twice from AddRecords
+     * @param table
+     * @param a 
+     */
     public void update(String table, Analyster a) {
         tableService = new TableService();
         tableService.setAssignmentTable(a.getassignmentTable());
         tableService.setReportTable(a.getReportTable());
-        tableName = table;
+        tableName = table; // table = string of combobox selected
         ana = a; 
     }
     
+    // this method does not look like a good idea
     public String getDateName() {
         if (tableName.equals("Assignments")) {
             return "dateAssigned"; 

@@ -37,15 +37,17 @@ public class AddRecords extends javax.swing.JFrame {
     private String selectedTable;
 
     /**
-     * Creates new form ReportWin
+     * Creates new form ReportWin <-- does it really?
      */
     public AddRecords(Analyster a, LogWindow l) {
         ana = a;
         log = l;
         initComponents();
         this.setLocationRelativeTo(a);
-        info.update(comboBoxTableSelect.getSelectedItem().toString(), ana);
+        info.update(comboBoxTableSelect.getSelectedItem().toString(), ana); // sets tableservice tables - useless
+        
         initTable(6);   // without this, date column in assignments will be object with no type (instead of string object)
+        
         /*
          No Tab key-pressed or key-released events are received by the key event listener. This is because the focus subsystem 
          consumes focus traversal keys, such as Tab and Shift Tab. To solve this, apply the following to the component that is 
@@ -90,7 +92,7 @@ public class AddRecords extends javax.swing.JFrame {
                     }
 
                 }
-                return false;
+                return false; 
             }
         }
         );
@@ -348,19 +350,28 @@ public class AddRecords extends javax.swing.JFrame {
     }//GEN-LAST:event_tableKeyPressed
 
     private void initTable(int rows) {
+        
+        // agian tableName? this was just set in update ?
+        // this is never used
         tableName = comboBoxTableSelect.getSelectedItem().toString();
+        
+        // looks like declaring two vectors
         Vector tableDefault, table0;    // default content of table which includes empty rows
         List list = new ArrayList();
 
+        // adds 6 empty rows
         while (rows-- > 0) {    // add new empty rows
             String[] aaa = info.getEmptyRow();
-            table0 = new Vector(Arrays.asList(aaa));
+            table0 = new Vector(Arrays.asList(aaa)); // initialize this vector
             list.add(table0);
         }
+        
+        // finally what I was looking for !
         columnNames = new Vector(Arrays.asList(info.getColumnTitles()));
 
-        tableDefault = new Vector(list);
+        tableDefault = new Vector(list); //initialize this vector
 
+        // finally set the table
         DefaultTableModel model = new DefaultTableModel(tableDefault, columnNames);
         table.setModel(model);
 
