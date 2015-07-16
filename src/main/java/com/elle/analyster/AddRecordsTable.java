@@ -66,14 +66,6 @@ public class AddRecordsTable {
         }
     }
     
-    public long getIdNum() {
-        if (tableName.equals("Assignments")) {
-            return ana.getAssignments().getRecordsNumber();
-        } else {
-            return ana.getReports().getRecordsNumber();
-        }
-    }
-    
     public String[] getColumnTitles() {
 
         if (tableName.equals("Assignments")) {

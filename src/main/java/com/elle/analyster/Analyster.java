@@ -97,11 +97,6 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         tabs.get(REPORTS_TABLE_NAME).setTable(reportTable);
         tabs.get(ARCHIVE_TABLE_NAME).setTable(archiveTable);
         
-        // set table states to tab objects
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableState(new TableState(assignmentTable));
-        tabs.get(REPORTS_TABLE_NAME).setTableState(new TableState(reportTable));
-        tabs.get(ARCHIVE_TABLE_NAME).setTableState(new TableState(archiveTable));
-        
         // set column width percents to tables of the tab objects
         tabs.get(ASSIGNMENTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
         tabs.get(REPORTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_REPORTS);
@@ -1141,7 +1136,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         }
 
         setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
-        tabs.get(ASSIGNMENTS_TABLE_NAME).getTableState().init(assignmentTable, new String[]{"Symbol", "Analyst"});
+
         // set label record information
         labelRecords.setText(tabs.get(ASSIGNMENTS_TABLE_NAME).getRecordsLabel()); 
     }//GEN-LAST:event_jMenuItemViewActiveAssigActionPerformed
@@ -1194,14 +1189,10 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
 //Filter is generated everytime that table is selected.
     private void tabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelStateChanged
 
-        TableState ts = getTableState();
         changeTabbedPanelState();
-        String[] field = ts.getSearchFields();
-        if (field == null) {
-            comboBoxSearch.setModel(new DefaultComboBoxModel(new String[]{"Symbol", "Analyst"}));
-        } else {
-            comboBoxSearch.setModel(new DefaultComboBoxModel(field));
-        }
+
+        // this could probably be set once, not everytime the tabpane is changed
+        comboBoxSearch.setModel(new DefaultComboBoxModel(new String[]{"Symbol", "Analyst"}));
 
         modifiedDataList.clear();    // when selected table changed, clear former edit history
     }//GEN-LAST:event_tabbedPanelStateChanged
@@ -1613,15 +1604,6 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         return tabs.get(selectedTab).getTable();
     }
 
-    public TableState getTableState() {                 // get TableState by selected Tab
-        String selectedTab = getSelectedTab();
-        return tabs.get(selectedTab).getTableState();
-    }
-
-    public TableState getTableState(JTable table) {     // get TableState by jTable object
-        return tabs.get(table.getName()).getTableState();
-    }
-
     public void setLastUpdateTime() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = dateFormat.format(new Date());
@@ -1768,18 +1750,6 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
 
     public List<ModifiedData> getModifiedDataList() {
         return modifiedDataList;
-    }
-
-    public TableState getAssignments() {
-        return tabs.get(ASSIGNMENTS_TABLE_NAME).getTableState();
-    }
-
-    public TableState getReports() {
-        return tabs.get(REPORTS_TABLE_NAME).getTableState();
-    }
-
-    public TableState getArchiveAssign() {
-        return tabs.get(ARCHIVE_TABLE_NAME).getTableState();
     }
 
     public JTableFilter getFilterTempAssignment() {

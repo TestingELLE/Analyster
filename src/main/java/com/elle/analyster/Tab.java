@@ -15,7 +15,6 @@ public class Tab implements ITableNameConstants{
     private JTable table;
     private JTable filteredTable;
     private JTableFilter filter;
-    private TableState tableState;
     private float[] colWidthPercent;
     private int totalRecords;
     private int recordsShown;
@@ -31,7 +30,6 @@ public class Tab implements ITableNameConstants{
         tableName = "";
         table = new JTable();
         filteredTable = new JTable();
-        tableState = new TableState();
         totalRecords = 0;
         recordsShown = 0;
         // filter is an instance and does not get initialized
@@ -64,14 +62,6 @@ public class Tab implements ITableNameConstants{
 
     public void setFilter(JTableFilter filter) {
         this.filter = filter;
-    }
-
-    public TableState getTableState() {
-        return tableState;
-    }
-
-    public void setTableState(TableState tableState) {
-        this.tableState = tableState;
     }
 
     public float[] getColWidthPercent() {
