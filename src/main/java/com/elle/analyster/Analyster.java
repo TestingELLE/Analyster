@@ -113,7 +113,7 @@ public class Analyster extends JFrame implements ITableConstants{
         tabs.get(ARCHIVE_TABLE_NAME).setSearchFields(ARCHIVE_SEARCH_FIELDS);
         
         // this initializes the comboBox for the first tab
-        // this overrides the properties one because we need to change the 
+        // this overrides the properties model because we need to change the 
         // values for each tab so the constants should be used in this case.
         // To make changes, the constants are in ITableConstants
         comboBoxSearch.setModel(new DefaultComboBoxModel(ASSIGNMENTS_SEARCH_FIELDS));
