@@ -48,55 +48,8 @@ public class AddRecords extends javax.swing.JFrame {
         
         initTable(6);   // without this, date column in assignments will be object with no type (instead of string object)
         
-        /*
-         No Tab key-pressed or key-released events are received by the key event listener. This is because the focus subsystem 
-         consumes focus traversal keys, such as Tab and Shift Tab. To solve this, apply the following to the component that is 
-         firing the key events 
-         */
-        table.setFocusTraversalKeysEnabled(false);
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {// Allow to TAB-
-
-            @Override
-            public boolean dispatchKeyEvent(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (e.getComponent() instanceof JTable) {
-                        JTable table = (JTable) e.getComponent();
-                        int row = table.getSelectedRow();
-                        int column = table.getSelectedColumn();
-                        if (column == table.getRowCount() || column == 0) {
-                            return false;
-                        } else {
-                            table.getComponentAt(row, column).requestFocus();
-                            table.editCellAt(row, column);
-                            JTextField selectCom = (JTextField) table.getEditorComponent();
-                            selectCom.requestFocusInWindow();
-                            selectCom.selectAll();
-                        }
-                    }
-
-                } else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
-                    JTable table = (JTable) e.getComponent().getParent();
-                    int column = table.getSelectedColumn();
-                    if (table.getColumnName(column).toLowerCase().contains("date")) {
-                        if (e.getID() != 401) {
-                            return false;
-                        } else {
-                            JTextField selectCom = (JTextField) e.getComponent();
-                            selectCom.requestFocusInWindow();
-                            selectCom.selectAll();
-                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                            Date date = new Date();
-                            String today = dateFormat.format(date);
-                            selectCom.setText(today);
-                        }// default date input with today's date}
-                    }
-
-                }
-                return false; 
-            }
-        }
-        );
-
+        setKeyboardFocusManager();
+        
     }
 
     /**
@@ -376,6 +329,62 @@ public class AddRecords extends javax.swing.JFrame {
         table.setModel(model);
 
     }
+    
+    /**
+     * setKeyboardFocusManager
+     * Sets the Keyboard Focus Manager
+     */
+    private void setKeyboardFocusManager() {
+        
+        /*
+         No Tab key-pressed or key-released events are received by the key event listener. This is because the focus subsystem 
+         consumes focus traversal keys, such as Tab and Shift Tab. To solve this, apply the following to the component that is 
+         firing the key events 
+         */
+        table.setFocusTraversalKeysEnabled(false);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {// Allow to TAB-
+
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_TAB) {
+                    if (e.getComponent() instanceof JTable) {
+                        JTable table = (JTable) e.getComponent();
+                        int row = table.getSelectedRow();
+                        int column = table.getSelectedColumn();
+                        if (column == table.getRowCount() || column == 0) {
+                            return false;
+                        } else {
+                            table.getComponentAt(row, column).requestFocus();
+                            table.editCellAt(row, column);
+                            JTextField selectCom = (JTextField) table.getEditorComponent();
+                            selectCom.requestFocusInWindow();
+                            selectCom.selectAll();
+                        }
+                    }
+
+                } else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
+                    JTable table = (JTable) e.getComponent().getParent();
+                    int column = table.getSelectedColumn();
+                    if (table.getColumnName(column).toLowerCase().contains("date")) {
+                        if (e.getID() != 401) {
+                            return false;
+                        } else {
+                            JTextField selectCom = (JTextField) e.getComponent();
+                            selectCom.requestFocusInWindow();
+                            selectCom.selectAll();
+                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = new Date();
+                            String today = dateFormat.format(date);
+                            selectCom.setText(today);
+                        }// default date input with today's date}
+                    }
+
+                }
+                return false; 
+            }
+        });
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox comboBoxTableSelect;
     private javax.swing.JButton jAddRow;
@@ -386,4 +395,5 @@ public class AddRecords extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrollpane;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
+
 }
