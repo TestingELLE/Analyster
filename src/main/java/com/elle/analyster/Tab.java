@@ -17,6 +17,7 @@ public class Tab implements ITableConstants{
     private JTableFilter filter;
     private float[] colWidthPercent;
     private int totalRecords;
+    private String[] tableColNames;
     private int recordsShown;
     
     // these menu items are enabled differently for each tab
@@ -33,6 +34,10 @@ public class Tab implements ITableConstants{
         totalRecords = 0;
         recordsShown = 0;
         // filter is an instance and does not get initialized
+        
+        // store the column names for the table
+        for (int i = 0; i < table.getColumnCount(); i++) 
+            tableColNames[i] = table.getColumnName(i);
     }
     
     /**************************************************************************
@@ -106,6 +111,14 @@ public class Tab implements ITableConstants{
 
     public void setArchiveRecordMenuItemEnabled(boolean archiveRecordMenuItemEnabled) {
         this.archiveRecordMenuItemEnabled = archiveRecordMenuItemEnabled;
+    }
+
+    public String[] getTableColNames() {
+        return tableColNames;
+    }
+
+    public void setTableColNames(String[] tableColNames) {
+        this.tableColNames = tableColNames;
     }
 
 

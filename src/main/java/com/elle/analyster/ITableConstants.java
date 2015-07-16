@@ -24,4 +24,5 @@ public interface ITableConstants {
     public static final float[] COL_WIDTH_PER_ASSIGNMENTS = {35, 65, 80, 70, 99, 99};
     public static final float[] COL_WIDTH_PER_REPORTS = {35, 65, 80, 100, 160, 120, 123};
     public static final float[] COL_WIDTH_PER_ARCHIVE = {35, 65, 80, 70, 99, 99};
+    
 }
