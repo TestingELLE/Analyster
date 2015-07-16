@@ -6,11 +6,16 @@
 package com.elle.analyster;
 
 /**
- *
- * @author Carlos Igreja
- * @since  June 27, 2015
+ * @author cigreja
+ * @since  July 16, 2015
+ * 
+ * This interface stores all the table constants
  */
-public interface IColumnConstants {
+public interface ITableConstants {
+    
+    final String ASSIGNMENTS_TABLE_NAME = "Assignments";
+    final String REPORTS_TABLE_NAME = "Reports";
+    final String ARCHIVE_TABLE_NAME = "Assignments_Archived";
     
     // column header name constants
     final String SYMBOL_COLUMN_NAME = "Symbol";
@@ -19,5 +24,4 @@ public interface IColumnConstants {
     final float[] COL_WIDTH_PER_ASSIGNMENTS = {35, 65, 80, 70, 99, 99};
     final float[] COL_WIDTH_PER_REPORTS = {35, 65, 80, 100, 160, 120, 123};
     final float[] COL_WIDTH_PER_ARCHIVE = {35, 65, 80, 70, 99, 99};
-    
 }

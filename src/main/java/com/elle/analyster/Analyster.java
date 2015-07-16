@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class Analyster extends JFrame implements ITableNameConstants, IColumnConstants{
+public class Analyster extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars
     private final String CREATION_DATE = "2015-07-15";  

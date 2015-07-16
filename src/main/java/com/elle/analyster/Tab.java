@@ -9,7 +9,7 @@ import javax.swing.JTable;
  * @author Carlos Igreja
  * @since  June 25, 2015
  */
-public class Tab implements ITableNameConstants{
+public class Tab implements ITableConstants{
 
     private String tableName; 
     private JTable table;

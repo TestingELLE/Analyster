@@ -24,7 +24,7 @@ import static com.elle.analyster.service.Connection.connection;
 import java.util.Map;
 
 
-public class LoadTables implements ITableNameConstants{
+public class LoadTables implements ITableConstants{
 
     private Analyster ana =Analyster.getInstance();
     JLabel recordsLabel = ana.getRecordsLabel();
