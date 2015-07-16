@@ -40,29 +40,28 @@ public class AddRecords extends JFrame {
      * Creates new form ReportWin <-- does it really?
      */
     public AddRecords(Analyster a, LogWindow l) {
+        
+        initComponents();
         ana = a;
         log = l;
-        initComponents();
-        this.setLocationRelativeTo(a);
-        info.update(comboBoxTableSelect.getSelectedItem().toString(), ana); // sets tableservice tables - useless
         
-        // initialize the table with 7 empty rows
-        Object[][] data = {{},{},{},{},{},{},{}}; 
+        this.setLocationRelativeTo(a);
+        
+        // initialize the table with 10 empty rows
+        Object[][] data = {{},{},{},{},{},{},{},{},{},{}}; 
         
         // get column names for selected Analyster table
         columnNames = ana.getTabs().get(ana.getSelectedTab()).getTableColNames();
         
-        System.out.println("Before: " + columnNames[0]); // testing
-        
         // we don't want the ID column 
         columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
-        
-        System.out.println("After: " + columnNames[0]); // testing
         
         // set the table model
         table.setModel(new DefaultTableModel(data, columnNames));
         
         setKeyboardFocusManager(); // sets the keyboard focus manager
+        
+        tableName = ana.getSelectedTab(); // used for the sql statement
         
     }
 
@@ -78,9 +77,7 @@ public class AddRecords extends JFrame {
         jPanel3 = new javax.swing.JPanel();
         scrollpane = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
-        comboBoxTableSelect = new javax.swing.JComboBox();
         jSubmit = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jCancel = new javax.swing.JButton();
         jAddRow = new javax.swing.JButton();
 
@@ -123,21 +120,12 @@ public class AddRecords extends JFrame {
         });
         scrollpane.setViewportView(table);
 
-        comboBoxTableSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Assignments", "Reports" }));
-        comboBoxTableSelect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxTableSelectActionPerformed(evt);
-            }
-        });
-
         jSubmit.setText("Submit");
         jSubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jSubmitActionPerformed(evt);
             }
         });
-
-        jLabel1.setText("Choose table:");
 
         jCancel.setText("Cancel");
         jCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -161,11 +149,6 @@ public class AddRecords extends JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(scrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(comboBoxTableSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jAddRow)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -178,11 +161,7 @@ public class AddRecords extends JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboBoxTableSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSubmit)
@@ -226,11 +205,12 @@ public class AddRecords extends JFrame {
 
         numRowsAdded = 0; // reset numRowsAdded counter
         
-        while (i != table.getRowCount() && !table.getValueAt(i, 0).equals("")) {    // within accessible rows && not null next line
+        while (i != table.getRowCount() && table.getValueAt(i, 0) != null) {    // within accessible rows && not null next line
             rowData = "(";
 
             while (j < colNum - 1) {
-                if (columnNames[j].equals(info.getDateName())) {     // first, check date format if it's date column
+                // first, check date format if it's date column
+                if (columnNames[j].equals("dateAssigned") || columnNames[j].equals("analysisDate")) {     
                     if (table.getValueAt(i, j).toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")) {
                         rowData += "'" + table.getValueAt(i, j).toString() + "',";
                     } else if (table.getValueAt(i, j).toString() == null) {
@@ -239,7 +219,8 @@ public class AddRecords extends JFrame {
                         JOptionPane.showMessageDialog(null, "Date format is incorrect!");
                         break;
                     }
-                } else if (table.getValueAt(i, j).toString().equals("")) {      // second, check null
+                // second, check if null
+                } else if (table.getValueAt(i, j) == null) {      
                     rowData += null + ",";
                 } else {
                     rowData += "'" + table.getValueAt(i, j).toString() + "',";
@@ -281,15 +262,8 @@ public class AddRecords extends JFrame {
             ana.loadData();
             ana.setLastUpdateTime();
             
-            // Code to get the table selected
-            selectedTable = comboBoxTableSelect.getSelectedItem().toString();
-            if(selectedTable.equals("Assignments"))
-                selectedTable = ana.ASSIGNMENTS_TABLE_NAME;
-            else
-                selectedTable = ana.REPORTS_TABLE_NAME;
-            
             // update total records with new records added
-            ana.getTabs().get(selectedTable).addToTotalRowCount(numRowsAdded);
+            ana.getTabs().get(ana.getSelectedTab()).addToTotalRowCount(numRowsAdded);
         }
         this.dispose();
     }//GEN-LAST:event_jSubmitActionPerformed
@@ -297,11 +271,6 @@ public class AddRecords extends JFrame {
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
 
     }//GEN-LAST:event_tableMouseClicked
-
-    private void comboBoxTableSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxTableSelectActionPerformed
-        info.update(comboBoxTableSelect.getSelectedItem().toString(), ana);
-        initTable(4);
-    }//GEN-LAST:event_comboBoxTableSelectActionPerformed
 
     private void jCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCancelActionPerformed
         this.dispose();
@@ -379,10 +348,8 @@ public class AddRecords extends JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox comboBoxTableSelect;
     private javax.swing.JButton jAddRow;
     private javax.swing.JButton jCancel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton jSubmit;
     private javax.swing.JScrollPane scrollpane;
