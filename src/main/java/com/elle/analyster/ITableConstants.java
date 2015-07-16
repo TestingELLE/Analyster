@@ -13,15 +13,15 @@ package com.elle.analyster;
  */
 public interface ITableConstants {
     
-    final String ASSIGNMENTS_TABLE_NAME = "Assignments";
-    final String REPORTS_TABLE_NAME = "Reports";
-    final String ARCHIVE_TABLE_NAME = "Assignments_Archived";
+    public static final String ASSIGNMENTS_TABLE_NAME = "Assignments";
+    public static final String REPORTS_TABLE_NAME = "Reports";
+    public static final String ARCHIVE_TABLE_NAME = "Assignments_Archived";
     
     // column header name constants
-    final String SYMBOL_COLUMN_NAME = "Symbol";
+    public static final String SYMBOL_COLUMN_NAME = "Symbol";
     
     // column width percent constants
-    final float[] COL_WIDTH_PER_ASSIGNMENTS = {35, 65, 80, 70, 99, 99};
-    final float[] COL_WIDTH_PER_REPORTS = {35, 65, 80, 100, 160, 120, 123};
-    final float[] COL_WIDTH_PER_ARCHIVE = {35, 65, 80, 70, 99, 99};
+    public static final float[] COL_WIDTH_PER_ASSIGNMENTS = {35, 65, 80, 70, 99, 99};
+    public static final float[] COL_WIDTH_PER_REPORTS = {35, 65, 80, 100, 160, 120, 123};
+    public static final float[] COL_WIDTH_PER_ARCHIVE = {35, 65, 80, 70, 99, 99};
 }
