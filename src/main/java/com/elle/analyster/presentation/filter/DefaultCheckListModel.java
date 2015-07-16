@@ -13,14 +13,19 @@ import java.util.*;
  */
 public class DefaultCheckListModel<T> extends AbstractListModel implements ICheckListModel<T> {
 
-    private static final long serialVersionUID = 1L;
-
+    // attributes
     private Set<T> checks = new HashSet<T>();
     private final List<T> dataList = new ArrayList<T>();
     private final Set<T> dataSet = new HashSet<T>();
     private List<T> filteredDataList = null;
     private Set<T> filteredDataSet = null;
 
+    
+    /**
+     * CONSTRUCTOR 
+     * DefaultCheckListModel
+     * @param data 
+     */
     public DefaultCheckListModel( Collection<? extends T> data ) {
 
         if ( data == null ) return;
@@ -30,6 +35,11 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
         }
     }
 
+    /**
+     * CONSTRUCTOR
+     * DefaultCheckListModel
+     * @param data 
+     */
     public DefaultCheckListModel( T... data ) {
         this( Arrays.asList( data ));
     }
@@ -42,10 +52,18 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
         return dataList().size();
     }
 
+    /**
+     * dataList
+     * @return 
+     */
     private List<T> dataList() {
         return filteredDataList == null ? dataList : filteredDataList;
     }
 
+    /**
+     * dataSet
+     * @return 
+     */
     private Set<T> dataSet() {
         return filteredDataSet == null ? dataSet : filteredDataSet;
     }
@@ -97,6 +115,11 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
         fireContentsChanged(this, 0, checks.size()-1);
     }
 
+    /**
+     * filter
+     * @param pattern
+     * @param listFilter 
+     */
     public void filter( String pattern, IListFilter listFilter ) {
 
         if ( pattern == null || pattern.trim().length() == 0 ) {
