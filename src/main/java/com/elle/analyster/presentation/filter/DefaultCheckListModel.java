@@ -32,6 +32,8 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
         // Not sure what the point of this is
         // it takes a collection to create two identical collections
         if ( data == null ) return;
+        // this is storing all the fields for that column 
+        // this must be what is used to populate the fields to check
         for (T object : data) {
             dataList.add(object);
             dataSet.add(object);

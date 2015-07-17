@@ -30,10 +30,6 @@ public class PopupMenuResizer extends MouseAdapter {
 
     // class attributes
     private final JPopupMenu menu;
-    private static final int REZSIZE_SPOT_SIZE = 10;
-    private Point mouseStart = new Point( Integer.MIN_VALUE, Integer.MIN_VALUE );
-    private Dimension startSize;
-    private boolean isResizing = false;
 
 
     /**
@@ -59,96 +55,5 @@ public class PopupMenuResizer extends MouseAdapter {
      */
     public static void decorate( JPopupMenu menu ) {
         new PopupMenuResizer( menu );
-    }
-    
-    /**
-     * isInResizeSpot
-     * @param point
-     * @return 
-     */
-    private boolean isInResizeSpot( Point point ) {
-
-        if ( point == null ) return false;
-
-        Rectangle resizeSpot = new Rectangle(
-            menu.getWidth()-REZSIZE_SPOT_SIZE,
-            menu.getHeight()-REZSIZE_SPOT_SIZE,
-            REZSIZE_SPOT_SIZE,
-            REZSIZE_SPOT_SIZE );
-
-        return resizeSpot.contains(point);
-
-    }
-
-    /**
-     * mouseMoved
-     * @param e 
-     */
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
-        menu.setCursor(
-           Cursor.getPredefinedCursor(
-              isInResizeSpot( e.getPoint() )? Cursor.SE_RESIZE_CURSOR: Cursor.DEFAULT_CURSOR ));
-    }
-
-    /**
-     * toScreen
-     * @param e
-     * @return 
-     */
-    private Point toScreen( MouseEvent e ) {
-        
-        Point p = e.getPoint();
-        SwingUtilities.convertPointToScreen(p, e.getComponent());
-        return p;
-        
-    }
-    
-    /**
-     * mousePressed
-     * @param e 
-     */
-    @Override
-    public void mousePressed(MouseEvent e) {
-        mouseStart = toScreen(e);
-        startSize = menu.getSize();
-        isResizing = isInResizeSpot(e.getPoint());
-    }
-
-    /**
-     * mouseReleased
-     * @param e 
-     */
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        mouseStart = new Point( Integer.MIN_VALUE, Integer.MIN_VALUE );
-        isResizing = false;
-    }
-
-    /**
-     * mouseDragged
-     * @param e 
-     */
-    @Override
-    public void mouseDragged(MouseEvent e) {
-
-        if ( !isResizing ) return;
-
-        Point p = toScreen(e);
-        
-        int dx = p.x - mouseStart.x;
-        int dy = p.y - mouseStart.y;
-
-        
-        Dimension minDim = menu.getMinimumSize();
-//        Dimension maxDim = menu.getMaximumSize();
-        Dimension newDim = new Dimension(startSize.width + dx, startSize.height + dy);
-
-        if ( newDim.width >= minDim.width && newDim.height >= minDim.height /*&&
-             newDim.width <= maxDim.width && newDim.height <= maxDim.height*/    ) {
-            menu.setPopupSize( newDim );
-        }
-
     }
 }
