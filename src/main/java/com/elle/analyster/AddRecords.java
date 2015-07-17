@@ -17,6 +17,7 @@ import java.util.*;
 /**
  *
  * @author Louis W.
+ * @author cigreja
  */
 public class AddRecords extends JFrame {
 
