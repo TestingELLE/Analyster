@@ -29,18 +29,18 @@ import javax.swing.event.PopupMenuEvent;
 class TableFilterColumnPopup implements MouseListener {
 
     // class attributes
-    private final CheckList<DistinctColumnItem> filterList = new CheckList.Builder().build(); // this calls the build method
-    private final Map<Integer, ColumnAttrs> colAttrs = new HashMap<Integer, ColumnAttrs>(); // column Attributes?
-    private Dimension defaultSize = new Dimension(100,100);
-    private boolean enabled = false;
-    private int mColumnIndex = -1;
-    private boolean actionsVisible = true;
-    private boolean useTableRenderers = false;
+    private CheckList<DistinctColumnItem> filterList; // this calls the build method
+    private Map<Integer, ColumnAttrs> colAttrs; // column Attributes?
+    private Dimension defaultSize;
+    private boolean enabled;
+    private int mColumnIndex;
+    private boolean actionsVisible;
+    private boolean useTableRenderers;
     
     // components
     private JTableFilter filter; // JTable filter
     private TableModel myTableModelInitial; // initial table model
-    private GUI gui = new GUI(); // this is usually static and an instance is usually not used
+    private GUI gui; // this is usually static and an instance is usually not used
     private CommandAction commandAction; // this is the actions for the buttons (Apply & Cancel)
     private ResizablePopupMenu menu; // JPopupMenu
     private DefaultCheckListModel<DistinctColumnItem> model;
@@ -52,6 +52,16 @@ class TableFilterColumnPopup implements MouseListener {
      * @param filter 
      */
     public TableFilterColumnPopup(JTableFilter filter) {
+
+        // initialize class attributes
+        filterList = new CheckList.Builder().build(); // this calls the build method
+        colAttrs = new HashMap<Integer, ColumnAttrs>(); // column Attributes?
+        defaultSize = new Dimension(100,100);
+        enabled = false;
+        mColumnIndex = -1;
+        actionsVisible = true;
+        useTableRenderers = false;
+        
 
         // ResizablePopupMenu is a JPopupMenu
         menu = new ResizablePopupMenu( true ) {
