@@ -21,6 +21,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
     /**
      * CONSTRUCTOR
      * ActionCheckListModel
+     * Looks like it just adds a listListener
      * @param originalModel 
      */
     public ActionCheckListModel( final ICheckListModel<T> originalModel ) {

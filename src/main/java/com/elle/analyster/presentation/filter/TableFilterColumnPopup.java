@@ -44,7 +44,7 @@ class TableFilterColumnPopup implements MouseListener {
     private CommandAction commandAction; // this is the actions for the buttons (Apply & Cancel)
     private ResizablePopupMenu menu; // JPopupMenu
     private DefaultCheckListModel<DistinctColumnItem> model;
-    
+    private ActionCheckListModel actionCheckListModel;
 
     /**
      * CONSTRUCTOR
@@ -320,7 +320,8 @@ class TableFilterColumnPopup implements MouseListener {
         Collection<DistinctColumnItem> distinctItems = filter.getDistinctColumnItems(mColumnIndex);
 
         model = new DefaultCheckListModel<>(distinctItems);
-        filterList.setModel(actionsVisible ? new ActionCheckListModel<>(model) : model);
+        actionCheckListModel = new ActionCheckListModel<>(model);
+        filterList.setModel(actionsVisible ? actionCheckListModel : model);
         Collection<DistinctColumnItem> checked = filter.getFilterState(mColumnIndex);
 
         // replace empty checked items with full selection
