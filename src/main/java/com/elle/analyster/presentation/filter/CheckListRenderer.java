@@ -16,7 +16,7 @@ import javax.swing.border.EmptyBorder;
 
 /**
  * CLASS CheckListRenderer
- * This instance is called from CheckList and TableAwareCheckListRenderer
+ * This instance is called once from CheckList and TableAwareCheckListRenderer inherits
  */
 public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Serializable {
 
@@ -242,6 +242,8 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Se
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
     }
     
+    
+    // THIS IS A CLASS
     @SuppressWarnings("serial")
     public static class UIResource extends DefaultListCellRenderer implements javax.swing.plaf.UIResource {
     }

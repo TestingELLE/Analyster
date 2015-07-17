@@ -24,6 +24,7 @@ public class CheckList<T> {
     // class components and objects
     private final JList list;
     private static final CheckListEditor checkBoxEditor = new CheckListEditor();
+    private CheckListRenderer checkListRenderer;
     
     /**
      * Nested class
@@ -59,7 +60,8 @@ public class CheckList<T> {
         this.list.getSelectionModel().setSelectionMode( ListSelectionModel.SINGLE_SELECTION);
 
         if ( !isEditorAttached() ) list.addMouseListener(checkBoxEditor);
-        this.list.setCellRenderer(new CheckListRenderer());
+        checkListRenderer = new CheckListRenderer();
+        this.list.setCellRenderer(checkListRenderer);
         
         setupKeyboardActions(list);
 
