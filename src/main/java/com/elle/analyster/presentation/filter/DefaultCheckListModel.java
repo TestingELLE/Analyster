@@ -19,6 +19,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     private final Set<T> dataSet = new HashSet<T>();
     private List<T> filteredDataList = null;
     private Set<T> filteredDataSet = null;
+    private IListFilter filter;
 
     
     /**
@@ -127,7 +128,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
             filteredDataSet = null;
         } else {
 
-            IListFilter filter = listFilter == null? CheckListFilterType.CONTAINS: listFilter;
+            filter = listFilter == null? CheckListFilterType.CONTAINS: listFilter;
 
             String p = pattern.toLowerCase();
 
