@@ -7,6 +7,7 @@ import java.util.Collection;
  * INTERFACE ICheckListModel<T> 
  * this is implemented in 
  * ActionCheckListModel & DefaultCheckListModel
+ * Looks like methods for checking the state of the checks in the checklist
  * @param <T> 
  */
 public interface ICheckListModel<T> extends ListModel{

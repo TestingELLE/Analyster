@@ -320,8 +320,10 @@ class TableFilterColumnPopup implements MouseListener {
         Collection<DistinctColumnItem> distinctItems = filter.getDistinctColumnItems(mColumnIndex);
 
         model = new DefaultCheckListModel<>(distinctItems);
+        
         actionCheckListModel = new ActionCheckListModel<>(model);
         filterList.setModel(actionsVisible ? actionCheckListModel : model);
+        
         Collection<DistinctColumnItem> checked = filter.getFilterState(mColumnIndex);
 
         // replace empty checked items with full selection

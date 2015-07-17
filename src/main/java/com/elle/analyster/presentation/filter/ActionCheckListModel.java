@@ -22,10 +22,13 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
      * CONSTRUCTOR
      * ActionCheckListModel
      * Looks like it just adds a listListener
+     * The List of ListDataListeners does not make sense since this is only called
+     * once and each time is a new instance
      * @param originalModel 
      */
     public ActionCheckListModel( final ICheckListModel<T> originalModel ) {
         
+        // apparently this is never null
         if ( originalModel == null ) throw new NullPointerException();
         this.originalModel = originalModel;
         
