@@ -29,20 +29,13 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
      */
     public DefaultCheckListModel( Collection<? extends T> data ) {
 
+        // Not sure what the point of this is
+        // it takes a collection to create two identical collections
         if ( data == null ) return;
         for (T object : data) {
             dataList.add(object);
             dataSet.add(object);
         }
-    }
-
-    /**
-     * CONSTRUCTOR
-     * DefaultCheckListModel
-     * @param data 
-     */
-    public DefaultCheckListModel( T... data ) {
-        this( Arrays.asList( data ));
     }
 
     /* (non-Javadoc)

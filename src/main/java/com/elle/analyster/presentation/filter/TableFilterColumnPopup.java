@@ -317,11 +317,16 @@ class TableFilterColumnPopup implements MouseListener {
         mColumnIndex = filter.getTable().convertColumnIndexToModel(vColumnIndex);
         setPreferredSize(getColumnAttrs(vColumnIndex).preferredSize);
 
+        // get Collection<DistinctColumnItem>  for column index
         Collection<DistinctColumnItem> distinctItems = filter.getDistinctColumnItems(mColumnIndex);
 
+        // new DefaultCheckListModel passed Collection<DistinctColumnItem> 
         model = new DefaultCheckListModel<>(distinctItems);
         
+        // pass that model to ActionCheckListModel
         actionCheckListModel = new ActionCheckListModel<>(model);
+        
+        // filterList = Collection<DistinctColumnItem> 
         filterList.setModel(actionsVisible ? actionCheckListModel : model);
         
         Collection<DistinctColumnItem> checked = filter.getFilterState(mColumnIndex);
