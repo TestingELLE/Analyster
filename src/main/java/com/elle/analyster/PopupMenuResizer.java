@@ -50,6 +50,11 @@ public class PopupMenuResizer extends MouseAdapter {
 
     /**
      * decorate
+     * Very strange behavior
+     * If this method is not static I get an unknown table error when
+     * the program boots up.
+     * I believe it is a custom error I made throwUnknownTableException
+     * It is working for now so that I can at least show the UML relation.
      * @param menu 
      */
     public static void decorate( JPopupMenu menu ) {
