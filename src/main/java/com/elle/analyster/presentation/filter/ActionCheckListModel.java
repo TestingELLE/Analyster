@@ -9,7 +9,7 @@ import java.util.*;
  * ActionCheckListModel
  * @param <T> 
  */
-public class ActionCheckListModel<T> implements ICheckListModel<T> {
+public class ActionCheckListModel<T> implements ICheckListModel<T>{
     
     // attributes
     private final List<ListDataListener> listeners = Collections.synchronizedList( new ArrayList<ListDataListener>());

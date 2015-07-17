@@ -106,15 +106,6 @@ public class CheckList<T> {
     }
     
     /**
-     * setData
-     * Sets data to a check list. Simplification for setting new the model 
-     * @param data
-     */
-    public void setData( Collection<T> data ) {
-        setModel( new DefaultCheckListModel<T>(data));
-    }
-    
-    /**
      * setModel
      * Sets the model for check list.
      * @param model
