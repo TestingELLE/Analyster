@@ -46,11 +46,17 @@ public class AddRecords extends JFrame {
         logger = LoggerFactory.getLogger(AddRecords.class);
         gui = new GUI();
         
+        // set the title of the window
+        this.setTitle("Add Records");
+        
         // set this window to appear in the middle of Analyster
         this.setLocationRelativeTo(analyster);
         
         // set the selected table name
         tableName = analyster.getSelectedTab();
+        
+        // set the label header
+        labelAddRecordsTableName.setText("Add Records to " + tableName);
         
         // get column names for selected Analyster table
         columnNames = analyster.getTabs().get(tableName).getTableColNames();
@@ -84,6 +90,7 @@ public class AddRecords extends JFrame {
         jSubmit = new javax.swing.JButton();
         jCancel = new javax.swing.JButton();
         jAddRow = new javax.swing.JButton();
+        labelAddRecordsTableName = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(550, 200));
@@ -145,6 +152,8 @@ public class AddRecords extends JFrame {
             }
         });
 
+        labelAddRecordsTableName.setText("Add Records to Assignments ");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -158,14 +167,17 @@ public class AddRecords extends JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jSubmit)
                         .addGap(18, 18, 18)
-                        .addComponent(jCancel)))
+                        .addComponent(jCancel))
+                    .addComponent(labelAddRecordsTableName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(labelAddRecordsTableName)
+                .addGap(12, 12, 12)
+                .addComponent(scrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSubmit)
@@ -350,6 +362,7 @@ public class AddRecords extends JFrame {
     private javax.swing.JButton jCancel;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton jSubmit;
+    private javax.swing.JLabel labelAddRecordsTableName;
     private javax.swing.JScrollPane scrollpane;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
