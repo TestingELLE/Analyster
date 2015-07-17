@@ -1073,7 +1073,7 @@ public class Analyster extends JFrame implements ITableConstants{
     }//GEN-LAST:event_jMenuEditDBActionPerformed
 
     private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
-        addRecords = new AddRecords(this, logwind);
+        addRecords = new AddRecords();
         addRecords.setVisible(true);
         
         // update records

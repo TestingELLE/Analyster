@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.elle.analyster;
 
 import org.slf4j.Logger;
@@ -17,7 +13,6 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 
 /**
  *
@@ -25,42 +20,54 @@ import java.util.List;
  */
 public class AddRecords extends JFrame {
 
-    @Autowired
-    private Analyster ana;
-    private LogWindow log = new LogWindow();
+    // attributes
     private String[] columnNames;
     private String tableName;
-    private Logger logger = LoggerFactory.getLogger(AddRecords.class);
-    private GUI gui = new GUI();
     private int numRowsAdded;  // number of rows added counter
-    private String selectedTable;
+    
+    // components
+    @Autowired
+    private Analyster analyster;
+    private LogWindow logWindow;
+    private Logger logger;
+    private GUI gui;
+    private DefaultTableModel model;
 
     /**
      * Creates new form ReportWin <-- does it really?
      */
-    public AddRecords(Analyster a, LogWindow l) {
+    public AddRecords() {
         
+        // initialize components
         initComponents();
-        ana = a;
-        log = l;
+        analyster = Analyster.getInstance();
+        logWindow = analyster.getLogwind();
+        logger = LoggerFactory.getLogger(AddRecords.class);
+        gui = new GUI();
         
-        this.setLocationRelativeTo(a);
+        // set this window to appear in the middle of Analyster
+        this.setLocationRelativeTo(analyster);
         
-        // initialize the table with 10 empty rows
-        Object[][] data = {{},{},{},{},{},{},{},{},{},{}}; 
+        // set the selected table name
+        tableName = analyster.getSelectedTab();
         
         // get column names for selected Analyster table
-        columnNames = ana.getTabs().get(ana.getSelectedTab()).getTableColNames();
+        columnNames = analyster.getTabs().get(tableName).getTableColNames();
+        
+        // initialize the table data with 10 empty rows
+        Object[][] data = {{},{},{},{},{},{},{},{},{},{}}; 
         
         // we don't want the ID column 
         columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
         
         // set the table model
-        table.setModel(new DefaultTableModel(data, columnNames));
+        model = new DefaultTableModel(data, columnNames);
         
-        setKeyboardFocusManager(); // sets the keyboard focus manager
+        // add the table model to the table
+        table.setModel(model);
         
-        tableName = ana.getSelectedTab(); // used for the sql statement
+        // sets the keyboard focus manager
+        setKeyboardFocusManager(); 
         
     }
 
@@ -244,7 +251,7 @@ public class AddRecords extends JFrame {
                 String sqlChange = "INSERT INTO " + tableName + title + " VALUES " + rows.get(i);
                 System.out.println(sqlChange);
                 gui.stmt.executeUpdate(sqlChange);
-                log.sendMessages(sqlChange);
+                logWindow.sendMessages(sqlChange);
                 flag = true;
             } catch (SQLException ex) {
                 ex.getErrorCode();
@@ -258,11 +265,11 @@ public class AddRecords extends JFrame {
 
         if (flag) {
             JOptionPane.showMessageDialog(null, "Add successfully!");
-            ana.loadData();
-            ana.setLastUpdateTime();
+            analyster.loadData();
+            analyster.setLastUpdateTime();
             
             // update total records with new records added
-            ana.getTabs().get(ana.getSelectedTab()).addToTotalRowCount(numRowsAdded);
+            analyster.getTabs().get(analyster.getSelectedTab()).addToTotalRowCount(numRowsAdded);
         }
         this.dispose();
     }//GEN-LAST:event_jSubmitActionPerformed
@@ -276,21 +283,15 @@ public class AddRecords extends JFrame {
     }//GEN-LAST:event_jCancelActionPerformed
 
     private void jAddRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddRowActionPerformed
-        int rows = table.getRowCount();
-        initTable(rows + 1);
+
+        // add an empty row to the table
+        model.addRow(new Object[]{});
     }//GEN-LAST:event_jAddRowActionPerformed
 
     private void tableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableKeyPressed
 
     }//GEN-LAST:event_tableKeyPressed
-
-    /**
-     * This method is called by netbeans components?
-     * I will have to investigate this
-     * @param rows 
-     */
-    private void initTable(int rows) {}
-    
+   
     /**
      * setKeyboardFocusManager
      * Sets the Keyboard Focus Manager
