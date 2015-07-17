@@ -55,14 +55,11 @@ public class AddRecords extends JFrame {
         // get column names for selected Analyster table
         columnNames = analyster.getTabs().get(tableName).getTableColNames();
         
-        // initialize the table data with 10 empty rows
-        Object[][] data = {{},{},{},{},{},{},{},{},{},{}}; 
-        
         // we don't want the ID column 
         columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
         
         // set the table model
-        model = new DefaultTableModel(data, columnNames);
+        model = new DefaultTableModel(columnNames, 10);
         
         // add the table model to the table
         table.setModel(model);
