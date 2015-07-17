@@ -58,7 +58,7 @@ public class AddRecords extends JFrame {
         // we don't want the ID column 
         columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
         
-        // set the table model
+        // set the table model - add 10 empty rows
         model = new DefaultTableModel(columnNames, 10);
         
         // add the table model to the table
