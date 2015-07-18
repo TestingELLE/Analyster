@@ -17,13 +17,14 @@ public class Tab implements ITableConstants{
     private JTableFilter filter;
     private float[] colWidthPercent;
     private int totalRecords;
+    private int recordsShown;
     private String[] tableColNames;
     private String[] searchFields;
-    private int recordsShown;
     
     // these menu items are enabled differently for each tab
     private boolean activateRecordMenuItemEnabled;
     private boolean archiveRecordMenuItemEnabled;
+    private boolean addRecordsBtnVisible;
 
     
     /**
@@ -35,6 +36,10 @@ public class Tab implements ITableConstants{
         filteredTable = new JTable();
         totalRecords = 0;
         recordsShown = 0;
+        activateRecordMenuItemEnabled = false;
+        archiveRecordMenuItemEnabled = false;
+        addRecordsBtnVisible = false;
+        
         // filter is an instance and does not get initialized
     }
     
@@ -152,9 +157,16 @@ public class Tab implements ITableConstants{
     public void setSearchFields(String[] searchFields) {
         this.searchFields = searchFields;
     }
-    
-    
 
+    public boolean isAddRecordsBtnVisible() {
+        return addRecordsBtnVisible;
+    }
+
+    public void setAddRecordsBtnVisible(boolean addRecordsBtnVisible) {
+        this.addRecordsBtnVisible = addRecordsBtnVisible;
+    }
+    
+    
 
     /**************************************************************************
      *************************** Methods **************************************

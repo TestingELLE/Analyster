@@ -67,17 +67,48 @@ public class Analyster extends JFrame implements ITableConstants{
      */
     public Analyster() {
         
-        instance = this; // this is used to call an instance of Analyster  
+        /**
+         * Note: initComponents() executes the tabpaneChanged method.
+         * Thus, some things need to be before or after the initComponents();
+         */
+        
+        // this is used to call an instance of Analyster 
+        instance = this;  
 
         // create tab objects -> this has to be before initcomponents();
         tabs.put(ASSIGNMENTS_TABLE_NAME, new Tab());
         tabs.put(REPORTS_TABLE_NAME, new Tab());
         tabs.put(ARCHIVE_TABLE_NAME, new Tab());
         
-        // set table names -> this has to be before initcomponents();
+        // set table names 
         tabs.get(ASSIGNMENTS_TABLE_NAME).setTableName(ASSIGNMENTS_TABLE_NAME);
         tabs.get(REPORTS_TABLE_NAME).setTableName(REPORTS_TABLE_NAME);
         tabs.get(ARCHIVE_TABLE_NAME).setTableName(ARCHIVE_TABLE_NAME);
+        
+        // set the search fields for the comboBox for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setSearchFields(ASSIGNMENTS_SEARCH_FIELDS);
+        tabs.get(REPORTS_TABLE_NAME).setSearchFields(REPORTS_SEARCH_FIELDS);
+        tabs.get(ARCHIVE_TABLE_NAME).setSearchFields(ARCHIVE_SEARCH_FIELDS);
+        
+        // set column width percents to tables of the tab objects
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
+        tabs.get(REPORTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_REPORTS);
+        tabs.get(ARCHIVE_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ARCHIVE);
+        
+        // set Activate Records menu item enabled for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setActivateRecordMenuItemEnabled(false);
+        tabs.get(REPORTS_TABLE_NAME).setActivateRecordMenuItemEnabled(false);
+        tabs.get(ARCHIVE_TABLE_NAME).setActivateRecordMenuItemEnabled(true);
+        
+        // set Archive Records menu item enabled for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(true);
+        tabs.get(REPORTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
+        tabs.get(ARCHIVE_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
+        
+        // set add records button visible for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setAddRecordsBtnVisible(true);
+        tabs.get(REPORTS_TABLE_NAME).setAddRecordsBtnVisible(true);
+        tabs.get(ARCHIVE_TABLE_NAME).setAddRecordsBtnVisible(false);
         
         initComponents(); // generated code
         
@@ -99,32 +130,7 @@ public class Analyster extends JFrame implements ITableConstants{
         tabs.get(REPORTS_TABLE_NAME).setTableColNames(reportTable);
         tabs.get(ARCHIVE_TABLE_NAME).setTableColNames(archiveTable);
         
-        // set the search fields for the comboBox for each tab
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setSearchFields(ASSIGNMENTS_SEARCH_FIELDS);
-        tabs.get(REPORTS_TABLE_NAME).setSearchFields(REPORTS_SEARCH_FIELDS);
-        tabs.get(ARCHIVE_TABLE_NAME).setSearchFields(ARCHIVE_SEARCH_FIELDS);
-        
-        // this initializes the comboBox for the first tab
-        // this overrides the properties model because we need to change the 
-        // values for each tab so the constants should be used in this case.
-        // To make changes, the constants are in ITableConstants
-        comboBoxSearch.setModel(new DefaultComboBoxModel(ASSIGNMENTS_SEARCH_FIELDS));
-        
-        // set column width percents to tables of the tab objects
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
-        tabs.get(REPORTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_REPORTS);
-        tabs.get(ARCHIVE_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ARCHIVE);
-        
-        // set Activate Records menu item enabled for each tab
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setActivateRecordMenuItemEnabled(false);
-        tabs.get(REPORTS_TABLE_NAME).setActivateRecordMenuItemEnabled(false);
-        tabs.get(ARCHIVE_TABLE_NAME).setActivateRecordMenuItemEnabled(true);
-        
-        // set Archive Records menu item enabled for each tab
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(true);
-        tabs.get(REPORTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
-        tabs.get(ARCHIVE_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
-        
+        // this sets the KeyboardFocusManger
         setKeyboardFocusManager();
 
         // show and hide components
@@ -1012,6 +1018,9 @@ public class Analyster extends JFrame implements ITableConstants{
         // this enables or disables the menu components for this tab
         jActivateRecord.setEnabled(tabs.get(selectedTab).isActivateRecordMenuItemEnabled()); 
         jArchiveRecord.setEnabled(tabs.get(selectedTab).isArchiveRecordMenuItemEnabled()); 
+        
+        // show or hide the add records button
+        btnAddRecords.setVisible(tabs.get(selectedTab).isAddRecordsBtnVisible());
         
         switch (selectedTab) {
             case ASSIGNMENTS_TABLE_NAME:
