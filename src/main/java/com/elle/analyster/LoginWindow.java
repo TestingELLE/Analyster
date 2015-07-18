@@ -312,6 +312,9 @@ public class LoginWindow extends JFrame {
 
     /**
      *  Loads the names of the databases from a text file
+     * 
+     *  this is if the actual database list is edited then it 
+        updates the combobox with the new values
      */
     public void loadDBList() {
         String temp = null;
