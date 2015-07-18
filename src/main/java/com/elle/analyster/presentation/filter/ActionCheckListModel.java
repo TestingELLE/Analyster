@@ -26,10 +26,8 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * once and each time is a new instance
      * @param originalModel 
      */
-    public ActionCheckListModel( final ICheckListModel<T> originalModel ) {
+    public ActionCheckListModel( final DefaultCheckListModel<T> originalModel ) {
         
-        // apparently this is never null
-        if ( originalModel == null ) throw new NullPointerException();
         this.originalModel = originalModel;
         
         //react on original model changes

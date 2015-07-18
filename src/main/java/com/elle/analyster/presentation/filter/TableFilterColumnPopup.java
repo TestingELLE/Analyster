@@ -318,8 +318,15 @@ class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupM
         // pass that model to ActionCheckListModel
         actionCheckListModel = new ActionCheckListModel<>(model);
         
-        // filterList = Collection<DistinctColumnItem> 
-        filterList.setModel(actionsVisible ? actionCheckListModel : model);
+        // if actionsVisible return actionCheckListModel else return model
+        // I am going to revise this for testing
+        if(actionsVisible){
+            filterList.setModel(actionCheckListModel);
+        }
+        else{
+            filterList.setModel(model);
+        }
+        
         
         Collection<DistinctColumnItem> checked = filter.getFilterState(mColumnIndex);
 

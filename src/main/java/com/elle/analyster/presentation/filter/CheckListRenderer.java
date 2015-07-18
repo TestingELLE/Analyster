@@ -3,7 +3,6 @@ package com.elle.analyster.presentation.filter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Rectangle;
-import java.io.Serializable;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
@@ -23,6 +22,7 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer{
     // attributes
     private static final Border NO_FOCUS_BORDER      = new EmptyBorder(1, 1, 1, 1);
     private static final Border SAFE_NO_FOCUS_BORDER = NO_FOCUS_BORDER; // may change in the feature
+    
 
     /**
      * CONSTRUCTOR
@@ -34,6 +34,7 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer{
         super();
         setOpaque(true);
         setBorder(getNoFocusBorder());
+
     }
 
     /**
@@ -69,7 +70,9 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer{
         Color bg = null;
         Color fg = null;
 
+        // the location the component should visually indicate
         JList.DropLocation dropLocation = list.getDropLocation();
+        
         if (dropLocation != null && !dropLocation.isInsert() && dropLocation.getIndex() == index) {
 
             bg = UIManager.getColor("List.dropCellBackground");
