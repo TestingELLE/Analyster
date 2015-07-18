@@ -8,7 +8,6 @@ package com.elle.analyster.presentation.filter;
 
 
 import com.elle.analyster.Analyster;
-import com.elle.analyster.CommandAction;
 import com.elle.analyster.GUI;
 
 import javax.swing.*;
@@ -41,9 +40,10 @@ class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupM
     private JTableFilter filter; // JTable filter
     private TableModel myTableModelInitial; // initial table model
     private GUI gui; // this is usually static and an instance is usually not used
-    private CommandAction commandAction; // this is the actions for the buttons (Apply & Cancel)
     private DefaultCheckListModel<DistinctColumnItem> model;
     private ActionCheckListModel actionCheckListModel;
+    private JButton btnApply;
+    private JButton btnCancel;
 
     /**
      * CONSTRUCTOR
@@ -127,49 +127,53 @@ class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupM
      * and a command box for the command buttons apply & cancel
      */
     protected JComponent buildContent() {
-        JPanel owner = new JPanel(new BorderLayout(3, 3));
-        owner.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        owner.setPreferredSize(new Dimension(250, 300)); // default popup size
+        
+        // create a new JPanel
+        JPanel panel = new JPanel(new BorderLayout(3, 3));
+        panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        panel.setPreferredSize(new Dimension(250, 300)); // default popup size
 
-        Box commands = new Box(BoxLayout.LINE_AXIS);
+        // create a new Box for the commands
+        Box boxCommands = new Box(BoxLayout.LINE_AXIS);
 
+        // create a toolbar and add it to the box of commands
         JToolBar toolbar = new JToolBar();
         toolbar.setFloatable(false);
         toolbar.setOpaque(false);
-        commands.add(toolbar);
+        boxCommands.add(toolbar);
 
-        commands.add(Box.createHorizontalGlue());
+        // add horizontal glue to the box
+        boxCommands.add(Box.createHorizontalGlue());
         
-        // create apply action performed and set menu
-        commandAction = new CommandAction("Apply"){
-
-            @Override
-            protected boolean perform() {
-                return applyColumnFilter();
+        // create Apply button
+        btnApply = new JButton("Apply");
+        btnApply.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applyColumnFilter();
             }
-        };
+        });
         
-        commandAction.setMenu(this.getMenu());
-
-        JButton apply = new JButton(commandAction);
+        // create Cancel button
+        btnCancel = new JButton("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setVisible(false);
+            }
+        });
         
-        commands.add(apply);
+        // add buttons and look and feel to box of commands
+        boxCommands.add(btnApply);
+        boxCommands.add(Box.createHorizontalStrut(5));
+        boxCommands.add(btnCancel);
+        boxCommands.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
+        boxCommands.setBackground(UIManager.getColor("Panel.background"));
+        boxCommands.setOpaque(true);
         
-        // add commandAction for the cancel button and set the menu
-        commandAction = new CommandAction("Cancel");
-        commandAction.setMenu(this.getMenu()); // pass this menu reference
+        // add the list and box of commands to the panel
+        panel.add(new JScrollPane(filterList.getList()), BorderLayout.CENTER); // add list to center
+        panel.add(boxCommands, BorderLayout.SOUTH); // add command buttons to south of panel
 
-        commands.add(Box.createHorizontalStrut(5));
-        commands.add(new JButton(commandAction));
-        commands.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
-        commands.setBackground(UIManager.getColor("Panel.background"));
-        commands.setOpaque(true);
-        // owner is the JPanel
-        owner.add(new JScrollPane(filterList.getList()), BorderLayout.CENTER); // add list to center
-        owner.add(commands, BorderLayout.SOUTH); // add command buttons to south of panel
-
-        return owner; // return JPanel
-
+        return panel; // return JPanel
     }
 
     /**
@@ -178,7 +182,7 @@ class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupM
      * 
      * This is the action performed for apply button
      */
-    public boolean applyColumnFilter() {
+    public void applyColumnFilter() {
         
         // apply filter
         Collection<DistinctColumnItem> checked = filterList.getCheckedItems();
@@ -196,7 +200,8 @@ class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupM
         String labelMsg = analyster.getTabs().get(selectedTab).getRecordsLabel();
         analyster.getRecordsLabel().setText(labelMsg);
         
-        return true;
+        //return true;
+        this.setVisible(false);
     }
 
     /**
