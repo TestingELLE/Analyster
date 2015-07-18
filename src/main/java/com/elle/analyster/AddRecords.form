@@ -31,7 +31,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+          <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -41,37 +41,29 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="scrollpane" pref="651" max="32767" attributes="0"/>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="jAddRow" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jSubmit" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                          <Component id="jCancel" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="labelAddRecordsTableName" alignment="0" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="jAddRow" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="445" max="32767" attributes="0"/>
+                  <Component id="jSubmit" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                  <Component id="jCancel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
+              <Component id="scrollpane" alignment="1" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
+                  <Component id="scrollpane" pref="179" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                  <Component id="labelAddRecordsTableName" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                  <Component id="scrollpane" min="-2" pref="143" max="-2" attributes="0"/>
-                  <EmptySpace pref="10" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jSubmit" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jCancel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jAddRow" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -165,11 +157,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jAddRowActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="labelAddRecordsTableName">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Add Records to Assignments "/>
-          </Properties>
         </Component>
       </SubComponents>
     </Container>
