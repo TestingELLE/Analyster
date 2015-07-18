@@ -23,7 +23,7 @@ public class CheckList<T> {
 
     // class components and objects
     private final JList list;
-    private static final CheckListEditor checkBoxEditor = new CheckListEditor();
+    private static final CheckListMouseAdapter checkListMouseAdapter = new CheckListMouseAdapter();
     private CheckListRenderer checkListRenderer;
     
     /**
@@ -59,7 +59,11 @@ public class CheckList<T> {
         this.list = list;
         this.list.getSelectionModel().setSelectionMode( ListSelectionModel.SINGLE_SELECTION);
 
-        if ( !isEditorAttached() ) list.addMouseListener(checkBoxEditor);
+        // call the boolean method to see if attached
+        if ( !isEditorAttached() ) 
+            list.addMouseListener(checkListMouseAdapter);
+        
+        
         checkListRenderer = new CheckListRenderer();
         this.list.setCellRenderer(checkListRenderer);
         
@@ -91,7 +95,7 @@ public class CheckList<T> {
     private boolean isEditorAttached() {
         
         for( MouseListener ml: list.getMouseListeners() ) {
-            if ( ml instanceof CheckListEditor ) return true;
+            if ( ml instanceof CheckListMouseAdapter ) return true;
         }
         return false;
         

@@ -18,10 +18,9 @@ import javax.swing.border.EmptyBorder;
  * CLASS CheckListRenderer
  * This instance is called once from CheckList and TableAwareCheckListRenderer inherits
  */
-public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Serializable {
+public class CheckListRenderer extends JCheckBox implements ListCellRenderer{
 
     // attributes
-    private static final long serialVersionUID = 1L;
     private static final Border NO_FOCUS_BORDER      = new EmptyBorder(1, 1, 1, 1);
     private static final Border SAFE_NO_FOCUS_BORDER = NO_FOCUS_BORDER; // may change in the feature
 
