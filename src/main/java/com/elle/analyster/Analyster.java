@@ -224,7 +224,9 @@ public class Analyster extends JFrame implements ITableConstants{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(894, 560));
 
+        labelTimeLastUpdate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelTimeLastUpdate.setText("Last updated: ");
+        labelTimeLastUpdate.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         btnSearch.setText("Search");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -292,15 +294,12 @@ public class Analyster extends JFrame implements ITableConstants{
         addPanel_controlLayout.setHorizontalGroup(
             addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(addPanel_controlLayout.createSequentialGroup()
-                .addGroup(addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(addPanel_controlLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(addPanel_controlLayout.createSequentialGroup()
-                        .addGap(258, 258, 258)
-                        .addComponent(labelTimeLastUpdate)))
+                .addContainerGap()
+                .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelTimeLastUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelRecords, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE))
                 .addContainerGap(84, Short.MAX_VALUE))
         );
         addPanel_controlLayout.setVerticalGroup(
@@ -310,9 +309,9 @@ public class Analyster extends JFrame implements ITableConstants{
                 .addGroup(addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(labelTimeLastUpdate)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         tabbedPanel.setPreferredSize(new java.awt.Dimension(800, 584));
