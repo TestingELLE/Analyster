@@ -201,20 +201,20 @@ public class Tab implements ITableConstants{
         switch (getTableName()) {
             case ASSIGNMENTS_TABLE_NAME:
                 output = "<html><pre>"
-                       + "          Number of records shown: " + getTotalRecords() 
-                  + "<br/> Number of records in Assignments: " + getRecordsShown()
+                       + "          Number of records shown: " + getRecordsShown() 
+                  + "<br/> Number of records in Assignments: " + getTotalRecords()
                      + "</pre></html>";
                 break;
             case REPORTS_TABLE_NAME:
                 output = "<html><pre>"
-                       + "      Number of records shown: " + getTotalRecords() 
-                  + "<br/> Number of records in Reports: " + getRecordsShown()
+                       + "      Number of records shown: " + getRecordsShown() 
+                  + "<br/> Number of records in Reports: " + getTotalRecords() 
                      + "</pre></html>";
                 break;
             case ARCHIVE_TABLE_NAME:
                 output = "<html><pre>"
-                       + "      Number of records shown: " + getTotalRecords() 
-                  + "<br/> Number of records in Archive: " + getRecordsShown()
+                       + "      Number of records shown: " + getRecordsShown() 
+                  + "<br/> Number of records in Archive: " + getTotalRecords() 
                      + "</pre></html>";
                 break;
             default:
