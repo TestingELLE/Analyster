@@ -10,7 +10,6 @@ package com.elle.analyster.presentation.filter;
 import com.elle.analyster.Analyster;
 import com.elle.analyster.CommandAction;
 import com.elle.analyster.GUI;
-import com.elle.analyster.ResizablePopupMenu;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
@@ -25,8 +24,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
-class TableFilterColumnPopup implements MouseListener {
+class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupMenuListener {
 
     // class attributes
     private CheckList<DistinctColumnItem> filterList; // this calls the build method
@@ -42,7 +42,6 @@ class TableFilterColumnPopup implements MouseListener {
     private TableModel myTableModelInitial; // initial table model
     private GUI gui; // this is usually static and an instance is usually not used
     private CommandAction commandAction; // this is the actions for the buttons (Apply & Cancel)
-    private ResizablePopupMenu menu; // JPopupMenu
     private DefaultCheckListModel<DistinctColumnItem> model;
     private ActionCheckListModel actionCheckListModel;
 
@@ -62,30 +61,8 @@ class TableFilterColumnPopup implements MouseListener {
         actionsVisible = true;
         useTableRenderers = false;
         
-
-        // ResizablePopupMenu is a JPopupMenu
-        menu = new ResizablePopupMenu( true ) {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                if ( menu.getComponentCount() == 0 ) {
-                    JComponent content = buildContent(); // this builds the window JPanel
-                    defaultSize = content.getPreferredSize();
-                    
-                    menu.add( content ); //add JPanel with content to the JPopupMenu
-
-                }
-                beforeShow();
-            }
-
-            @Override
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                beforeHide();
-            }
-
-        };
+        // from ResizablePopupMenu
+        addPopupMenuListener(this);
 
         this.filter = filter;
         
@@ -422,33 +399,6 @@ class TableFilterColumnPopup implements MouseListener {
     }
 
     /**
-     * getPreferredSize
-     * @return 
-     */
-    public final Dimension getPreferredSize() {
-        return menu.getPreferredSize();
-    }
-
-    /**
-     * setPreferredSize
-     * @param preferredSize 
-     */
-    public final void setPreferredSize( Dimension preferredSize ) {
-        menu.setPreferredSize(preferredSize);
-    }
-
-
-    /**
-     * Shows Popup in predefined location
-     * @param invoker
-     * @param x
-     * @param y
-     */
-    public void show( Component invoker, int x, int y ) {
-        menu.show( invoker, x, y );
-    }
-
-    /**
      * Shows popup in predefined location
      * @param invoker
      * @param location
@@ -467,6 +417,53 @@ class TableFilterColumnPopup implements MouseListener {
      * @return 
      */
     public JPopupMenu getMenu() {
-        return menu;
+        return this;
     }
+    
+    
+    /**************************************************************************
+     *********************** ResizablePopupMenu Methods ***********************
+     **************************************************************************/
+    
+    /**
+     * popupMenuWillBecomeVisible
+     * @param e 
+     */
+    @Override
+    public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+        if ( this.getComponentCount() == 0 ) {
+            JComponent content = buildContent(); // this builds the window JPanel
+            defaultSize = content.getPreferredSize();
+
+            this.add( content ); //add JPanel with content to the JPopupMenu
+
+        }
+        beforeShow();
+    }
+
+    /**
+     * popupMenuWillBecomeInvisible
+     * @param e 
+     */
+    @Override
+    public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+        beforeHide();
+    }
+
+    /**
+     * popupMenuCanceled
+     * @param e 
+     */
+    @Override
+    public  void popupMenuCanceled(PopupMenuEvent e) {}
+
+    /**
+     * paintChildren
+     * @param g 
+     */
+    @Override
+    public void paintChildren(Graphics g) {
+        super.paintChildren(g);
+        //if ( resizable ) drawResizer(g);
+    }       
 }
