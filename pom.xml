@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elle</groupId>
     <artifactId>Analyster</artifactId>
-    <version>0.6.7c</version>
+    <version>0.6.7d</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -60,7 +60,7 @@
             </plugin>
         </plugins>
     </build>
-    <description>- new archive Analyster_0.6.7c released
+    <description>- new archive Analyster_0.6.7d released
   - Changed the Add Records window
   - The add records button does not display on Assignments Archived
   - The last update label appears below the records shown and total records.
