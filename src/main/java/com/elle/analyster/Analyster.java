@@ -7,7 +7,6 @@ import com.elle.analyster.presentation.filter.DistinctColumnItem;
 import com.elle.analyster.presentation.filter.JTableFilter;
 import com.elle.analyster.presentation.filter.TableFilterColumnPopup;
 import static com.elle.analyster.service.Connection.connection;
-import com.elle.analyster.service.DeleteRecord;
 import com.elle.analyster.service.UploadRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +47,6 @@ public class Analyster extends JFrame implements ITableConstants{
 
     private JTableFilter jTableFilter;
     private JTableHeader header;
-    private DeleteRecord deleteRecord;
     private AddRecords  addRecords;
     
     private static Analyster instance;
@@ -1143,12 +1141,12 @@ public class Analyster extends JFrame implements ITableConstants{
     }//GEN-LAST:event_jMenuItemLogOffActionPerformed
 
     private void jDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
-        deleteRecord = new DeleteRecord();
+        
         String selectedTab = getSelectedTab();
         String sqlDelete;
 
        try{
-            sqlDelete = deleteRecord.deleteRecordSelected(tabs.get(selectedTab).getTable());
+            sqlDelete = deleteRecordSelected(tabs.get(selectedTab).getTable());
             logwind.sendMessages(sqlDelete);
             
             // set label record information
@@ -2055,7 +2053,34 @@ public class Analyster extends JFrame implements ITableConstants{
 
     }
     
+    /***************************************************************************
+     ********************* DeleteRecords Method ********************************
+     ***************************************************************************/
     
+    public String deleteRecordSelected( JTable table) throws HeadlessException {
+        String sqlDelete = "";
+        String tableName = table.getName();
+        int rowsSelected = table.getSelectedRows().length;
+        if (rowsSelected != -1) {
+            for (int i = 0; i < rowsSelected; i++) {
+                int row = table.getSelectedRows()[i];
+                Integer selectedTask = (Integer) table.getValueAt(row, 0); // Add Note to selected taskID
+                sqlDelete = "DELETE FROM " + GUI.getDatabase() + "." + tableName + " where ID=" + selectedTask;
+                try {
+                    GUI.getStmt().executeUpdate(sqlDelete);
+                } catch (SQLException e) {
+                    log.info(e.getMessage());
+                }
+            }
+            
+            // this is where the table is refreshing 
+            Analyster.getInstance().loadTable(Analyster.getInstance().getTabs().get(tableName).getTable());
+
+            // output pop up dialog that a record was deleted 
+            JOptionPane.showMessageDialog(Analyster.getInstance(), rowsSelected + " Record(s) Deleted");
+        }
+        return sqlDelete;
+    }
     
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
