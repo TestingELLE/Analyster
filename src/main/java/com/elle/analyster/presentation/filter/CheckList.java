@@ -151,7 +151,7 @@ public class CheckList<T> {
      * @param pattern
      * @param translator
      */
-    public void filter( String pattern, IListFilter listFilter ) {
+    public void filter( String pattern, CheckListFilterType listFilter ) {
         getModel().filter(pattern, listFilter);
     }
     

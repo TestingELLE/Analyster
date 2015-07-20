@@ -215,7 +215,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * @param listFilter 
      */
 
-    public void filter(String pattern, IListFilter listFilter) {
+    public void filter(String pattern, CheckListFilterType listFilter) {
         originalModel.filter(pattern, listFilter);
     }
 

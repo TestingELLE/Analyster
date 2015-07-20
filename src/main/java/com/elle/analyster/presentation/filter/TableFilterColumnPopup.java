@@ -35,6 +35,7 @@ class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupM
     private int mColumnIndex;
     private boolean actionsVisible;
     private boolean useTableRenderers;
+    private CheckListFilterType checkListFilterType;
     
     // components
     private JTableFilter filter; // JTable filter
@@ -60,6 +61,7 @@ class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupM
         mColumnIndex = -1;
         actionsVisible = true;
         useTableRenderers = false;
+        checkListFilterType = new CheckListFilterType(); // initialize the first time for the program here
         
         // from ResizablePopupMenu
         addPopupMenuListener(this);
@@ -188,7 +190,7 @@ class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupM
         Collection<DistinctColumnItem> checked = filterList.getCheckedItems();
         ICheckListModel<DistinctColumnItem> model = filterList.getModel();
         myTableModelInitial = filter.getTable().getModel();
-        model.filter("", CheckListFilterType.CONTAINS); // clear filter to get true results
+        model.filter("", checkListFilterType); // clear filter to get true results
         filter.apply(mColumnIndex, checked);
         filter.saveFilterCriteria(checked);
         filter.setColumnIndex(mColumnIndex);
