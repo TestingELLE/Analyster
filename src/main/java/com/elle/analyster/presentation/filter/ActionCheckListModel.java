@@ -13,7 +13,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
     
     // attributes
     private final List<ListDataListener> listeners = Collections.synchronizedList( new ArrayList<ListDataListener>());
-    private final ICheckListModel<T> originalModel;
+    private final DefaultCheckListModel<T> originalModel;
     private final CheckAll<T> actionCheckAll = new CheckAll<T>();
     private final List<CheckAll<T>> actionItems = Arrays.asList( actionCheckAll );
     private final Set<CheckAll<T>> checks = new HashSet<CheckAll<T>>();
@@ -162,7 +162,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * @param index
      * @return 
      */
-    @Override
+
     public boolean isCheckedIndex(int index) {
         if ( isDecoratedIndex(index)) {
             return checks.contains(actionItems.get(index));
@@ -177,9 +177,11 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * @param index
      * @param value 
      */
-    @Override
+
     public void setCheckedIndex(int index, boolean value) {
         if ( isDecoratedIndex(index)) {
+            
+            // returns List<CheckAll<T>
             CheckAll<T> item = actionItems.get(index);
             item.check(originalModel, value);
             if ( value ) checks.add(item); else checks.remove(item);
@@ -193,7 +195,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * getCheckedItems
      * @return 
      */
-    @Override
+
     public Collection<T> getCheckedItems() {
         return originalModel.getCheckedItems();
     }
@@ -202,7 +204,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * setCheckedItems
      * @param items 
      */
-    @Override
+
     public void setCheckedItems(Collection<T> items) {
         originalModel.setCheckedItems(items);
     }
@@ -212,7 +214,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * @param pattern
      * @param listFilter 
      */
-    @Override
+
     public void filter(String pattern, IListFilter listFilter) {
         originalModel.filter(pattern, listFilter);
     }

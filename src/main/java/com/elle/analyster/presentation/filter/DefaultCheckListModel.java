@@ -42,6 +42,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
 
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#getSize()
+    method calls: Action,checklist,checkall
      */
     @Override
     public int getSize() {
@@ -51,6 +52,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /**
      * dataList
      * @return 
+     * method calls: this class
      */
     private List<T> dataList() {
         return filteredDataList == null ? dataList : filteredDataList;
@@ -59,6 +61,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /**
      * dataSet
      * @return 
+     * method calls: this class
      */
     private Set<T> dataSet() {
         return filteredDataSet == null ? dataSet : filteredDataSet;
@@ -66,6 +69,8 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
 
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#getElementAt(int)
+    
+    This is from ListModel 
      */
     @Override
     public Object getElementAt(int index) {
@@ -75,7 +80,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#isChecked(int)
      */
-    @Override
+
     public boolean isCheckedIndex( int index ) {
         return checks.contains(dataList().get(index));
     }
@@ -83,7 +88,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#setChecked(int, boolean)
      */
-    @Override
+
     public void setCheckedIndex( int index, boolean value ) {
         T o = dataList().get(index);
         if ( value ) checks.add(o); else checks.remove(o);
@@ -93,7 +98,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#getChecked()
      */
-    @Override
+
     public Collection<T> getCheckedItems() {
         List<T> items = new ArrayList<T>(checks);
         items.retainAll(dataSet());
@@ -103,11 +108,13 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#setChecked(java.util.Collection)
      */
-    @Override
+
     public void setCheckedItems( Collection<T> items ) {
         Set<T> correctedItems = new HashSet<T>(items);
         correctedItems.retainAll(dataSet());
         checks = correctedItems;
+        // this is a method of the AbstractList
+        // it is used after content in the list is changed
         fireContentsChanged(this, 0, checks.size()-1);
     }
 
@@ -115,6 +122,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
      * filter
      * @param pattern
      * @param listFilter 
+     * method calls: action, table, checklist
      */
     public void filter( String pattern, IListFilter listFilter ) {
 

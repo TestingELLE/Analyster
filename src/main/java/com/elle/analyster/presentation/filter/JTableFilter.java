@@ -81,10 +81,6 @@ public class JTableFilter {
      */
     public void apply(int col, Object selectField) { //Create Collection from selected fields 
         
-        // set the column and string to match to the TableRowFilter
-        filter.setCol(col);
-        filter.setStr(selectField.toString());
-        
         Collection<DistinctColumnItem> item = new ArrayList<>();
         
         // handle null exceptions
@@ -378,8 +374,6 @@ public class JTableFilter {
     class TableRowFilter extends RowFilter<Object, Object>  {
 
         private RowFilter<Object, Object> parentFilter; // extend and then make one?
-        private int col; // the column index
-        private String str; // the string to match
 
         /**
          * setParentFilter
@@ -389,24 +383,6 @@ public class JTableFilter {
         public void setParentFilter(RowFilter<Object, Object> parentFilter) {
             this.parentFilter = (parentFilter == null || parentFilter == this) ? null : parentFilter;
         }
-
-        /**
-         * setCol
-         * @param col 
-         */
-        public void setCol(int col) {
-            this.col = col;
-        }
-
-        /**
-         * setStr
-         * @param str 
-         */
-        public void setStr(String str) {
-            this.str = str;
-        }
-        
-        
 
         /**
          * include

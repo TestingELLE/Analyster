@@ -122,7 +122,6 @@ public class CheckList<T> {
      * getModel
      * @return 
      */
-    @SuppressWarnings("unchecked")
     public ICheckListModel<T> getModel() {
         return (ICheckListModel<T>) list.getModel();
     }
@@ -139,6 +138,7 @@ public class CheckList<T> {
     /**
      * setCheckedItems
      * Resets checked elements 
+     * This called the ActionCheckListModel override
      * @param elements
      */
     public void setCheckedItems( Collection<T> elements ) {

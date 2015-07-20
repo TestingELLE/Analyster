@@ -27,13 +27,14 @@ public class CheckAll<T> {
     /**
      * check
      * 0 usages
+     * This method is only called when the checkAll option is selected
      * @param model
      * @param value 
      */
     public void check(ICheckListModel<T> model, boolean value) {
         Collection<T> items = new ArrayList<>();
         if (value) {
-            for( int i=0, s=model.getSize(); i<s; i++ ) {
+            for( int i=0; i<model.getSize(); i++ ) {
                 items.add((T) model.getElementAt(i));
             }
         }

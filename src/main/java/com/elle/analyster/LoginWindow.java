@@ -414,7 +414,6 @@ public class LoginWindow extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
 
             System.out.println("Cannot open local database -- make sure it is configured properly.");
-            ex.printStackTrace();
             analyster.getLogwind().sendMessages(ex.getMessage());
             GUI.password = "";
             jPassword.setText("");
