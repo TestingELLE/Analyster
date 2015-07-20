@@ -7,7 +7,6 @@ package com.elle.analyster.service;
 
 import com.elle.analyster.Analyster;
 import com.elle.analyster.GUI;
-import com.elle.analyster.LoadTables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
