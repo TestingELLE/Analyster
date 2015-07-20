@@ -8,17 +8,17 @@ import java.util.regex.PatternSyntaxException;
  */
 public enum CheckListFilterType implements IListFilter {
 
-    STARTS_WITH {
-        
-        @Override
-        public boolean include( String element, String pattern ) {
-            
-            if ( element == null || pattern == null ) return false;
-            return element.startsWith(pattern);
-            
-        }
-        
-    },
+//    STARTS_WITH {
+//        
+//        @Override
+//        public boolean include( String element, String pattern ) {
+//            
+//            if ( element == null || pattern == null ) return false;
+//            return element.startsWith(pattern);
+//            
+//        }
+//        
+//    },
     
     CONTAINS {
     
@@ -32,20 +32,20 @@ public enum CheckListFilterType implements IListFilter {
         
     },
 
-    REGEX {
-
-        @Override
-        public boolean include( String element, String pattern ) {
-
-            if ( element == null || pattern == null ) return false;
-            try {
-                return element.matches(pattern);
-            } catch (PatternSyntaxException e) {
-                return false;
-            }
-
-        }
-
-    };
+//    REGEX {
+//
+//        @Override
+//        public boolean include( String element, String pattern ) {
+//
+//            if ( element == null || pattern == null ) return false;
+//            try {
+//                return element.matches(pattern);
+//            } catch (PatternSyntaxException e) {
+//                return false;
+//            }
+//
+//        }
+//
+//    };
 
 }
