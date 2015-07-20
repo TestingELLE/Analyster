@@ -3,6 +3,13 @@ package com.elle.analyster.presentation.filter;
 import javax.swing.*;
 import java.util.Collection;
 
+/**
+ * INTERFACE ICheckListModel<T> 
+ * this is implemented in 
+ * ActionCheckListModel & DefaultCheckListModel
+ * Looks like methods for checking the state of the checks in the checklist
+ * @param <T> 
+ */
 public interface ICheckListModel<T> extends ListModel{
 
     /**
@@ -38,6 +45,6 @@ public interface ICheckListModel<T> extends ListModel{
      * @param pattern the pattern the filter will match on
      * @param translator object to string translator to aid the search
      */
-    void filter(String pattern, IObjectToStringTranslator translator, IListFilter listFilter);
+    void filter(String pattern, CheckListFilterType listFilter);
 
 }

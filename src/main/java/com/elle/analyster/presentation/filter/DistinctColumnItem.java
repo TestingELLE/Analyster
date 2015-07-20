@@ -2,17 +2,16 @@ package com.elle.analyster.presentation.filter;
 
 import java.math.BigDecimal;
 
-public class DistinctColumnItem implements Comparable<DistinctColumnItem>, IValueWrapper<Object> {
+public class DistinctColumnItem implements Comparable<DistinctColumnItem> {
 
     private final Object value;
     private final int row;
 
     public DistinctColumnItem( Object value, int row) {
-        this.value = value.toString().toLowerCase();
+        this.value = value;
         this.row = row;
     }
 
-    @Override
     public Object getValue() {
         return value;
     }
@@ -49,6 +48,7 @@ public class DistinctColumnItem implements Comparable<DistinctColumnItem>, IValu
                 return false;
         } else if (!value.equals(other.value))
             return false;
+        
         return true;
     }
 

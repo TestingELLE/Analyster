@@ -1,13 +1,11 @@
 package com.elle.analyster;
 
-import com.elle.analyster.db.ExecuteSQLStatement;
 import com.elle.analyster.domain.ModifiedData;
 import com.elle.analyster.presentation.filter.CreateDocumentFilter;
 import com.elle.analyster.presentation.filter.JTableFilter;
 import com.elle.analyster.presentation.filter.TableRowFilterSupport;
 import static com.elle.analyster.service.Connection.connection;
 import com.elle.analyster.service.DeleteRecord;
-import com.elle.analyster.service.TableService;
 import com.elle.analyster.service.UploadRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,15 +34,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class Analyster extends JFrame implements ITableNameConstants, IColumnConstants{
+
+public class Analyster extends JFrame implements ITableConstants{
     
+    // Edit the version and date it was created for new archives and jars
+    private final String CREATION_DATE = "2015-07-18";  
+    private final String VERSION = "0.6.7d";   
     
     Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
 
-    private final TableService tableService = new TableService();
     private TableRowFilterSupport tableRowFilterSupport;
     private LoadTables loadTables;
     private JTableHeader header;
+    private DeleteRecord deleteRecord;
+    private AddRecords  addRecords;
     
     private static Analyster instance;
     private Logger log = LoggerFactory.getLogger(Analyster.class);
@@ -56,47 +60,35 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     @Autowired
     private UploadRecord uploadRecordService;
     
-    LoginWindow loginWindow;
+    private LoginWindow loginWindow;
     
     /**
      * CONSTRUCTOR
      */
     public Analyster() {
         
-        instance = this; // this is used to call an instance of Analyster  
+        /**
+         * Note: initComponents() executes the tabpaneChanged method.
+         * Thus, some things need to be before or after the initComponents();
+         */
+        
+        // this is used to call an instance of Analyster 
+        instance = this;  
 
         // create tab objects -> this has to be before initcomponents();
         tabs.put(ASSIGNMENTS_TABLE_NAME, new Tab());
         tabs.put(REPORTS_TABLE_NAME, new Tab());
         tabs.put(ARCHIVE_TABLE_NAME, new Tab());
         
-        // set table names -> this has to be before initcomponents();
+        // set table names 
         tabs.get(ASSIGNMENTS_TABLE_NAME).setTableName(ASSIGNMENTS_TABLE_NAME);
         tabs.get(REPORTS_TABLE_NAME).setTableName(REPORTS_TABLE_NAME);
         tabs.get(ARCHIVE_TABLE_NAME).setTableName(ARCHIVE_TABLE_NAME);
         
-        initComponents(); // generated code
-        
-        // set names to tables (this was in tabbedPanelChanged method)
-        assignmentTable.setName(ASSIGNMENTS_TABLE_NAME);
-        reportTable.setName(REPORTS_TABLE_NAME);
-        archiveTable.setName(ARCHIVE_TABLE_NAME);
-        
-        // I COMMENTED THESE OUT AND IT WORKED FINE !!
-        tableService.setAssignmentTable(assignmentTable);
-        tableService.setReportTable(reportTable);
-        tableService.setArchiveAssignTable(archiveTable);
-        tableService.setViewerTable(assignmentTable);
-        
-        // set tables to tab objects
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setTable(assignmentTable);
-        tabs.get(REPORTS_TABLE_NAME).setTable(reportTable);
-        tabs.get(ARCHIVE_TABLE_NAME).setTable(archiveTable);
-        
-        // set table states to tab objects
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableState(new TableState(assignmentTable));
-        tabs.get(REPORTS_TABLE_NAME).setTableState(new TableState(reportTable));
-        tabs.get(ARCHIVE_TABLE_NAME).setTableState(new TableState(archiveTable));
+        // set the search fields for the comboBox for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setSearchFields(ASSIGNMENTS_SEARCH_FIELDS);
+        tabs.get(REPORTS_TABLE_NAME).setSearchFields(REPORTS_SEARCH_FIELDS);
+        tabs.get(ARCHIVE_TABLE_NAME).setSearchFields(ARCHIVE_SEARCH_FIELDS);
         
         // set column width percents to tables of the tab objects
         tabs.get(ASSIGNMENTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
@@ -113,6 +105,32 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         tabs.get(REPORTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
         tabs.get(ARCHIVE_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
         
+        // set add records button visible for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setAddRecordsBtnVisible(true);
+        tabs.get(REPORTS_TABLE_NAME).setAddRecordsBtnVisible(true);
+        tabs.get(ARCHIVE_TABLE_NAME).setAddRecordsBtnVisible(false);
+        
+        initComponents(); // generated code
+        
+        // set names to tables (this was in tabbedPanelChanged method)
+        assignmentTable.setName(ASSIGNMENTS_TABLE_NAME);
+        reportTable.setName(REPORTS_TABLE_NAME);
+        archiveTable.setName(ARCHIVE_TABLE_NAME);
+        
+        // set tables to tab objects
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setTable(assignmentTable);
+        tabs.get(REPORTS_TABLE_NAME).setTable(reportTable);
+        tabs.get(ARCHIVE_TABLE_NAME).setTable(archiveTable);
+        
+        // set array variable of stored column names of the tables
+        // this is just to store and use the information
+        // to actually change the table names it should be done
+        // through properties in the gui design tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableColNames(assignmentTable);
+        tabs.get(REPORTS_TABLE_NAME).setTableColNames(reportTable);
+        tabs.get(ARCHIVE_TABLE_NAME).setTableColNames(archiveTable);
+        
+        // this sets the KeyboardFocusManger
         setKeyboardFocusManager();
 
         // show and hide components
@@ -206,7 +224,9 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(894, 560));
 
+        labelTimeLastUpdate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelTimeLastUpdate.setText("Last updated: ");
+        labelTimeLastUpdate.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         btnSearch.setText("Search");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -274,15 +294,12 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         addPanel_controlLayout.setHorizontalGroup(
             addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(addPanel_controlLayout.createSequentialGroup()
-                .addGroup(addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(addPanel_controlLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(addPanel_controlLayout.createSequentialGroup()
-                        .addGap(258, 258, 258)
-                        .addComponent(labelTimeLastUpdate)))
+                .addContainerGap()
+                .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelTimeLastUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelRecords, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE))
                 .addContainerGap(84, Short.MAX_VALUE))
         );
         addPanel_controlLayout.setVerticalGroup(
@@ -292,9 +309,9 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
                 .addGroup(addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(labelTimeLastUpdate)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         tabbedPanel.setPreferredSize(new java.awt.Dimension(800, 584));
@@ -779,8 +796,8 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     private void jMenuItemFileVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFileVersionActionPerformed
 
         JOptionPane.showMessageDialog(this, "Creation Date: "
-                + "2015-07-9" + "\n"
-                + "Version: " + "0.6.6c");
+                + CREATION_DATE + "\n"
+                + "Version: " + VERSION);
     }//GEN-LAST:event_jMenuItemFileVersionActionPerformed
 
     private void textFieldForSearchMouseClicked(MouseEvent evt) {//GEN-FIRST:event_textFieldForSearchMouseClicked
@@ -829,8 +846,9 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
             // apply changes to filter
             tableRowFilterSupport.getFilter().apply(columnIndex, selectedField);
             
-            
+            // this sets the column header green
             GUI.columnFilterStatus(columnIndex, tabs.get(selectedTab).getFilter().getTable());
+            
             // set label record information
             labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
             
@@ -897,8 +915,15 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
                 logwind.sendMessages(e.getMessage());  //To change body of catch statement use File | Settings | File Templates.
             }
         } else {
-            ExecuteSQLStatement.updateDatabase(GUI.con,
-                    enterButton.getCommand(jTextAreaSQL));
+            
+            try {
+                    Statement state = GUI.con.createStatement();
+                    state.executeUpdate(enterButton.getCommand(jTextAreaSQL));
+            } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+            } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+            }
         }
     }//GEN-LAST:event_btnEnterSQLActionPerformed
 
@@ -993,6 +1018,9 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         jActivateRecord.setEnabled(tabs.get(selectedTab).isActivateRecordMenuItemEnabled()); 
         jArchiveRecord.setEnabled(tabs.get(selectedTab).isArchiveRecordMenuItemEnabled()); 
         
+        // show or hide the add records button
+        btnAddRecords.setVisible(tabs.get(selectedTab).isAddRecordsBtnVisible());
+        
         switch (selectedTab) {
             case ASSIGNMENTS_TABLE_NAME:
                 isFilterActive = GUI.filterAssignmentIsActive;
@@ -1053,7 +1081,11 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     }//GEN-LAST:event_jMenuEditDBActionPerformed
 
     private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
-        new AddRecords(this, logwind).setVisible(true);
+        addRecords = new AddRecords();
+        addRecords.setVisible(true);
+        
+        // update records
+        getRecordsLabel().setText(tabs.get(getSelectedTab()).getRecordsLabel());
     }//GEN-LAST:event_btnAddRecordsActionPerformed
 
     /**
@@ -1096,7 +1128,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     }//GEN-LAST:event_jMenuItemLogOffActionPerformed
 
     private void jDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
-        DeleteRecord deleteRecord = new DeleteRecord();
+        deleteRecord = new DeleteRecord();
         String selectedTab = getSelectedTab();
         String sqlDelete;
 
@@ -1129,7 +1161,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         }
 
         setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
-        tabs.get(ASSIGNMENTS_TABLE_NAME).getTableState().init(assignmentTable, new String[]{"Symbol", "Analyst"});
+
         // set label record information
         labelRecords.setText(tabs.get(ASSIGNMENTS_TABLE_NAME).getRecordsLabel()); 
     }//GEN-LAST:event_jMenuItemViewActiveAssigActionPerformed
@@ -1170,26 +1202,118 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
     }//GEN-LAST:event_jMenuItemOthersLoadDataActionPerformed
 
     private void jArchiveRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jArchiveRecordActionPerformed
-        tableService.archiveRecords();
 
+        int rowSelected = assignmentTable.getSelectedRows().length;
+        int[] rowsSelected = assignmentTable.getSelectedRows();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String today = dateFormat.format(date);
+
+        // Delete Selected Records from Assignments
+        if (rowSelected != -1) {
+            for (int i = 0; i < rowSelected; i++) {
+                String analyst = (String) assignmentTable.getValueAt(rowsSelected[i], 2);
+                Integer selectedTask = (Integer) assignmentTable.getValueAt(rowsSelected[i], 0); // Add Note to selected taskID
+                String sqlDelete = "UPDATE " + GUI.getDatabase() + "." + assignmentTable.getName() + " SET analyst = \"\",\n"
+                        + " priority=null,\n"
+                        + " dateAssigned= '" + today + "',"
+                        + " dateDone=null,\n"
+                        + " notes= \'Previous " + analyst + "' " + "where ID=" + selectedTask;
+                try {
+                    GUI.getStmt().executeUpdate(sqlDelete);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please, select one task!");
+        }
+        // Archive Selected Records in Assignments Archive
+        if (rowSelected != -1) {
+
+            for (int i = 0; i < rowSelected; i++) {
+                String sqlInsert = "INSERT INTO " + GUI.getDatabase() + "." + archiveTable.getName() + " (symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES (";
+                int numRow = rowsSelected[i];
+                for (int j = 1; j < assignmentTable.getColumnCount() - 1; j++) {
+                    if (assignmentTable.getValueAt(numRow, j) == null) {
+                        sqlInsert += null + ",";
+                    } else {
+                        sqlInsert += "'" + assignmentTable.getValueAt(numRow, j) + "',";
+                    }
+                }
+                if (assignmentTable.getValueAt(numRow, assignmentTable.getColumnCount() - 1) == null) {
+                    sqlInsert += null + ")";
+                } else {
+                    sqlInsert += "'" + assignmentTable.getValueAt(numRow, assignmentTable.getColumnCount() - 1) + "')";
+                }
+                try {
+                    GUI.getStmt().executeUpdate(sqlInsert);
+//                    logwind.sendMessages(sqlInsert);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            loadTables.loadTable(assignmentTable);
+            loadTables.loadTable(archiveTable);
+            assignmentTable.setRowSelectionInterval(rowsSelected[0], rowsSelected[rowSelected - 1]);
+            JOptionPane.showMessageDialog(null, rowSelected + " Record(s) Archived!");
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Please, select one task!");
+        }
     }//GEN-LAST:event_jArchiveRecordActionPerformed
 
     private void jActivateRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jActivateRecordActionPerformed
-        tableService.activateRecords();
+       
+        int rowSelected = archiveTable.getSelectedRows().length;
+        int[] rowsSelected = archiveTable.getSelectedRows();
+        // Archive Selected Records in Assignments Archive
+        if (rowSelected != -1) {
 
+            for (int i = 0; i < rowSelected; i++) {
+                String sqlInsert = "INSERT INTO " + GUI.getDatabase() + "." + assignmentTable.getName() + "(symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES ( ";
+                int numRow = rowsSelected[i];
+                for (int j = 1; j < archiveTable.getColumnCount() - 1; j++) {
+                    if (archiveTable.getValueAt(numRow, j) == null) {
+                        sqlInsert += null + ",";
+                    } else {
+                        sqlInsert += "'" + archiveTable.getValueAt(numRow, j) + "',";
+                    }
+                }
+                if (archiveTable.getValueAt(numRow, archiveTable.getColumnCount() - 1) == null) {
+                    sqlInsert += null + ")";
+                } else {
+                    sqlInsert += "'" + archiveTable.getValueAt(numRow, archiveTable.getColumnCount() - 1) + "')";
+                }
+                try {
+                    GUI.getStmt().executeUpdate(sqlInsert);
+//                    ana.getLogwind().sendMessages(sqlInsert);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    System.out.println(e.toString());
+                }
+            }
+
+            archiveTable.setRowSelectionInterval(rowsSelected[0], rowsSelected[0]);
+            loadTables.loadTable(archiveTable);
+            loadTables.loadTable(assignmentTable);
+
+            JOptionPane.showMessageDialog(null, rowSelected + " Record(s) Activated!");
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Please, select one task!");
+        }
     }//GEN-LAST:event_jActivateRecordActionPerformed
 
 //Filter is generated everytime that table is selected.
     private void tabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelStateChanged
 
-        TableState ts = getTableState();
         changeTabbedPanelState();
-        String[] field = ts.getSearchFields();
-        if (field == null) {
-            comboBoxSearch.setModel(new DefaultComboBoxModel(new String[]{"Symbol", "Analyst"}));
-        } else {
-            comboBoxSearch.setModel(new DefaultComboBoxModel(field));
-        }
+
+        // this changes the search fields for the comboBox for each tab
+        // this event is fired from initCompnents hence the null condition
+        if(tabs.get(getSelectedTab()).getSearchFields() != null)
+            comboBoxSearch.setModel(new DefaultComboBoxModel(tabs.get(getSelectedTab()).getSearchFields()));
 
         modifiedDataList.clear();    // when selected table changed, clear former edit history
     }//GEN-LAST:event_tabbedPanelStateChanged
@@ -1601,15 +1725,6 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         return tabs.get(selectedTab).getTable();
     }
 
-    public TableState getTableState() {                 // get TableState by selected Tab
-        String selectedTab = getSelectedTab();
-        return tabs.get(selectedTab).getTableState();
-    }
-
-    public TableState getTableState(JTable table) {     // get TableState by jTable object
-        return tabs.get(table.getName()).getTableState();
-    }
-
     public void setLastUpdateTime() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = dateFormat.format(new Date());
@@ -1758,18 +1873,6 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         return modifiedDataList;
     }
 
-    public TableState getAssignments() {
-        return tabs.get(ASSIGNMENTS_TABLE_NAME).getTableState();
-    }
-
-    public TableState getReports() {
-        return tabs.get(REPORTS_TABLE_NAME).getTableState();
-    }
-
-    public TableState getArchiveAssign() {
-        return tabs.get(ARCHIVE_TABLE_NAME).getTableState();
-    }
-
     public JTableFilter getFilterTempAssignment() {
         return tabs.get(ASSIGNMENTS_TABLE_NAME).getFilter();
     }
@@ -1782,7 +1885,7 @@ public class Analyster extends JFrame implements ITableNameConstants, IColumnCon
         this.tabs = tabs;
     }
     
-    private String getSelectedTab() {
+    public String getSelectedTab() {
         return tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
     }
 

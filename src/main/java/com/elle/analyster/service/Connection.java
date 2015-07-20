@@ -3,7 +3,6 @@ package com.elle.analyster.service;
 import com.elle.analyster.Analyster;
 import com.elle.analyster.GUI;
 import com.elle.analyster.LoginWindow;
-import com.elle.analyster.TableState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +25,6 @@ public class Connection {
         Analyster ana = Analyster.getInstance();
         Vector data = new Vector();
         Vector columnNames = new Vector();
-        TableState ts = ana.getTableState(table);
         int columns;
 
         if (GUI.status == false) {
@@ -64,7 +62,7 @@ public class Connection {
 
         ana.tableReload(table, data, columnNames);  // Table model (table visualization) set up
         log.info("Table added succesfully");
-        ts.setRowsNumber(data.size());   // update number of rows displayed
+
         return null;
     }
 

@@ -312,6 +312,9 @@ public class LoginWindow extends JFrame {
 
     /**
      *  Loads the names of the databases from a text file
+     * 
+     *  this is if the actual database list is edited in EditDatabaseList 
+     * then it updates the combobox with the new values in LoginWindow.
      */
     public void loadDBList() {
         String temp = null;
@@ -411,7 +414,6 @@ public class LoginWindow extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
 
             System.out.println("Cannot open local database -- make sure it is configured properly.");
-            ex.printStackTrace();
             analyster.getLogwind().sendMessages(ex.getMessage());
             GUI.password = "";
             jPassword.setText("");

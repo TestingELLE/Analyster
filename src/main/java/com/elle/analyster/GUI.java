@@ -5,8 +5,6 @@
  */
 package com.elle.analyster;
 
-
-import com.elle.analyster.service.TableService;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;

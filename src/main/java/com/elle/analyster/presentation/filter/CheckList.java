@@ -9,7 +9,6 @@ package com.elle.analyster.presentation.filter;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.util.Collection;
 
@@ -22,9 +21,15 @@ import java.util.Collection;
  */
 public class CheckList<T> {
 
+    // class components and objects
     private final JList list;
-    private static final MouseAdapter checkBoxEditor = new CheckListEditor();
+    private static final CheckListMouseAdapter checkListMouseAdapter = new CheckListMouseAdapter();
+    private CheckListRenderer checkListRenderer;
     
+    /**
+     * Nested class
+     * Builder
+     */
     public static class Builder {
         
         private JList list;
@@ -54,13 +59,22 @@ public class CheckList<T> {
         this.list = list;
         this.list.getSelectionModel().setSelectionMode( ListSelectionModel.SINGLE_SELECTION);
 
-        if ( !isEditorAttached() ) list.addMouseListener(checkBoxEditor);
-        this.list.setCellRenderer(new CheckListRenderer());
+        // call the boolean method to see if attached
+        if ( !isEditorAttached() ) 
+            list.addMouseListener(checkListMouseAdapter);
+        
+        
+        checkListRenderer = new CheckListRenderer();
+        this.list.setCellRenderer(checkListRenderer);
         
         setupKeyboardActions(list);
 
     }
 
+    /**
+     * setupKeyboardActions
+     * @param list 
+     */
     @SuppressWarnings("serial")
     private void setupKeyboardActions(final JList list) {
         String actionKey = "toggle-check";
@@ -72,29 +86,31 @@ public class CheckList<T> {
                 toggleIndex(list.getSelectedIndex());
             }});
     }
-    
+    /**
+     * isEditorAttached
+     * the editor is actually a mouselistener
+     * this checks if the mouselistener is attached to the Jlist
+     * @return 
+     */
     private boolean isEditorAttached() {
         
         for( MouseListener ml: list.getMouseListeners() ) {
-            if ( ml instanceof CheckListEditor ) return true;
+            if ( ml instanceof CheckListMouseAdapter ) return true;
         }
         return false;
         
     }
     
+    /**
+     * getList
+     * @return 
+     */
     public JList getList() {
         return list;
     }
     
     /**
-     * Sets data to a check list. Simplification for setting new the model 
-     * @param data
-     */
-    public void setData( Collection<T> data ) {
-        setModel( new DefaultCheckListModel<T>(data));
-    }
-    
-    /**
+     * setModel
      * Sets the model for check list.
      * @param model
      */
@@ -102,12 +118,16 @@ public class CheckList<T> {
         list.setModel(model);
     }
     
-    @SuppressWarnings("unchecked")
+    /**
+     * getModel
+     * @return 
+     */
     public ICheckListModel<T> getModel() {
         return (ICheckListModel<T>) list.getModel();
     }
 
     /**
+     * getCheckedItems
      * Returns a collection of checked items. 
      * @return collection of checked items. Empty collection if nothing is selected
      */
@@ -116,7 +136,9 @@ public class CheckList<T> {
     }
 
     /**
+     * setCheckedItems
      * Resets checked elements 
+     * This called the ActionCheckListModel override
      * @param elements
      */
     public void setCheckedItems( Collection<T> elements ) {
@@ -124,14 +146,19 @@ public class CheckList<T> {
     }
     
     /**
+     * filter
      * Filters list view without losing actual data
      * @param pattern
      * @param translator
      */
-    public void filter( String pattern, IObjectToStringTranslator translator, IListFilter listFilter ) {
-        getModel().filter(pattern, translator, listFilter);
+    public void filter( String pattern, CheckListFilterType listFilter ) {
+        getModel().filter(pattern, listFilter);
     }
     
+    /**
+     * toggleIndex
+     * @param index 
+     */
     public void toggleIndex( int index ) {
         if ( index >= 0 && index < list.getModel().getSize()) {
             ICheckListModel<T> model = getModel();

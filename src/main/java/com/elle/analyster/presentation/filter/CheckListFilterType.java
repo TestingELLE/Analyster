@@ -2,46 +2,17 @@ package com.elle.analyster.presentation.filter;
 
 import java.util.regex.PatternSyntaxException;
 
-public enum CheckListFilterType implements IListFilter {
+/**
+ * ENUM CheckListFilterType
+ * This is called from TableFilterColumnPopup & DefaultCheckListModel
+ */
+public class CheckListFilterType {
 
-    STARTS_WITH {
-        
-        @Override
-        public boolean include( String element, String pattern ) {
-            
-            if ( element == null || pattern == null ) return false;
-            return element.startsWith(pattern);
-            
-        }
-        
-    },
-    
-    CONTAINS {
-    
-        @Override
-        public boolean include( String element, String pattern ) {
-            
-            if ( element == null || pattern == null ) return false;
-            return element.contains(pattern);
-            
-        }
-        
-    },
 
-    REGEX {
+    public boolean include( String element, String pattern ) {
 
-        @Override
-        public boolean include( String element, String pattern ) {
+        if ( element == null || pattern == null ) return false;
+        return element.contains(pattern);
 
-            if ( element == null || pattern == null ) return false;
-            try {
-                return element.matches(pattern);
-            } catch (PatternSyntaxException e) {
-                return false;
-            }
-
-        }
-
-    };
-
+    }
 }

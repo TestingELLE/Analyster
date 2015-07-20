@@ -7,17 +7,43 @@ import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-@SuppressWarnings("serial")
+/**
+ * CLASS TableAwareCheckListRenderer
+ * @author cigreja
+ * This class has one method and extends CheckListRenderer
+ * Maybe it can just be added to the CheckListRenderer?
+ * I tried to merge it but it didn't work,
+ * It can be tricky because this method is overriding the method in CheckListRenderer
+ */
 public class TableAwareCheckListRenderer extends CheckListRenderer {
     
+    // attributes
     private final JTable table;
     private final int column;
 
+    /**
+     * CONSTRUCTOR
+     * * This class instance is created once in TableFilterColumnPopup
+     * @param table
+     * @param column 
+     */
     public TableAwareCheckListRenderer( JTable table, int column ) {
         this.table = table;
         this.column = column;
     }
 
+    /**
+     * getListCellRendererComponent
+     * @param list
+     * @param value
+     * @param index
+     * @param isSelected
+     * @param cellHasFocus
+     * @return 
+     * 
+     * This method calls itself once to override the method.
+     * No other usages found
+     */
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
             boolean cellHasFocus) {

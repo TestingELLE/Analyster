@@ -3,7 +3,6 @@ package com.elle.analyster.presentation.filter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Rectangle;
-import java.io.Serializable;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
@@ -14,22 +13,36 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Serializable {
+/**
+ * CLASS CheckListRenderer
+ * This instance is called once from CheckList and TableAwareCheckListRenderer inherits
+ */
+public class CheckListRenderer extends JCheckBox implements ListCellRenderer{
 
-    private static final long serialVersionUID = 1L;
-
+    // attributes
     private static final Border NO_FOCUS_BORDER      = new EmptyBorder(1, 1, 1, 1);
     private static final Border SAFE_NO_FOCUS_BORDER = NO_FOCUS_BORDER; // may change in the feature
+    
 
     /**
+     * CONSTRUCTOR
+     * CheckListRenderer
      * Constructs a default renderer object for an item in a list.
+     * This instance is called from CheckList and TableAwareCheckListRenderer
      */
     public CheckListRenderer() {
         super();
         setOpaque(true);
         setBorder(getNoFocusBorder());
+
     }
 
+    /**
+     * getNoFocusBorder
+     * @return 
+     * 
+     * called twice from this class
+     */
     private static Border getNoFocusBorder() {
         if (System.getSecurityManager() != null) {
             return SAFE_NO_FOCUS_BORDER;
@@ -38,6 +51,17 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Se
         }
     }
 
+    /**
+     * getListCellRendererComponent
+     * is overriden in TableAwareCheckListRenderer
+     * No other usages found
+     * @param list
+     * @param value
+     * @param index
+     * @param isSelected
+     * @param cellHasFocus
+     * @return 
+     */
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
             boolean cellHasFocus) {
 
@@ -46,7 +70,9 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Se
         Color bg = null;
         Color fg = null;
 
+        // the location the component should visually indicate
         JList.DropLocation dropLocation = list.getDropLocation();
+        
         if (dropLocation != null && !dropLocation.isInsert() && dropLocation.getIndex() == index) {
 
             bg = UIManager.getColor("List.dropCellBackground");
@@ -92,10 +118,24 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Se
         return this;
     }
 
+    /**
+     * getObjectAsText
+     * Looks like a toString method
+     * called once from this class
+     * @param obj
+     * @return 
+     */
     protected String getObjectAsText(Object obj) {
         return (obj == null) ? "" : obj.toString();
     }
 
+    /**
+     * isChecked
+     * called once from this class
+     * @param list
+     * @param index
+     * @return 
+     */
     private boolean isChecked(JList list, int index) {
 
         if (list.getModel() instanceof ICheckListModel<?>) {
@@ -108,6 +148,7 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Se
 
     /**
      * @return true if the background is opaque and differs from the JList's background; false otherwise
+     * 2 usages this class
      */
     @Override
     public boolean isOpaque() {
@@ -121,6 +162,13 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Se
         return !colorMatch && super.isOpaque();
     }
 
+    /**
+     * firePropertyChange
+     * 1 usage this class
+     * @param propertyName
+     * @param oldValue
+     * @param newValue 
+     */
     @Override
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         
@@ -132,7 +180,13 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Se
         }
     }
 
-    // Methods below are overridden for performance reasons.
+    
+    
+    
+    /***************************************************************************
+     ********** Methods below are overridden for performance reasons. **********
+     ***************************************************************************/
+    
 
     @Override
     public void validate() {
@@ -190,6 +244,8 @@ public class CheckListRenderer extends JCheckBox implements ListCellRenderer, Se
     public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
     }
     
+    
+    // THIS IS A CLASS
     @SuppressWarnings("serial")
     public static class UIResource extends DefaultListCellRenderer implements javax.swing.plaf.UIResource {
     }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -22,6 +23,10 @@ import javax.swing.event.TableModelListener;
  */
 public class JTableFilter {
 
+    // no set - filter cleared; set - some kind of filtering
+    private final Map<Integer,Set<DistinctColumnItem>> data = new HashMap<Integer,Set<DistinctColumnItem>>();
+    
+    // this is a nested class here
     private TableRowFilter filter = new TableRowFilter();
     
     private int columnIndex = -1;
@@ -32,7 +37,7 @@ public class JTableFilter {
             = Collections.synchronizedMap(new HashMap<Integer, Collection<DistinctColumnItem>>());
 
     private JTable table = new JTable(); 
-    private TableFilterState filterState = new TableFilterState();
+    //private TableFilterState filterState = new TableFilterState();
     
     /**
      * CONSTRUCTOR
@@ -75,6 +80,7 @@ public class JTableFilter {
      * @param selectField
      */
     public void apply(int col, Object selectField) { //Create Collection from selected fields 
+        
         Collection<DistinctColumnItem> item = new ArrayList<>();
         
         // handle null exceptions
@@ -94,7 +100,7 @@ public class JTableFilter {
     public void apply(int col, Collection<DistinctColumnItem> items) {
         
         // create a column map key and add this collection
-        filterState.setValues(col, items); 
+        setValues(col, items); 
 
         // new DRS instance of the Table's RowSorter
         DefaultRowSorter<?, ?> drs = (DefaultRowSorter<?, ?>) getTable().getRowSorter();
@@ -108,11 +114,11 @@ public class JTableFilter {
 
         // DRS is now passed this filter to be set
         // this points to the table filter
-        drs.setRowFilter(filter);
+        drs.setRowFilter(filter); // this calls the equals method in DistinctColumnItem
 
         // this was the IFilterChangeListener implementation
         table.getTableHeader().repaint();
-        table.getModel().getRowCount();
+        table.getModel().getRowCount(); // not sure if this is needed
     }
 
     /**
@@ -192,7 +198,7 @@ public class JTableFilter {
      * @return 
      */
     public Collection<DistinctColumnItem> getFilterState(int column) {
-        return filterState.getValues(column);
+        return getValues(column);
     }
     
     /**
@@ -239,9 +245,126 @@ public class JTableFilter {
      * @return 
      */
     public boolean includeRow(JTableFilter.Row row) {
-        return filterState.include(row);
+        return include(row);
+    }
+    
+    /**************************************************************************
+     *************************** TableFilterState Methods *********************
+     **************************************************************************/
+
+    /**
+     * Clears filtering for specific column
+     */
+    public void clear( int column ) {
+        data.remove(column);
+    }
+    
+    
+    /**
+     * Clears all filtering
+     */
+    public void clear() {
+        data.clear();
+    }
+    
+    /**
+     * prepareValueSet
+     * creates an array of data for a column if one doesn't exist
+     * then adds the array to the data map and the column index is the key
+     * @param column
+     * @return Set<DistinctColumnItem> // the array of data for that column
+     */
+    private Set<DistinctColumnItem> prepareValueSet( int column ) {
+        Set<DistinctColumnItem> vals =  data.get(column);
+        if ( vals == null ) {
+            vals = new HashSet<DistinctColumnItem>();
+            data.put(column, vals);
+        }
+        return vals;
+    }
+    
+    
+    /**
+     * Adds filter value for specified column 
+     * @param column // int column index
+     * @param value // DistinctColumnItem
+     */
+    public void addValue( int column, DistinctColumnItem value ) {
+        prepareValueSet(column).add(value);
     }
 
+    
+    /**
+     * Adds a collection of filter values for specified column 
+     * @param column
+     * @param values
+     */
+    public void addValues( int column, Collection<DistinctColumnItem> values ) {
+        prepareValueSet(column).addAll(values);
+    }
+
+    /**
+     * Resets a collection of filter values for specified column
+     * @param column
+     * @param values
+     */
+    public void setValues( int column, Collection<DistinctColumnItem> values ) {
+        
+        data.remove(column); // remove this column key from map
+        
+        // if values is not empty
+        if ( !CollectionUtils.isEmpty(values)) {
+            
+            // create a column map key and add this collection
+            prepareValueSet(column).addAll(values);
+        }
+    }
+    
+    /**
+     * 
+     * @param column
+     * @return 
+     */
+    public Collection<DistinctColumnItem> getValues( int column ) {
+        Set<DistinctColumnItem> vals =  data.get(column);
+        return vals == null? Collections.<DistinctColumnItem>emptySet(): vals;
+    }
+    
+    /**
+     * Standard test for row inclusion using current filter values
+     * @param entry
+     * @return true if row has to be included
+     */
+    public boolean include( JTableFilter.Row entry ) {                 //////////////// Include in new data
+    
+        // check every column
+        for( int col=0; col< entry.getValueCount(); col++ ) {
+            
+            // get filter values
+            Collection<DistinctColumnItem> values = getValues(col);
+            if ( CollectionUtils.isEmpty(values) ) continue; // no filtering for this column
+            
+            // get value
+            Object value = entry.getValue(col);
+            
+            // handle null exception
+            if(entry.getValue(col) == null) value = "";
+            
+            
+            if ( !values.contains( new DistinctColumnItem( value, 0))) {
+                return false;
+            } 
+        }
+
+        return true;
+        
+    }
+    
+    /***************************************************************************
+     ********************** End TableFilterState Methods **********************
+     **************************************************************************/
+    
+    
     /**
      * NESTED CLASS
      * TableRowFilter
@@ -270,6 +393,13 @@ public class JTableFilter {
         @Override
         public boolean include(final Entry<? extends Object, ? extends Object> entry) {
 
+            // test
+            // this code only appears to work for the search text box
+//            
+//            if(entry.getStringValue(col).equalsIgnoreCase(str)){
+//                return true;
+//            }
+//            
             // use parent filter condition
             if (parentFilter != null && !parentFilter.include(entry)) {
                 return false;

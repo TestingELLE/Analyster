@@ -11,10 +11,13 @@ import java.util.Collections;
 public class TableRowFilterSupport {
     
     // class attributes
-    private JTableFilter filter;
     private boolean actionsVisible;
     private int filterIconPlacement;
     private boolean useTableRenderers;
+    
+    // class objects
+    private JTableFilter filter;
+    private TableFilterColumnPopup filterPopup;
 
 
     /**
@@ -72,7 +75,7 @@ public class TableRowFilterSupport {
     public void apply() {
 
         // this should not be called and set here
-        TableFilterColumnPopup filterPopup = new TableFilterColumnPopup(filter);
+        filterPopup = new TableFilterColumnPopup(filter);
         filterPopup.setEnabled(true);
         filterPopup.setActionsVisible(actionsVisible);
         filterPopup.setUseTableRenderers( useTableRenderers );
@@ -82,7 +85,7 @@ public class TableRowFilterSupport {
         FilterTableHeaderRenderer headerRenderer =
                 new FilterTableHeaderRenderer(filter, filterIconPlacement);
         
-        filter.modelChanged( table.getModel() ); 
+        filter.modelChanged( table.getModel() );  // wouldn't this be the same filter?
 
         for( TableColumn c:  Collections.list( table.getColumnModel().getColumns()) ) {
             c.setHeaderRenderer( headerRenderer );

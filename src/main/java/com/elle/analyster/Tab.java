@@ -9,32 +9,58 @@ import javax.swing.JTable;
  * @author Carlos Igreja
  * @since  June 25, 2015
  */
-public class Tab implements ITableNameConstants{
+public class Tab implements ITableConstants{
 
     private String tableName; 
     private JTable table;
     private JTable filteredTable;
     private JTableFilter filter;
-    private TableState tableState;
     private float[] colWidthPercent;
     private int totalRecords;
     private int recordsShown;
+    private String[] tableColNames;
+    private String[] searchFields;
     
     // these menu items are enabled differently for each tab
     private boolean activateRecordMenuItemEnabled;
     private boolean archiveRecordMenuItemEnabled;
+    private boolean addRecordsBtnVisible;
 
+    
     /**
-     * CONSTRUCTOR
+     * 
      */
     public Tab() {
         tableName = "";
         table = new JTable();
         filteredTable = new JTable();
-        tableState = new TableState();
+        totalRecords = 0;
+        recordsShown = 0;
+        activateRecordMenuItemEnabled = false;
+        archiveRecordMenuItemEnabled = false;
+        addRecordsBtnVisible = false;
+        
+        // filter is an instance and does not get initialized
+    }
+    
+    /**
+     * CONSTRUCTOR
+     * This would be the ideal constructor, but there are issues with 
+     * the initcomponents in Analyster so the tab must be initialized first
+     * then the table can be added
+     * @param table 
+     */
+    public Tab(JTable table) {
+        tableName = "";
+        this.table = table;
+        filteredTable = new JTable();
         totalRecords = 0;
         recordsShown = 0;
         // filter is an instance and does not get initialized
+        
+        // store the column names for the table
+        for (int i = 0; i < table.getColumnCount(); i++) 
+            tableColNames[i] = table.getColumnName(i);
     }
     
     /**************************************************************************
@@ -64,14 +90,6 @@ public class Tab implements ITableNameConstants{
 
     public void setFilter(JTableFilter filter) {
         this.filter = filter;
-    }
-
-    public TableState getTableState() {
-        return tableState;
-    }
-
-    public void setTableState(TableState tableState) {
-        this.tableState = tableState;
     }
 
     public float[] getColWidthPercent() {
@@ -118,6 +136,37 @@ public class Tab implements ITableNameConstants{
         this.archiveRecordMenuItemEnabled = archiveRecordMenuItemEnabled;
     }
 
+    public String[] getTableColNames() {
+        return tableColNames;
+    }
+
+    public void setTableColNames(String[] tableColNames) {
+        this.tableColNames = tableColNames;
+    }
+    
+    public void setTableColNames(JTable table) {
+        tableColNames = new String[table.getColumnCount()];
+        for (int i = 0; i < table.getColumnCount(); i++) 
+            tableColNames[i] = table.getColumnName(i);
+    }
+
+    public String[] getSearchFields() {
+        return searchFields;
+    }
+
+    public void setSearchFields(String[] searchFields) {
+        this.searchFields = searchFields;
+    }
+
+    public boolean isAddRecordsBtnVisible() {
+        return addRecordsBtnVisible;
+    }
+
+    public void setAddRecordsBtnVisible(boolean addRecordsBtnVisible) {
+        this.addRecordsBtnVisible = addRecordsBtnVisible;
+    }
+    
+    
 
     /**************************************************************************
      *************************** Methods **************************************
@@ -133,6 +182,15 @@ public class Tab implements ITableNameConstants{
     }
     
     /**
+     * This method subtracts an amount from the totalRecords value
+     * This is used when records are deleted to update the totalRecords value
+     * @param amountOfRecordsDeleted 
+     */
+    public void addToTotalRowCount(int amountOfRecordsAdded) {
+        this.totalRecords = this.totalRecords + amountOfRecordsAdded;
+    }
+    
+    /**
      * This method returns a string that displays the records.
      * @return String This returns a string that has the records for both total and shown
      */
@@ -143,20 +201,20 @@ public class Tab implements ITableNameConstants{
         switch (getTableName()) {
             case ASSIGNMENTS_TABLE_NAME:
                 output = "<html><pre>"
-                       + "Number of records in Assignments: " + getTotalRecords() 
-                  + "<br/>         Number of records shown: " + getRecordsShown()
+                       + "          Number of records shown: " + getRecordsShown() 
+                  + "<br/> Number of records in Assignments: " + getTotalRecords()
                      + "</pre></html>";
                 break;
             case REPORTS_TABLE_NAME:
                 output = "<html><pre>"
-                       + "Number of records in Reports: " + getTotalRecords() 
-                  + "<br/>     Number of records shown: " + getRecordsShown()
+                       + "      Number of records shown: " + getRecordsShown() 
+                  + "<br/> Number of records in Reports: " + getTotalRecords() 
                      + "</pre></html>";
                 break;
             case ARCHIVE_TABLE_NAME:
                 output = "<html><pre>"
-                       + "Number of records in Archive: " + getTotalRecords() 
-                  + "<br/>     Number of records shown: " + getRecordsShown()
+                       + "      Number of records shown: " + getRecordsShown() 
+                  + "<br/> Number of records in Archive: " + getTotalRecords() 
                      + "</pre></html>";
                 break;
             default:

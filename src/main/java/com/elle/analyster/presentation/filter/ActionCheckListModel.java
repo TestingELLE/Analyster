@@ -4,20 +4,30 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import java.util.*;
 
-public class ActionCheckListModel<T> implements ICheckListModel<T> {
+/**
+ * CLASS 
+ * ActionCheckListModel
+ * @param <T> 
+ */
+public class ActionCheckListModel<T> implements ICheckListModel<T>{
     
+    // attributes
     private final List<ListDataListener> listeners = Collections.synchronizedList( new ArrayList<ListDataListener>());
-    private final ICheckListModel<T> originalModel;
+    private final DefaultCheckListModel<T> originalModel;
+    private final CheckAll<T> actionCheckAll = new CheckAll<T>();
+    private final List<CheckAll<T>> actionItems = Arrays.asList( actionCheckAll );
+    private final Set<CheckAll<T>> checks = new HashSet<CheckAll<T>>();
     
-    private final ICheckListAction<T> actionCheckAll = new ICheckListAction.CheckAll<T>();
-    
-    @SuppressWarnings("unchecked")
-    private final List<ICheckListAction<T>> actionItems = Arrays.asList( actionCheckAll );
-    private final Set<ICheckListAction<T>> checks = new HashSet<ICheckListAction<T>>();
-    
-    public ActionCheckListModel( final ICheckListModel<T> originalModel ) {
+    /**
+     * CONSTRUCTOR
+     * ActionCheckListModel
+     * Looks like it just adds a listListener
+     * The List of ListDataListeners does not make sense since this is only called
+     * once and each time is a new instance
+     * @param originalModel 
+     */
+    public ActionCheckListModel( final DefaultCheckListModel<T> originalModel ) {
         
-        if ( originalModel == null ) throw new NullPointerException();
         this.originalModel = originalModel;
         
         //react on original model changes
@@ -55,11 +65,20 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
         });
     }
     
+    /**
+     * getSize
+     * @return 
+     */
     @Override
     public int getSize() {
         return originalModel.getSize() + actionItems.size();
     }
 
+    /**
+     * getElementAt
+     * @param index
+     * @return 
+     */
     @Override
     public Object getElementAt(int index) {
         if ( isDecoratedIndex(index)) {
@@ -69,30 +88,55 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
         }
     }
     
+    /**
+     * toOriginalIndex
+     * @param index
+     * @return 
+     */
     private int toOriginalIndex( int index ) {
         return index - actionItems.size();
     }
 
+    /**
+     * toDecoratedIndex
+     * @param index
+     * @return 
+     */
     private int toDecoratedIndex( int index ) {
         return index + actionItems.size();
     }
     
+    /**
+     * isDecoratedIndex
+     * @param index
+     * @return 
+     */
     private boolean isDecoratedIndex( int index ) {
         int size = actionItems.size();
         return size > 0 && index >= 0 && index < size; 
     }
-
     
+    /**
+     * addListDataListener
+     * @param l 
+     */
     @Override
     public void addListDataListener(ListDataListener l) {
         listeners.add(l);
     }
 
+    /**
+     * removeListDataListener
+     * @param l 
+     */
     @Override
     public void removeListDataListener(ListDataListener l) {
         listeners.remove(l);
     }
     
+    /**
+     * fireListDataChanged
+     */
     private void fireListDataChanged() {
         ListDataEvent e = new ListDataEvent( this, 0, 0, getSize() );
         for( ListDataListener l: listeners ) {
@@ -100,6 +144,11 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
         }
     }
 
+    /**
+     * toDecoratedEvent
+     * @param e
+     * @return 
+     */
     private ListDataEvent toDecoratedEvent( ListDataEvent e ) {
         return new ListDataEvent(
             e.getSource(), 
@@ -108,7 +157,12 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
             toDecoratedIndex(e.getIndex1()));
     }
     
-    @Override
+    /**
+     * isCheckedIndex
+     * @param index
+     * @return 
+     */
+
     public boolean isCheckedIndex(int index) {
         if ( isDecoratedIndex(index)) {
             return checks.contains(actionItems.get(index));
@@ -118,10 +172,17 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
         
     }
 
-    @Override
+    /**
+     * setCheckedIndex
+     * @param index
+     * @param value 
+     */
+
     public void setCheckedIndex(int index, boolean value) {
         if ( isDecoratedIndex(index)) {
-            ICheckListAction<T> item = actionItems.get(index);
+            
+            // returns List<CheckAll<T>
+            CheckAll<T> item = actionItems.get(index);
             item.check(originalModel, value);
             if ( value ) checks.add(item); else checks.remove(item);
             fireListDataChanged();
@@ -130,19 +191,32 @@ public class ActionCheckListModel<T> implements ICheckListModel<T> {
         }
     }
 
-    @Override
+    /**
+     * getCheckedItems
+     * @return 
+     */
+
     public Collection<T> getCheckedItems() {
         return originalModel.getCheckedItems();
     }
 
-    @Override
+    /**
+     * setCheckedItems
+     * @param items 
+     */
+
     public void setCheckedItems(Collection<T> items) {
         originalModel.setCheckedItems(items);
     }
 
-    @Override
-    public void filter(String pattern, IObjectToStringTranslator translator, IListFilter listFilter) {
-        originalModel.filter(pattern, translator, listFilter);
+    /**
+     * filter
+     * @param pattern
+     * @param listFilter 
+     */
+
+    public void filter(String pattern, CheckListFilterType listFilter) {
+        originalModel.filter(pattern, listFilter);
     }
 
 }

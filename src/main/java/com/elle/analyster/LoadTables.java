@@ -24,7 +24,7 @@ import static com.elle.analyster.service.Connection.connection;
 import java.util.Map;
 
 
-public class LoadTables implements ITableNameConstants{
+public class LoadTables implements ITableConstants{
 
     private Analyster ana =Analyster.getInstance();
     JLabel recordsLabel = ana.getRecordsLabel();
@@ -102,7 +102,6 @@ public class LoadTables implements ITableNameConstants{
             log.error("Error", e);
         }
         ana.setColumnFormat(ana.getTabs().get(table.getName()).getColWidthPercent(), table);
-        ana.getTabs().get(table.getName()).getTableState().init(table, new String[]{"Symbol", "Analyst"});
           
         // new tableRowFilterSupport instance and takes table to set filter
         tableRowFilterSupport = new TableRowFilterSupport(tabs.get(table.getName()).getTable());
@@ -141,7 +140,6 @@ public class LoadTables implements ITableNameConstants{
             log.error("Error", e);
         }
         ana.setColumnFormat(ana.getTabs().get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
-        ana.getAssignments().init(assignmentTable, new String[]{"Symbol", "Analyst"});
         
         // new tableRowFilterSupport instance and takes table to set filter
         tableRowFilterSupport = new TableRowFilterSupport(tabs.get(assignmentTable.getName()).getTable());

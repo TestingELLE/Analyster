@@ -13,47 +13,64 @@ import java.util.*;
  */
 public class DefaultCheckListModel<T> extends AbstractListModel implements ICheckListModel<T> {
 
-    private static final long serialVersionUID = 1L;
-
-    public static IObjectToStringTranslator DEFAULT_TRANSLATOR = new DefaultObjectToStringTranslator();
-
+    // attributes
     private Set<T> checks = new HashSet<T>();
     private final List<T> dataList = new ArrayList<T>();
     private final Set<T> dataSet = new HashSet<T>();
     private List<T> filteredDataList = null;
     private Set<T> filteredDataSet = null;
+    private CheckListFilterType filter;
 
+    
+    /**
+     * CONSTRUCTOR 
+     * DefaultCheckListModel
+     * @param data 
+     */
     public DefaultCheckListModel( Collection<? extends T> data ) {
 
+        // Not sure what the point of this is
+        // it takes a collection to create two identical collections
         if ( data == null ) return;
+        // this is storing all the fields for that column 
+        // this must be what is used to populate the fields to check
         for (T object : data) {
             dataList.add(object);
             dataSet.add(object);
         }
     }
 
-    public DefaultCheckListModel( T... data ) {
-        this( Arrays.asList( data ));
-    }
-
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#getSize()
+    method calls: Action,checklist,checkall
      */
     @Override
     public int getSize() {
         return dataList().size();
     }
 
+    /**
+     * dataList
+     * @return 
+     * method calls: this class
+     */
     private List<T> dataList() {
         return filteredDataList == null ? dataList : filteredDataList;
     }
 
+    /**
+     * dataSet
+     * @return 
+     * method calls: this class
+     */
     private Set<T> dataSet() {
         return filteredDataSet == null ? dataSet : filteredDataSet;
     }
 
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#getElementAt(int)
+    
+    This is from ListModel 
      */
     @Override
     public Object getElementAt(int index) {
@@ -63,7 +80,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#isChecked(int)
      */
-    @Override
+
     public boolean isCheckedIndex( int index ) {
         return checks.contains(dataList().get(index));
     }
@@ -71,7 +88,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#setChecked(int, boolean)
      */
-    @Override
+
     public void setCheckedIndex( int index, boolean value ) {
         T o = dataList().get(index);
         if ( value ) checks.add(o); else checks.remove(o);
@@ -81,7 +98,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#getChecked()
      */
-    @Override
+
     public Collection<T> getCheckedItems() {
         List<T> items = new ArrayList<T>(checks);
         items.retainAll(dataSet());
@@ -91,24 +108,31 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /* (non-Javadoc)
      * @see org.oxbow.swingbits.list.ICheckListModel#setChecked(java.util.Collection)
      */
-    @Override
+
     public void setCheckedItems( Collection<T> items ) {
         Set<T> correctedItems = new HashSet<T>(items);
         correctedItems.retainAll(dataSet());
         checks = correctedItems;
+        // this is a method of the AbstractList
+        // it is used after content in the list is changed
         fireContentsChanged(this, 0, checks.size()-1);
     }
 
-    public void filter( String pattern, IObjectToStringTranslator translator, IListFilter listFilter ) {
+    /**
+     * filter
+     * @param pattern
+     * @param listFilter 
+     * method calls: action, table, checklist
+     */
+    public void filter( String pattern, CheckListFilterType listFilter ) {
 
         if ( pattern == null || pattern.trim().length() == 0 ) {
             filteredDataList = null;
             filteredDataSet = null;
         } else {
 
-            IListFilter filter = listFilter == null? CheckListFilterType.CONTAINS: listFilter;
+            filter = listFilter; 
 
-            IObjectToStringTranslator t = translator == null? DEFAULT_TRANSLATOR: translator;
             String p = pattern.toLowerCase();
 
             List<T> fDataList = new ArrayList<T>();
@@ -116,9 +140,8 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
 
             Object value;
             for (T o : dataList) {
-                //if ( t.translate(o).startsWith(f)) {
-                value = o instanceof IValueWrapper? ((IValueWrapper<?>)o).getValue(): o;
-                if ( filter.include(t.translate(value), p)) {
+                value = o;
+                if ( filter.include(value.toString(), p)) {
                     fDataList.add(o);
                     fDataSet.add(o);
                 }

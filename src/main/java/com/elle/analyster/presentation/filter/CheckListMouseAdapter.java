@@ -15,8 +15,10 @@ import javax.swing.SwingUtilities;
 // * Created on Feb 4, 2011
 // * @author Eugene Ryzhikov
 // *
+// * This is called from CheckList
+// * This is just a listener, maybe it can be added to set terminals in Analyster
 // */
-final class CheckListEditor extends MouseAdapter {
+final class CheckListMouseAdapter extends MouseAdapter {
     
     // this is just one method that listens for when the check List is clicked
     @Override
