@@ -2074,10 +2074,10 @@ public class Analyster extends JFrame implements ITableConstants{
             }
             
             // this is where the table is refreshing 
-            Analyster.getInstance().loadTable(Analyster.getInstance().getTabs().get(tableName).getTable());
+            loadTable(tabs.get(tableName).getTable());
 
             // output pop up dialog that a record was deleted 
-            JOptionPane.showMessageDialog(Analyster.getInstance(), rowsSelected + " Record(s) Deleted");
+            JOptionPane.showMessageDialog(this, rowsSelected + " Record(s) Deleted");
         }
         return sqlDelete;
     }
