@@ -3,7 +3,7 @@ package com.elle.analyster;
 import com.elle.analyster.domain.ModifiedData;
 import com.elle.analyster.presentation.filter.CreateDocumentFilter;
 import com.elle.analyster.presentation.filter.JTableFilter;
-import com.elle.analyster.presentation.filter.TableRowFilterSupport;
+import com.elle.analyster.presentation.filter.TableFilterColumnPopup;
 import static com.elle.analyster.service.Connection.connection;
 import com.elle.analyster.service.DeleteRecord;
 import com.elle.analyster.service.UploadRecord;
@@ -43,7 +43,7 @@ public class Analyster extends JFrame implements ITableConstants{
     
     Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
 
-    private TableRowFilterSupport tableRowFilterSupport;
+    private JTableFilter jTableFilter;
     private LoadTables loadTables;
     private JTableHeader header;
     private DeleteRecord deleteRecord;
@@ -61,6 +61,8 @@ public class Analyster extends JFrame implements ITableConstants{
     private UploadRecord uploadRecordService;
     
     private LoginWindow loginWindow;
+    
+    private TableFilterColumnPopup filterPopup;
     
     /**
      * CONSTRUCTOR
@@ -833,18 +835,25 @@ public class Analyster extends JFrame implements ITableConstants{
         
         try{
 
-            // new tableRowFilterSupport instance and takes table to set filter
-            tableRowFilterSupport = new TableRowFilterSupport(tabs.get(selectedTab).getTable());
+            // new JTableFilter instance and takes table to set filter
+            jTableFilter = new JTableFilter(tabs.get(selectedTab).getTable());
             
             // set actions visible to true
-            tableRowFilterSupport.setActionsVisible(true);
+            jTableFilter.setActionsVisible(true);
+            
+            // Add the TableFilterColumnPopup
+            // this code was in the apply() before any other code in the method
+            filterPopup = new TableFilterColumnPopup(jTableFilter);
+            filterPopup.setEnabled(true);
+            filterPopup.setActionsVisible(jTableFilter.getActionsVisible());
+            filterPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
             
             // apply changes to tableRowFilterSupport
             // This method still needs refactoring -> legacy code
-            tableRowFilterSupport.apply();
+            jTableFilter.apply();
             
             // apply changes to filter
-            tableRowFilterSupport.getFilter().apply(columnIndex, selectedField);
+            jTableFilter.apply(columnIndex, selectedField);
             
             // this sets the column header green
             GUI.columnFilterStatus(columnIndex, tabs.get(selectedTab).getFilter().getTable());
@@ -1044,18 +1053,25 @@ public class Analyster extends JFrame implements ITableConstants{
             tabs.get(selectedTab).setTable(tabs.get(selectedTab).getFilteredTable());
             } else {
                 
-                // new tableRowFilterSupport instance and takes table to set filter
-                tableRowFilterSupport = new TableRowFilterSupport(tabs.get(selectedTab).getTable());
+                // new JTableFilter instance and takes table to set filter
+                jTableFilter = new JTableFilter(tabs.get(selectedTab).getTable());
 
                 // set actions visible to true
-                tableRowFilterSupport.setActionsVisible(true);
+                jTableFilter.setActionsVisible(true);
+                
+                // Add the TableFilterColumnPopup
+                // this code was in the apply() before any other code in the method
+                filterPopup = new TableFilterColumnPopup(jTableFilter);
+                filterPopup.setEnabled(true);
+                filterPopup.setActionsVisible(jTableFilter.getActionsVisible());
+                filterPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
 
                 // apply changes to tableRowFilterSupport
                 // This method still needs refactoring -> legacy code
-                tableRowFilterSupport.apply();
+                jTableFilter.apply();
 
                 // set filter to tabs table
-                tabs.get(selectedTab).setFilter(tableRowFilterSupport.getFilter());
+                tabs.get(selectedTab).setFilter(jTableFilter);
                 
                 // set filtered table in tabs using the filter to filter and return table
                 tabs.get(selectedTab).setFilteredTable(tabs.get(selectedTab).getFilter().getTable());

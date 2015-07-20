@@ -12,7 +12,7 @@ package com.elle.analyster;
 
 import com.elle.analyster.presentation.filter.DistinctColumnItem;
 import com.elle.analyster.presentation.filter.JTableFilter;
-import com.elle.analyster.presentation.filter.TableRowFilterSupport;
+import com.elle.analyster.presentation.filter.TableFilterColumnPopup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,8 @@ public class LoadTables implements ITableConstants{
     JTable reportTable = tabs.get(REPORTS_TABLE_NAME).getTable();
     JTable archiveAssignTable = tabs.get(ARCHIVE_TABLE_NAME).getTable();
     
-    TableRowFilterSupport tableRowFilterSupport;
+    JTableFilter jTableFilter;
+    TableFilterColumnPopup filterPopup;
 
 
     /**
@@ -103,18 +104,25 @@ public class LoadTables implements ITableConstants{
         }
         ana.setColumnFormat(ana.getTabs().get(table.getName()).getColWidthPercent(), table);
           
-        // new tableRowFilterSupport instance and takes table to set filter
-        tableRowFilterSupport = new TableRowFilterSupport(tabs.get(table.getName()).getTable());
+        // new JTableFilter instance and takes table to set filter
+        jTableFilter = new JTableFilter(tabs.get(table.getName()).getTable());
 
         // set actions visible to true
-        tableRowFilterSupport.setActionsVisible(true);
+        jTableFilter.setActionsVisible(true);
+        
+        // Add the TableFilterColumnPopup
+        // this code was in the apply() before any other code in the method
+        filterPopup = new TableFilterColumnPopup(jTableFilter);
+        filterPopup.setEnabled(true);
+        filterPopup.setActionsVisible(jTableFilter.getActionsVisible());
+        filterPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
 
         // apply changes to tableRowFilterSupport
         // This method still needs refactoring -> legacy code
-        tableRowFilterSupport.apply();
+        jTableFilter.apply();
 
         // set filter to tabs table
-        tabs.get(table.getName()).setFilter(tableRowFilterSupport.getFilter());
+        tabs.get(table.getName()).setFilter(jTableFilter);
 
         // set filtered table in tabs using the filter to filter and return table
         tabs.get(table.getName()).setFilteredTable(tabs.get(table.getName()).getFilter().getTable());
@@ -141,21 +149,25 @@ public class LoadTables implements ITableConstants{
         }
         ana.setColumnFormat(ana.getTabs().get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
         
-        // new tableRowFilterSupport instance and takes table to set filter
-        tableRowFilterSupport = new TableRowFilterSupport(tabs.get(assignmentTable.getName()).getTable());
+        // new JTableFilter instance and takes table to set filter
+        jTableFilter = new JTableFilter(tabs.get(assignmentTable.getName()).getTable());
 
         // set actions visible to true
-        tableRowFilterSupport.setActionsVisible(true);
+        jTableFilter.setActionsVisible(true);
+        
+        // Add the TableFilterColumnPopup
+        // this code was in the apply() before any other code in the method
+        filterPopup = new TableFilterColumnPopup(jTableFilter);
+        filterPopup.setEnabled(true);
+        filterPopup.setActionsVisible(jTableFilter.getActionsVisible());
+        filterPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
 
         // apply changes to tableRowFilterSupport
         // This method still needs refactoring -> legacy code
-        tableRowFilterSupport.apply();
-        
-        // get filter and store it in a new variable
-        JTableFilter filter = tableRowFilterSupport.getFilter();
+        jTableFilter.apply();
         
         // apply filter changes -> not sure / legacy code / still refactoring
-        ana.setFilterTempAssignment(filter);
+        ana.setFilterTempAssignment(jTableFilter);
         ana.getFilterTempAssignment().getTable();   // create filter when the table is loaded.
         //ana.setNumberAssignmentInit(assignmentTable.getRowCount());
         ana.getjActivateRecord().setEnabled(false);
@@ -163,16 +175,16 @@ public class LoadTables implements ITableConstants{
 
 
         // testing, looks like just filter and number
-        tabs.get("Assignments").setFilter(filter);
+        tabs.get("Assignments").setFilter(jTableFilter);
         //tabs.get("Assignments").setTotalRecords(assignmentTable.getRowCount());
 
         // set label record information -> this should not be done here : only in Analyster
         //recordsLabel.setText(tabs.get(ASSIGNMENTS_TABLE_NAME).getRecordsLabel()); 
 
         // why is this code here?
-        filter.apply(columnIndex, filterCriteria);
-        filter.saveFilterCriteria(filterCriteria);
-        filter.setColumnIndex(columnIndex);
+        jTableFilter.apply(columnIndex, filterCriteria);
+        jTableFilter.saveFilterCriteria(filterCriteria);
+        jTableFilter.setColumnIndex(columnIndex);
 
 
     }

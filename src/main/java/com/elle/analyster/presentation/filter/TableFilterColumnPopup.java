@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
-class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupMenuListener {
+public class TableFilterColumnPopup extends JPopupMenu implements MouseListener, PopupMenuListener {
 
     // class attributes
     private CheckList<DistinctColumnItem> filterList; // this calls the build method

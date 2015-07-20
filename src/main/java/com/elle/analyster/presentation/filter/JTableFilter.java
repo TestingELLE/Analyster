@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
 
 /**
  * JTableFilter class
@@ -39,12 +40,30 @@ public class JTableFilter {
     private JTable table = new JTable(); 
     //private TableFilterState filterState = new TableFilterState();
     
+    // from TableRowFilterSupport
+    
+    // class attributes
+    private boolean actionsVisible;
+    private int filterIconPlacement;
+    private boolean useTableRenderers;
+    
+    // class objects
+    //private JTableFilter filter;
+    
+    
     /**
      * CONSTRUCTOR
      * JTableFilter
      * @param table 
      */
     public JTableFilter(JTable table) {
+        
+        // from TableRowFilterSupport
+        //filter = new JTableFilter(table);
+        actionsVisible = true; // this should start at false and turned on
+        filterIconPlacement = SwingConstants.LEADING;
+        useTableRenderers = false;
+        
         this.table = table; 
         setupDistinctItemCacheRefresh(); 
     }
@@ -362,6 +381,75 @@ public class JTableFilter {
     
     /***************************************************************************
      ********************** End TableFilterState Methods **********************
+     **************************************************************************/
+    
+    /***************************************************************************
+     ********************** Start TableRowFilterSupport Methods ***************
+     **************************************************************************/
+    
+    /************************************************************************
+     ************************ Setters ***************************************
+     ************************************************************************/
+    
+    //public void setFilter(JTableFilter filter){this.filter = filter;}
+    public void setActionsVisible( boolean visible ) {actionsVisible = visible;}
+
+    /**
+     * Set the placement of the filter icon with respect to the existing icon
+     * in the column label.
+     *
+     * @param filterIconPlacement either SwingConstants.LEADING or
+     *         SwingConstants.TRAILING.
+     */
+    public void filterIconPlacement(int filterIconPlacement) {
+        if (filterIconPlacement != SwingConstants.LEADING &&
+                filterIconPlacement != SwingConstants.TRAILING) {
+            throw new UnsupportedOperationException("The filter icon " +         
+                    "placement can only take the values of " +                   
+                    "SwingConstants.LEADING or SwingConstants.TRAILING");
+        }
+        this.filterIconPlacement = filterIconPlacement;
+    }
+
+    public void useTableRenderers( boolean value ) { useTableRenderers = value;}
+
+    /************************************************************************
+     ************************ Getters ***************************************
+     ************************************************************************/
+    
+    //public JTableFilter getFilter(){return filter;}
+    public boolean getActionsVisible(){return actionsVisible;}
+    public int getFilterIconPlacement(){return filterIconPlacement;}
+    public boolean getUseTableRenderers(){return useTableRenderers;}
+            
+    /************************************************************************
+     ************************ Methods ***************************************
+     ************************************************************************/        
+            
+    public void apply() {
+
+        JTable table = this.getTable();
+        
+        FilterTableHeaderRenderer headerRenderer =
+                new FilterTableHeaderRenderer(this, filterIconPlacement);
+        
+        this.modelChanged( table.getModel() );  // wouldn't this be the same filter?
+
+        for( TableColumn c:  Collections.list( table.getColumnModel().getColumns()) ) {
+            c.setHeaderRenderer( headerRenderer );
+        }
+
+        table.addPropertyChangeListener("model", new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent e) {
+                // can't use this in this method
+                modelChanged( (TableModel) e.getNewValue() ); 
+            } 
+        }); // end addPropertyChangeListener
+    } // end apply
+    
+    /***************************************************************************
+     ********************** End TableRowFilterSupport Methods *****************
      **************************************************************************/
     
     
