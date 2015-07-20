@@ -1,7 +1,9 @@
 package com.elle.analyster;
 
+import static com.elle.analyster.ITableConstants.ASSIGNMENTS_TABLE_NAME;
 import com.elle.analyster.domain.ModifiedData;
 import com.elle.analyster.presentation.filter.CreateDocumentFilter;
+import com.elle.analyster.presentation.filter.DistinctColumnItem;
 import com.elle.analyster.presentation.filter.JTableFilter;
 import com.elle.analyster.presentation.filter.TableFilterColumnPopup;
 import static com.elle.analyster.service.Connection.connection;
@@ -28,6 +30,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +47,6 @@ public class Analyster extends JFrame implements ITableConstants{
     Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
 
     private JTableFilter jTableFilter;
-    private LoadTables loadTables;
     private JTableHeader header;
     private DeleteRecord deleteRecord;
     private AddRecords  addRecords;
@@ -146,9 +148,6 @@ public class Analyster extends JFrame implements ITableConstants{
 
         // set title of window to Analyster
         this.setTitle("Analyster");
-        
-        // initialize loadTables
-        loadTables = new LoadTables();
         
         // create a login window instance
         loginWindow = new LoginWindow(this);
@@ -905,7 +904,7 @@ public class Analyster extends JFrame implements ITableConstants{
         if (GUI.isIsFiltering()) {
 //            loadPrevious(selectedTab);
         } else {         
-            loadTables.loadTable(tabs.get(selectedTab).getTable());
+            loadTable(tabs.get(selectedTab).getTable());
         }
         getModifiedDataList().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();    // update time
@@ -996,7 +995,7 @@ public class Analyster extends JFrame implements ITableConstants{
         if (GUI.isIsFiltering()) {
             loadPrevious(selectedTab);
         } else {
-            loadTables.loadTable(tabs.get(selectedTab).getTable());
+            loadTable(tabs.get(selectedTab).getTable());
         }
         makeTableEditable();
 
@@ -1006,7 +1005,7 @@ public class Analyster extends JFrame implements ITableConstants{
         // TODO check that the selectedTab is actually needed to be passed in.
         
         try{
-            loadTables.loadAssignmentTableWithFilter(tabs.get(selectedTab).getFilter().getColumnIndex(), tabs.get(selectedTab).getFilter().getFilterCriteria());
+            loadAssignmentTableWithFilter(tabs.get(selectedTab).getFilter().getColumnIndex(), tabs.get(selectedTab).getFilter().getFilterCriteria());
             setColumnFormat(tabs.get(selectedTab).getColWidthPercent(), tabs.get(selectedTab).getTable());
             GUI.columnFilterStatus(tabs.get(selectedTab).getFilter().getColumnIndex(), tabs.get(selectedTab).getTable());
             // set label record information
@@ -1198,7 +1197,7 @@ public class Analyster extends JFrame implements ITableConstants{
                 break;
         }
         
-        loadTables.loadTable(tabs.get(selectedTab).getTable());
+        loadTable(tabs.get(selectedTab).getTable());
         GUI.cleanAllColumnFilterStatus(tabs.get(selectedTab).getTable());
         // set label record information
         labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
@@ -1212,7 +1211,7 @@ public class Analyster extends JFrame implements ITableConstants{
         
         String selectedTab = getSelectedTab();
         
-        loadTables.loadTable(tabs.get(selectedTab).getTable());
+        loadTable(tabs.get(selectedTab).getTable());
         // set label record information
         labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
     }//GEN-LAST:event_jMenuItemOthersLoadDataActionPerformed
@@ -1269,8 +1268,8 @@ public class Analyster extends JFrame implements ITableConstants{
                     e.printStackTrace();
                 }
             }
-            loadTables.loadTable(assignmentTable);
-            loadTables.loadTable(archiveTable);
+            loadTable(assignmentTable);
+            loadTable(archiveTable);
             assignmentTable.setRowSelectionInterval(rowsSelected[0], rowsSelected[rowSelected - 1]);
             JOptionPane.showMessageDialog(null, rowSelected + " Record(s) Archived!");
 
@@ -1311,8 +1310,8 @@ public class Analyster extends JFrame implements ITableConstants{
             }
 
             archiveTable.setRowSelectionInterval(rowsSelected[0], rowsSelected[0]);
-            loadTables.loadTable(archiveTable);
-            loadTables.loadTable(assignmentTable);
+            loadTable(archiveTable);
+            loadTable(assignmentTable);
 
             JOptionPane.showMessageDialog(null, rowSelected + " Record(s) Activated!");
 
@@ -1409,7 +1408,7 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
     public void loadData() {
-        loadTables.loadTables(tabs);
+        loadTables(tabs);
     }
 
     /**
@@ -1904,9 +1903,156 @@ public class Analyster extends JFrame implements ITableConstants{
     public String getSelectedTab() {
         return tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
     }
+    
+    /***************************************************************************
+     **************** LoadTables Methods ***************************************
+     ***************************************************************************/
+    
+    /**
+     *  called once to initialize the total row counts of each tabs table
+     * @param tabs
+     * @return 
+     */
+    public Map<String,Tab> initTotalRowCounts(Map<String,Tab> tabs) {
+        
+        int totalRecords;
+ 
+        boolean isFirstTabRecordLabelSet = false;
+        
+        for (Map.Entry<String, Tab> entry : tabs.entrySet())
+        {
+            totalRecords = tabs.get(entry.getKey()).getTable().getRowCount();
+            tabs.get(entry.getKey()).setTotalRecords(totalRecords);
+            
+            if(isFirstTabRecordLabelSet == false){
+                labelRecords.setText(tabs.get(entry.getKey()).getRecordsLabel());
+                isFirstTabRecordLabelSet = true; // now its set
+            }
+        }
 
-    public LoadTables getLoadTables() {
-        return loadTables;
+        return tabs;
+    }
+    
+    
+    /**
+     * This method takes a tabs Map and loads all the tabs/tables
+     * @param tabs
+     * @return 
+     */
+    public Map<String,Tab> loadTables(Map<String,Tab> tabs) {
+        
+        for (Map.Entry<String, Tab> entry : tabs.entrySet())
+        {
+            loadTable(tabs.get(entry.getKey()).getTable());
+            setTerminalsFunction(tabs.get(entry.getKey()).getTable());
+        }
+
+        setLastUpdateTime();
+        
+        return tabs;
+    }
+    
+
+      /**
+       * This method takes a table and loads it
+       * Does not need to pass the table back since it is passed by reference
+       * However, it can make the code clearer and it's good practice to return
+       * @param table 
+       */
+    public JTable loadTable(JTable table) {
+        
+        // make sure column percents are set in tabs first
+        
+        try {
+            connection(sqlQuery(table.getName()), table);
+        } catch (SQLException e) {
+            log.error("Error", e);
+        }
+        setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
+          
+        // new JTableFilter instance and takes table to set filter
+        jTableFilter = new JTableFilter(tabs.get(table.getName()).getTable());
+
+        // set actions visible to true
+        jTableFilter.setActionsVisible(true);
+        
+        // Add the TableFilterColumnPopup
+        // this code was in the apply() before any other code in the method
+        filterPopup = new TableFilterColumnPopup(jTableFilter);
+        filterPopup.setEnabled(true);
+        filterPopup.setActionsVisible(jTableFilter.getActionsVisible());
+        filterPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
+
+        // apply changes to tableRowFilterSupport
+        // This method still needs refactoring -> legacy code
+        jTableFilter.apply();
+
+        // set filter to tabs table
+        tabs.get(table.getName()).setFilter(jTableFilter);
+
+        // set filtered table in tabs using the filter to filter and return table
+        tabs.get(table.getName()).setFilteredTable(tabs.get(table.getName()).getFilter().getTable());
+            
+        // this enables or disables the menu components for this tab
+        jActivateRecord.setEnabled(tabs.get(table.getName()).isActivateRecordMenuItemEnabled()); 
+        jArchiveRecord.setEnabled(tabs.get(table.getName()).isArchiveRecordMenuItemEnabled()); 
+        
+        return table;
+    }
+    
+    
+    /**
+     * This method is called by LoadPrevious method in Analyster class
+     * @param columnIndex
+     * @param filterCriteria 
+     */
+    public void loadAssignmentTableWithFilter(int columnIndex, Collection<DistinctColumnItem> filterCriteria) {
+
+        try {
+            connection(sqlQuery(Analyster.getAssignmentsTableName()), assignmentTable);
+        } catch (SQLException e) {
+            log.error("Error", e);
+        }
+        setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
+        
+        // new JTableFilter instance and takes table to set filter
+        jTableFilter = new JTableFilter(tabs.get(assignmentTable.getName()).getTable());
+
+        // set actions visible to true
+        jTableFilter.setActionsVisible(true);
+        
+        // Add the TableFilterColumnPopup
+        // this code was in the apply() before any other code in the method
+        filterPopup = new TableFilterColumnPopup(jTableFilter);
+        filterPopup.setEnabled(true);
+        filterPopup.setActionsVisible(jTableFilter.getActionsVisible());
+        filterPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
+
+        // apply changes to tableRowFilterSupport
+        // This method still needs refactoring -> legacy code
+        jTableFilter.apply();
+        
+        // apply filter changes -> not sure / legacy code / still refactoring
+        setFilterTempAssignment(jTableFilter);
+        getFilterTempAssignment().getTable();   // create filter when the table is loaded.
+        //ana.setNumberAssignmentInit(assignmentTable.getRowCount());
+        jActivateRecord.setEnabled(false);
+        jArchiveRecord.setEnabled(true);
+
+
+        // testing, looks like just filter and number
+        tabs.get("Assignments").setFilter(jTableFilter);
+        //tabs.get("Assignments").setTotalRecords(assignmentTable.getRowCount());
+
+        // set label record information -> this should not be done here : only in Analyster
+        //recordsLabel.setText(tabs.get(ASSIGNMENTS_TABLE_NAME).getRecordsLabel()); 
+
+        // why is this code here?
+        jTableFilter.apply(columnIndex, filterCriteria);
+        jTableFilter.saveFilterCriteria(filterCriteria);
+        jTableFilter.setColumnIndex(columnIndex);
+
+
     }
     
     

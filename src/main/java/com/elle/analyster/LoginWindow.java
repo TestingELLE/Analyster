@@ -394,10 +394,10 @@ public class LoginWindow extends JFrame {
             GUI.status = true;
             
             // load data from database to tables
-            analyster.getLoadTables().loadTables(analyster.getTabs());
+            analyster.loadTables(analyster.getTabs());
             
             // set initial record counts of now full tables
-            analyster.getLoadTables().initTotalRowCounts(analyster.getTabs());
+            analyster.initTotalRowCounts(analyster.getTabs());
             
             // hide login window
             this.setVisible(false);
