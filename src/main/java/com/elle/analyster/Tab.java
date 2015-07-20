@@ -178,7 +178,7 @@ public class Tab implements ITableConstants{
      * @param amountOfRecordsDeleted 
      */
     public void subtractFromTotalRowCount(int amountOfRecordsDeleted) {
-        this.totalRecords = this.totalRecords - amountOfRecordsDeleted;
+        totalRecords = totalRecords - amountOfRecordsDeleted;
     }
     
     /**
@@ -187,7 +187,7 @@ public class Tab implements ITableConstants{
      * @param amountOfRecordsDeleted 
      */
     public void addToTotalRowCount(int amountOfRecordsAdded) {
-        this.totalRecords = this.totalRecords + amountOfRecordsAdded;
+        totalRecords = totalRecords + amountOfRecordsAdded;
     }
     
     /**

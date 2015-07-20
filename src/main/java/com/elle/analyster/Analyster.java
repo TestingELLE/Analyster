@@ -1146,12 +1146,8 @@ public class Analyster extends JFrame implements ITableConstants{
         String sqlDelete;
 
        try{
-            sqlDelete = deleteRecordSelected(tabs.get(selectedTab).getTable());
+            sqlDelete = deleteRecordsSelected(tabs.get(selectedTab).getTable());
             logwind.sendMessages(sqlDelete);
-            
-            // set label record information
-            tabs.get(selectedTab).subtractFromTotalRowCount(1); // update total row count
-            labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); // update label
             
         }catch(NullPointerException e){
             throwUnknownTableException(selectedTab, e);
@@ -2057,27 +2053,47 @@ public class Analyster extends JFrame implements ITableConstants{
      ********************* DeleteRecords Method ********************************
      ***************************************************************************/
     
-    public String deleteRecordSelected( JTable table) throws HeadlessException {
-        String sqlDelete = "";
-        String tableName = table.getName();
-        int rowsSelected = table.getSelectedRows().length;
-        if (rowsSelected != -1) {
-            for (int i = 0; i < rowsSelected; i++) {
-                int row = table.getSelectedRows()[i];
-                Integer selectedTask = (Integer) table.getValueAt(row, 0); // Add Note to selected taskID
-                sqlDelete = "DELETE FROM " + GUI.getDatabase() + "." + tableName + " where ID=" + selectedTask;
-                try {
-                    GUI.getStmt().executeUpdate(sqlDelete);
-                } catch (SQLException e) {
-                    log.info(e.getMessage());
-                }
+    public String deleteRecordsSelected( JTable table) throws HeadlessException {
+        String sqlDelete = ""; // String for the SQL Statement
+        String tableName = table.getName(); // name of the table
+        int[] selectedRows = table.getSelectedRows(); // array of the rows selected
+        int rowCount = selectedRows.length; // the number of rows selected
+        if (rowCount != -1) {
+            for (int i = 0; i < rowCount; i++) {
+                int row = selectedRows[i];
+                Integer selectedID = (Integer) table.getValueAt(row, 0); // Add Note to selected taskID
+                
+                if(i == 0) // this is the first row
+                    sqlDelete += "DELETE FROM " + GUI.getDatabase() + "." + tableName 
+                            + " WHERE " + table.getColumnName(0) + " IN (" + selectedID;
+                else // this adds the rest of the rows
+                    sqlDelete += ", " + selectedID;
             }
-            
-            // this is where the table is refreshing 
-            loadTable(tabs.get(tableName).getTable());
+                
+            try {
 
-            // output pop up dialog that a record was deleted 
-            JOptionPane.showMessageDialog(this, rowsSelected + " Record(s) Deleted");
+                // close the sql statement
+                sqlDelete += ");";
+
+                // delete records from database
+                GUI.getStmt().executeUpdate(sqlDelete); 
+
+                // this is where the table is refreshing 
+                loadTable(tabs.get(tableName).getTable());
+
+                // output pop up dialog that a record was deleted 
+                JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");
+
+                // set label record information
+                tabs.get(tableName).subtractFromTotalRowCount(rowCount); // update total row count
+                labelRecords.setText(tabs.get(tableName).getRecordsLabel()); // update label
+
+            } catch (SQLException e) {
+                log.info(e.getMessage());
+
+                // output pop up dialog that there was an error 
+                JOptionPane.showMessageDialog(this, "There was an SQL Error.");
+            }
         }
         return sqlDelete;
     }
