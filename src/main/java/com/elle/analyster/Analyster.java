@@ -2058,7 +2058,6 @@ public class Analyster extends JFrame implements ITableConstants{
         String tableName = table.getName(); // name of the table
         int[] selectedRows = table.getSelectedRows(); // array of the rows selected
         int rowCount = selectedRows.length; // the number of rows selected
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
         if (rowCount != -1) {
             for (int i = 0; i < rowCount; i++) {
                 int row = selectedRows[i];
@@ -2081,7 +2080,7 @@ public class Analyster extends JFrame implements ITableConstants{
                 GUI.getStmt().executeUpdate(sqlDelete); 
 
                 // this is where the table is refreshing 
-                loadTable(tabs.get(tableName).getTable());
+                loadTable(table);
 
                 // output pop up dialog that a record was deleted 
                 JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");
