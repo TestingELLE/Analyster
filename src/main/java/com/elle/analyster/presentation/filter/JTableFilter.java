@@ -23,34 +23,23 @@ import javax.swing.table.TableColumn;
  * @author cigreja
  */
 public class JTableFilter {
-
-    // no set - filter cleared; set - some kind of filtering
-    private final Map<Integer,Set<DistinctColumnItem>> data = new HashMap<Integer,Set<DistinctColumnItem>>();
-    
-    // this is a nested class here
-    private TableRowFilter filter = new TableRowFilter();
-    
-    private int columnIndex = -1;
-    
-    private Collection <DistinctColumnItem> itemChecked;
-
-    private final Map<Integer, Collection<DistinctColumnItem>> distinctItemCache
-            = Collections.synchronizedMap(new HashMap<Integer, Collection<DistinctColumnItem>>());
-
-    private JTable table = new JTable(); 
-    //private TableFilterState filterState = new TableFilterState();
-    
-    // from TableRowFilterSupport
     
     // class attributes
     private boolean actionsVisible;
     private int filterIconPlacement;
     private boolean useTableRenderers;
+    private int columnIndex;
     
-    // class objects
-    //private JTableFilter filter;
+    // components
+    private JTable table; 
+    private TableRowFilter filter; // this is a nested class here
     
-    
+    // Arrays
+    private Map<Integer,Set<DistinctColumnItem>> data;
+    private Collection <DistinctColumnItem> itemChecked;
+    private Map<Integer, Collection<DistinctColumnItem>> distinctItemCache;
+
+
     /**
      * CONSTRUCTOR
      * JTableFilter
@@ -58,13 +47,14 @@ public class JTableFilter {
      */
     public JTableFilter(JTable table) {
         
-        // from TableRowFilterSupport
-        //filter = new JTableFilter(table);
         actionsVisible = true; // this should start at false and turned on
         filterIconPlacement = SwingConstants.LEADING;
         useTableRenderers = false;
-        
+        columnIndex = -1;
+        filter = new TableRowFilter(); // this is a nested class here
         this.table = table; 
+        data = new HashMap<Integer,Set<DistinctColumnItem>>();
+        distinctItemCache = Collections.synchronizedMap(new HashMap<Integer, Collection<DistinctColumnItem>>());
         setupDistinctItemCacheRefresh(); 
     }
     
@@ -267,6 +257,10 @@ public class JTableFilter {
         return include(row);
     }
     
+    public TableRowFilter getTableRowFilter(){
+        return filter;
+    }
+    
     /**************************************************************************
      *************************** TableFilterState Methods *********************
      **************************************************************************/
@@ -459,9 +453,10 @@ public class JTableFilter {
      * this class is used once to create an instance in this outer class
      * it is also called as another instance in method execute in the outer class
      */
-    class TableRowFilter extends RowFilter<Object, Object>  {
+    public class TableRowFilter extends RowFilter<Object, Object>  {
 
         private RowFilter<Object, Object> parentFilter; // extend and then make one?
+        private boolean removeRow = false;
 
         /**
          * setParentFilter
@@ -480,14 +475,7 @@ public class JTableFilter {
          */
         @Override
         public boolean include(final Entry<? extends Object, ? extends Object> entry) {
-
-            // test
-            // this code only appears to work for the search text box
-//            
-//            if(entry.getStringValue(col).equalsIgnoreCase(str)){
-//                return true;
-//            }
-//            
+            
             // use parent filter condition
             if (parentFilter != null && !parentFilter.include(entry)) {
                 return false;
@@ -517,6 +505,7 @@ public class JTableFilter {
                 }
             });
         }
+        
     }
     
     /**

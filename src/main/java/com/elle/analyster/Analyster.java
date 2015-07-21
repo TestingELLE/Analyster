@@ -2058,6 +2058,7 @@ public class Analyster extends JFrame implements ITableConstants{
         String tableName = table.getName(); // name of the table
         int[] selectedRows = table.getSelectedRows(); // array of the rows selected
         int rowCount = selectedRows.length; // the number of rows selected
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
         if (rowCount != -1) {
             for (int i = 0; i < rowCount; i++) {
                 int row = selectedRows[i];
@@ -2065,9 +2066,10 @@ public class Analyster extends JFrame implements ITableConstants{
                 
                 if(i == 0) // this is the first row
                     sqlDelete += "DELETE FROM " + GUI.getDatabase() + "." + tableName 
-                            + " WHERE " + table.getColumnName(0) + " IN (" + selectedID;
+                            + " WHERE " + table.getColumnName(0) + " IN (" + selectedID; // 0 is the first column index = primary key
                 else // this adds the rest of the rows
                     sqlDelete += ", " + selectedID;
+                
             }
                 
             try {
