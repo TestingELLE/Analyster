@@ -60,6 +60,10 @@ public class Analyster extends JFrame implements ITableConstants{
     
     private TableFilterColumnPopup tableFilterColumnPopup;
     
+    private TableEditor tableEditor;
+    
+    private EditDatabaseList editDBWindow;
+    
     /**
      * CONSTRUCTOR
      */
@@ -1078,13 +1082,13 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
-        TableEditor tableEditor = new TableEditor(tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex()), this);
+        tableEditor = new TableEditor(tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex()), this);
         tableEditor.setVisible(true);
 
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
     private void jMenuEditDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuEditDBActionPerformed
-        EditDatabaseList editDBWindow = new EditDatabaseList();
+        editDBWindow = new EditDatabaseList();
         editDBWindow.setLocationRelativeTo(this);
         editDBWindow.setVisible(true);
     }//GEN-LAST:event_jMenuEditDBActionPerformed
@@ -1799,48 +1803,12 @@ public class Analyster extends JFrame implements ITableConstants{
         );
     }
 
-    public JTableFilter getFilterTempArchive() {
-        return tabs.get(ARCHIVE_TABLE_NAME).getFilter();
-    }
-
-    public void setFilterTempArchive(JTableFilter filterTempArchive) {
-        tabs.get(ARCHIVE_TABLE_NAME).setFilter(filterTempArchive);
-    }
-
-    public JTableFilter getFilterTempReport() {
-        return tabs.get(REPORTS_TABLE_NAME).getFilter();
-    }
-
-    public void setFilterTempReport(JTableFilter filterTempReport) {
-        tabs.get(REPORTS_TABLE_NAME).setFilter(filterTempReport);
-    }
-
     public void setFilterTempAssignment(JTableFilter filterTempAssignment) {
         tabs.get(ASSIGNMENTS_TABLE_NAME).setFilter(filterTempAssignment);
     }
 
-    public void setNumberArchiveAssignInit(int numberArchiveAssignInit) {
-        tabs.get(ARCHIVE_TABLE_NAME).setTotalRecords(numberArchiveAssignInit);
-    }
-
-    public void setNumberAssignmentInit(int numberAssignmentInit) {
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setTotalRecords(numberAssignmentInit);
-    }
-
-    public void setNumberReportsInit(int numberReportsInit) {
-        tabs.get(REPORTS_TABLE_NAME).setTotalRecords(numberReportsInit);
-    }
-
     public static String getAssignmentsTableName() {
         return ASSIGNMENTS_TABLE_NAME;
-    }
-
-    public static String getReportsTableName() {
-        return REPORTS_TABLE_NAME;
-    }
-
-    public static String getArchiveTableName() {
-        return ARCHIVE_TABLE_NAME;
     }
 
     public static Analyster getInstance() {
@@ -1848,30 +1816,6 @@ public class Analyster extends JFrame implements ITableConstants{
             instance = new Analyster();
         }
         return instance;
-    }
-
-    public JTable getassignmentTable() {
-        return assignmentTable;
-    }
-
-    public JTable getReportTable() {
-        return reportTable;
-    }
-
-    public JTable getArchiveAssignTable() {
-        return archiveTable;
-    }
-
-    public JTabbedPane getjTabbedPanel1() {
-        return tabbedPanel;
-    }
-
-    public JMenuItem getjActivateRecord() {
-        return jActivateRecord;
-    }
-
-    public JMenuItem getjArchiveRecord() {
-        return jArchiveRecord;
     }
 
     public JLabel getRecordsLabel() {
@@ -1892,10 +1836,6 @@ public class Analyster extends JFrame implements ITableConstants{
     
         public Map<String, Tab> getTabs() {
         return tabs;
-    }
-
-    public void setTabs(Map<String, Tab> tabs) {
-        this.tabs = tabs;
     }
     
     public String getSelectedTab() {
