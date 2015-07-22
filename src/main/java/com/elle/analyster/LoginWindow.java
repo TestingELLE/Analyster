@@ -41,10 +41,7 @@ public class LoginWindow extends JFrame {
         // hide Analyster
         analyster.setVisible(false);
         
-        // this is for faster testing
-        jUsername.setText("Carlos");
-        jPassword.setText("CarlosQQ");
-        login();
+
     }
 
     /**
