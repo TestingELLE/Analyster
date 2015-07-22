@@ -14,8 +14,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
 /**
@@ -37,7 +35,6 @@ public class JTableFilter {
     // Arrays
     private Map<Integer,Set<DistinctColumnItem>> data; // distincted items to filter
     private Collection <DistinctColumnItem> itemChecked;
-    private Map<Integer, Collection<DistinctColumnItem>> distinctItemCache;
 
 
     /**
@@ -54,32 +51,6 @@ public class JTableFilter {
         filter = new TableRowFilter(); // this is a nested class here
         this.table = table; 
         data = new HashMap<Integer,Set<DistinctColumnItem>>();
-        distinctItemCache = Collections.synchronizedMap(new HashMap<Integer, Collection<DistinctColumnItem>>());
-        setupDistinctItemCacheRefresh(); 
-    }
-    
-    /**
-     * setupDistinctItemCacheRefresh
-     * called from the constructor
-     */
-    public void setupDistinctItemCacheRefresh() {
-        distinctItemCache.clear();
-        this.table.addPropertyChangeListener("model", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent e) {
-                distinctItemCache.clear();
-                TableModel model = (TableModel) e.getNewValue();
-                if (model != null) {
-                    model.addTableModelListener(new TableModelListener() {
-
-                        @Override
-                        public void tableChanged(TableModelEvent e) {
-                            distinctItemCache.clear();
-                        }
-                    });
-                }
-            }
-        });
     }
 
     /**
@@ -218,13 +189,7 @@ public class JTableFilter {
      * @return 
      */
     public Collection<DistinctColumnItem> getDistinctColumnItems(int column) {
-        Collection<DistinctColumnItem> result = distinctItemCache.get(column);
-        if (result == null) {
-            result = collectDistinctColumnItems(column);
-            distinctItemCache.put(column, result);
-        }
-        return result;
-
+        return collectDistinctColumnItems(column);
     }
     
     /**
