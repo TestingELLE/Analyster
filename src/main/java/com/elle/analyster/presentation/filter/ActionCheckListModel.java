@@ -68,6 +68,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
     /**
      * getSize
      * @return 
+     * 5 - occurances / 3 classes: action, checkall, checklist
      */
     @Override
     public int getSize() {
@@ -78,6 +79,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * getElementAt
      * @param index
      * @return 
+     * 
      */
     @Override
     public Object getElementAt(int index) {
@@ -92,6 +94,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * toOriginalIndex
      * @param index
      * @return 
+     *  3 occurances this class
      */
     private int toOriginalIndex( int index ) {
         return index - actionItems.size();
@@ -101,6 +104,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * toDecoratedIndex
      * @param index
      * @return 
+     * 2 occurances this class
      */
     private int toDecoratedIndex( int index ) {
         return index + actionItems.size();
@@ -110,6 +114,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
      * isDecoratedIndex
      * @param index
      * @return 
+     *  3 occurances this class
      */
     private boolean isDecoratedIndex( int index ) {
         int size = actionItems.size();
@@ -119,6 +124,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
     /**
      * addListDataListener
      * @param l 
+     * once this class
      */
     @Override
     public void addListDataListener(ListDataListener l) {
@@ -128,6 +134,7 @@ public class ActionCheckListModel<T> implements ICheckListModel<T>{
     /**
      * removeListDataListener
      * @param l 
+     * no occurances
      */
     @Override
     public void removeListDataListener(ListDataListener l) {

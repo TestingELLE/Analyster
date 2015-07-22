@@ -10,6 +10,8 @@ import java.util.*;
  * @author Eugene Ryzhikov
  *
  * @param <T> list element type
+ * 
+ * called from actionChecklist and TableFilterColumnPopup
  */
 public class DefaultCheckListModel<T> extends AbstractListModel implements ICheckListModel<T> {
 
@@ -25,6 +27,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
     /**
      * CONSTRUCTOR 
      * DefaultCheckListModel
+     * called once from TableFilterColumnPopup
      * @param data 
      */
     public DefaultCheckListModel( Collection<? extends T> data ) {
@@ -71,6 +74,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
      * @see org.oxbow.swingbits.list.ICheckListModel#getElementAt(int)
     
     This is from ListModel 
+    used in few classes
      */
     @Override
     public Object getElementAt(int index) {
@@ -81,6 +85,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
      * @see org.oxbow.swingbits.list.ICheckListModel#isChecked(int)
      */
 
+    // this is called a lot about 4 classes
     public boolean isCheckedIndex( int index ) {
         return checks.contains(dataList().get(index));
     }
@@ -89,6 +94,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
      * @see org.oxbow.swingbits.list.ICheckListModel#setChecked(int, boolean)
      */
 
+    // called from action checklist and mouse
     public void setCheckedIndex( int index, boolean value ) {
         T o = dataList().get(index);
         if ( value ) checks.add(o); else checks.remove(o);
@@ -99,6 +105,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
      * @see org.oxbow.swingbits.list.ICheckListModel#getChecked()
      */
 
+    // called from action and checklist
     public Collection<T> getCheckedItems() {
         List<T> items = new ArrayList<T>(checks);
         items.retainAll(dataSet());
@@ -109,6 +116,7 @@ public class DefaultCheckListModel<T> extends AbstractListModel implements IChec
      * @see org.oxbow.swingbits.list.ICheckListModel#setChecked(java.util.Collection)
      */
 
+    // called from action checklist checkall and mouse
     public void setCheckedItems( Collection<T> items ) {
         Set<T> correctedItems = new HashSet<T>(items);
         correctedItems.retainAll(dataSet());
