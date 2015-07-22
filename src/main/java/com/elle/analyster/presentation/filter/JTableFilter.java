@@ -102,7 +102,7 @@ public class JTableFilter {
     
     /**
      * apply
-     * Called from Analyster, LoadTables, this, TableFilterColumnPopup
+     * Called from Analyster, this, TableFilterColumnPopup
      * @param col
      * @param items
      */
@@ -132,7 +132,7 @@ public class JTableFilter {
 
     /**
      * saveFilterCriteria
-     * this method is called from LoadTables & TableFilterColumnPopup classes
+     * this method is called from Analyster & TableFilterColumnPopup classes
      * @param collection 
      */
     public void saveFilterCriteria(Collection collection) {
@@ -150,7 +150,7 @@ public class JTableFilter {
 
     /**
      * modelChanged
-     * this method is called from TableRowFilterSupport
+     * this method is called from this
      * @param model 
      */
     public void modelChanged(TableModel model) {
@@ -161,7 +161,7 @@ public class JTableFilter {
 
     /**
      * setColumnIndex
-     * this method is called from LoadTables & TableFilterColumnPopup
+     * this method is called from Analyster & TableFilterColumnPopup
      * @param mColumnIndex 
      */
     public void setColumnIndex(int mColumnIndex) {
@@ -181,7 +181,7 @@ public class JTableFilter {
     /**
      * getTable
      * this method is used a lot
-     * it is called from Analyster, LoadTables, this TableFilterColumnPopup, 
+     * it is called from Analyster, this, TableFilterColumnPopup, 
      * & TableRowFilterSupport
      * @return 
      */
@@ -363,7 +363,6 @@ public class JTableFilter {
             // handle null exception
             if(entry.getValue(col) == null) value = "";
             
-            
             if ( !values.contains( new DistinctColumnItem( value, 0))) {
                 return false;
             } 
@@ -456,7 +455,6 @@ public class JTableFilter {
     public class TableRowFilter extends RowFilter<Object, Object>  {
 
         private RowFilter<Object, Object> parentFilter; // extend and then make one?
-        private boolean removeRow = false;
 
         /**
          * setParentFilter

@@ -2068,6 +2068,8 @@ public class Analyster extends JFrame implements ITableConstants{
                             + " WHERE " + table.getColumnName(0) + " IN (" + selectedID; // 0 is the first column index = primary key
                 else // this adds the rest of the rows
                     sqlDelete += ", " + selectedID;
+                
+                
             }
                 
             try {
