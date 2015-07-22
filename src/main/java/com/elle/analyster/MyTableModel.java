@@ -22,10 +22,11 @@ public class MyTableModel extends DefaultTableModel {
 
     }
 
-    public MyTableModel(Object[][] rowData, Object[] columnNames, boolean filteringStatus) {
-        super(rowData, columnNames);
-        readOnly = filteringStatus;
-    }
+    // NO USAGES
+//    public MyTableModel(Object[][] rowData, Object[] columnNames, boolean filteringStatus) {
+//        super(rowData, columnNames);
+//        readOnly = filteringStatus;
+//    }
 
     public MyTableModel(Vector data, Vector columnNames, boolean filteringStatus) {
         super(data, columnNames);
