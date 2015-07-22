@@ -1,8 +1,6 @@
 package com.elle.analyster.configuration;
 
 import com.elle.analyster.Analyster;
-import com.elle.analyster.LoginWindow;
-import com.elle.analyster.service.UploadRecord;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,15 +30,4 @@ public class AnalysterConfiguration {
         Analyster analyster = new Analyster();
         return analyster;
     }
-
-    @Bean
-    public UploadRecord uploadRecord(){
-        return new UploadRecord();
-    }
-
-
-
-
-
-
 }

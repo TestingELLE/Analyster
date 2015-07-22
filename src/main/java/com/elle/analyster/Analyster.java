@@ -6,10 +6,8 @@ import com.elle.analyster.presentation.filter.CreateDocumentFilter;
 import com.elle.analyster.presentation.filter.DistinctColumnItem;
 import com.elle.analyster.presentation.filter.JTableFilter;
 import com.elle.analyster.presentation.filter.TableFilterColumnPopup;
-import com.elle.analyster.service.UploadRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -57,9 +55,6 @@ public class Analyster extends JFrame implements ITableConstants{
     public EnterButton enterButton = new EnterButton();
     protected static boolean isFiltering = true;
     private List<ModifiedData> modifiedDataList = new ArrayList<>();    // record the locations of changed cell
-    
-    @Autowired
-    private UploadRecord uploadRecordService;
     
     private LoginWindow loginWindow;
     
@@ -1718,7 +1713,7 @@ public class Analyster extends JFrame implements ITableConstants{
     private void updateTable(JTable table, List<ModifiedData> modifiedDataList) {
         table.getModel().addTableModelListener(table);
         try {
-            String uploadQuery = uploadRecordService.uploadRecord(table, modifiedDataList);
+            String uploadQuery = uploadRecord(table, modifiedDataList);
             loadPrevious(table.getName());
 
             JOptionPane.showMessageDialog(this, "Edits uploaded!");
@@ -1786,14 +1781,6 @@ public class Analyster extends JFrame implements ITableConstants{
             }
         }
         );
-    }
-    
-    public UploadRecord getUploadRecordService() {
-        return uploadRecordService;
-    }
-
-    public void setUploadRecordService(UploadRecord uploadRecordService) {
-        this.uploadRecordService = uploadRecordService;
     }
 
     public JTableFilter getFilterTempArchive() {
@@ -2148,6 +2135,43 @@ public class Analyster extends JFrame implements ITableConstants{
         log.info("Table added succesfully");
 
         return null;
+    }
+    
+    
+    /***************************************************************************
+     * *********************** uploadRecord Method *******************************
+     ***************************************************************************/
+    
+    public String uploadRecord(JTable table, List<ModifiedData> modifiedDataList) throws SQLException {
+        int id, col;
+        Object value;
+        String sqlChange = null;
+
+        for (ModifiedData modifiedData : modifiedDataList) {
+            String tableName = modifiedData.getTableName();
+            id = modifiedData.getId();
+            col = modifiedData.getColumnIndex();
+            value = modifiedData.getValueModified();
+            try {
+
+                if ("".equals(value)) {
+                    value = null;
+                    sqlChange = "UPDATE " + tableName + " SET " + table.getColumnName(col)
+                            + " = " + value + " WHERE ID = " + id + ";";
+                } else {
+                    sqlChange = "UPDATE " + tableName + " SET " + table.getColumnName(col)
+                            + " = '" + value + "' WHERE ID = " + id + ";";
+                }
+                log.info(sqlChange);
+                GUI.getStmt().executeUpdate(sqlChange);
+                table.setAutoCreateRowSorter(true);
+
+            } catch (SQLException ex) {
+                log.error("Error: ", ex);
+                throw ex;
+            }
+        }
+        return sqlChange;
     }
     
     // @formatter:off
