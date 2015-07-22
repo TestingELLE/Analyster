@@ -25,7 +25,7 @@ import javax.swing.table.TableColumn;
 public class JTableFilter {
     
     // class attributes
-    private boolean actionsVisible;
+    private boolean actionsVisible; 
     private int filterIconPlacement;
     private boolean useTableRenderers;
     private int columnIndex;
@@ -35,7 +35,7 @@ public class JTableFilter {
     private TableRowFilter filter; // this is a nested class here
     
     // Arrays
-    private Map<Integer,Set<DistinctColumnItem>> data;
+    private Map<Integer,Set<DistinctColumnItem>> data; // distincted items to filter
     private Collection <DistinctColumnItem> itemChecked;
     private Map<Integer, Collection<DistinctColumnItem>> distinctItemCache;
 
@@ -90,14 +90,14 @@ public class JTableFilter {
      */
     public void apply(int col, Object selectField) { //Create Collection from selected fields 
         
-        Collection<DistinctColumnItem> item = new ArrayList<>();
+        Collection<DistinctColumnItem> items = new ArrayList<>();
         
         // handle null exceptions
         if(selectField == null) selectField = "";
         
-        DistinctColumnItem distinctColumnItem =new DistinctColumnItem(selectField, col);
-        item.add(distinctColumnItem);
-        apply(col, item);
+        DistinctColumnItem distinctColumnItem = new DistinctColumnItem(selectField, col);
+        items.add(distinctColumnItem);
+        apply(col, items);
     }
     
     /**
@@ -245,17 +245,6 @@ public class JTableFilter {
         }
         return result;
     }
-
-    /**
-     * includeRow
-     * this method is called once by the nested class TableRowFilter 
-     * method include that overrides the Java API method of the RowFilter class
-     * @param row
-     * @return 
-     */
-    public boolean includeRow(JTableFilter.Row row) {
-        return include(row);
-    }
     
     public TableRowFilter getTableRowFilter(){
         return filter;
@@ -341,35 +330,6 @@ public class JTableFilter {
     public Collection<DistinctColumnItem> getValues( int column ) {
         Set<DistinctColumnItem> vals =  data.get(column);
         return vals == null? Collections.<DistinctColumnItem>emptySet(): vals;
-    }
-    
-    /**
-     * Standard test for row inclusion using current filter values
-     * @param entry
-     * @return true if row has to be included
-     */
-    public boolean include( JTableFilter.Row entry ) {                 //////////////// Include in new data
-    
-        // check every column
-        for( int col=0; col< entry.getValueCount(); col++ ) {
-            
-            // get filter values
-            Collection<DistinctColumnItem> values = getValues(col);
-            if ( CollectionUtils.isEmpty(values) ) continue; // no filtering for this column
-            
-            // get value
-            Object value = entry.getValue(col);
-            
-            // handle null exception
-            if(entry.getValue(col) == null) value = "";
-            
-            if ( !values.contains( new DistinctColumnItem( value, 0))) {
-                return false;
-            } 
-        }
-
-        return true;
-        
     }
     
     /***************************************************************************
@@ -479,55 +439,26 @@ public class JTableFilter {
                 return false;
             }
 
-            return includeRow(new Row() { // Row is the nested interface
+            // check every column
+            for( int col=0; col< entry.getValueCount(); col++ ) {
 
-                /**
-                 * getValueCount
-                 * this method is called once from TableFilterState
-                 * @return 
-                 */
-                @Override
-                public int getValueCount() {
-                    return entry.getValueCount();
-                }
+                // get filter values
+                Collection<DistinctColumnItem> values = getValues(col);
+                if ( CollectionUtils.isEmpty(values) ) continue; // no filtering for this column
 
-                /**
-                 * getValue
-                 * this method is called twice from TableFilterState
-                 * @param column
-                 * @return 
-                 */
-                @Override
-                public Object getValue(int column) {
-                    return entry.getValue(column);
-                }
-            });
+                // get value
+                Object value = entry.getValue(col);
+
+                // handle null exception
+                if(entry.getValue(col) == null) value = "";
+
+                if ( !values.contains( new DistinctColumnItem( value, 0))) {
+                    return false;
+                } 
+            }
+
+            return true;
         }
         
     }
-    
-    /**
-     * NESTED INTERFACE 
-     * Row
-     * this interface is called twice in this outer class
-     * and once from TableFilterState
-     */
-    public interface Row {
-        
-        /**
-         * getValueCount
-         * this method is called once from TableFilterState
-         * @return 
-         */
-        int getValueCount();
-
-        /**
-         * getValue
-         * this method is called twice from TableFilterState
-         * @param column
-         * @return 
-         */
-        Object getValue(int column);
-    }
-
 }
