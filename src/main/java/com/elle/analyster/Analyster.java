@@ -989,12 +989,7 @@ public class Analyster extends JFrame implements ITableConstants{
         }
     }
     private void btnCancelEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelEditModeActionPerformed
-        String selectedTab = tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
-        if (GUI.isIsFiltering()) {
-            loadPrevious(selectedTab);
-        } else {
-            loadTable(tabs.get(selectedTab).getTable());
-        }
+
         makeTableEditable();
 
     }//GEN-LAST:event_btnCancelEditModeActionPerformed
@@ -1003,7 +998,7 @@ public class Analyster extends JFrame implements ITableConstants{
         // TODO check that the selectedTab is actually needed to be passed in.
         
         try{
-            loadAssignmentTableWithFilter(tabs.get(selectedTab).getFilter().getColumnIndex(), tabs.get(selectedTab).getFilter().getFilterCriteria());
+            loadTableWithFilter(tabs.get(selectedTab).getFilter().getColumnIndex(), tabs.get(selectedTab).getFilter().getFilterCriteria());
             setColumnFormat(tabs.get(selectedTab).getColWidthPercent(), tabs.get(selectedTab).getTable());
             GUI.columnFilterStatus(tabs.get(selectedTab).getFilter().getColumnIndex(), tabs.get(selectedTab).getTable());
             // set label record information
@@ -1746,8 +1741,7 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
     public JTable getSelectedTable() {  //get JTable by  selected Tab
-        String selectedTab = getSelectedTab();
-        return tabs.get(selectedTab).getTable();
+        return tabs.get(getSelectedTab()).getTable();
     }
 
     public void setLastUpdateTime() {
@@ -1938,23 +1932,25 @@ public class Analyster extends JFrame implements ITableConstants{
         return table;
     }
     
-    
     /**
+     * loadTableWithFilter
+     * This method is a universal method to replace the assignments only method
      * This method is called by LoadPrevious method in Analyster class
+     * It appears to do the same thing as loadTable from testing
      * @param columnIndex
      * @param filterCriteria 
      */
-    public void loadAssignmentTableWithFilter(int columnIndex, Collection<DistinctColumnItem> filterCriteria) {
+    public void loadTableWithFilter(int columnIndex, Collection<DistinctColumnItem> filterCriteria) {
 
         try {
-            connection(sqlQuery(Analyster.getAssignmentsTableName()), assignmentTable);
+            connection(sqlQuery(tabs.get(getSelectedTab()).getTableName()), tabs.get(getSelectedTab()).getTable());
         } catch (SQLException e) {
             log.error("Error", e);
         }
-        setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
+        setColumnFormat(tabs.get(getSelectedTab()).getColWidthPercent(), tabs.get(getSelectedTab()).getTable());
         
         // new JTableFilter instance and takes table to set filter
-        jTableFilter = new JTableFilter(tabs.get(assignmentTable.getName()).getTable());
+        jTableFilter = new JTableFilter(tabs.get(getSelectedTab()).getTable());
 
         // set actions visible to true
         jTableFilter.setActionsVisible(true);
@@ -1971,26 +1967,19 @@ public class Analyster extends JFrame implements ITableConstants{
         jTableFilter.apply();
         
         // apply filter changes -> not sure / legacy code / still refactoring
-        setFilterTempAssignment(jTableFilter);
-        getFilterTempAssignment().getTable();   // create filter when the table is loaded.
-        //ana.setNumberAssignmentInit(assignmentTable.getRowCount());
-        jActivateRecord.setEnabled(false);
-        jArchiveRecord.setEnabled(true);
+        tabs.get(getSelectedTab()).setFilter(jTableFilter);
+        tabs.get(getSelectedTab()).getFilter().getTable();   // create filter when the table is loaded.
 
+        // set tab enabled changes
+        jActivateRecord.setEnabled(tabs.get(getSelectedTab()).isActivateRecordMenuItemEnabled());
+        jArchiveRecord.setEnabled(tabs.get(getSelectedTab()).isArchiveRecordMenuItemEnabled());
 
-        // testing, looks like just filter and number
-        tabs.get("Assignments").setFilter(jTableFilter);
-        //tabs.get("Assignments").setTotalRecords(assignmentTable.getRowCount());
-
-        // set label record information -> this should not be done here : only in Analyster
-        //recordsLabel.setText(tabs.get(ASSIGNMENTS_TABLE_NAME).getRecordsLabel()); 
+        tabs.get(getSelectedTab()).setFilter(jTableFilter); // this is set again?
 
         // why is this code here?
-        jTableFilter.apply(columnIndex, filterCriteria);
-        jTableFilter.saveFilterCriteria(filterCriteria);
-        jTableFilter.setColumnIndex(columnIndex);
-
-
+        tabs.get(getSelectedTab()).getFilter().apply(columnIndex, filterCriteria);
+        tabs.get(getSelectedTab()).getFilter().saveFilterCriteria(filterCriteria);
+        tabs.get(getSelectedTab()).getFilter().setColumnIndex(columnIndex);
     }
     
     /***************************************************************************
@@ -2025,7 +2014,8 @@ public class Analyster extends JFrame implements ITableConstants{
                 GUI.getStmt().executeUpdate(sqlDelete); 
 
                 // this is where the table is refreshing 
-                loadTable(table);
+                // loadTable(table);
+                loadPrevious(getSelectedTab()); // load table with filter
 
                 // output pop up dialog that a record was deleted 
                 JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");

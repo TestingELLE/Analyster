@@ -50,7 +50,7 @@ public class JTableFilter {
         columnIndex = -1;
         filter = new TableRowFilter(); // this is a nested class here
         this.table = table; 
-        data = new HashMap<Integer,Set<DistinctColumnItem>>();
+        data = new HashMap<>(); // this map stores the distinct items for each column
     }
 
     /**
@@ -290,6 +290,7 @@ public class JTableFilter {
             } 
         }); // end addPropertyChangeListener
     } // end apply
+    
     
     
     /**
