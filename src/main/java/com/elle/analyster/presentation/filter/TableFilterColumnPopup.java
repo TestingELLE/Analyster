@@ -282,7 +282,7 @@ public class TableFilterColumnPopup extends JPopupMenu implements MouseListener,
      * showFilterPopup
      * @param e 
      */
-    private void showFilterPopup(MouseEvent e) {
+    public void showFilterPopup(MouseEvent e) {
         
         // these are Java API Components
         JTableHeader header = (JTableHeader) (e.getSource());

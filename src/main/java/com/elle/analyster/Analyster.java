@@ -58,7 +58,7 @@ public class Analyster extends JFrame implements ITableConstants{
     
     private LoginWindow loginWindow;
     
-    private TableFilterColumnPopup filterPopup;
+    private TableFilterColumnPopup tableFilterColumnPopup;
     
     /**
      * CONSTRUCTOR
@@ -836,10 +836,10 @@ public class Analyster extends JFrame implements ITableConstants{
             
             // Add the TableFilterColumnPopup
             // this code was in the apply() before any other code in the method
-            filterPopup = new TableFilterColumnPopup(jTableFilter);
-            filterPopup.setEnabled(true);
-            filterPopup.setActionsVisible(jTableFilter.getActionsVisible());
-            filterPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
+            tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
+            tableFilterColumnPopup.setEnabled(true);
+            tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
+            tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
             
             // apply changes to tableRowFilterSupport
             // This method still needs refactoring -> legacy code
@@ -1054,10 +1054,10 @@ public class Analyster extends JFrame implements ITableConstants{
                 
                 // Add the TableFilterColumnPopup
                 // this code was in the apply() before any other code in the method
-                filterPopup = new TableFilterColumnPopup(jTableFilter);
-                filterPopup.setEnabled(true);
-                filterPopup.setActionsVisible(jTableFilter.getActionsVisible());
-                filterPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
+                tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
+                tableFilterColumnPopup.setEnabled(true);
+                tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
+                tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
 
                 // apply changes to tableRowFilterSupport
                 // This method still needs refactoring -> legacy code
@@ -1413,15 +1413,31 @@ public class Analyster extends JFrame implements ITableConstants{
             header.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() == 2) {
-                        if (isFiltering) {
-                            clearFilterDoubleClick(e, table);
+                    
+                    // Left mouse clicks
+                    if (SwingUtilities.isLeftMouseButton(e)){
+                        if (e.getClickCount() == 2) {
+                            if (isFiltering) {
+                                clearFilterDoubleClick(e, table);
+                            }
+                        } else if (e.getClickCount() == 1) {
+                            // why is nothing here?
+                            // Shouldnt this order the columns?
+                            // or perhaps it is already a built in feature to the JTable?
                         }
-                    } else if (e.getClickCount() == 1) {
-                        // why is nothing here?
-                        // Shouldnt this order the columns?
-                        // or perhaps it is already a built in feature to the JTable?
                     }
+                    
+                    // Right mouse clicks
+                    else if(SwingUtilities.isRightMouseButton(e)){
+                        if (e.getClickCount() == 1){
+                            // this should be called here
+                            // it works fine except there is issues with filtering
+                            // it is the way that they implemented the listener
+                            // in TableFilterColumnPopup
+                            //tableFilterColumnPopup.showFilterPopup(e);
+                        }
+                    }
+                    
                 }
             });
         }
@@ -1960,10 +1976,10 @@ public class Analyster extends JFrame implements ITableConstants{
         
         // Add the TableFilterColumnPopup
         // this code was in the apply() before any other code in the method
-        filterPopup = new TableFilterColumnPopup(jTableFilter);
-        filterPopup.setEnabled(true);
-        filterPopup.setActionsVisible(jTableFilter.getActionsVisible());
-        filterPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
+        tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
+        tableFilterColumnPopup.setEnabled(true);
+        tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
+        tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
 
         // apply changes to tableRowFilterSupport
         // This method still needs refactoring -> legacy code
@@ -2005,10 +2021,10 @@ public class Analyster extends JFrame implements ITableConstants{
         
         // Add the TableFilterColumnPopup
         // this code was in the apply() before any other code in the method
-        filterPopup = new TableFilterColumnPopup(jTableFilter);
-        filterPopup.setEnabled(true);
-        filterPopup.setActionsVisible(jTableFilter.getActionsVisible());
-        filterPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
+        tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
+        tableFilterColumnPopup.setEnabled(true);
+        tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
+        tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
 
         // apply changes to tableRowFilterSupport
         // This method still needs refactoring -> legacy code
