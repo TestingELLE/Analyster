@@ -6,7 +6,6 @@ import com.elle.analyster.presentation.filter.CreateDocumentFilter;
 import com.elle.analyster.presentation.filter.DistinctColumnItem;
 import com.elle.analyster.presentation.filter.JTableFilter;
 import com.elle.analyster.presentation.filter.TableFilterColumnPopup;
-import static com.elle.analyster.service.Connection.connection;
 import com.elle.analyster.service.UploadRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -2098,6 +2099,55 @@ public class Analyster extends JFrame implements ITableConstants{
             }
         }
         return sqlDelete;
+    }
+    
+    /***************************************************************************
+     * *********************** Connection Method *******************************
+     ***************************************************************************/
+    
+    public String connection(String sql, JTable table) throws SQLException {
+
+        Vector data = new Vector();
+        Vector columnNames = new Vector();
+        int columns;
+
+        if (GUI.status == false) {
+            JOptionPane.showMessageDialog(null, "You have not yet logged in.",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            new LoginWindow(this).setVisible(true);
+        }
+
+        ResultSet rs = null;
+        ResultSetMetaData metaData = null;
+        try {
+            rs = GUI.getStmt().executeQuery(sql);
+            metaData = rs.getMetaData();
+        } catch (Exception ex) {
+            log.error("Error: ", ex);
+        }
+        try {
+            columns = metaData.getColumnCount();
+            for (int i = 1; i <= columns; i++) {
+                columnNames.addElement(metaData.getColumnName(i));
+            }
+            while (rs.next()) {
+                Vector row = new Vector(columns);
+                for (int i = 1; i <= columns; i++) {
+                    row.addElement(rs.getObject(i));
+                }
+                data.addElement(row);
+            }
+            rs.close();
+
+        } catch (SQLException ex) {
+            log.error("Error: ", ex);
+            throw ex;
+        }
+
+        tableReload(table, data, columnNames);  // Table model (table visualization) set up
+        log.info("Table added succesfully");
+
+        return null;
     }
     
     // @formatter:off
