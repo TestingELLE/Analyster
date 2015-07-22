@@ -250,25 +250,6 @@ public class JTableFilter {
         return filter;
     }
     
-    /**************************************************************************
-     *************************** TableFilterState Methods *********************
-     **************************************************************************/
-
-    /**
-     * Clears filtering for specific column
-     */
-    public void clear( int column ) {
-        data.remove(column);
-    }
-    
-    
-    /**
-     * Clears all filtering
-     */
-    public void clear() {
-        data.clear();
-    }
-    
     /**
      * prepareValueSet
      * creates an array of data for a column if one doesn't exist
@@ -283,26 +264,6 @@ public class JTableFilter {
             data.put(column, vals);
         }
         return vals;
-    }
-    
-    
-    /**
-     * Adds filter value for specified column 
-     * @param column // int column index
-     * @param value // DistinctColumnItem
-     */
-    public void addValue( int column, DistinctColumnItem value ) {
-        prepareValueSet(column).add(value);
-    }
-
-    
-    /**
-     * Adds a collection of filter values for specified column 
-     * @param column
-     * @param values
-     */
-    public void addValues( int column, Collection<DistinctColumnItem> values ) {
-        prepareValueSet(column).addAll(values);
     }
 
     /**
@@ -331,54 +292,29 @@ public class JTableFilter {
         Set<DistinctColumnItem> vals =  data.get(column);
         return vals == null? Collections.<DistinctColumnItem>emptySet(): vals;
     }
-    
-    /***************************************************************************
-     ********************** End TableFilterState Methods **********************
-     **************************************************************************/
-    
-    /***************************************************************************
-     ********************** Start TableRowFilterSupport Methods ***************
-     **************************************************************************/
-    
-    /************************************************************************
-     ************************ Setters ***************************************
-     ************************************************************************/
-    
-    //public void setFilter(JTableFilter filter){this.filter = filter;}
-    public void setActionsVisible( boolean visible ) {actionsVisible = visible;}
 
     /**
-     * Set the placement of the filter icon with respect to the existing icon
-     * in the column label.
-     *
-     * @param filterIconPlacement either SwingConstants.LEADING or
-     *         SwingConstants.TRAILING.
+     * setActionsVisible
+     * @param visible 
      */
-    public void filterIconPlacement(int filterIconPlacement) {
-        if (filterIconPlacement != SwingConstants.LEADING &&
-                filterIconPlacement != SwingConstants.TRAILING) {
-            throw new UnsupportedOperationException("The filter icon " +         
-                    "placement can only take the values of " +                   
-                    "SwingConstants.LEADING or SwingConstants.TRAILING");
-        }
-        this.filterIconPlacement = filterIconPlacement;
-    }
-
-    public void useTableRenderers( boolean value ) { useTableRenderers = value;}
-
-    /************************************************************************
-     ************************ Getters ***************************************
-     ************************************************************************/
+    public void setActionsVisible( boolean visible ) {actionsVisible = visible;}
     
-    //public JTableFilter getFilter(){return filter;}
+    /**
+     * getActionsVisible
+     * @return 
+     */
     public boolean getActionsVisible(){return actionsVisible;}
-    public int getFilterIconPlacement(){return filterIconPlacement;}
-    public boolean getUseTableRenderers(){return useTableRenderers;}
+    
+    /**
+     * getUseTableRenderers
+     * @return 
+     */
+    public boolean getUseTableRenderers(){return useTableRenderers;}      
             
-    /************************************************************************
-     ************************ Methods ***************************************
-     ************************************************************************/        
-            
+    /**
+     * apply
+     * this was from the TableFilterSupport class
+     */
     public void apply() {
 
         JTable table = this.getTable();
@@ -400,10 +336,6 @@ public class JTableFilter {
             } 
         }); // end addPropertyChangeListener
     } // end apply
-    
-    /***************************************************************************
-     ********************** End TableRowFilterSupport Methods *****************
-     **************************************************************************/
     
     
     /**
