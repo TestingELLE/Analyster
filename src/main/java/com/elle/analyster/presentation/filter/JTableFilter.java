@@ -249,22 +249,6 @@ public class JTableFilter {
     public TableRowFilter getTableRowFilter(){
         return filter;
     }
-    
-    /**
-     * prepareValueSet
-     * creates an array of data for a column if one doesn't exist
-     * then adds the array to the data map and the column index is the key
-     * @param column
-     * @return Set<DistinctColumnItem> // the array of data for that column
-     */
-    private Set<DistinctColumnItem> prepareValueSet( int column ) {
-        Set<DistinctColumnItem> vals =  data.get(column);
-        if ( vals == null ) {
-            vals = new HashSet<DistinctColumnItem>();
-            data.put(column, vals);
-        }
-        return vals;
-    }
 
     /**
      * Resets a collection of filter values for specified column
@@ -279,7 +263,12 @@ public class JTableFilter {
         if ( !CollectionUtils.isEmpty(values)) {
             
             // create a column map key and add this collection
-            prepareValueSet(column).addAll(values);
+            Set<DistinctColumnItem> vals =  data.get(column);
+            if ( vals == null ) {
+                vals = new HashSet<DistinctColumnItem>();
+                data.put(column, vals);
+            }
+            vals.addAll(values);
         }
     }
     
