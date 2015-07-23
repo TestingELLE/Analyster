@@ -1982,6 +1982,24 @@ public class Analyster extends JFrame implements ITableConstants{
         tabs.get(getSelectedTab()).getFilter().setColumnIndex(columnIndex);
     }
     
+    /**
+     * loadTableWithFilterTest
+     * 
+     */
+    public void loadTableWithFilterTest(){
+        
+        // refresh table
+        try {
+            connection(sqlQuery(tabs.get(getSelectedTab()).getTableName()), tabs.get(getSelectedTab()).getTable());
+        } catch (SQLException e) {
+            log.error("Error", e);
+        }
+        
+        // reapply filter
+        tabs.get(getSelectedTab()).getFilter().reapplyFilters();
+        
+    }
+    
     /***************************************************************************
      ********************* DeleteRecords Method ********************************
      ***************************************************************************/
@@ -2002,7 +2020,6 @@ public class Analyster extends JFrame implements ITableConstants{
                 else // this adds the rest of the rows
                     sqlDelete += ", " + selectedID;
                 
-                
             }
                 
             try {
@@ -2015,7 +2032,12 @@ public class Analyster extends JFrame implements ITableConstants{
 
                 // this is where the table is refreshing 
                 // loadTable(table);
-                loadPrevious(getSelectedTab()); // load table with filter
+                //loadPrevious(getSelectedTab()); // load table with filter
+                // testing
+//                tabs.get(getSelectedTab()).getFilter().reapplyFilters();
+//                tabs.get(getSelectedTab()).getFilter().getTable().repaint();
+//                tabs.get(getSelectedTab()).getFilter().getTable().getRowCount();
+                loadTableWithFilterTest();
 
                 // output pop up dialog that a record was deleted 
                 JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");

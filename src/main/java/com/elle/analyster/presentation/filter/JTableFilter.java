@@ -1,5 +1,6 @@
 package com.elle.analyster.presentation.filter;
 
+import com.elle.analyster.GUI;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -291,7 +292,17 @@ public class JTableFilter {
         }); // end addPropertyChangeListener
     } // end apply
     
-    
+    /**
+     * reapplyFilters
+     */
+    public void reapplyFilters(){
+        
+        Map<Integer,Set<DistinctColumnItem>> temp = new HashMap<>(data); // makes a copy
+        for (Map.Entry<Integer,Set<DistinctColumnItem>> entry : temp.entrySet()){
+            apply(entry.getKey(), temp.get(entry.getKey()));
+            GUI.columnFilterStatus(entry.getKey(), table);
+        }
+    }
     
     /**
      * NESTED CLASS
