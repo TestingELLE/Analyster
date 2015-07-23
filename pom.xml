@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elle</groupId>
     <artifactId>Analyster</artifactId>
-    <version>0.6.8</version>
+    <version>0.6.8a</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -60,13 +60,7 @@
             </plugin>
         </plugins>
     </build>
-    <description>- new archive Analyster_0.6.8 released
-  - Can finally refresh tables and keep the filtering
-  - Edit mode feature implemented commit or revert dialog
-  - Deleted more classes - Refactoring
-    - Deleted Connection class
-    - Deleted UploadRecord class
-    - Deleted Row Interface
-  - Removed about 20+ methods that were no longer needed
+    <description>- new archive Analyster_0.6.8a released
+  - Saving more resources from the GUI, and LoginWindow when Analyster is running
 </description>
 </project>
