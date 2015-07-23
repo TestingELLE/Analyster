@@ -1555,6 +1555,11 @@ public class Analyster extends JFrame implements ITableConstants{
 
     }
 
+    /**
+     * filterByDoubleClick
+     * this selects the item double clicked on to be filtered
+     * @param table 
+     */
     public void filterByDoubleClick(JTable table) {
         
         int columnIndex = table.getSelectedColumn(); // this returns the column index
@@ -1570,7 +1575,9 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
     /**
-     * This is triggered when the the column header is double clicked
+     * clearFilterDoubleClick
+     * This clears the filters for that column by double clicking on that 
+     * column header.
      */
     private void clearFilterDoubleClick(MouseEvent e, JTable table) {
         
@@ -1582,12 +1589,25 @@ public class Analyster extends JFrame implements ITableConstants{
         labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
     }
 
+    /**
+     * sqlQuery
+     * this returns an sql query to retrieve all the data for that table
+     * @param tableName
+     * @return 
+     */
     public String sqlQuery(String tableName) { //Creat Query to select * from DB.
         log.info("Connection");
         String SqlQuery = "SELECT * FROM " + tableName + " ORDER BY symbol ASC";
         return SqlQuery;
     }
 
+    /**
+     * tableReload
+     * This creates a new model and adds it to the table
+     * @param table
+     * @param data
+     * @param columnNames 
+     */
     public void tableReload(final JTable table, Vector data, Vector columnNames) {
         MyTableModel model = new MyTableModel(data, columnNames, isFiltering);
         TableRowSorter sorter = new TableRowSorter<>(model);
@@ -1606,7 +1626,13 @@ public class Analyster extends JFrame implements ITableConstants{
         setColumnFormat(tabs.get(ARCHIVE_TABLE_NAME).getColWidthPercent(), archiveTable);
     }
 
-    void setColumnFormat(float[] width, JTable table) {
+    /**
+     * setColumnFormat
+     * sets column format for each table
+     * @param width
+     * @param table 
+     */
+    public void setColumnFormat(float[] width, JTable table) {
         // Center column content
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1782,14 +1808,6 @@ public class Analyster extends JFrame implements ITableConstants{
         );
     }
 
-    public void setFilterTempAssignment(JTableFilter filterTempAssignment) {
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setFilter(filterTempAssignment);
-    }
-
-    public static String getAssignmentsTableName() {
-        return ASSIGNMENTS_TABLE_NAME;
-    }
-
     public static Analyster getInstance() {
         if (instance == null) {
             instance = new Analyster();
@@ -1808,12 +1826,8 @@ public class Analyster extends JFrame implements ITableConstants{
     public List<ModifiedData> getModifiedDataList() {
         return modifiedDataList;
     }
-
-    public JTableFilter getFilterTempAssignment() {
-        return tabs.get(ASSIGNMENTS_TABLE_NAME).getFilter();
-    }
     
-        public Map<String, Tab> getTabs() {
+    public Map<String, Tab> getTabs() {
         return tabs;
     }
     
