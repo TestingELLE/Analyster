@@ -3,7 +3,6 @@ package com.elle.analyster;
 import static com.elle.analyster.ITableConstants.ASSIGNMENTS_TABLE_NAME;
 import com.elle.analyster.domain.ModifiedData;
 import com.elle.analyster.presentation.filter.CreateDocumentFilter;
-import com.elle.analyster.presentation.filter.DistinctColumnItem;
 import com.elle.analyster.presentation.filter.JTableFilter;
 import com.elle.analyster.presentation.filter.TableFilterColumnPopup;
 import org.slf4j.Logger;
@@ -28,7 +27,6 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -993,20 +991,7 @@ public class Analyster extends JFrame implements ITableConstants{
         makeTableEditable();
 
     }//GEN-LAST:event_btnCancelEditModeActionPerformed
-    public void loadPrevious(String selectedTab) {
 
-        // TODO check that the selectedTab is actually needed to be passed in.
-        
-        try{
-            loadTableWithFilter(tabs.get(selectedTab).getFilter().getColumnIndex(), tabs.get(selectedTab).getFilter().getFilterCriteria());
-            setColumnFormat(tabs.get(selectedTab).getColWidthPercent(), tabs.get(selectedTab).getTable());
-            GUI.columnFilterStatus(tabs.get(selectedTab).getFilter().getColumnIndex(), tabs.get(selectedTab).getTable());
-            // set label record information
-            labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
-        }catch(NullPointerException e){
-            throwUnknownTableException(selectedTab, e);
-        }
-    }
     
     private void changeTabbedPanelState() {
         
@@ -1729,7 +1714,7 @@ public class Analyster extends JFrame implements ITableConstants{
         table.getModel().addTableModelListener(table);
         try {
             String uploadQuery = uploadRecord(table, modifiedDataList);
-            loadPrevious(table.getName());
+            loadTableWithFilter();
 
             JOptionPane.showMessageDialog(this, "Edits uploaded!");
             logwind.sendMessages(uploadQuery);
@@ -1933,60 +1918,10 @@ public class Analyster extends JFrame implements ITableConstants{
     }
     
     /**
-     * loadTableWithFilter
-     * This method is a universal method to replace the assignments only method
-     * This method is called by LoadPrevious method in Analyster class
-     * It appears to do the same thing as loadTable from testing
-     * @param columnIndex
-     * @param filterCriteria 
-     */
-    public void loadTableWithFilter(int columnIndex, Collection<DistinctColumnItem> filterCriteria) {
-
-        try {
-            connection(sqlQuery(tabs.get(getSelectedTab()).getTableName()), tabs.get(getSelectedTab()).getTable());
-        } catch (SQLException e) {
-            log.error("Error", e);
-        }
-        setColumnFormat(tabs.get(getSelectedTab()).getColWidthPercent(), tabs.get(getSelectedTab()).getTable());
-        
-        // new JTableFilter instance and takes table to set filter
-        jTableFilter = new JTableFilter(tabs.get(getSelectedTab()).getTable());
-
-        // set actions visible to true
-        jTableFilter.setActionsVisible(true);
-        
-        // Add the TableFilterColumnPopup
-        // this code was in the apply() before any other code in the method
-        tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
-        tableFilterColumnPopup.setEnabled(true);
-        tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
-        tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
-
-        // apply changes to tableRowFilterSupport
-        // This method still needs refactoring -> legacy code
-        jTableFilter.apply();
-        
-        // apply filter changes -> not sure / legacy code / still refactoring
-        tabs.get(getSelectedTab()).setFilter(jTableFilter);
-        tabs.get(getSelectedTab()).getFilter().getTable();   // create filter when the table is loaded.
-
-        // set tab enabled changes
-        jActivateRecord.setEnabled(tabs.get(getSelectedTab()).isActivateRecordMenuItemEnabled());
-        jArchiveRecord.setEnabled(tabs.get(getSelectedTab()).isArchiveRecordMenuItemEnabled());
-
-        tabs.get(getSelectedTab()).setFilter(jTableFilter); // this is set again?
-
-        // why is this code here?
-        tabs.get(getSelectedTab()).getFilter().apply(columnIndex, filterCriteria);
-        tabs.get(getSelectedTab()).getFilter().saveFilterCriteria(filterCriteria);
-        tabs.get(getSelectedTab()).getFilter().setColumnIndex(columnIndex);
-    }
-    
-    /**
      * loadTableWithFilterTest
      * 
      */
-    public void loadTableWithFilterTest(){
+    public void loadTableWithFilter(){
         
         // refresh table
         try {
@@ -2030,14 +1965,8 @@ public class Analyster extends JFrame implements ITableConstants{
                 // delete records from database
                 GUI.getStmt().executeUpdate(sqlDelete); 
 
-                // this is where the table is refreshing 
-                // loadTable(table);
-                //loadPrevious(getSelectedTab()); // load table with filter
-                // testing
-//                tabs.get(getSelectedTab()).getFilter().reapplyFilters();
-//                tabs.get(getSelectedTab()).getFilter().getTable().repaint();
-//                tabs.get(getSelectedTab()).getFilter().getTable().getRowCount();
-                loadTableWithFilterTest();
+                // refresh table and retain filters
+                loadTableWithFilter();
 
                 // output pop up dialog that a record was deleted 
                 JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");
