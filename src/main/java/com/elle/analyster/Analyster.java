@@ -1458,10 +1458,7 @@ public class Analyster extends JFrame implements ITableConstants{
                                 break;
                             case 1:
                                 // if Revert, revert changes
-                                
-                                //TODO
-                                // there is still no easy way to work with the tables
-                                // refactoring first would be ideal for a feasible solution
+                                loadTableWithFilter(); // reverts the model back
                                 
                                 break;
                             default:
