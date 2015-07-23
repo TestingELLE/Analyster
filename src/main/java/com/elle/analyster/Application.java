@@ -11,12 +11,14 @@ import org.springframework.context.ConfigurableApplicationContext;
  * Time: 7:32 PM
  * To change this template use File | Settings | File Templates.
  */
-@SpringBootApplication
+//@SpringBootApplication
 public class Application {
 
     public static void main(String[] args) {
+        
+        
 
-        ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(Application.class).headless(false).run(args);
+        //ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(Application.class).headless(false).run(args);
         //System.out.println("Enter the main");
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -29,9 +31,31 @@ public class Application {
                 @Override
                 public void run() {
 
-                    Analyster analyster = applicationContext.getBean(Analyster.class);
+                    //Analyster analyster = applicationContext.getBean(Analyster.class);
                     //analyster.setVisible(false);
                     //new LoginWindow(analyster).setVisible(true);
+                    
+                    
+                    // set the look and feel
+                    try {
+                        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                            if ("Nimbus".equals(info.getName())) {
+                                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                                break;
+                            }
+                        }
+                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+                        java.util.logging.Logger.getLogger(Analyster.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    }
+
+                    // this is the first window that is shown to log in
+                    // to the database.
+                    // Once the database connection is made, then an instance
+                    // of Analyster is created.
+                    LoginWindow loginWindow = new LoginWindow();
+                    loginWindow.setLocationRelativeTo(null);
+                    loginWindow.setVisible(true);
+                    
                 }
             });
     }

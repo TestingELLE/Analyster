@@ -31,7 +31,6 @@ public class AddRecords extends JFrame {
     private Analyster analyster;
     private LogWindow logWindow;
     private Logger logger;
-    private GUI gui;
     private DefaultTableModel model;
 
     /**
@@ -44,7 +43,6 @@ public class AddRecords extends JFrame {
         analyster = Analyster.getInstance();
         logWindow = analyster.getLogwind();
         logger = LoggerFactory.getLogger(AddRecords.class);
-        gui = new GUI();
         
         // set this window to appear in the middle of Analyster
         this.setLocationRelativeTo(analyster);
@@ -248,7 +246,7 @@ public class AddRecords extends JFrame {
             try {
                 String sqlChange = "INSERT INTO " + tableName + title + " VALUES " + rows.get(i);
                 System.out.println(sqlChange);
-                gui.stmt.executeUpdate(sqlChange);
+                analyster.getStatement().executeUpdate(sqlChange);
                 logWindow.sendMessages(sqlChange);
                 flag = true;
             } catch (SQLException ex) {

@@ -15,33 +15,40 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
 public class LoginWindow extends JFrame {
 
-    private Analyster analyster;
+    // class attributes 
+    private String server;           // server url
+    private String database;         // database name
+    private String db_url;           // server url + database name
+    private String username;         // username to login 
+    private String password;         // password to login
+    private Connection connection;   // connection to database 
+    private Statement statement;     // statement object used to execute sql queries
     
-    public LoginWindow(Analyster analyster) {
+    // class component instances
+    private Analyster analyster;
+    private EditDatabaseList editDatabaseList;
+    private LogWindow logWindow;
+    
+    public LoginWindow() {
         
         // initialize
         initComponents();
-        this.analyster = analyster;
+        logWindow = new LogWindow(); // this is for reporting connections to log
         
-        loadDBList();    // did not find suitable event
+        // load database selections from the text file for the combobox
+        loadDBList(); 
  
         // show window
         this.setTitle("Log in");
-        this.setLocationRelativeTo(analyster);
-        this.setVisible(true); 
-        
-        // hide Analyster
-        analyster.setVisible(false);
-        
-
     }
 
     /**
@@ -269,15 +276,8 @@ public class LoginWindow extends JFrame {
      * Close down application properly
      */
     public void close(){
-        GUI.status = false; // already logged in?
-        GUI.db_url = "";
-        GUI.database = "";
-        GUI.username = "";
-        GUI.password = "";
-        GUI.stmt = null;
-        GUI.con = null;
-        // destroy these component and return consumed resources
-        analyster.dispose();
+
+        // terminate window and return resources
         this.dispose();
         System.exit(0); // Terminates the currently running Java Virtual Machine.
     }
@@ -297,11 +297,15 @@ public class LoginWindow extends JFrame {
     }//GEN-LAST:event_jDatabaseActionPerformed
 
     private void jServerActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jServerActionPerformed
-//        loadList();
+
     }//GEN-LAST:event_jServerActionPerformed
 
     private void jEditDBActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jEditDBActionPerformed
-        new EditDatabaseList(this).setVisible(true);
+        
+        // create a new edit database window
+        editDatabaseList = new EditDatabaseList(this); // maybe we can make it not dependant on this
+        editDatabaseList.setLocationRelativeTo(this);
+        editDatabaseList.setVisible(true);
     }//GEN-LAST:event_jEditDBActionPerformed
 
     private void jUsernameActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jUsernameActionPerformed
@@ -362,7 +366,6 @@ public class LoginWindow extends JFrame {
 
     public void login() {
         String selectedServer = jServer.getSelectedItem().toString();
-        String server;
         char[] pw;
 
         // load url for server
@@ -375,38 +378,41 @@ public class LoginWindow extends JFrame {
         } else {
             server = null;
         }
-
+        
         // load database name
-        GUI.database = jDatabase.getSelectedItem().toString();
+        database = jDatabase.getSelectedItem().toString();
+        db_url = server + database;
+        username = jUsername.getText();
         pw = jPassword.getPassword();
-        GUI.username = jUsername.getText();
-        GUI.password = String.valueOf(pw);
-        GUI.db_url = server + GUI.database;
-        Arrays.fill(pw, '0');
+        password = String.valueOf(pw);
 
         String jdbc_driver = "com.mysql.jdbc.Driver";
         try {
             Class.forName(jdbc_driver);
             //connect to the local database for test now
-            analyster.getLogwind().sendMessages("\nStart to connect local database...");
-            GUI.con = DriverManager.getConnection(GUI.db_url, GUI.username, GUI.password);
-            analyster.getLogwind().sendMessages("Connect successfully!\n");
-            GUI.stmt = GUI.con.createStatement();
+            logWindow.sendMessages("\nStart to connect local database...");
+            connection = DriverManager.getConnection(db_url, username, password);
+            logWindow.sendMessages("Connect successfully!\n");
+            statement = connection.createStatement();
             System.out.println("Connection successfully");
-            GUI.status = true;
             
-            // load data from database to tables
-            analyster.loadTables(analyster.getTabs());
+            // create an Analyster object
+            // it takes the statement that can execute sql queries with the DB
+            analyster = new Analyster(statement);
             
-            // set initial record counts of now full tables
-            analyster.initTotalRowCounts(analyster.getTabs());
+            // pass the log window to analyster
+            analyster.setLogWindow(logWindow);
             
-            // hide login window
-            this.setVisible(false);
+            // pass the database to Analyster
+            // it is used in sql statements
+            analyster.setDatabase(database);
             
             // show Analyster
             analyster.setLocationRelativeTo(this);
             analyster.setVisible(true);
+            
+            // terminate this object
+            this.dispose(); // returns used resources
             
         } catch (Exception ex) {
 
@@ -416,8 +422,7 @@ public class LoginWindow extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
 
             System.out.println("Cannot open local database -- make sure it is configured properly.");
-            analyster.getLogwind().sendMessages(ex.getMessage());
-            GUI.password = "";
+            logWindow.sendMessages(ex.getMessage());
             jPassword.setText("");
         }
 

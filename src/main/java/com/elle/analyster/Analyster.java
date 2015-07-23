@@ -48,7 +48,7 @@ public class Analyster extends JFrame implements ITableConstants{
     
     private static Analyster instance;
     private Logger log = LoggerFactory.getLogger(Analyster.class);
-    private LogWindow logwind = new LogWindow(); 
+    private LogWindow logWindow = new LogWindow(); 
     
     public EnterButton enterButton = new EnterButton();
     protected static boolean isFiltering = true;
@@ -62,15 +62,23 @@ public class Analyster extends JFrame implements ITableConstants{
     
     private EditDatabaseList editDBWindow;
     
+    private Statement statement;
+    
+    private String database;
+    
     /**
      * CONSTRUCTOR
      */
-    public Analyster() {
+    public Analyster(Statement statement) {
         
         /**
          * Note: initComponents() executes the tabpaneChanged method.
          * Thus, some things need to be before or after the initComponents();
          */
+        
+        // the statement is used for sql statements with the database connection
+        // the statement is created in LoginWindow and passed to Analyster.
+        this.statement = statement;
         
         // this is used to call an instance of Analyster 
         instance = this;  
@@ -141,12 +149,15 @@ public class Analyster extends JFrame implements ITableConstants{
         btnCancelEditMode.setVisible(false);
         btnBatchEdit.setVisible(true);
         jTextAreaSQL.setVisible(true);
-
+        
+        // load data from database to tables
+        loadTables(tabs);
+            
+        // set initial record counts of now full tables
+        initTotalRowCounts(tabs);
+        
         // set title of window to Analyster
         this.setTitle("Analyster");
-        
-        // create a login window instance
-        loginWindow = new LoginWindow(this);
         
     }
 
@@ -872,7 +883,7 @@ public class Analyster extends JFrame implements ITableConstants{
             String sqlD = "select * from " + REPORTS_TABLE_NAME;
             connection(sqlD, reportTable);
         } catch (SQLException ex) {
-            logwind.sendMessages(ex.getMessage());
+            logWindow.sendMessages(ex.getMessage());
         }
 
     }//GEN-LAST:event_jMenuItem3ActionPerformed
@@ -912,13 +923,12 @@ public class Analyster extends JFrame implements ITableConstants{
             try {
                 connection(enterButton.getCommand(jTextAreaSQL), assignmentTable);
             } catch (SQLException e) {
-                logwind.sendMessages(e.getMessage());  //To change body of catch statement use File | Settings | File Templates.
+                logWindow.sendMessages(e.getMessage());  //To change body of catch statement use File | Settings | File Templates.
             }
         } else {
             
             try {
-                    Statement state = GUI.con.createStatement();
-                    state.executeUpdate(enterButton.getCommand(jTextAreaSQL));
+                    statement.executeUpdate(enterButton.getCommand(jTextAreaSQL));
             } catch (SQLException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (Exception e) {
@@ -1104,12 +1114,14 @@ public class Analyster extends JFrame implements ITableConstants{
 
         switch (n) {
             case 0: {               // Reconnect
-                
-                // hide Analyster
-                this.setVisible(false);
-                
-                // show login window
+
+                // create a new Login Window
+                loginWindow = new LoginWindow();
+                loginWindow.setLocationRelativeTo(this);
                 loginWindow.setVisible(true);
+                
+                // dispose of this Object and return resources
+                this.dispose();
 
                 break;
             }
@@ -1125,7 +1137,7 @@ public class Analyster extends JFrame implements ITableConstants{
 
        try{
             sqlDelete = deleteRecordsSelected(tabs.get(selectedTab).getTable());
-            logwind.sendMessages(sqlDelete);
+            logWindow.sendMessages(sqlDelete);
             
         }catch(NullPointerException e){
             throwUnknownTableException(selectedTab, e);
@@ -1144,7 +1156,7 @@ public class Analyster extends JFrame implements ITableConstants{
         try {
             connection(sqlC, assignmentTable);
         } catch (SQLException e) {
-            logwind.sendMessages(e.getMessage());  
+            logWindow.sendMessages(e.getMessage());  
         }
 
         setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
@@ -1201,13 +1213,13 @@ public class Analyster extends JFrame implements ITableConstants{
             for (int i = 0; i < rowSelected; i++) {
                 String analyst = (String) assignmentTable.getValueAt(rowsSelected[i], 2);
                 Integer selectedTask = (Integer) assignmentTable.getValueAt(rowsSelected[i], 0); // Add Note to selected taskID
-                String sqlDelete = "UPDATE " + GUI.getDatabase() + "." + assignmentTable.getName() + " SET analyst = \"\",\n"
+                String sqlDelete = "UPDATE " + database + "." + assignmentTable.getName() + " SET analyst = \"\",\n"
                         + " priority=null,\n"
                         + " dateAssigned= '" + today + "',"
                         + " dateDone=null,\n"
                         + " notes= \'Previous " + analyst + "' " + "where ID=" + selectedTask;
                 try {
-                    GUI.getStmt().executeUpdate(sqlDelete);
+                    statement.executeUpdate(sqlDelete);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -1219,7 +1231,7 @@ public class Analyster extends JFrame implements ITableConstants{
         if (rowSelected != -1) {
 
             for (int i = 0; i < rowSelected; i++) {
-                String sqlInsert = "INSERT INTO " + GUI.getDatabase() + "." + archiveTable.getName() + " (symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES (";
+                String sqlInsert = "INSERT INTO " + database + "." + archiveTable.getName() + " (symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES (";
                 int numRow = rowsSelected[i];
                 for (int j = 1; j < assignmentTable.getColumnCount() - 1; j++) {
                     if (assignmentTable.getValueAt(numRow, j) == null) {
@@ -1234,7 +1246,7 @@ public class Analyster extends JFrame implements ITableConstants{
                     sqlInsert += "'" + assignmentTable.getValueAt(numRow, assignmentTable.getColumnCount() - 1) + "')";
                 }
                 try {
-                    GUI.getStmt().executeUpdate(sqlInsert);
+                    statement.executeUpdate(sqlInsert);
 //                    logwind.sendMessages(sqlInsert);
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -1258,7 +1270,7 @@ public class Analyster extends JFrame implements ITableConstants{
         if (rowSelected != -1) {
 
             for (int i = 0; i < rowSelected; i++) {
-                String sqlInsert = "INSERT INTO " + GUI.getDatabase() + "." + assignmentTable.getName() + "(symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES ( ";
+                String sqlInsert = "INSERT INTO " + database + "." + assignmentTable.getName() + "(symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES ( ";
                 int numRow = rowsSelected[i];
                 for (int j = 1; j < archiveTable.getColumnCount() - 1; j++) {
                     if (archiveTable.getValueAt(numRow, j) == null) {
@@ -1273,7 +1285,7 @@ public class Analyster extends JFrame implements ITableConstants{
                     sqlInsert += "'" + archiveTable.getValueAt(numRow, archiveTable.getColumnCount() - 1) + "')";
                 }
                 try {
-                    GUI.getStmt().executeUpdate(sqlInsert);
+                    statement.executeUpdate(sqlInsert);
 //                    ana.getLogwind().sendMessages(sqlInsert);
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -1309,11 +1321,11 @@ public class Analyster extends JFrame implements ITableConstants{
 
         if(jCheckBoxMenuItemViewLog.isSelected()){
             
-            logwind.setLocationRelativeTo(this);
-            logwind.setVisible(true); // show log window
+            logWindow.setLocationRelativeTo(this);
+            logWindow.setVisible(true); // show log window
             
             // remove check if window is closed from the window
-            logwind.addWindowListener(new WindowAdapter() {
+            logWindow.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e){
                         jCheckBoxMenuItemViewLog.setSelected(false);
@@ -1321,7 +1333,7 @@ public class Analyster extends JFrame implements ITableConstants{
                 });
         }else{
             // hide log window
-            logwind.setVisible(false);
+            logWindow.setVisible(false);
         }
     }//GEN-LAST:event_jCheckBoxMenuItemViewLogActionPerformed
 
@@ -1729,11 +1741,11 @@ public class Analyster extends JFrame implements ITableConstants{
             loadTableWithFilter();
 
             JOptionPane.showMessageDialog(this, "Edits uploaded!");
-            logwind.sendMessages(uploadQuery);
+            logWindow.sendMessages(uploadQuery);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Upload failed!");
-            logwind.sendMessages(e.getMessage());
-            logwind.sendMessages(e.getSQLState() + "\n");
+            logWindow.sendMessages(e.getMessage());
+            logWindow.sendMessages(e.getSQLState() + "\n");
         }
     }
 
@@ -1795,9 +1807,6 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
     public static Analyster getInstance() {
-        if (instance == null) {
-            instance = new Analyster();
-        }
         return instance;
     }
 
@@ -1806,7 +1815,7 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
     public LogWindow getLogwind() {
-        return logwind;
+        return logWindow;
     }
 
     public List<ModifiedData> getModifiedDataList() {
@@ -1820,6 +1829,21 @@ public class Analyster extends JFrame implements ITableConstants{
     public String getSelectedTab() {
         return tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
     }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public void setLogWindow(LogWindow logWindow) {
+        this.logWindow = logWindow;
+    }
+
+    public Statement getStatement() {
+        return statement;
+    }
+    
+    
+    
     
     /***************************************************************************
      **************** LoadTables Methods ***************************************
@@ -1950,7 +1974,7 @@ public class Analyster extends JFrame implements ITableConstants{
                 Integer selectedID = (Integer) table.getValueAt(row, 0); // Add Note to selected taskID
                 
                 if(i == 0) // this is the first row
-                    sqlDelete += "DELETE FROM " + GUI.getDatabase() + "." + tableName 
+                    sqlDelete += "DELETE FROM " + database + "." + tableName 
                             + " WHERE " + table.getColumnName(0) + " IN (" + selectedID; // 0 is the first column index = primary key
                 else // this adds the rest of the rows
                     sqlDelete += ", " + selectedID;
@@ -1963,7 +1987,7 @@ public class Analyster extends JFrame implements ITableConstants{
                 sqlDelete += ");";
 
                 // delete records from database
-                GUI.getStmt().executeUpdate(sqlDelete); 
+                statement.executeUpdate(sqlDelete); 
 
                 // refresh table and retain filters
                 loadTableWithFilter();
@@ -1995,16 +2019,10 @@ public class Analyster extends JFrame implements ITableConstants{
         Vector columnNames = new Vector();
         int columns;
 
-        if (GUI.status == false) {
-            JOptionPane.showMessageDialog(null, "You have not yet logged in.",
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            new LoginWindow(this).setVisible(true);
-        }
-
         ResultSet rs = null;
         ResultSetMetaData metaData = null;
         try {
-            rs = GUI.getStmt().executeQuery(sql);
+            rs = statement.executeQuery(sql);
             metaData = rs.getMetaData();
         } catch (Exception ex) {
             log.error("Error: ", ex);
@@ -2060,7 +2078,7 @@ public class Analyster extends JFrame implements ITableConstants{
                             + " = '" + value + "' WHERE ID = " + id + ";";
                 }
                 log.info(sqlChange);
-                GUI.getStmt().executeUpdate(sqlChange);
+                statement.executeUpdate(sqlChange);
                 table.setAutoCreateRowSorter(true);
 
             } catch (SQLException ex) {

@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.sql.Connection;
-import java.sql.Statement;
 
 /**
  *
@@ -19,18 +17,14 @@ import java.sql.Statement;
  */
 @Component
 public class GUI {
-
-    public static boolean status = false;    // already logged in?
-    protected static String db_url;
-    protected static String database;
-    protected static String username;
-    protected static String password;
-    protected static Statement stmt;
-    protected static Connection con = null;
+    
+    // filtering active variables
     protected static boolean isFiltering = false;
     public static boolean filterAssignmentIsActive = false;
     public static boolean filterReportIstActive;
     static boolean filterArchiveIsActive;
+    
+    
     protected static boolean isChangesUploaded =false;
     final JTable temporaryTable = new JTable();
     private static GUI guiInstance;
@@ -44,18 +38,6 @@ public class GUI {
 
     public static boolean isIsFiltering() {
         return isFiltering;
-    }
-
-    public static String getDatabase() {
-        return database;
-    }
-
-    public static Statement getStmt() {
-        return stmt;
-    }
-
-    public static void setStmt(Statement statement){
-        stmt = statement;
     }
    
     public static JTable setTemporaryTable (JTable table){
