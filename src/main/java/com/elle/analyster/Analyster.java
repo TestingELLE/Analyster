@@ -897,11 +897,8 @@ public class Analyster extends JFrame implements ITableConstants{
         
         updateTable(tabs.get(selectedTab).getTable(), modifiedDataList);
 
-        if (GUI.isIsFiltering()) {
-//            loadPrevious(selectedTab);
-        } else {         
-            loadTable(tabs.get(selectedTab).getTable());
-        }
+        loadTableWithFilter(); // refresh table
+        
         getModifiedDataList().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();    // update time
         makeTableEditable();
