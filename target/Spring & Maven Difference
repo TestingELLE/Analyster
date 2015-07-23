@@ -1,0 +1,12 @@
+The performance seems fine either way for me. On loading is the same but that might be impacted by internet speed for loading the tables.
+
+Difference in jar sizes:
+with = 6.6MB
+
+The old jar was 157 kb - but this jar does not contain the mysql jar - You can tell because you can't log in.
+
+The new jar is 973.8 kb - this one actually contains the mysql jar though
+
+The mysql jar is 834.1 kb
+
+973.8 kb - 834.1 kb = 139.7 kb
