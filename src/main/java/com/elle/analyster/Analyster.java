@@ -901,7 +901,6 @@ public class Analyster extends JFrame implements ITableConstants{
         
         getModifiedDataList().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();    // update time
-        makeTableEditable();
     }
     
     private void jMenuItemOtherReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOtherReportActionPerformed
@@ -944,13 +943,15 @@ public class Analyster extends JFrame implements ITableConstants{
 
     private void btnSwitchEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchEditModeActionPerformed
 
-        makeTableEditable();
+        // this was the way it is being checked - with the label text
+        // this checks the text and passes the opposite - ON = false to turn off
+        makeTableEditable(jLabelEdit.getText().equals("ON ")?false:true);
 
     }//GEN-LAST:event_btnSwitchEditModeActionPerformed
     //Make the table Editable or Read Only
 
-    public void makeTableEditable() {
-        if (jLabelEdit.getText().equals("OFF")) {
+    public void makeTableEditable( boolean makeTableEditable) {
+        if (makeTableEditable) {
             jLabelEdit.setText("ON ");
             btnSwitchEditMode.setVisible(false);
             btnUploadChanges.setVisible(true);
@@ -985,7 +986,7 @@ public class Analyster extends JFrame implements ITableConstants{
     }
     private void btnCancelEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelEditModeActionPerformed
 
-        makeTableEditable();
+        makeTableEditable(false); // exit edit mode;
 
     }//GEN-LAST:event_btnCancelEditModeActionPerformed
 
@@ -1427,7 +1428,10 @@ public class Analyster extends JFrame implements ITableConstants{
             @Override
             public void keyReleased(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_F2) {
-                    makeTableEditable();
+                    
+                    // I beleive this is meant to toggle edit mode
+                    // so I passed the conditional
+                    makeTableEditable(jLabelEdit.getText().equals("ON ")?false:true);
                 } 
                 
                 // in editing mode this should ask to upload changes when enter key press
@@ -1439,6 +1443,9 @@ public class Analyster extends JFrame implements ITableConstants{
                         // if finished display dialog box
                         // Upload Changes? Yes or No?
                         Object[] options = {"Commit", "Revert"};  // the titles of buttons
+                        
+                        // store selected row before the table is refreshed
+                        int rowIndex = table.getSelectedRow();
 
                         int selectedOption = JOptionPane.showOptionDialog(Analyster.getInstance(), 
                                 "Would you like to upload changes?", "Upload Changes",
@@ -1451,11 +1458,13 @@ public class Analyster extends JFrame implements ITableConstants{
                         switch (selectedOption) {
                             case 0:            
                                 // if Commit, upload changes and return to editing
-                                uploadChanges();
+                                uploadChanges();  // upload changes to database
+                                makeTableEditable(false); // exit edit mode;
                                 break;
                             case 1:
                                 // if Revert, revert changes
                                 loadTableWithFilter(); // reverts the model back
+                                makeTableEditable(false); // exit edit mode;
                                 
                                 break;
                             default:
@@ -1463,26 +1472,9 @@ public class Analyster extends JFrame implements ITableConstants{
                                 break;
                         }   
                         
-                        // return to edit mode for next cell
-                        
-                        // get selected cell
-                        int columnIndex = table.getSelectedColumn(); // this returns the column index
-                        int rowIndex = table.getSelectedRow() + 1; // this returns the next row index
-                        if (rowIndex != -1 && columnIndex != -1) {
-
-                            // this highlights the next row
-                            table.changeSelection(rowIndex, columnIndex, false, false);
-
-                            // this starts editing the next cell
-                            table.editCellAt(rowIndex, columnIndex);
-                            
-                            // this selects all the text in the editing cell
-                            JTextField selectCom = (JTextField) table.getEditorComponent();
-                            if (selectCom != null) {
-                                selectCom.requestFocusInWindow();
-                                selectCom.selectAll();
-                            }
-                        }
+                        // highligh previously selected row
+                        if (rowIndex != -1) 
+                            table.setRowSelectionInterval(rowIndex, rowIndex);
                     }
                 }
             }
@@ -1509,7 +1501,7 @@ public class Analyster extends JFrame implements ITableConstants{
                             if (e.getClickCount() == 2 ) {
                                 
                                 // make table editable
-                                makeTableEditable();
+                                makeTableEditable(true);
                                 
                                 // get selected cell
                                 int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
