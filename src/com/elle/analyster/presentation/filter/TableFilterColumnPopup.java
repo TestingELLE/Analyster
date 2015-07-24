@@ -19,6 +19,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -313,6 +314,11 @@ public class TableFilterColumnPopup extends JPopupMenu implements MouseListener,
 
         // get Collection<DistinctColumnItem>  for column index
         Collection<DistinctColumnItem> distinctItems = filter.getDistinctColumnItems(mColumnIndex);
+        
+        // checks for duplicates
+        // this should already be done, but for some reason priority shows
+        // duplicate items. This fixes that and ensures no duplicates.
+        distinctItems = removeDubplicateCheckItems(distinctItems);
 
         // new DefaultCheckListModel passed Collection<DistinctColumnItem> 
         model = new DefaultCheckListModel<>(distinctItems);
@@ -341,6 +347,27 @@ public class TableFilterColumnPopup extends JPopupMenu implements MouseListener,
 
         // show pop-up
         show(header, headerRect.x, header.getHeight());
+    }
+    
+    /**
+     * formatCheckItems
+     * This method is to format the check items
+     * @param distinctItems
+     * @return 
+     */
+    private Collection<DistinctColumnItem> removeDubplicateCheckItems(Collection<DistinctColumnItem> distinctItems) {
+        
+        Collection<DistinctColumnItem>  temp = new ArrayList<>(); // store new list
+        
+        for (DistinctColumnItem item: distinctItems){
+            
+            // check for duplicates
+            if(!temp.contains(item)){
+                temp.add(item);
+            }
+        }
+        
+        return temp;
     }
 
     /**
@@ -389,6 +416,7 @@ public class TableFilterColumnPopup extends JPopupMenu implements MouseListener,
     @Override
     public void mouseExited(MouseEvent e) {
     }
+
 
     /**
      * CLASS

@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 public class DistinctColumnItem implements Comparable<DistinctColumnItem> {
 
-    private final Object value;
-    private final int row;
+    private Object value;
+    private int row;
 
     public DistinctColumnItem( Object value, int row) {
         this.value = value;
@@ -20,6 +20,16 @@ public class DistinctColumnItem implements Comparable<DistinctColumnItem> {
     	
         return row;
     }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+    
+    
 
     @Override
     public String toString() {
