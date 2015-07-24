@@ -453,7 +453,15 @@ public class ReportWin extends JDialog {
             //logwind.sendMessages(ex.getMessage());
         }
 
-        table.setModel(new MyTableModel(data, columnNames,true));   // true - isCellEditable
+        /**
+         *  I commented this line out. The only line ! I am refactoring !
+         *  I don't know what this table is for but it is not used that I 
+         *  know off. If this is to be used, this is the only line of code
+         *  that was commented out. There is also the original file also !!
+         */
+        //table.setModel(new MyTableModel(data, columnNames,true));   // true - isCellEditable
+        
+        
 		//System.out.println(data.size());
         //System.out.println(columnNames.size());
         //table.setModel(new DefaultTableModel(data, columnNames));

@@ -3,8 +3,6 @@ package com.elle.analyster;
 import static com.elle.analyster.ITableConstants.ASSIGNMENTS_TABLE_NAME;
 import com.elle.analyster.domain.ModifiedData;
 import com.elle.analyster.presentation.filter.CreateDocumentFilter;
-import com.elle.analyster.presentation.filter.JTableFilter;
-import com.elle.analyster.presentation.filter.TableFilterColumnPopup;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -40,7 +38,6 @@ public class Analyster extends JFrame implements ITableConstants{
     
     Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
 
-    private JTableFilter jTableFilter;
     private JTableHeader header;
     private AddRecords  addRecords;
     
@@ -52,8 +49,6 @@ public class Analyster extends JFrame implements ITableConstants{
     private List<ModifiedData> modifiedDataList = new ArrayList<>();    // record the locations of changed cell
     
     private LoginWindow loginWindow;
-    
-    private TableFilterColumnPopup tableFilterColumnPopup;
     
     private TableEditor tableEditor;
     
@@ -838,28 +833,30 @@ public class Analyster extends JFrame implements ITableConstants{
         
         try{
 
+            // this called filter and pop up
+            
             // new JTableFilter instance and takes table to set filter
-            jTableFilter = new JTableFilter(tabs.get(selectedTab).getTable());
-            
-            // set actions visible to true
-            jTableFilter.setActionsVisible(true);
-            
-            // Add the TableFilterColumnPopup
-            // this code was in the apply() before any other code in the method
-            tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
-            tableFilterColumnPopup.setEnabled(true);
-            tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
-            tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
-            
-            // apply changes to tableRowFilterSupport
-            // This method still needs refactoring -> legacy code
-            jTableFilter.apply();
-            
-            // apply changes to filter
-            jTableFilter.apply(columnIndex, selectedField);
-            
-            // this sets the column header green
-            GUI.columnFilterStatus(columnIndex, tabs.get(selectedTab).getFilter().getTable());
+//            jTableFilter = new JTableFilter(tabs.get(selectedTab).getTable());
+//            
+//            // set actions visible to true
+//            jTableFilter.setActionsVisible(true);
+//            
+//            // Add the TableFilterColumnPopup
+//            // this code was in the apply() before any other code in the method
+//            tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
+//            tableFilterColumnPopup.setEnabled(true);
+//            tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
+//            tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
+//            
+//            // apply changes to tableRowFilterSupport
+//            // This method still needs refactoring -> legacy code
+//            jTableFilter.apply();
+//            
+//            // apply changes to filter
+//            jTableFilter.apply(columnIndex, selectedField);
+//            
+//            // this sets the column header green
+//            GUI.columnFilterStatus(columnIndex, tabs.get(selectedTab).getFilter().getTable());
             
             // set label record information
             labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
@@ -974,20 +971,20 @@ public class Analyster extends JFrame implements ITableConstants{
             btnCancelEditMode.setVisible(false);
             btnBatchEdit.setVisible(true);
             isFiltering = true;
-            ((MyTableModel)assignmentTable.getModel()).setReadOnly(true);
-            ((MyTableModel) reportTable.getModel()).setReadOnly(true);
-            ((MyTableModel) archiveTable.getModel()).setReadOnly(true);
+//            ((MyTableModel)assignmentTable.getModel()).setReadOnly(true);
+//            ((MyTableModel) reportTable.getModel()).setReadOnly(true);
+//            ((MyTableModel) archiveTable.getModel()).setReadOnly(true);
 //            ((MyTableModel) viewerTable.getModel()).setReadOnly(true);
         }
     }
 
     private void makeEditable(TableModel tableModel) {
-        if (tableModel instanceof MyTableModel) {
-            ((MyTableModel) tableModel).setReadOnly(false);
-             tableModel.removeTableModelListener(assignmentTable); 
-             tableModel.removeTableModelListener(reportTable); 
-             
-        }
+//        if (tableModel instanceof MyTableModel) {
+//            ((MyTableModel) tableModel).setReadOnly(false);
+//             tableModel.removeTableModelListener(assignmentTable); 
+//             tableModel.removeTableModelListener(reportTable); 
+//             
+//        }
     }
     private void btnCancelEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelEditModeActionPerformed
 
@@ -1010,51 +1007,51 @@ public class Analyster extends JFrame implements ITableConstants{
         // show or hide the add records button
         btnAddRecords.setVisible(tabs.get(selectedTab).isAddRecordsBtnVisible());
         
-        switch (selectedTab) {
-            case ASSIGNMENTS_TABLE_NAME:
-                isFilterActive = GUI.filterAssignmentIsActive;
-                break;
-                
-            case REPORTS_TABLE_NAME:
-                isFilterActive = GUI.filterReportIstActive;
-                break;
-                
-            case ARCHIVE_TABLE_NAME:
-                isFilterActive = GUI.filterArchiveIsActive;
-                break;
-
-            default:
-                selectedTab = "unknown";
-                break;
-        }
+//        switch (selectedTab) {
+//            case ASSIGNMENTS_TABLE_NAME:
+//                isFilterActive = GUI.filterAssignmentIsActive;
+//                break;
+//                
+//            case REPORTS_TABLE_NAME:
+//                isFilterActive = GUI.filterReportIstActive;
+//                break;
+//                
+//            case ARCHIVE_TABLE_NAME:
+//                isFilterActive = GUI.filterArchiveIsActive;
+//                break;
+//
+//            default:
+//                selectedTab = "unknown";
+//                break;
+//        }
         
         try{
             if (isFilterActive) {
             tabs.get(selectedTab).setTable(tabs.get(selectedTab).getFilteredTable());
             } else {
                 
-                // new JTableFilter instance and takes table to set filter
-                jTableFilter = new JTableFilter(tabs.get(selectedTab).getTable());
-
-                // set actions visible to true
-                jTableFilter.setActionsVisible(true);
-                
-                // Add the TableFilterColumnPopup
-                // this code was in the apply() before any other code in the method
-                tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
-                tableFilterColumnPopup.setEnabled(true);
-                tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
-                tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
-
-                // apply changes to tableRowFilterSupport
-                // This method still needs refactoring -> legacy code
-                jTableFilter.apply();
-
-                // set filter to tabs table
-                tabs.get(selectedTab).setFilter(jTableFilter);
-                
-                // set filtered table in tabs using the filter to filter and return table
-                tabs.get(selectedTab).setFilteredTable(tabs.get(selectedTab).getFilter().getTable());
+//                // new JTableFilter instance and takes table to set filter
+//                jTableFilter = new JTableFilter(tabs.get(selectedTab).getTable());
+//
+//                // set actions visible to true
+//                jTableFilter.setActionsVisible(true);
+//                
+//                // Add the TableFilterColumnPopup
+//                // this code was in the apply() before any other code in the method
+//                tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
+//                tableFilterColumnPopup.setEnabled(true);
+//                tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
+//                tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
+//
+//                // apply changes to tableRowFilterSupport
+//                // This method still needs refactoring -> legacy code
+//                jTableFilter.apply();
+//
+//                // set filter to tabs table
+//                tabs.get(selectedTab).setFilter(jTableFilter);
+//                
+//                // set filtered table in tabs using the filter to filter and return table
+//                tabs.get(selectedTab).setFilteredTable(tabs.get(selectedTab).getFilter().getTable());
             }
             
             // set label record information
@@ -1164,20 +1161,20 @@ public class Analyster extends JFrame implements ITableConstants{
 
         String selectedTab = getSelectedTab();
         
-        switch (selectedTab) {
-            case ASSIGNMENTS_TABLE_NAME:
-                GUI.filterAssignmentIsActive = false;
-                break;
-            case REPORTS_TABLE_NAME:
-                GUI.filterReportIstActive = false;
-                break;
-            case ARCHIVE_TABLE_NAME:
-                GUI.filterArchiveIsActive = false;
-                break;
-        }
-        
-        loadTable(tabs.get(selectedTab).getTable());
-        GUI.cleanAllColumnFilterStatus(tabs.get(selectedTab).getTable());
+//        switch (selectedTab) {
+//            case ASSIGNMENTS_TABLE_NAME:
+//                GUI.filterAssignmentIsActive = false;
+//                break;
+//            case REPORTS_TABLE_NAME:
+//                GUI.filterReportIstActive = false;
+//                break;
+//            case ARCHIVE_TABLE_NAME:
+//                GUI.filterArchiveIsActive = false;
+//                break;
+//        }
+//        
+//        loadTable(tabs.get(selectedTab).getTable());
+//        GUI.cleanAllColumnFilterStatus(tabs.get(selectedTab).getTable());
         // set label record information
         labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
                 
@@ -1560,8 +1557,8 @@ public class Analyster extends JFrame implements ITableConstants{
         if (rowIndex != -1) {
             Object selectedField = table.getValueAt(rowIndex, columnIndex);
             // apply filter
-            tabs.get(table.getName()).getFilter().apply(columnIndex, selectedField);
-            GUI.columnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());
+//            tabs.get(table.getName()).getFilter().apply(columnIndex, selectedField);
+//            GUI.columnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());
             // set label record information
             labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
         }
@@ -1576,8 +1573,8 @@ public class Analyster extends JFrame implements ITableConstants{
         
         int columnIndex = table.getColumnModel().getColumnIndexAtX(e.getX());
         
-        tabs.get(table.getName()).getFilter().apply(columnIndex, tabs.get(table.getName()).getFilter().getDistinctColumnItems(columnIndex));
-        GUI.cleanColumnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());// clean green background
+//        tabs.get(table.getName()).getFilter().apply(columnIndex, tabs.get(table.getName()).getFilter().getDistinctColumnItems(columnIndex));
+//        GUI.cleanColumnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());// clean green background
         // set label record information
         labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
     }
@@ -1601,18 +1598,23 @@ public class Analyster extends JFrame implements ITableConstants{
      * @param columnNames 
      */
     public void tableReload(final JTable table, Vector data, Vector columnNames) {
-        MyTableModel model = new MyTableModel(data, columnNames, isFiltering);
-        TableRowSorter sorter = new TableRowSorter<>(model);
-
-        model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                jTableChanged(e);
-            }
-        });
-
+//        MyTableModel model = new MyTableModel(data, columnNames, isFiltering);
+//        TableRowSorter sorter = new TableRowSorter<>(model);
+//
+//        model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
+//            @Override
+//            public void tableChanged(TableModelEvent e) {
+//                jTableChanged(e);
+//            }
+//        });
+//
+//        table.setModel(model);
+//        table.setRowSorter(sorter);
+        
+        // set table model
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
         table.setModel(model);
-        table.setRowSorter(sorter);
+        
         setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
         setColumnFormat(tabs.get(REPORTS_TABLE_NAME).getColWidthPercent(), reportTable);
         setColumnFormat(tabs.get(ARCHIVE_TABLE_NAME).getColWidthPercent(), archiveTable);
@@ -1906,28 +1908,28 @@ public class Analyster extends JFrame implements ITableConstants{
         }
         setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
           
-        // new JTableFilter instance and takes table to set filter
-        jTableFilter = new JTableFilter(tabs.get(table.getName()).getTable());
-
-        // set actions visible to true
-        jTableFilter.setActionsVisible(true);
-        
-        // Add the TableFilterColumnPopup
-        // this code was in the apply() before any other code in the method
-        tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
-        tableFilterColumnPopup.setEnabled(true);
-        tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
-        tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
-
-        // apply changes to tableRowFilterSupport
-        // This method still needs refactoring -> legacy code
-        jTableFilter.apply();
-
-        // set filter to tabs table
-        tabs.get(table.getName()).setFilter(jTableFilter);
-
-        // set filtered table in tabs using the filter to filter and return table
-        tabs.get(table.getName()).setFilteredTable(tabs.get(table.getName()).getFilter().getTable());
+//        // new JTableFilter instance and takes table to set filter
+//        jTableFilter = new JTableFilter(tabs.get(table.getName()).getTable());
+//
+//        // set actions visible to true
+//        jTableFilter.setActionsVisible(true);
+//        
+//        // Add the TableFilterColumnPopup
+//        // this code was in the apply() before any other code in the method
+//        tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
+//        tableFilterColumnPopup.setEnabled(true);
+//        tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
+//        tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
+//
+//        // apply changes to tableRowFilterSupport
+//        // This method still needs refactoring -> legacy code
+//        jTableFilter.apply();
+//
+//        // set filter to tabs table
+//        tabs.get(table.getName()).setFilter(jTableFilter);
+//
+//        // set filtered table in tabs using the filter to filter and return table
+//        tabs.get(table.getName()).setFilteredTable(tabs.get(table.getName()).getFilter().getTable());
             
         // this enables or disables the menu components for this tab
         jActivateRecord.setEnabled(tabs.get(table.getName()).isActivateRecordMenuItemEnabled()); 
@@ -1950,8 +1952,8 @@ public class Analyster extends JFrame implements ITableConstants{
             e.printStackTrace();
         }
         
-        // reapply filter
-        tabs.get(getSelectedTab()).getFilter().reapplyFilters();
+//        // reapply filter
+//        tabs.get(getSelectedTab()).getFilter().reapplyFilters();
         
     }
     

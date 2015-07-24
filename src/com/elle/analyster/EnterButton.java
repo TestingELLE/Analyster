@@ -17,6 +17,11 @@ import com.elle.analyster.presentation.filter.CreateDocumentFilter;
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 
+/**
+ *  I am not sure why this is used but it must be legacy code
+ *  A JButton should work fine for future implementation.
+ * @author cigreja
+ */
 public class EnterButton {
 
 	int commandStart;

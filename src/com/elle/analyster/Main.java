@@ -33,5 +33,6 @@ public class Main {
         LoginWindow loginWindow = new LoginWindow();
         loginWindow.setLocationRelativeTo(null);
         loginWindow.setVisible(true);
+        loginWindow.dispose();
     }
 }
