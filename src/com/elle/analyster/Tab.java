@@ -2,6 +2,7 @@
 package com.elle.analyster;
 
 //import com.elle.analyster.presentation.filter.JTableFilter;
+import com.elle.analyster.presentation.filter.ColumnPopupMenu;
 import com.elle.analyster.presentation.filter.TableFilter;
 import javax.swing.JTable;
 
@@ -21,6 +22,7 @@ public class Tab implements ITableConstants{
     private int recordsShown;
     private String[] tableColNames;
     private String[] searchFields;
+    private ColumnPopupMenu ColumnPopupMenu;
     
     // these menu items are enabled differently for each tab
     private boolean activateRecordMenuItemEnabled;
@@ -29,7 +31,9 @@ public class Tab implements ITableConstants{
 
     
     /**
-     * 
+     * CONSTRUCTOR
+     * Tab
+     * This is used if no table is ready such as before initComponents of a frame.
      */
     public Tab() {
         tableName = "";
@@ -40,8 +44,6 @@ public class Tab implements ITableConstants{
         activateRecordMenuItemEnabled = false;
         archiveRecordMenuItemEnabled = false;
         addRecordsBtnVisible = false;
-        
-        // filter is an instance and does not get initialized
     }
     
     /**
@@ -57,7 +59,8 @@ public class Tab implements ITableConstants{
         filteredTable = new JTable();
         totalRecords = 0;
         recordsShown = 0;
-        // filter is an instance and does not get initialized
+        filter = new TableFilter(table);
+        ColumnPopupMenu = new ColumnPopupMenu(table);
         
         // store the column names for the table
         for (int i = 0; i < table.getColumnCount(); i++) 
@@ -165,6 +168,14 @@ public class Tab implements ITableConstants{
 
     public void setAddRecordsBtnVisible(boolean addRecordsBtnVisible) {
         this.addRecordsBtnVisible = addRecordsBtnVisible;
+    }
+
+    public ColumnPopupMenu getColumnPopupMenu() {
+        return ColumnPopupMenu;
+    }
+
+    public void setColumnPopupMenu(ColumnPopupMenu ColumnPopupMenu) {
+        this.ColumnPopupMenu = ColumnPopupMenu;
     }
     
     

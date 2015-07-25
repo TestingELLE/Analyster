@@ -148,7 +148,9 @@ public class Analyster extends JFrame implements ITableConstants{
         
         // initialize columnPopupMenu 
         // - must be before loadtables because setTerminalFunctions is called
-        columnPopupMenu = new ColumnPopupMenu();
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setColumnPopupMenu(new ColumnPopupMenu(assignmentTable));
+        tabs.get(REPORTS_TABLE_NAME).setColumnPopupMenu(new ColumnPopupMenu(reportTable));
+        tabs.get(ARCHIVE_TABLE_NAME).setColumnPopupMenu(new ColumnPopupMenu(archiveTable));
         
         // load data from database to tables
         loadTables(tabs);
@@ -1436,7 +1438,8 @@ public class Analyster extends JFrame implements ITableConstants{
                         if (e.getClickCount() == 1){
                             
                             // this calls the column popup menu
-                            columnPopupMenu.showPopupMenu(e);
+                            tabs.get(table.getName()) 
+                                    .getColumnPopupMenu().showPopupMenu(e);
                             
                         }
                     }
