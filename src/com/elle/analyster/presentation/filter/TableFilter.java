@@ -107,6 +107,15 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     }
     
     /**
+     * removeDistinctItems
+     * @param col
+     */
+    public void removeDistinctItems(int col){
+
+        distinctColumnItems.get(col).clear();
+    }
+    
+    /**
      * removeAllDistinctItems
      * @param col
      * @param items 

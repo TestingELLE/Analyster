@@ -1588,6 +1588,9 @@ public class Analyster extends JFrame implements ITableConstants{
 //        tabs.get(table.getName()).getFilter().apply(columnIndex, tabs.get(table.getName()).getFilter().getDistinctColumnItems(columnIndex));
 //        GUI.cleanColumnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());// clean green background
         // set label record information
+        
+        tabs.get(getSelectedTab()).getFilter().removeDistinctItems(columnIndex);
+        tabs.get(getSelectedTab()).getFilter().applyFilter();
         labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
     }
 
