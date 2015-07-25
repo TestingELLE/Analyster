@@ -2,6 +2,7 @@ package com.elle.analyster;
 
 import static com.elle.analyster.ITableConstants.ASSIGNMENTS_TABLE_NAME;
 import com.elle.analyster.domain.ModifiedData;
+import com.elle.analyster.presentation.filter.ColumnPopupMenu;
 import com.elle.analyster.presentation.filter.CreateDocumentFilter;
 import com.elle.analyster.presentation.filter.TableFilter;
 
@@ -58,6 +59,8 @@ public class Analyster extends JFrame implements ITableConstants{
     private Statement statement;
     
     private String database;
+    
+    private ColumnPopupMenu columnPopupMenu;
     
     /**
      * CONSTRUCTOR
@@ -142,6 +145,10 @@ public class Analyster extends JFrame implements ITableConstants{
         btnCancelEditMode.setVisible(false);
         btnBatchEdit.setVisible(true);
         jTextAreaSQL.setVisible(true);
+        
+        // initialize columnPopupMenu 
+        // - must be before loadtables because setTerminalFunctions is called
+        columnPopupMenu = new ColumnPopupMenu();
         
         // load data from database to tables
         loadTables(tabs);
@@ -1415,21 +1422,22 @@ public class Analyster extends JFrame implements ITableConstants{
                             if (isFiltering) {
                                 clearFilterDoubleClick(e, table);
                             }
-                        } else if (e.getClickCount() == 1) {
-                            // why is nothing here?
-                            // Shouldnt this order the columns?
-                            // or perhaps it is already a built in feature to the JTable?
-                        }
+                        } 
+//                        else if (e.getClickCount() == 1) {
+//                            // why is nothing here?
+//                            // Shouldnt this order the columns?
+//                            // or perhaps it is already a built in feature to the JTable?
+                              // I commented it out for now because it might cause issues with the sorter
+//                        }
                     }
                     
                     // Right mouse clicks
                     else if(SwingUtilities.isRightMouseButton(e)){
                         if (e.getClickCount() == 1){
-                            // this should be called here
-                            // it works fine except there is issues with filtering
-                            // it is the way that they implemented the listener
-                            // in TableFilterColumnPopup
-                            //tableFilterColumnPopup.showFilterPopup(e);
+                            
+                            // this calls the column popup menu
+                            columnPopupMenu.showPopupMenu(e);
+                            
                         }
                     }
                     
@@ -1437,62 +1445,7 @@ public class Analyster extends JFrame implements ITableConstants{
             });
         }
         
-        table.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent ke) {
-                if (ke.getKeyCode() == KeyEvent.VK_F2) {
-                    
-                    // I beleive this is meant to toggle edit mode
-                    // so I passed the conditional
-                    makeTableEditable(jLabelEdit.getText().equals("ON ")?false:true);
-                } 
-                
-                // in editing mode this should ask to upload changes when enter key press
-                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-                    
-                    // make sure in editing mode
-                    if(jLabelEdit.getText().equals("ON ")){
-
-                        // if finished display dialog box
-                        // Upload Changes? Yes or No?
-                        Object[] options = {"Commit", "Revert"};  // the titles of buttons
-                        
-                        // store selected row before the table is refreshed
-                        int rowIndex = table.getSelectedRow();
-
-                        int selectedOption = JOptionPane.showOptionDialog(Analyster.getInstance(), 
-                                "Would you like to upload changes?", "Upload Changes",
-                                JOptionPane.YES_NO_OPTION, 
-                                JOptionPane.QUESTION_MESSAGE,
-                                null, //do not use a custom Icon
-                                options, //the titles of buttons
-                                options[0]); //default button title
-
-                        switch (selectedOption) {
-                            case 0:            
-                                // if Commit, upload changes and return to editing
-                                uploadChanges();  // upload changes to database
-                                makeTableEditable(false); // exit edit mode;
-                                break;
-                            case 1:
-                                // if Revert, revert changes
-                                loadTableWithFilter(); // reverts the model back
-                                makeTableEditable(false); // exit edit mode;
-                                
-                                break;
-                            default:
-                                // do nothing -> cancel
-                                break;
-                        }   
-                        
-                        // highligh previously selected row
-                        if (rowIndex != -1) 
-                            table.setRowSelectionInterval(rowIndex, rowIndex);
-                    }
-                }
-            }
-        });
-        
+        // add mouselistener to the table
         table.addMouseListener(
                 new MouseAdapter() {
                     @Override
@@ -1551,7 +1504,63 @@ public class Analyster extends JFrame implements ITableConstants{
                     }
                 }
         );
+        
+        // add keyListener to the table
+        table.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_F2) {
+                    
+                    // I beleive this is meant to toggle edit mode
+                    // so I passed the conditional
+                    makeTableEditable(jLabelEdit.getText().equals("ON ")?false:true);
+                } 
+                
+                // in editing mode this should ask to upload changes when enter key press
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    
+                    // make sure in editing mode
+                    if(jLabelEdit.getText().equals("ON ")){
 
+                        // if finished display dialog box
+                        // Upload Changes? Yes or No?
+                        Object[] options = {"Commit", "Revert"};  // the titles of buttons
+                        
+                        // store selected row before the table is refreshed
+                        int rowIndex = table.getSelectedRow();
+
+                        int selectedOption = JOptionPane.showOptionDialog(Analyster.getInstance(), 
+                                "Would you like to upload changes?", "Upload Changes",
+                                JOptionPane.YES_NO_OPTION, 
+                                JOptionPane.QUESTION_MESSAGE,
+                                null, //do not use a custom Icon
+                                options, //the titles of buttons
+                                options[0]); //default button title
+
+                        switch (selectedOption) {
+                            case 0:            
+                                // if Commit, upload changes and return to editing
+                                uploadChanges();  // upload changes to database
+                                makeTableEditable(false); // exit edit mode;
+                                break;
+                            case 1:
+                                // if Revert, revert changes
+                                loadTableWithFilter(); // reverts the model back
+                                makeTableEditable(false); // exit edit mode;
+                                
+                                break;
+                            default:
+                                // do nothing -> cancel
+                                break;
+                        }   
+                        
+                        // highligh previously selected row
+                        if (rowIndex != -1) 
+                            table.setRowSelectionInterval(rowIndex, rowIndex);
+                    }
+                }
+            }
+        });
     }
 
     /**
