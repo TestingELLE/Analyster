@@ -145,12 +145,6 @@ public class Analyster extends JFrame implements ITableConstants{
         btnBatchEdit.setVisible(true);
         jTextAreaSQL.setVisible(true);
         
-        // initialize columnPopupMenu 
-        // - must be before loadtables because setTerminalFunctions is called
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setColumnPopupMenu(new ColumnPopupMenu(assignmentTable));
-        tabs.get(REPORTS_TABLE_NAME).setColumnPopupMenu(new ColumnPopupMenu(reportTable));
-        tabs.get(ARCHIVE_TABLE_NAME).setColumnPopupMenu(new ColumnPopupMenu(archiveTable));
-        
         // load data from database to tables
         loadTables(tabs);
             
@@ -158,9 +152,23 @@ public class Analyster extends JFrame implements ITableConstants{
         initTotalRowCounts(tabs);
         
         // add filters for each table
+        // must be before setting ColumnPopupMenu because this is its parameter
         tabs.get(ASSIGNMENTS_TABLE_NAME).setFilter(new TableFilter(assignmentTable));
         tabs.get(REPORTS_TABLE_NAME).setFilter(new TableFilter(reportTable));
         tabs.get(ARCHIVE_TABLE_NAME).setFilter(new TableFilter(archiveTable));
+        
+        // initialize columnPopupMenu 
+        // - must be before setTerminalFunctions is called
+        // - because the mouslistener is added to the table header
+        tabs.get(ASSIGNMENTS_TABLE_NAME)
+                .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(ASSIGNMENTS_TABLE_NAME).getFilter()));
+        tabs.get(REPORTS_TABLE_NAME)
+                .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(REPORTS_TABLE_NAME).getFilter()));
+        tabs.get(ARCHIVE_TABLE_NAME)
+                .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(ARCHIVE_TABLE_NAME).getFilter()));
+        
+        // set the mouseListeners and KeyListeneres to the tables
+        setTerminalsFunction(tabs);
         
         // set title of window to Analyster
         this.setTitle("Analyster");
@@ -1563,6 +1571,22 @@ public class Analyster extends JFrame implements ITableConstants{
                 }
             }
         });
+    }
+    
+    /**
+     * setTerminalsFunction
+     * This method overloads the seTerminalFunctions 
+     * to take tabs instead of a single table
+     * @param tabs
+     * @return 
+     */
+    public Map<String,Tab> setTerminalsFunction(Map<String,Tab> tabs) {
+        
+        for (Map.Entry<String, Tab> entry : tabs.entrySet())
+        {
+            setTerminalsFunction(tabs.get(entry.getKey()).getTable());
+        }
+        return tabs;
     }
 
     /**

@@ -27,7 +27,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     // attributes
     private JTable table; // table to be filtered 
     private TableRowSorter<TableModel> sorter;
-    private Map<Integer,ArrayList<Object>> distinctColumnItems; // distincted items to filter
+    private Map<Integer,ArrayList<Object>> filterItems; // distincted items to filter
     private Color color;
     
 
@@ -44,10 +44,10 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         sorter = new TableRowSorter<TableModel>(table.getModel());
         table.setRowSorter(sorter);
         
-        // initialize disctinctColumnItems
-        distinctColumnItems = new HashMap<>(); 
-        for(int i = 0; i < table.getModel().getColumnCount(); i++){
-            distinctColumnItems.put(i, new ArrayList<Object>());
+        // initialize filterItems
+        filterItems = new HashMap<>(); 
+        for(int i = 0; i < table.getColumnCount(); i++){
+            filterItems.put(i, new ArrayList<>());
         }
         
         // initialize the color for the table header when it is filtering
@@ -64,7 +64,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         if(selectedField == null) 
             selectedField = "";
         
-        distinctColumnItems.get(col).add(selectedField);
+        filterItems.get(col).add(selectedField);
     }
     
     /**
@@ -79,7 +79,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
             if(item == null)
                 item = "";
             
-            distinctColumnItems.get(col).add(item);
+            filterItems.get(col).add(item);
         }
     }
     
@@ -93,7 +93,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         if(selectedField == null) 
             selectedField = "";
         
-        distinctColumnItems.get(col).remove(selectedField);
+        filterItems.get(col).remove(selectedField);
     }
     
     /**
@@ -108,7 +108,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
             if(item == null)
                 item = "";
             
-            distinctColumnItems.get(col).remove(item);
+            filterItems.get(col).remove(item);
         }
     }
     
@@ -118,7 +118,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      */
     public void removeDistinctItems(int col){
 
-        distinctColumnItems.get(col).clear();
+        filterItems.get(col).clear();
     }
     
     /**
@@ -128,8 +128,8 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      */
     public void removeAllDistinctItems(){
         
-        for(int i = 0; i < distinctColumnItems.size(); i++)
-            distinctColumnItems.get(i).clear();
+        for(int i = 0; i < filterItems.size(); i++)
+            filterItems.get(i).clear();
     }
     
     /**
@@ -162,8 +162,8 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      */
     public void applyColorHeaders(){
         
-        for(int i = 0; i < distinctColumnItems.size(); i++){
-            if(distinctColumnItems.get(i).isEmpty()){
+        for(int i = 0; i < filterItems.size(); i++){
+            if(filterItems.get(i).isEmpty()){
                 removeColorHeader(i);
             }
             else{
@@ -191,7 +191,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      */
     public void removeAllColorHeaders(){
         
-        for(int i = 0; i < distinctColumnItems.size(); i++){
+        for(int i = 0; i < filterItems.size(); i++){
             removeColorHeader(i);
         }
         table.getTableHeader().repaint();
@@ -250,7 +250,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * @return 
      */
     public Map<Integer, ArrayList<Object>> getDistinctColumnItems() {
-        return distinctColumnItems;
+        return filterItems;
     }
 
     /**
@@ -258,7 +258,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * @param distinctColumnItems 
      */
     public void setDistinctColumnItems(Map<Integer, ArrayList<Object>> distinctColumnItems) {
-        this.distinctColumnItems = distinctColumnItems;
+        this.filterItems = distinctColumnItems;
     }
 
     /**
@@ -275,11 +275,11 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         // check every column
         for( int col = 0; col < model.getColumnCount(); col++ ) {
 
-            if ( distinctColumnItems.get(col).isEmpty() ) 
+            if ( filterItems.get(col).isEmpty() ) 
                 continue; // no filtering for this column
             
             // get filter values
-            ArrayList<Object> distinctItems = distinctColumnItems.get(col);
+            ArrayList<Object> distinctItems = filterItems.get(col);
 
             // get value
             Object cellValue = model.getValueAt(row, col);

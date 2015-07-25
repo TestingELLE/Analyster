@@ -6,7 +6,11 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -28,17 +32,27 @@ public class ColumnPopupMenu extends JPopupMenu{
     
     // attributes
     private CheckBoxList checkBoxList;
-    private JTable table;
+    private TableFilter filter;
     private ArrayList<JCheckBox> checkBoxItems; // items in checklist
+    private Map<Integer,ArrayList<JCheckBox>> distinctItems; // distinct items for options
     
     /**
      * CONSTRUCTOR
      * ColumnPopupMenu
      * creates a ColumnPopupMenu
      */
-    public ColumnPopupMenu(JTable table){
+    public ColumnPopupMenu(TableFilter filter){
         initComponents();
-        this.table = table;
+        this.filter = filter;
+        
+        // initialize distinctItems
+        distinctItems = new HashMap<>(); 
+        for(int i = 0; i < filter.getTable().getColumnCount(); i++){
+            distinctItems.put(i, new ArrayList<>());
+        }
+        
+        // load all distinct items
+        loadAllDistinctItems();
     }
     
     /**
@@ -70,14 +84,6 @@ public class ColumnPopupMenu extends JPopupMenu{
                }
             }
         });
-        
-        // load JList with checkbox items
-        // this list is just for testing
-        ArrayList<JCheckBox> checkBoxItems = new ArrayList<>();
-        for(int i = 0; i<20; i++){
-            checkBoxItems.add(new JCheckBox("item " + i));
-        }
-        checkBoxList.setListData(checkBoxItems.toArray());
         
         // add the check box list to the panel
         panel.add(new JScrollPane(checkBoxList), BorderLayout.CENTER); // add list to center
@@ -117,7 +123,6 @@ public class ColumnPopupMenu extends JPopupMenu{
         
         // add the panel to the ColumnPopupMenu
         this.add(panel);
-        
     }
     
     /**
@@ -151,7 +156,79 @@ public class ColumnPopupMenu extends JPopupMenu{
             return;
         }
 
+        loadList(vColumnIndex);
+        
         // show pop-up
         this.show(header, headerRect.x, header.getHeight());
+    }
+    
+    /**
+     * loadList
+     */
+    public void loadList(int col){
+        
+        // load JList with checkbox items
+        // this list is just for testing
+        checkBoxItems = new ArrayList<>();
+        
+        //Map<Integer,ArrayList<Object>> distinctColumnItems = filter.getDistinctColumnItems();
+        for(int i = 0; i<filter.getTable().getModel().getColumnCount(); i++){
+            checkBoxItems.add(new JCheckBox("item " + i));
+        }
+        checkBoxList.setListData(distinctItems.get(col).toArray());
+    }
+    
+    /**
+     * loadDistinctItems
+     * This is to load all of the distinct options to initialize or when
+     * needed to refresh the list. Database change or refresh for example.
+     */
+    public void loadAllDistinctItems(){
+        
+        int cap = 10; // cap the String length of list options
+        Object value; // value of the cell
+        
+        // for every column
+        for(int col = 0; col < filter.getTable().getColumnCount(); col++){
+            
+            // clear the array
+            //distinctItems.get(col).clear();
+            
+            ArrayList<String> temp = new ArrayList<>();
+            
+            // for every row
+            for (int row = 0; row < filter.getTable().getRowCount(); row++){
+                
+                // get value of cell
+                value = filter.getTable().getValueAt(row, col);
+                
+                // handle null values
+                if(value == null)
+                    value = "";
+                
+                // cap the String length of list options
+                if(value.toString().length() > cap){
+                    value = value.toString().substring(0, cap);
+                }
+                
+                // add the first item to the array for comparison
+                if(temp.isEmpty()){
+                    temp.add(value.toString());
+                }
+                else{
+                    
+                    // compare the values
+                    if(!temp.contains(value.toString())){
+                        temp.add(value.toString());
+                    }
+                }
+            }
+            
+            // add distinct items
+            for(String item: temp){
+                distinctItems.get(col).add(new JCheckBox(item));
+            }
+            
+        }
     }
 }
