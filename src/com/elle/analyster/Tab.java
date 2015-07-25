@@ -2,6 +2,7 @@
 package com.elle.analyster;
 
 //import com.elle.analyster.presentation.filter.JTableFilter;
+import com.elle.analyster.presentation.filter.TableFilter;
 import javax.swing.JTable;
 
 /**
@@ -14,7 +15,7 @@ public class Tab implements ITableConstants{
     private String tableName; 
     private JTable table;
     private JTable filteredTable;
-    //private JTableFilter filter;
+    private TableFilter filter;
     private float[] colWidthPercent;
     private int totalRecords;
     private int recordsShown;
@@ -84,13 +85,13 @@ public class Tab implements ITableConstants{
         this.filteredTable = filteredTable;
     }
 
-//    public JTableFilter getFilter() {
-//        return filter;
-//    }
-//
-//    public void setFilter(JTableFilter filter) {
-//        this.filter = filter;
-//    }
+    public TableFilter getFilter() {
+        return filter;
+    }
+
+    public void setFilter(TableFilter filter) {
+        this.filter = filter;
+    }
 
     public float[] getColWidthPercent() {
         return colWidthPercent;

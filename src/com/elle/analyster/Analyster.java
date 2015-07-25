@@ -3,6 +3,7 @@ package com.elle.analyster;
 import static com.elle.analyster.ITableConstants.ASSIGNMENTS_TABLE_NAME;
 import com.elle.analyster.domain.ModifiedData;
 import com.elle.analyster.presentation.filter.CreateDocumentFilter;
+import com.elle.analyster.presentation.filter.TableFilter;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -147,6 +148,11 @@ public class Analyster extends JFrame implements ITableConstants{
             
         // set initial record counts of now full tables
         initTotalRowCounts(tabs);
+        
+        // add filters for each table
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setFilter(new TableFilter(assignmentTable));
+        tabs.get(REPORTS_TABLE_NAME).setFilter(new TableFilter(reportTable));
+        tabs.get(ARCHIVE_TABLE_NAME).setFilter(new TableFilter(archiveTable));
         
         // set title of window to Analyster
         this.setTitle("Analyster");
@@ -831,6 +837,14 @@ public class Analyster extends JFrame implements ITableConstants{
         
         String selectedField = textFieldForSearch.getText();  // store string from text box
         
+        // add item to filter
+        tabs.get(getSelectedTab())
+                .getFilter().addDistinctItem(columnIndex, selectedField);
+        
+        // apply filter
+        tabs.get(getSelectedTab())
+                .getFilter().applyFilter();
+        
         try{
 
             // this called filter and pop up
@@ -1158,8 +1172,9 @@ public class Analyster extends JFrame implements ITableConstants{
     }//GEN-LAST:event_jMenuItemViewActiveAssigActionPerformed
 
     private void btnClearAllFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllFilterActionPerformed
-
-        String selectedTab = getSelectedTab();
+     
+        tabs.get(getSelectedTab()).getFilter().removeAllDistinctItems();
+        tabs.get(getSelectedTab()).getFilter().applyFilter();
         
 //        switch (selectedTab) {
 //            case ASSIGNMENTS_TABLE_NAME:
@@ -1176,7 +1191,7 @@ public class Analyster extends JFrame implements ITableConstants{
 //        loadTable(tabs.get(selectedTab).getTable());
 //        GUI.cleanAllColumnFilterStatus(tabs.get(selectedTab).getTable());
         // set label record information
-        labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
+        labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
                 
         modifiedDataList.clear();
 
@@ -1598,22 +1613,19 @@ public class Analyster extends JFrame implements ITableConstants{
      * @param columnNames 
      */
     public void tableReload(final JTable table, Vector data, Vector columnNames) {
-//        MyTableModel model = new MyTableModel(data, columnNames, isFiltering);
-//        TableRowSorter sorter = new TableRowSorter<>(model);
-//
-//        model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
-//            @Override
-//            public void tableChanged(TableModelEvent e) {
-//                jTableChanged(e);
-//            }
-//        });
-//
-//        table.setModel(model);
-//        table.setRowSorter(sorter);
-        
-        // set table model
+        //MyTableModel model = new MyTableModel(data, columnNames, isFiltering);
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        TableRowSorter sorter = new TableRowSorter<>(model);
+
+        model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                jTableChanged(e);
+            }
+        });
+
         table.setModel(model);
+        table.setRowSorter(sorter);
         
         setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
         setColumnFormat(tabs.get(REPORTS_TABLE_NAME).getColWidthPercent(), reportTable);
