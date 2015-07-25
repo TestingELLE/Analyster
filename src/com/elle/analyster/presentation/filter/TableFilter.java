@@ -138,6 +138,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         cellRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(columnIndex)
                 .setHeaderRenderer(cellRenderer);
+        table.getTableHeader().repaint();
     }
     
     /**
@@ -154,6 +155,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
                 addColorHeader(i, color);
             }
         }
+        table.getTableHeader().repaint();
     }
     
     /**
@@ -165,6 +167,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         
         table.getColumnModel().getColumn(columnIndex)
                 .setHeaderRenderer(table.getTableHeader().getDefaultRenderer());
+        table.getTableHeader().repaint();
     }
     
     /**
@@ -176,6 +179,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         for(int i = 0; i < distinctColumnItems.size(); i++){
             removeColorHeader(i);
         }
+        table.getTableHeader().repaint();
     }
     
 

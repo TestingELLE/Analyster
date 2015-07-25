@@ -964,8 +964,12 @@ public class Analyster extends JFrame implements ITableConstants{
         makeTableEditable(jLabelEdit.getText().equals("ON ")?false:true);
 
     }//GEN-LAST:event_btnSwitchEditModeActionPerformed
-    //Make the table Editable or Read Only
 
+    /**
+     * makeTableEditable
+     * Make tables editable or non editable
+     * @param makeTableEditable  // takes boolean true or false to make editable
+     */
     public void makeTableEditable( boolean makeTableEditable) {
         if (makeTableEditable) {
             jLabelEdit.setText("ON ");
@@ -974,10 +978,6 @@ public class Analyster extends JFrame implements ITableConstants{
             btnCancelEditMode.setVisible(true);
             btnBatchEdit.setVisible(true);
             isFiltering = false;
-            makeEditable(assignmentTable.getModel());
-            makeEditable(reportTable.getModel());
-            makeEditable(archiveTable.getModel());
-
         } else {
             jLabelEdit.setText("OFF");
             btnSwitchEditMode.setVisible(true);
@@ -985,21 +985,15 @@ public class Analyster extends JFrame implements ITableConstants{
             btnCancelEditMode.setVisible(false);
             btnBatchEdit.setVisible(true);
             isFiltering = true;
-//            ((MyTableModel)assignmentTable.getModel()).setReadOnly(true);
-//            ((MyTableModel) reportTable.getModel()).setReadOnly(true);
-//            ((MyTableModel) archiveTable.getModel()).setReadOnly(true);
-//            ((MyTableModel) viewerTable.getModel()).setReadOnly(true);
+        }
+        
+        for (Map.Entry<String, Tab> entry : tabs.entrySet()){
+            
+            ((EditableTableModel)tabs.get(entry.getKey()).getTable().getModel())
+                    .setCellEditable(makeTableEditable);
         }
     }
 
-    private void makeEditable(TableModel tableModel) {
-//        if (tableModel instanceof MyTableModel) {
-//            ((MyTableModel) tableModel).setReadOnly(false);
-//             tableModel.removeTableModelListener(assignmentTable); 
-//             tableModel.removeTableModelListener(reportTable); 
-//             
-//        }
-    }
     private void btnCancelEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelEditModeActionPerformed
 
         makeTableEditable(false); // exit edit mode;
@@ -1575,6 +1569,9 @@ public class Analyster extends JFrame implements ITableConstants{
 //            tabs.get(table.getName()).getFilter().apply(columnIndex, selectedField);
 //            GUI.columnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());
             // set label record information
+            
+            tabs.get(getSelectedTab()).getFilter().addDistinctItem(columnIndex, selectedField);
+            tabs.get(getSelectedTab()).getFilter().applyFilter();
             labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
         }
     }
@@ -1613,8 +1610,8 @@ public class Analyster extends JFrame implements ITableConstants{
      * @param columnNames 
      */
     public void tableReload(final JTable table, Vector data, Vector columnNames) {
-        //MyTableModel model = new MyTableModel(data, columnNames, isFiltering);
-        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        
+        EditableTableModel model = new EditableTableModel(data, columnNames);
         TableRowSorter sorter = new TableRowSorter<>(model);
 
         model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
@@ -1627,9 +1624,9 @@ public class Analyster extends JFrame implements ITableConstants{
         table.setModel(model);
         table.setRowSorter(sorter);
         
-        setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
-        setColumnFormat(tabs.get(REPORTS_TABLE_NAME).getColWidthPercent(), reportTable);
-        setColumnFormat(tabs.get(ARCHIVE_TABLE_NAME).getColWidthPercent(), archiveTable);
+        setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
+        //setColumnFormat(tabs.get(REPORTS_TABLE_NAME).getColWidthPercent(), reportTable);
+        //setColumnFormat(tabs.get(ARCHIVE_TABLE_NAME).getColWidthPercent(), archiveTable);
     }
 
     /**
