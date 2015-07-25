@@ -28,6 +28,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     private JTable table; // table to be filtered 
     private TableRowSorter<TableModel> sorter;
     private Map<Integer,ArrayList<Object>> distinctColumnItems; // distincted items to filter
+    private Color color;
     
 
     /**
@@ -38,14 +39,19 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     public TableFilter(JTable table){
         
         this.table = table;
+        
+        // set table sorter
         sorter = new TableRowSorter<TableModel>(table.getModel());
         table.setRowSorter(sorter);
         
-        distinctColumnItems = new HashMap<>();
-        
+        // initialize disctinctColumnItems
+        distinctColumnItems = new HashMap<>(); 
         for(int i = 0; i < table.getModel().getColumnCount(); i++){
             distinctColumnItems.put(i, new ArrayList<Object>());
         }
+        
+        // initialize the color for the table header when it is filtering
+        color = Color.GREEN; // default color is green
     }
     
     /**
@@ -132,7 +138,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     public void applyFilter(){
         
         sorter.setRowFilter(this);
-        addColorHeaders(Color.GREEN);
+        applyColorHeaders();
     }
     
     /**
@@ -140,7 +146,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * @param columnIndex
      * @param color 
      */
-    public void addColorHeader(int columnIndex, Color color){
+    public void addColorHeader(int columnIndex){
         
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setBackground(color);
@@ -151,17 +157,17 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     }
     
     /**
-     * addColorHeaders
+     * applyColorHeaders
      * @param color 
      */
-    public void addColorHeaders(Color color){
+    public void applyColorHeaders(){
         
         for(int i = 0; i < distinctColumnItems.size(); i++){
             if(distinctColumnItems.get(i).isEmpty()){
                 removeColorHeader(i);
             }
             else{
-                addColorHeader(i, color);
+                addColorHeader(i);
             }
         }
         table.getTableHeader().repaint();
@@ -180,7 +186,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     }
     
     /**
-     * removeColorHeaders
+     * removeAllColorHeaders
      * @param color 
      */
     public void removeAllColorHeaders(){
@@ -190,7 +196,22 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         }
         table.getTableHeader().repaint();
     }
-    
+
+    /**
+     * getColor
+     * @return 
+     */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * setColor
+     * @param color 
+     */
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
     /**
      * include
