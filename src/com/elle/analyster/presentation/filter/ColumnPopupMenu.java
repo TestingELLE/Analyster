@@ -4,6 +4,7 @@ package com.elle.analyster.presentation.filter;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
@@ -26,8 +27,9 @@ import javax.swing.table.TableColumnModel;
 public class ColumnPopupMenu extends JPopupMenu{
     
     // attributes
-    private CheckBoxList cbList;
+    private CheckBoxList checkBoxList;
     private JTable table;
+    private ArrayList<JCheckBox> checkBoxItems; // items in checklist
     
     /**
      * CONSTRUCTOR
@@ -51,7 +53,23 @@ public class ColumnPopupMenu extends JPopupMenu{
         panel.setPreferredSize(new Dimension(250, 300)); // default popup size
         
         // create the checkbox JList 
-        cbList = new CheckBoxList(); // JList
+        checkBoxList = new CheckBoxList(); // JList
+        
+        // add mouseListener to the list
+        checkBoxList.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e)
+            {
+               int index = checkBoxList.locationToIndex(e.getPoint());
+
+               if (index != -1) {
+                  JCheckBox checkbox = (JCheckBox)
+                              checkBoxList.getModel().getElementAt(index);
+                  checkbox.setSelected(
+                                     !checkbox.isSelected());
+                  repaint();
+               }
+            }
+        });
         
         // load JList with checkbox items
         // this list is just for testing
@@ -59,10 +77,10 @@ public class ColumnPopupMenu extends JPopupMenu{
         for(int i = 0; i<20; i++){
             checkBoxItems.add(new JCheckBox("item " + i));
         }
-        cbList.setListData(checkBoxItems.toArray());
+        checkBoxList.setListData(checkBoxItems.toArray());
         
         // add the check box list to the panel
-        panel.add(new JScrollPane(cbList), BorderLayout.CENTER); // add list to center
+        panel.add(new JScrollPane(checkBoxList), BorderLayout.CENTER); // add list to center
 
         // create a new Box for the buttons
         Box boxButtons = new Box(BoxLayout.LINE_AXIS);

@@ -8,36 +8,23 @@ package com.elle.analyster.presentation.filter;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
-import java.awt.event.*;
 
+/**
+ * CheckBoxList
+ * @author cigreja
+ */
 public class CheckBoxList extends JList
 {
     
-   protected static Border noFocusBorder =
-                                 new EmptyBorder(1, 1, 1, 1);
+   protected static Border noFocusBorder;
 
    public CheckBoxList()
    {
+       // set the no focus border
+       noFocusBorder = new EmptyBorder(1, 1, 1, 1);
+       
        // set cell renderer
       setCellRenderer(new CellRenderer());
-
-      // add mouse listener for what checkbox is clicke in the List
-      addMouseListener(new MouseAdapter()
-         {
-            public void mousePressed(MouseEvent e)
-            {
-               int index = locationToIndex(e.getPoint());
-
-               if (index != -1) {
-                  JCheckBox checkbox = (JCheckBox)
-                              getModel().getElementAt(index);
-                  checkbox.setSelected(
-                                     !checkbox.isSelected());
-                  repaint();
-               }
-            }
-         }
-      );
 
       // selection mode is single selection
       setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

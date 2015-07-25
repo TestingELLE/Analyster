@@ -60,7 +60,6 @@ public class Analyster extends JFrame implements ITableConstants{
     
     private String database;
     
-    private ColumnPopupMenu columnPopupMenu;
     
     /**
      * CONSTRUCTOR

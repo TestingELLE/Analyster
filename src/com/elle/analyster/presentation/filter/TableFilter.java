@@ -214,6 +214,54 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     }
 
     /**
+     * getTable
+     * @return 
+     */
+    public JTable getTable() {
+        return table;
+    }
+
+    /**
+     * setTable
+     * @param table 
+     */
+    public void setTable(JTable table) {
+        this.table = table;
+    }
+
+    /**
+     * getSorter
+     * @return 
+     */
+    public TableRowSorter<TableModel> getSorter() {
+        return sorter;
+    }
+
+    /**
+     * setSorter
+     * @param sorter 
+     */
+    public void setSorter(TableRowSorter<TableModel> sorter) {
+        this.sorter = sorter;
+    }
+
+    /**
+     * getDistinctColumnItems
+     * @return 
+     */
+    public Map<Integer, ArrayList<Object>> getDistinctColumnItems() {
+        return distinctColumnItems;
+    }
+
+    /**
+     * setDistinctColumnItems
+     * @param distinctColumnItems 
+     */
+    public void setDistinctColumnItems(Map<Integer, ArrayList<Object>> distinctColumnItems) {
+        this.distinctColumnItems = distinctColumnItems;
+    }
+
+    /**
      * include
      * @param entry
      * @return 
