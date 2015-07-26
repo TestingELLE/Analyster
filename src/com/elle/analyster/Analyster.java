@@ -841,8 +841,6 @@ public class Analyster extends JFrame implements ITableConstants{
      */
     public void filterBySearch() {
         
-        String selectedTab = getSelectedTab(); // get the selected tab
-        
         int columnIndex; // the column of the table
         
         if (comboBoxSearch.getSelectedItem().toString().equals(SYMBOL_COLUMN_NAME)) {
@@ -854,14 +852,10 @@ public class Analyster extends JFrame implements ITableConstants{
         String selectedField = textFieldForSearch.getText();  // store string from text box
         
         // add item to filter
-        tabs.get(getSelectedTab())
-                .getFilter().addFilterItem(columnIndex, selectedField);
+        tabs.get(getSelectedTab()).getFilter().addFilterItem(columnIndex, selectedField);
+        tabs.get(getSelectedTab()).getFilter().applyFilter();
         
-        // apply filter
-        tabs.get(getSelectedTab())
-                .getFilter().applyFilter();
-        
-        try{
+      
 
             // this called filter and pop up
             
@@ -889,11 +883,9 @@ public class Analyster extends JFrame implements ITableConstants{
 //            GUI.columnFilterStatus(columnIndex, tabs.get(selectedTab).getFilter().getTable());
             
             // set label record information
-            labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
+            labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
             
-        }catch(NullPointerException e){
-            throwUnknownTableException(selectedTab, e);
-        }    
+        
     }
     
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -1051,7 +1043,7 @@ public class Analyster extends JFrame implements ITableConstants{
         
         try{
             if (isFilterActive) {
-            tabs.get(selectedTab).setTable(tabs.get(selectedTab).getFilteredTable());
+            //tabs.get(selectedTab).setTable(tabs.get(selectedTab).getFilteredTable());
             } else {
                 
 //                // new JTableFilter instance and takes table to set filter
@@ -1183,7 +1175,8 @@ public class Analyster extends JFrame implements ITableConstants{
 
     private void btnClearAllFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllFilterActionPerformed
      
-        tabs.get(getSelectedTab()).getFilter().removeAllFilterItems();
+        // clear all filters
+        tabs.get(getSelectedTab()).getFilter().clearAllFilters();
         tabs.get(getSelectedTab()).getFilter().applyFilter();
         
 //        switch (selectedTab) {

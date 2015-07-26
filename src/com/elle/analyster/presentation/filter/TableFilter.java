@@ -9,13 +9,13 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import sun.awt.datatransfer.DataTransferer;
 
 /**
  * TableFilter
@@ -30,6 +30,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     private TableRowSorter<TableModel> sorter;
     private Map<Integer,ArrayList<Object>> filterItems; // distincted items to filter
     private Color color;
+    private boolean isFiltering;
     
 
     /**
@@ -51,14 +52,14 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
             filterItems.put(i, new ArrayList<>());
         }
         
-        // load all initial rows with no filtering
-        loadAllRows();
-        
         // initialize the color for the table header when it is filtering
         color = Color.GREEN; // default color is green
         
-        //test
-        applyFilter();
+        // initialize the tables
+        loadAllRows(); // load all rows 
+        applyFilter(); // apply filter
+        
+        isFiltering = false;
     }
     
     /**
@@ -68,10 +69,22 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      */
     public void addFilterItem(int col, Object selectedField){
         
-        if(selectedField == null) 
-            selectedField = "";
+        // if not filtering then all filters are cleared (full table)
+        // this is to not clear other filtered columns
+        if(isFiltering == false){
+            removeAllFilterItems();                // this empties all column filters
+            isFiltering = true;
+        }
+        else{
+            filterItems.get(col).clear();              // remove all items from this column
+        }
         
-        filterItems.get(col).add(selectedField);
+        if(selectedField == null)                  // check for null just in case
+            selectedField = "";                    // no reason not to
+        
+        filterItems.get(col).add(selectedField);   // add passed item
+
+        addColorHeader(col);                       // highlight header
     }
     
     /**
@@ -81,13 +94,17 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      */
     public void addFilterItems(int col, ArrayList<Object> items){
         
-        for(Object item: items){
-            
-            if(item == null)
-                item = "";
-            
-            filterItems.get(col).add(item);
+        filterItems.get(col).clear();              // remove all items
+        
+        for(Object item: items){                  
+
+            if(item == null)                      // check for null just in case
+                item = "";                        // no reason not to
+
+            filterItems.get(col).add(item);       // add item to list
         }
+
+        addColorHeader(col);                      // highlight header
     }
     
     /**
@@ -117,6 +134,8 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
             
             filterItems.get(col).remove(item);
         }
+        
+        removeColorHeader(col);
     }
     
     /**
@@ -126,6 +145,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     public void removeFilterItems(int col){
 
         filterItems.get(col).clear();
+        removeColorHeader(col);
     }
     
     /**
@@ -145,7 +165,6 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     public void applyFilter(){
         
         sorter.setRowFilter(this);
-        applyColorHeaders();
     }
     
     /**
@@ -277,47 +296,54 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         
         // this is just items to search for
         // we decided to cap long values - notes for example
-        int cap = 20; // cap the String length of list options
+//        int cap = 10; // cap the String length of list options
         Object value; // value of the cell
-        
-        // for every column
-        for(int col = 0; col < table.getColumnCount(); col++){
             
-            // clear the array
-            //distinctItems.get(col).clear();
-            
-            ArrayList<Object> disctinctColumnItems = filterItems.get(columnIndex);
-            
-            // for every row
-            for (int row = 0; row < table.getRowCount(); row++){
-                
-                // get value of cell
-                value = getTable().getValueAt(row, col);
-                
-                // handle null values
-                if(value == null)
-                    value = "";
-                
-                // cap the String length of list options
-                if(value.toString().length() > cap){
-                    value = value.toString().substring(0, cap);
-                }
-                
-                // add the first item to the array for comparison
-                if(disctinctColumnItems.isEmpty()){
-                    disctinctColumnItems.add(value.toString());
-                }
-                else{
-                    // compare the values
-                    if(!disctinctColumnItems.contains(value.toString())){
-                        disctinctColumnItems.add(value.toString());
-                    }
+        // clear the array
+        filterItems.get(columnIndex).clear();
+
+        ArrayList<String> temp = new ArrayList<>();
+
+        // for every row
+        for (int row = 0; row < table.getModel().getRowCount(); row++){
+
+            // get value of cell
+            value = table.getModel().getValueAt(row, columnIndex);
+
+            // handle null values
+            if(value == null)
+                value = "";
+
+            // cap the String length of list options
+            // causing errors
+//            if(value.toString().length() > cap){
+//                value = value.toString().substring(0, cap);
+//            }
+
+            // add the first item to the array for comparison
+            if(temp.isEmpty()){
+                temp.add(value.toString());
+            }
+            else{
+
+                // compare the values
+                if(!temp.contains(value.toString())){
+                    temp.add(value.toString());
                 }
             }
-            
-            // sort items
-            disctinctColumnItems.sort(null);
         }
+
+        // sort items
+        temp.sort(null);
+
+        // the first item is (All) for select all and uncheck all
+        filterItems.get(columnIndex).add("(All)");
+
+        // add distinct items
+        for(String item: temp){
+            filterItems.get(columnIndex).add(item);
+        }
+        
     }
     
     /**
@@ -330,9 +356,29 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         for(int col = 0; col < table.getColumnCount(); col++){
             loadAllRows(col);
         }
+    }
+    
+    /**
+     * clearAllFilters
+     * clears filters for the specified column
+     * @param columnIndex
+     * @return 
+     */
+    public void clearAllFilters(int columnIndex){
+        loadAllRows(columnIndex);         // load all rows
+        removeColorHeader(columnIndex);   // remove all header highlighted Colors
+        isFiltering = false;              // no filters are applied 
+    }
+    
+    /**
+     * clearAllFilters
+     * Loads all rows, applys the filter, and removes the color highlights
+     */
+    public void clearAllFilters(){
         
-        // remove header highlight
-        removeAllColorHeaders();
+        loadAllRows();               // load all rows
+        removeAllColorHeaders();     // remove all header highlighted Colors
+        isFiltering = false;         // no filters are applied 
     }
 
     /**
@@ -345,13 +391,16 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         
         TableModel model = entry.getModel();
         int row = entry.getIdentifier();
+        int numColsfiltered = filterItems.size();     // number of cols filtered
+        int itemsFound = 0;                           // items found must match the total columns filtered
         
         // check every column
         for( int col = 0; col < model.getColumnCount(); col++ ) {
 
-            if ( filterItems.get(col).isEmpty() ) 
-                continue;
-            
+            if ( filterItems.get(col).isEmpty() ){
+                numColsfiltered--;
+                continue;                          // the column is empty
+            }
                 // get filter values
                 ArrayList<Object> distinctItems = filterItems.get(col);
 
@@ -363,24 +412,28 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
                     cellValue = "";
 
                 // if contains any of the filter items then include
-                if(!distinctItems.contains(cellValue.toString())){
-                    return true;
+                if(distinctItems.contains(cellValue.toString())){
+                    itemsFound++;
                 }
-                else
+                else{
                     // search for a match and ignore case
                     for(Object distinctItem : distinctItems){
                         if(cellValue.toString().equalsIgnoreCase(distinctItem.toString())){
-                            return true;
+                            itemsFound++;
                         }
                         // notes only shows the first 20 char so if startsWith is also checked
                         else if(cellValue.toString().startsWith(distinctItem.toString())){
-                            return true;
+                            itemsFound++;
                         }
                     }
-                return false; // there was no match
-            }
+                }
+        }
         
-        return false; // include the whole column
+        if(itemsFound == numColsfiltered){
+            return true;
+        }
+        else{
+            return false; 
+        }
     }
-    
 }
