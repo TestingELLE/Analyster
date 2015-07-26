@@ -6,9 +6,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
@@ -19,7 +17,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
@@ -35,6 +32,7 @@ public class ColumnPopupMenu extends JPopupMenu{
     private TableFilter filter;
     private ArrayList<JCheckBox> checkBoxItems; // items in checklist
     private Map<Integer,ArrayList<JCheckBox>> distinctItems; // distinct items for options
+    private int columnIndex; // selected colunm
     
     /**
      * CONSTRUCTOR
@@ -98,7 +96,8 @@ public class ColumnPopupMenu extends JPopupMenu{
         JButton btnApply = new JButton("Apply");
         btnApply.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //applyColumnFilter();
+                applyColumnFilter(getColumnIndex());
+                setVisible(false);
             }
         });
         
@@ -122,7 +121,7 @@ public class ColumnPopupMenu extends JPopupMenu{
         panel.add(boxButtons, BorderLayout.SOUTH); // add command buttons to south of panel
         
         // add the panel to the ColumnPopupMenu
-        this.add(panel);
+        add(panel);
     }
     
     /**
@@ -156,6 +155,7 @@ public class ColumnPopupMenu extends JPopupMenu{
             return;
         }
 
+        setColumnIndex(vColumnIndex);
         loadList(vColumnIndex);
         
         // show pop-up
@@ -164,18 +164,38 @@ public class ColumnPopupMenu extends JPopupMenu{
     
     /**
      * loadList
+     * @param col
      */
     public void loadList(int col){
         
-        // load JList with checkbox items
-        // this list is just for testing
-        checkBoxItems = new ArrayList<>();
+        // apply checks to filtered items
+        applyChecksToFilteredItems(col);
         
-        //Map<Integer,ArrayList<Object>> distinctColumnItems = filter.getDistinctColumnItems();
-        for(int i = 0; i<filter.getTable().getModel().getColumnCount(); i++){
-            checkBoxItems.add(new JCheckBox("item " + i));
-        }
+        // load JList with checkbox items
         checkBoxList.setListData(distinctItems.get(col).toArray());
+    }
+    
+    /**
+     * applyChecksToFilteredItems
+     */
+    public void applyChecksToFilteredItems(int col){
+        
+        // get filtered items
+        ArrayList<Object> fItems = filter.getFilterItems().get(col);
+        ArrayList<JCheckBox> dItems = distinctItems.get(col);
+        
+        // reset all checks to false
+        removeAllChecks(col);
+        
+        // apply checks to filtered items
+        for(JCheckBox dItem: dItems){
+            for(Object fItem: fItems){
+                if(dItem.getText().equals(fItem.toString())){
+                    dItem.setSelected(true);
+                }
+            }
+        }
+        
     }
     
     /**
@@ -224,11 +244,133 @@ public class ColumnPopupMenu extends JPopupMenu{
                 }
             }
             
+            // sort items
+            temp.sort(null);
+            
+            // the first item is (All) for select all and uncheck all
+            distinctItems.get(col).add(new JCheckBox("(All)"));
+            
             // add distinct items
             for(String item: temp){
                 distinctItems.get(col).add(new JCheckBox(item));
             }
             
         }
+    }
+
+    /**
+     * getCheckBoxList
+     * @return 
+     */
+    public CheckBoxList getCheckBoxList() {
+        return checkBoxList;
+    }
+
+    /**
+     * setCheckBoxList
+     * @param checkBoxList 
+     */
+    public void setCheckBoxList(CheckBoxList checkBoxList) {
+        this.checkBoxList = checkBoxList;
+    }
+
+    /**
+     * getFilter
+     * @return 
+     */
+    public TableFilter getFilter() {
+        return filter;
+    }
+
+    /**
+     * setFilter
+     * @param filter 
+     */
+    public void setFilter(TableFilter filter) {
+        this.filter = filter;
+    }
+
+    /**
+     * getCheckBoxItems
+     * @return 
+     */
+    public ArrayList<JCheckBox> getCheckBoxItems() {
+        return checkBoxItems;
+    }
+
+    /**
+     * setCheckBoxItems
+     * @param checkBoxItems 
+     */
+    public void setCheckBoxItems(ArrayList<JCheckBox> checkBoxItems) {
+        this.checkBoxItems = checkBoxItems;
+    }
+
+    /**
+     * getDistinctItems
+     * @return 
+     */
+    public Map<Integer, ArrayList<JCheckBox>> getDistinctItems() {
+        return distinctItems;
+    }
+
+    /**
+     * setDistinctItems
+     * @param distinctItems 
+     */
+    public void setDistinctItems(Map<Integer, ArrayList<JCheckBox>> distinctItems) {
+        this.distinctItems = distinctItems;
+    }
+
+    /**
+     * getColumnIndex
+     * @return 
+     */
+    public int getColumnIndex() {
+        return columnIndex;
+    }
+
+    /**
+     * setColumnIndex
+     * @param columnIndex 
+     */
+    public void setColumnIndex(int columnIndex) {
+        this.columnIndex = columnIndex;
+    }
+    
+    /**
+     * applyColumnFilter
+     * @param columnIndex 
+     */
+    public void applyColumnFilter(int columnIndex) {
+        
+        filter.removeFilterItems(columnIndex);
+        ArrayList<JCheckBox> dItems = distinctItems.get(columnIndex);
+        for(JCheckBox item: dItems){
+            if(item.isSelected()){
+                filter.addFilterItem(columnIndex, item.getText());
+            }
+        }      
+        filter.applyFilter();
+    }  
+    
+    /**
+     * removeAllChecks
+     * @param columnIndex 
+     */
+    public void removeAllChecks(int columnIndex){
+        ArrayList<JCheckBox> dItems = distinctItems.get(columnIndex);
+        for(JCheckBox item: dItems)
+            item.setSelected(false);
+    }
+    
+    /**
+     * checkAll
+     * @param columnIndex 
+     */
+    public void checkAll(int columnIndex){
+        ArrayList<JCheckBox> dItems = distinctItems.get(columnIndex);
+        for(JCheckBox item: dItems)
+            item.setSelected(true);
     }
 }

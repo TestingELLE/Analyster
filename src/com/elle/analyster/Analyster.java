@@ -855,7 +855,7 @@ public class Analyster extends JFrame implements ITableConstants{
         
         // add item to filter
         tabs.get(getSelectedTab())
-                .getFilter().addDistinctItem(columnIndex, selectedField);
+                .getFilter().addFilterItem(columnIndex, selectedField);
         
         // apply filter
         tabs.get(getSelectedTab())
@@ -1183,7 +1183,7 @@ public class Analyster extends JFrame implements ITableConstants{
 
     private void btnClearAllFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllFilterActionPerformed
      
-        tabs.get(getSelectedTab()).getFilter().removeAllDistinctItems();
+        tabs.get(getSelectedTab()).getFilter().removeAllFilterItems();
         tabs.get(getSelectedTab()).getFilter().applyFilter();
         
 //        switch (selectedTab) {
@@ -1605,7 +1605,7 @@ public class Analyster extends JFrame implements ITableConstants{
 //            GUI.columnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());
             // set label record information
             
-            tabs.get(getSelectedTab()).getFilter().addDistinctItem(columnIndex, selectedField);
+            tabs.get(getSelectedTab()).getFilter().addFilterItem(columnIndex, selectedField);
             tabs.get(getSelectedTab()).getFilter().applyFilter();
             labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
         }
@@ -1624,7 +1624,7 @@ public class Analyster extends JFrame implements ITableConstants{
 //        GUI.cleanColumnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());// clean green background
         // set label record information
         
-        tabs.get(getSelectedTab()).getFilter().removeDistinctItems(columnIndex);
+        tabs.get(getSelectedTab()).getFilter().removeFilterItems(columnIndex);
         tabs.get(getSelectedTab()).getFilter().applyFilter();
         labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
     }

@@ -59,7 +59,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * @param col
      * @param selectedField 
      */
-    public void addDistinctItem(int col, Object selectedField){
+    public void addFilterItem(int col, Object selectedField){
         
         if(selectedField == null) 
             selectedField = "";
@@ -72,7 +72,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * @param col
      * @param items 
      */
-    public void addDistinctItems(int col, ArrayList<Object> items){
+    public void addFilterItems(int col, ArrayList<Object> items){
         
         for(Object item: items){
             
@@ -88,7 +88,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * @param col
      * @param selectedField 
      */
-    public void removeDistinctItem(int col, Object selectedField){
+    public void removeFilterItem(int col, Object selectedField){
         
         if(selectedField == null) 
             selectedField = "";
@@ -101,7 +101,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * @param col
      * @param items 
      */
-    public void removeDistinctItems(int col, ArrayList<Object> items){
+    public void removeFilterItems(int col, ArrayList<Object> items){
         
         for(Object item: items){
             
@@ -116,7 +116,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * removeDistinctItems
      * @param col
      */
-    public void removeDistinctItems(int col){
+    public void removeFilterItems(int col){
 
         filterItems.get(col).clear();
     }
@@ -126,7 +126,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * @param col
      * @param items 
      */
-    public void removeAllDistinctItems(){
+    public void removeAllFilterItems(){
         
         for(int i = 0; i < filterItems.size(); i++)
             filterItems.get(i).clear();
@@ -249,7 +249,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * getDistinctColumnItems
      * @return 
      */
-    public Map<Integer, ArrayList<Object>> getDistinctColumnItems() {
+    public Map<Integer, ArrayList<Object>> getFilterItems() {
         return filterItems;
     }
 
@@ -257,7 +257,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * setDistinctColumnItems
      * @param distinctColumnItems 
      */
-    public void setDistinctColumnItems(Map<Integer, ArrayList<Object>> distinctColumnItems) {
+    public void setFilterItems(Map<Integer, ArrayList<Object>> distinctColumnItems) {
         this.filterItems = distinctColumnItems;
     }
 
@@ -276,28 +276,37 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         for( int col = 0; col < model.getColumnCount(); col++ ) {
 
             if ( filterItems.get(col).isEmpty() ) 
-                continue; // no filtering for this column
+                continue;
             
-            // get filter values
-            ArrayList<Object> distinctItems = filterItems.get(col);
+                // get filter values
+                ArrayList<Object> distinctItems = filterItems.get(col);
 
-            // get value
-            Object cellValue = model.getValueAt(row, col);
+                // get value
+                Object cellValue = model.getValueAt(row, col);
 
-            // handle null exception
-            if(cellValue == null) 
-                cellValue = "";
+                // handle null exception
+                if(cellValue == null) 
+                    cellValue = "";
 
-            // search for a match and ignore case
-            for(Object distinctItem : distinctItems){
-                if(!cellValue.toString().equalsIgnoreCase(distinctItem.toString())){
+                // if contains any of the filter items then include
+                if(!distinctItems.contains(cellValue.toString())){
                     return false;
                 }
+//                else
+//                    // search for a match and ignore case
+//                    for(Object distinctItem : distinctItems){
+//                        if(cellValue.toString().equalsIgnoreCase(distinctItem.toString())){
+//                            return true;
+//                        }
+//                        // notes only shows the first 20 char so if startsWith is also checked
+//                        else if(cellValue.toString().startsWith(distinctItem.toString())){
+//                            return true;
+//                        }
+//                    }
+//                return false; // there was no match
             }
-            
-        }
-
-        return true;
+        
+        return true; // include the whole column
     }
     
 }
