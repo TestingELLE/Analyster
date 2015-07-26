@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
@@ -50,8 +51,14 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
             filterItems.put(i, new ArrayList<>());
         }
         
+        // load all initial rows with no filtering
+        loadAllRows();
+        
         // initialize the color for the table header when it is filtering
         color = Color.GREEN; // default color is green
+        
+        //test
+        applyFilter();
     }
     
     /**
@@ -260,6 +267,73 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     public void setFilterItems(Map<Integer, ArrayList<Object>> distinctColumnItems) {
         this.filterItems = distinctColumnItems;
     }
+    
+    /**
+     * loadAllRows
+     * gets every row and adds it to the filterItems for the specified column
+     * @param columnIndex 
+     */
+    public void loadAllRows(int columnIndex){
+        
+        // this is just items to search for
+        // we decided to cap long values - notes for example
+        int cap = 20; // cap the String length of list options
+        Object value; // value of the cell
+        
+        // for every column
+        for(int col = 0; col < table.getColumnCount(); col++){
+            
+            // clear the array
+            //distinctItems.get(col).clear();
+            
+            ArrayList<Object> disctinctColumnItems = filterItems.get(columnIndex);
+            
+            // for every row
+            for (int row = 0; row < table.getRowCount(); row++){
+                
+                // get value of cell
+                value = getTable().getValueAt(row, col);
+                
+                // handle null values
+                if(value == null)
+                    value = "";
+                
+                // cap the String length of list options
+                if(value.toString().length() > cap){
+                    value = value.toString().substring(0, cap);
+                }
+                
+                // add the first item to the array for comparison
+                if(disctinctColumnItems.isEmpty()){
+                    disctinctColumnItems.add(value.toString());
+                }
+                else{
+                    // compare the values
+                    if(!disctinctColumnItems.contains(value.toString())){
+                        disctinctColumnItems.add(value.toString());
+                    }
+                }
+            }
+            
+            // sort items
+            disctinctColumnItems.sort(null);
+        }
+    }
+    
+    /**
+     * loadAllRows
+     * gets every row and adds it to the filterItems for every column
+     */
+    public void loadAllRows(){
+        
+        // for every column
+        for(int col = 0; col < table.getColumnCount(); col++){
+            loadAllRows(col);
+        }
+        
+        // remove header highlight
+        removeAllColorHeaders();
+    }
 
     /**
      * include
@@ -290,23 +364,23 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
 
                 // if contains any of the filter items then include
                 if(!distinctItems.contains(cellValue.toString())){
-                    return false;
+                    return true;
                 }
-//                else
-//                    // search for a match and ignore case
-//                    for(Object distinctItem : distinctItems){
-//                        if(cellValue.toString().equalsIgnoreCase(distinctItem.toString())){
-//                            return true;
-//                        }
-//                        // notes only shows the first 20 char so if startsWith is also checked
-//                        else if(cellValue.toString().startsWith(distinctItem.toString())){
-//                            return true;
-//                        }
-//                    }
-//                return false; // there was no match
+                else
+                    // search for a match and ignore case
+                    for(Object distinctItem : distinctItems){
+                        if(cellValue.toString().equalsIgnoreCase(distinctItem.toString())){
+                            return true;
+                        }
+                        // notes only shows the first 20 char so if startsWith is also checked
+                        else if(cellValue.toString().startsWith(distinctItem.toString())){
+                            return true;
+                        }
+                    }
+                return false; // there was no match
             }
         
-        return true; // include the whole column
+        return false; // include the whole column
     }
     
 }
