@@ -1,6 +1,8 @@
 
 package com.elle.analyster.presentation.filter;
 
+import com.elle.analyster.Analyster;
+import com.elle.analyster.Tab;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -34,6 +36,10 @@ public class ColumnPopupMenu extends JPopupMenu{
     private Map<Integer,ArrayList<JCheckBox>> distinctItems; // distinct items for options
     private int columnIndex; // selected colunm
     
+    // for updating the records label when a filter is applied
+    Analyster analyster;
+    Map<String,Tab> tabs;
+    
     /**
      * CONSTRUCTOR
      * ColumnPopupMenu
@@ -51,6 +57,11 @@ public class ColumnPopupMenu extends JPopupMenu{
         
         // load all distinct items
         loadAllDistinctItems();
+        
+        // initialize analyster and tabs 
+        // for updating the records label when filter is applied
+        analyster = Analyster.getInstance();
+        tabs = analyster.getTabs();
     }
     
     /**
@@ -330,6 +341,11 @@ public class ColumnPopupMenu extends JPopupMenu{
         }      
         filter.addFilterItems(columnIndex, filterItems);
         filter.applyFilter();
+        
+        // update record label
+        String selectedTab = analyster.getSelectedTab();
+        String records = tabs.get(selectedTab).getRecordsLabel();
+        analyster.getRecordsLabel().setText(records);
     }  
     
     /**

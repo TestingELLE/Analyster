@@ -1440,7 +1440,6 @@ public class Analyster extends JFrame implements ITableConstants{
                             // this calls the column popup menu
                             tabs.get(table.getName()) 
                                     .getColumnPopupMenu().showPopupMenu(e);
-                            
                         }
                     }
                     
