@@ -71,14 +71,30 @@ public class ColumnPopupMenu extends JPopupMenu{
         checkBoxList.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e)
             {
+                // get the checkbox item index
                int index = checkBoxList.locationToIndex(e.getPoint());
 
+               // index cannot be null
                if (index != -1) {
+                   
+                   // get the check box item at this index
                   JCheckBox checkbox = (JCheckBox)
                               checkBoxList.getModel().getElementAt(index);
-                  checkbox.setSelected(
-                                     !checkbox.isSelected());
-                  repaint();
+                  
+                  // check if the (All) selection was checked
+                  if(checkbox.getText().equals("(All)")){
+                      if(checkbox.isSelected()){
+                          removeAllChecks(getColumnIndex());
+                      }
+                      else{
+                          checkAll(getColumnIndex());
+                      }
+                  }
+                  else{
+                      // toogle the check for the checkbox item
+                      checkbox.setSelected(!checkbox.isSelected());
+                  }
+                  repaint(); // redraw graphics
                }
             }
         });
