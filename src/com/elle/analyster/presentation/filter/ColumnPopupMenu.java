@@ -221,54 +221,14 @@ public class ColumnPopupMenu extends JPopupMenu{
      */
     public void loadAllDistinctItems(){
         
-        int cap = 10; // cap the String length of list options
-        Object value; // value of the cell
-        
         // for every column
         for(int col = 0; col < filter.getTable().getColumnCount(); col++){
             
-            // clear the array
-            //distinctItems.get(col).clear();
-            
-            ArrayList<String> temp = new ArrayList<>();
-            
-            // for every row
-            for (int row = 0; row < filter.getTable().getRowCount(); row++){
-                
-                // get value of cell
-                value = filter.getTable().getValueAt(row, col);
-                
-                // handle null values
-                if(value == null)
-                    value = "";
-                
-                // cap the String length of list options
-                if(value.toString().length() > cap){
-                    value = value.toString().substring(0, cap);
-                }
-                
-                // add the first item to the array for comparison
-                if(temp.isEmpty()){
-                    temp.add(value.toString());
-                }
-                else{
-                    
-                    // compare the values
-                    if(!temp.contains(value.toString())){
-                        temp.add(value.toString());
-                    }
-                }
-            }
-            
-            // sort items
-            temp.sort(null);
-            
-            // the first item is (All) for select all and uncheck all
-            distinctItems.get(col).add(new JCheckBox("(All)"));
+            ArrayList<Object> temp = filter.getFilterItems().get(col);
             
             // add distinct items
-            for(String item: temp){
-                distinctItems.get(col).add(new JCheckBox(item));
+            for(Object item: temp){
+                distinctItems.get(col).add(new JCheckBox(item.toString()));
             }
             
         }
@@ -362,11 +322,13 @@ public class ColumnPopupMenu extends JPopupMenu{
         
         filter.removeFilterItems(columnIndex);
         ArrayList<JCheckBox> dItems = distinctItems.get(columnIndex);
+        ArrayList<Object> filterItems = new ArrayList<>();
         for(JCheckBox item: dItems){
             if(item.isSelected()){
-                filter.addFilterItem(columnIndex, item.getText());
+                filterItems.add(item.getText());
             }
         }      
+        filter.addFilterItems(columnIndex, filterItems);
         filter.applyFilter();
     }  
     

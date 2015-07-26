@@ -94,7 +94,15 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      */
     public void addFilterItems(int col, ArrayList<Object> items){
         
-        filterItems.get(col).clear();              // remove all items
+        // if not filtering then all filters are cleared (full table)
+        // this is to not clear other filtered columns
+        if(isFiltering == false){
+            removeAllFilterItems();                // this empties all column filters
+            isFiltering = true;
+        }
+        else{
+            filterItems.get(col).clear();              // remove all items from this column
+        }
         
         for(Object item: items){                  
 
