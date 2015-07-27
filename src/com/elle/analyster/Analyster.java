@@ -46,7 +46,6 @@ public class Analyster extends JFrame implements ITableConstants{
     private static Analyster instance;
     private LogWindow logWindow = new LogWindow(); 
     
-    public EnterButton enterButton = new EnterButton();
     protected static boolean isFiltering = true;
     private List<ModifiedData> modifiedDataList = new ArrayList<>();    // record the locations of changed cell
     
