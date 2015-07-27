@@ -11,6 +11,7 @@ import java.awt.*;
 
 /**
  * CheckBoxList
+ * This is the JList used in the ColumnPopupMenu
  * @author cigreja
  */
 public class CheckBoxList extends JList
@@ -30,6 +31,10 @@ public class CheckBoxList extends JList
       setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
    }
 
+   /**
+    * CellRenderer
+    * This is the ListCellRenderer used for the CheckBoxList JList.
+    */
    protected class CellRenderer implements ListCellRenderer
    {
       public Component getListCellRendererComponent(
