@@ -15,7 +15,7 @@ import java.util.*;
  * @author Louis W.
  * @author cigreja
  */
-public class AddRecords extends JFrame {
+public class AddRecordsWindow extends JFrame {
 
     // attributes
     private String[] columnNames;
@@ -31,7 +31,7 @@ public class AddRecords extends JFrame {
     /**
      * Creates new form ReportWin <-- does it really?
      */
-    public AddRecords() {
+    public AddRecordsWindow() {
         
         // initialize components
         initComponents();

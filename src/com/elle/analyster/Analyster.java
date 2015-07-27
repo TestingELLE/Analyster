@@ -41,7 +41,7 @@ public class Analyster extends JFrame implements ITableConstants{
     private Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
 
     private JTableHeader header;
-    private AddRecords  addRecords;
+    private AddRecordsWindow  addRecords;
     
     private static Analyster instance;
     private LogWindow logWindow = new LogWindow(); 
@@ -1092,7 +1092,7 @@ public class Analyster extends JFrame implements ITableConstants{
     }//GEN-LAST:event_jMenuEditDBActionPerformed
 
     private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
-        addRecords = new AddRecords();
+        addRecords = new AddRecordsWindow();
         addRecords.setVisible(true);
         
         // update records
