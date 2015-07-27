@@ -52,7 +52,7 @@ public class Analyster extends JFrame implements ITableConstants{
     
     private LoginWindow loginWindow;
     
-    private TableEditor tableEditor;
+    private BatchEditWindow tableEditor;
     
     private EditDatabaseWindow editDBWindow;
     
@@ -1080,7 +1080,7 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
-        tableEditor = new TableEditor(tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex()), this);
+        tableEditor = new BatchEditWindow(tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex()), this);
         tableEditor.setVisible(true);
 
     }//GEN-LAST:event_btnBatchEditActionPerformed
@@ -1740,7 +1740,7 @@ public class Analyster extends JFrame implements ITableConstants{
     
 
     // Keep the float in Table Editor by separating editing part out here
-    public void batchEdit(TableEditor editor) {
+    public void batchEdit(BatchEditWindow editor) {
         
         int row[], id, col = 1, i, j, num;
         JTable table = getSelectedTable();   // current Table

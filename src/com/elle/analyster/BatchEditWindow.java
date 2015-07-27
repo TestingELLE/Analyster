@@ -11,14 +11,14 @@ import javax.swing.DefaultComboBoxModel;
  *
  * @author Louis W.
  */
-public class TableEditor extends javax.swing.JFrame {
+public class BatchEditWindow extends javax.swing.JFrame {
     
     /**
      * Creates new form TableEdit
      * @param selectedTable
      * @param a
      */
-    public TableEditor(String selectedTable, Analyster a) {
+    public BatchEditWindow(String selectedTable, Analyster a) {
         initComponents();
         analyster = a;
         // set the interface to the middle of the window
@@ -210,7 +210,7 @@ public class TableEditor extends javax.swing.JFrame {
 //        /* Create and display the form */
 //        java.awt.EventQueue.invokeLater(new Runnable() {
 //            public void run() {
-//                new TableEditor().setVisible(true);
+//                new BatchEditWindow().setVisible(true);
 //            }
 //        });
 //    }
