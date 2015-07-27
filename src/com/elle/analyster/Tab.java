@@ -1,33 +1,36 @@
 
 package com.elle.analyster;
 
-//import com.elle.analyster.presentation.filter.JTableFilter;
 import com.elle.analyster.presentation.filter.ColumnPopupMenu;
 import com.elle.analyster.presentation.filter.TableFilter;
 import javax.swing.JTable;
 
 /**
- *
+ * Tab
+ * This class is used to create a tab object.
+ * This object contains all the components of the tab on Analyster.
+ * Each tab may have its own attributes and that is what this class
+ * is for.
  * @author Carlos Igreja
  * @since  June 25, 2015
  */
 public class Tab implements ITableConstants{
 
-    private String tableName; 
-    private JTable table;
-    private JTable filteredTable;
-    private TableFilter filter;
-    private float[] colWidthPercent;
-    private int totalRecords;
-    private int recordsShown;
-    private String[] tableColNames;
-    private String[] searchFields;
-    private ColumnPopupMenu ColumnPopupMenu;
+    // attributes
+    private String tableName;                    // name of the JTable
+    private JTable table;                        // the JTable on the tab
+    private TableFilter filter;                  // filter used for the table
+    private float[] colWidthPercent;             // column width for each column
+    private int totalRecords;                    // total records in table model
+    private int recordsShown;                    // number of records shown on table
+    private String[] tableColNames;              // column header names
+    private String[] searchFields;               // search combobox options
+    private ColumnPopupMenu ColumnPopupMenu;     // column filter pop up menu
     
     // these menu items are enabled differently for each tab
-    private boolean activateRecordMenuItemEnabled;
-    private boolean archiveRecordMenuItemEnabled;
-    private boolean addRecordsBtnVisible;
+    private boolean activateRecordMenuItemEnabled; // enables activate record menu item
+    private boolean archiveRecordMenuItemEnabled;  // enables archive record menu item
+    private boolean addRecordsBtnVisible;          // sets the add records button visible
 
     
     /**
@@ -38,7 +41,6 @@ public class Tab implements ITableConstants{
     public Tab() {
         tableName = "";
         table = new JTable();
-        filteredTable = new JTable();
         totalRecords = 0;
         recordsShown = 0;
         activateRecordMenuItemEnabled = false;
@@ -56,7 +58,6 @@ public class Tab implements ITableConstants{
     public Tab(JTable table) {
         tableName = "";
         this.table = table;
-        filteredTable = new JTable();
         totalRecords = 0;
         recordsShown = 0;
         filter = new TableFilter(table);
@@ -78,14 +79,6 @@ public class Tab implements ITableConstants{
 
     public void setTable(JTable table) {
         this.table = table;
-    }
-    
-    public JTable getFilteredTable() {
-        return filteredTable;
-    }
-
-    public void setFilteredTable(JTable filteredTable) {
-        this.filteredTable = filteredTable;
     }
 
     public TableFilter getFilter() {
