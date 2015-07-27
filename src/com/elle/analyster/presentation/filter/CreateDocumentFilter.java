@@ -16,6 +16,13 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
+/**
+ * CreateDocumentFilter
+ * - Not sure about this class. It has something to do with the sql text area. 
+ * The problem was that it is used in generated code so I was unable to find out 
+ * how to disable it to test it any further. I did not see anything in properties.
+ * @author cigreja
+ */
 public class CreateDocumentFilter extends DocumentFilter {
 
 	private int promptPosition;
