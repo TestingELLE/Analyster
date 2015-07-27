@@ -935,16 +935,19 @@ public class Analyster extends JFrame implements ITableConstants{
     }//GEN-LAST:event_jMenuItemOtherReportActionPerformed
 
     private void btnEnterSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterSQLActionPerformed
-        if (enterButton.isCreateTable(jTextAreaSQL)) {
+
+        int commandStart = jTextAreaSQL.getText().lastIndexOf(">>") + 2;
+        String command = jTextAreaSQL.getText().substring(commandStart);  
+        if (command.toLowerCase().contains("select")){
             try {
-                connection(enterButton.getCommand(jTextAreaSQL), assignmentTable);
+                connection(command, assignmentTable);
             } catch (SQLException e) {
                 logWindow.sendMessages(e.getMessage());  //To change body of catch statement use File | Settings | File Templates.
             }
         } else {
             
             try {
-                    statement.executeUpdate(enterButton.getCommand(jTextAreaSQL));
+                    statement.executeUpdate(command);
             } catch (SQLException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (Exception e) {
