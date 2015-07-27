@@ -234,14 +234,40 @@ public class ColumnPopupMenu extends JPopupMenu{
      */
     public void loadAllDistinctItems(){
         
+        
+        // this is just items to search for
+        // we decided to cap long values - notes for example
+        int cap = 20;       // cap the String length of list options
+        String value = "";  // store current object string value
+
         // for every column
         for(int col = 0; col < filter.getTable().getColumnCount(); col++){
             
-            ArrayList<Object> temp = filter.getFilterItems().get(col);
+            ArrayList<Object> filterItems = new ArrayList<>(filter.getFilterItems().get(col));
+            ArrayList<String> cappedItems = new ArrayList<>();
             
             // add distinct items
-            for(Object item: temp){
-                distinctItems.get(col).add(new JCheckBox(item.toString()));
+            for(Object fItem: filterItems){
+                
+                // cap the String length of list options
+                // causing errors
+                if(fItem.toString().length() > cap){
+                    value = fItem.toString().substring(0, cap);
+                }
+                else{
+                    value = fItem.toString();
+                }
+                
+                // use capped items array to store new disctinct capped items
+                if(cappedItems.isEmpty()){
+                    cappedItems.add(value);    // add first item for comparison
+                    distinctItems.get(col).add(new JCheckBox(value));
+                }
+                else{
+                    if(!cappedItems.contains(value)){
+                        distinctItems.get(col).add(new JCheckBox(value));
+                    }
+                }
             }
             
         }

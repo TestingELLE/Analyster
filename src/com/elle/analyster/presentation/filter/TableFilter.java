@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.elle.analyster.presentation.filter;
 
 import java.awt.Color;
@@ -15,7 +11,6 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import sun.awt.datatransfer.DataTransferer;
 
 /**
  * TableFilter
@@ -26,17 +21,17 @@ import sun.awt.datatransfer.DataTransferer;
 public class TableFilter extends RowFilter<TableModel, Integer> {
     
     // attributes
-    private JTable table; // table to be filtered 
-    private TableRowSorter<TableModel> sorter;
-    private Map<Integer,ArrayList<Object>> filterItems; // distincted items to filter
-    private Color color;
-    private boolean isFiltering;
+    private JTable table;                                // table to be filtered 
+    private TableRowSorter<TableModel> sorter;           // the table sorter
+    private Map<Integer,ArrayList<Object>> filterItems;  // distinct items to filter
+    private Color color;                                 // color to paint header
+    private boolean isFiltering;                         // is filtering items
     
 
     /**
      * CONSTRUCTOR
      * TableFilter
-     * @param table 
+     * @param table  // the table to apply the filter
      */
     public TableFilter(JTable table){
         
@@ -302,9 +297,6 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      */
     public void loadAllRows(int columnIndex){
         
-        // this is just items to search for
-        // we decided to cap long values - notes for example
-//        int cap = 10; // cap the String length of list options
         Object value; // value of the cell
             
         // clear the array
@@ -321,12 +313,6 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
             // handle null values
             if(value == null)
                 value = "";
-
-            // cap the String length of list options
-            // causing errors
-//            if(value.toString().length() > cap){
-//                value = value.toString().substring(0, cap);
-//            }
 
             // add the first item to the array for comparison
             if(temp.isEmpty()){
