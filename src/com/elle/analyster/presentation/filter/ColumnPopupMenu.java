@@ -24,7 +24,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 /**
- *
+ * ColumnPopupMenu
+ * This class is the JPopupMenu used for the column filtering with the 
+ * CheckBoxlist.
  * @author cigreja
  */
 public class ColumnPopupMenu extends JPopupMenu{
