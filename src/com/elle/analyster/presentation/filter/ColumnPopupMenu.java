@@ -37,8 +37,8 @@ public class ColumnPopupMenu extends JPopupMenu{
     private int columnIndex; // selected colunm
     
     // for updating the records label when a filter is applied
-    Analyster analyster;
-    Map<String,Tab> tabs;
+    private Analyster analyster;
+    private Map<String,Tab> tabs;
     
     /**
      * CONSTRUCTOR

@@ -21,6 +21,7 @@ public class AddRecords extends JFrame {
     private String[] columnNames;
     private String tableName;
     private int numRowsAdded;  // number of rows added counter
+    private Map<String,Tab> tabs;  // used to update the records label
     
     // components
     private Analyster analyster;
@@ -36,6 +37,7 @@ public class AddRecords extends JFrame {
         initComponents();
         analyster = Analyster.getInstance();
         logWindow = analyster.getLogwind();
+        tabs = analyster.getTabs();
         
         // set this window to appear in the middle of Analyster
         this.setLocationRelativeTo(analyster);
@@ -256,8 +258,12 @@ public class AddRecords extends JFrame {
             analyster.loadData();
             analyster.setLastUpdateTime();
             
-            // update total records with new records added
-            analyster.getTabs().get(analyster.getSelectedTab()).addToTotalRowCount(numRowsAdded);
+            // update record label
+            String selectedTab = analyster.getSelectedTab();
+            tabs.get(selectedTab).addToTotalRowCount(numRowsAdded);   // update total records
+            String records = tabs.get(selectedTab).getRecordsLabel();
+            analyster.getRecordsLabel().setText(records);
+        
         }
         this.dispose();
     }//GEN-LAST:event_jSubmitActionPerformed

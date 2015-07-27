@@ -38,7 +38,7 @@ public class Analyster extends JFrame implements ITableConstants{
     private final String CREATION_DATE = "2015-07-24";  
     private final String VERSION = "0.6.8c";   
     
-    Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
+    private Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
 
     private JTableHeader header;
     private AddRecords  addRecords;
@@ -923,6 +923,8 @@ public class Analyster extends JFrame implements ITableConstants{
         updateTable(tabs.get(selectedTab).getTable(), modifiedDataList);
 
         loadTableWithFilter(); // refresh table
+        
+        makeTableEditable(jLabelEdit.getText().equals("OFF")?true:false);
         
         getModifiedDataList().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();    // update time
