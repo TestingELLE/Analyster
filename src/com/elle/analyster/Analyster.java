@@ -54,7 +54,7 @@ public class Analyster extends JFrame implements ITableConstants{
     
     private TableEditor tableEditor;
     
-    private EditDatabaseList editDBWindow;
+    private EditDatabaseWindow editDBWindow;
     
     private Statement statement;
     
@@ -1086,7 +1086,7 @@ public class Analyster extends JFrame implements ITableConstants{
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
     private void jMenuEditDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuEditDBActionPerformed
-        editDBWindow = new EditDatabaseList();
+        editDBWindow = new EditDatabaseWindow();
         editDBWindow.setLocationRelativeTo(this);
         editDBWindow.setVisible(true);
     }//GEN-LAST:event_jMenuEditDBActionPerformed

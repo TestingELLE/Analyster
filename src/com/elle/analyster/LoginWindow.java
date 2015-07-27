@@ -35,7 +35,7 @@ public class LoginWindow extends JFrame {
     
     // class component instances
     private Analyster analyster;
-    private EditDatabaseList editDatabaseList;
+    private EditDatabaseWindow editDatabaseList;
     private LogWindow logWindow;
     
     public LoginWindow() {
@@ -303,7 +303,7 @@ public class LoginWindow extends JFrame {
     private void jEditDBActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jEditDBActionPerformed
         
         // create a new edit database window
-        editDatabaseList = new EditDatabaseList(this); // maybe we can make it not dependant on this
+        editDatabaseList = new EditDatabaseWindow(this); // maybe we can make it not dependant on this
         editDatabaseList.setLocationRelativeTo(this);
         editDatabaseList.setVisible(true);
     }//GEN-LAST:event_jEditDBActionPerformed
@@ -318,9 +318,9 @@ public class LoginWindow extends JFrame {
 
     /**
      *  Loads the names of the databases from a text file
-     * 
-     *  this is if the actual database list is edited in EditDatabaseList 
-     * then it updates the combobox with the new values in LoginWindow.
+ 
+  this is if the actual database list is edited in EditDatabaseWindow 
+ then it updates the combobox with the new values in LoginWindow.
      */
     public void loadDBList() {
         String temp = null;

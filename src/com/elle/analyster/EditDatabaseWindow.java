@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  *
  * @author Louis W.
  */
-public class EditDatabaseList extends javax.swing.JFrame {
+public class EditDatabaseWindow extends javax.swing.JFrame {
     
     LoginWindow L ;
     boolean flag = false;   // true if call this class from log in window
@@ -27,14 +27,14 @@ public class EditDatabaseList extends javax.swing.JFrame {
     /**
      * Creates new form EditDatabaseList
      */
-    public EditDatabaseList() {
+    public EditDatabaseWindow() {
         initComponents();
         this.setLocationRelativeTo(null);
         loadList();
     }
     
     // Call this class from log in window
-    public EditDatabaseList(LoginWindow l) {
+    public EditDatabaseWindow(LoginWindow l) {
         initComponents();
         L = l;
         flag = true;
@@ -292,7 +292,7 @@ public class EditDatabaseList extends javax.swing.JFrame {
         }
 //        dbFile.getParentFile().mkdirs();
         
-        // this is if the actual database list is edited in EditDatabaseList 
+        // this is if the actual database list is edited in EditDatabaseWindow 
         // then it updates the combobox with the new values in LoginWindow.
         if (flag == true)   // go back to log in window
             L.loadDBList();   
@@ -316,20 +316,20 @@ public class EditDatabaseList extends javax.swing.JFrame {
 //                }
 //            }
 //        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(EditDatabaseList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(EditDatabaseWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(EditDatabaseList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(EditDatabaseWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(EditDatabaseList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(EditDatabaseWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(EditDatabaseList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(EditDatabaseWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        }
 //        //</editor-fold>
 //
 //        /* Create and display the form */
 //        java.awt.EventQueue.invokeLater(new Runnable() {
 //            public void run() {
-//                new EditDatabaseList().setVisible(true);
+//                new EditDatabaseWindow().setVisible(true);
 //            }
 //        });
 //    }
