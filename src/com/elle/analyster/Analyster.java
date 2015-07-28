@@ -36,7 +36,7 @@ public class Analyster extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars
     private final String CREATION_DATE = "2015-07-27";  
-    private final String VERSION = "0.6.9";   
+    private final String VERSION = "0.6.9a";   
     
     // attributes
     private Map<String,Tab> tabs; // stores individual tab information
