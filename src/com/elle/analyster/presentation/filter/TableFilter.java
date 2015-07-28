@@ -89,25 +89,27 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      */
     public void addFilterItems(int col, ArrayList<Object> items){
         
-        // if not filtering then all filters are cleared (full table)
-        // this is to not clear other filtered columns
-        if(isFiltering == false){
-            removeAllFilterItems();                // this empties all column filters
-            isFiltering = true;
-        }
-        else{
-            filterItems.get(col).clear();              // remove all items from this column
-        }
-        
-        for(Object item: items){                  
+        if(!items.isEmpty()){
+            // if not filtering then all filters are cleared (full table)
+            // this is to not clear other filtered columns
+            if(isFiltering == false){
+                removeAllFilterItems();                // this empties all column filters
+                isFiltering = true;
+            }
+            else{
+                filterItems.get(col).clear();              // remove all items from this column
+            }
 
-            if(item == null)                      // check for null just in case
-                item = "";                        // no reason not to
+            for(Object item: items){                  
 
-            filterItems.get(col).add(item);       // add item to list
+                if(item == null)                      // check for null just in case
+                    item = "";                        // no reason not to
+
+                filterItems.get(col).add(item);       // add item to list
+            }
+
+            addColorHeader(col);                      // highlight header
         }
-
-        addColorHeader(col);                      // highlight header
     }
     
     /**
