@@ -909,7 +909,7 @@ public class Analyster extends JFrame implements ITableConstants{
             try {
                 connection(command, assignmentTable);
             } catch (SQLException e) {
-                logWindow.sendMessages(e.getMessage());  //To change body of catch statement use File | Settings | File Templates.
+                logWindow.sendMessages(e.getMessage());  
             }
         } else {
             
@@ -980,71 +980,16 @@ public class Analyster extends JFrame implements ITableConstants{
 
     
     private void changeTabbedPanelState() {
-        
-        String selectedTab = getSelectedTab();
 
-        // pointers to information
-        boolean isFilterActive = false;
-        
         // this enables or disables the menu components for this tab
-        jActivateRecord.setEnabled(tabs.get(selectedTab).isActivateRecordMenuItemEnabled()); 
-        jArchiveRecord.setEnabled(tabs.get(selectedTab).isArchiveRecordMenuItemEnabled()); 
+        jActivateRecord.setEnabled(tabs.get(getSelectedTab()).isActivateRecordMenuItemEnabled()); 
+        jArchiveRecord.setEnabled(tabs.get(getSelectedTab()).isArchiveRecordMenuItemEnabled()); 
         
         // show or hide the add records button
-        btnAddRecords.setVisible(tabs.get(selectedTab).isAddRecordsBtnVisible());
+        btnAddRecords.setVisible(tabs.get(getSelectedTab()).isAddRecordsBtnVisible());
         
-//        switch (selectedTab) {
-//            case ASSIGNMENTS_TABLE_NAME:
-//                isFilterActive = GUI.filterAssignmentIsActive;
-//                break;
-//                
-//            case REPORTS_TABLE_NAME:
-//                isFilterActive = GUI.filterReportIstActive;
-//                break;
-//                
-//            case ARCHIVE_TABLE_NAME:
-//                isFilterActive = GUI.filterArchiveIsActive;
-//                break;
-//
-//            default:
-//                selectedTab = "unknown";
-//                break;
-//        }
-        
-        try{
-            if (isFilterActive) {
-            //tabs.get(selectedTab).setTable(tabs.get(selectedTab).getFilteredTable());
-            } else {
-                
-//                // new JTableFilter instance and takes table to set filter
-//                jTableFilter = new JTableFilter(tabs.get(selectedTab).getTable());
-//
-//                // set actions visible to true
-//                jTableFilter.setActionsVisible(true);
-//                
-//                // Add the TableFilterColumnPopup
-//                // this code was in the apply() before any other code in the method
-//                tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
-//                tableFilterColumnPopup.setEnabled(true);
-//                tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
-//                tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
-//
-//                // apply changes to tableRowFilterSupport
-//                // This method still needs refactoring -> legacy code
-//                jTableFilter.apply();
-//
-//                // set filter to tabs table
-//                tabs.get(selectedTab).setFilter(jTableFilter);
-//                
-//                // set filtered table in tabs using the filter to filter and return table
-//                tabs.get(selectedTab).setFilteredTable(tabs.get(selectedTab).getFilter().getTable());
-            }
-            
-            // set label record information
-            labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
-        }catch(NullPointerException e){
-            throwUnknownTableException(selectedTab, e);
-        }
+        // set label record information
+        labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel());    
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
@@ -1064,7 +1009,7 @@ public class Analyster extends JFrame implements ITableConstants{
         addRecords.setVisible(true);
         
         // update records
-        getRecordsLabel().setText(tabs.get(getSelectedTab()).getRecordsLabel());
+        labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel());
     }//GEN-LAST:event_btnAddRecordsActionPerformed
 
     /**
@@ -1081,6 +1026,11 @@ public class Analyster extends JFrame implements ITableConstants{
         }
     }//GEN-LAST:event_textFieldForSearchKeyPressed
 
+    /**
+     * jMenuItemLogOffActionPerformed
+     * Log Off menu item action performed
+     * @param evt 
+     */
     private void jMenuItemLogOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLogOffActionPerformed
         Object[] options = {"Reconnect", "Log Out"};  // the titles of buttons
 
@@ -1108,6 +1058,11 @@ public class Analyster extends JFrame implements ITableConstants{
         }
     }//GEN-LAST:event_jMenuItemLogOffActionPerformed
 
+    /**
+     * jDeleteRecordActionPerformed
+     * Delete records menu item action performed
+     * @param evt 
+     */
     private void jDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
         
         String selectedTab = getSelectedTab();
@@ -1123,11 +1078,20 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
 
+    /**
+     * jMenuItemViewAllAssigActionPerformed
+     * calls load data method
+     * @param evt 
+     */
     private void jMenuItemViewAllAssigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemViewAllAssigActionPerformed
         loadData();
     }//GEN-LAST:event_jMenuItemViewAllAssigActionPerformed
 
-    // load only active data from analyst
+    /**
+     * jMenuItemViewActiveAssigActionPerformed
+     * load only active data from analyst
+     * @param evt 
+     */
     private void jMenuItemViewActiveAssigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemViewActiveAssigActionPerformed
 
         String sqlC = "select A.* from Assignments A left join t_analysts T\n" + "on A.analyst = T.analyst\n" + "where T.active = 1\n" + "order by A.symbol";
@@ -1143,26 +1107,17 @@ public class Analyster extends JFrame implements ITableConstants{
         labelRecords.setText(tabs.get(ASSIGNMENTS_TABLE_NAME).getRecordsLabel()); 
     }//GEN-LAST:event_jMenuItemViewActiveAssigActionPerformed
 
+    /**
+     * btnClearAllFilterActionPerformed
+     * clear all filters
+     * @param evt 
+     */
     private void btnClearAllFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllFilterActionPerformed
      
         // clear all filters
         tabs.get(getSelectedTab()).getFilter().clearAllFilters();
         tabs.get(getSelectedTab()).getFilter().applyFilter();
-        
-//        switch (selectedTab) {
-//            case ASSIGNMENTS_TABLE_NAME:
-//                GUI.filterAssignmentIsActive = false;
-//                break;
-//            case REPORTS_TABLE_NAME:
-//                GUI.filterReportIstActive = false;
-//                break;
-//            case ARCHIVE_TABLE_NAME:
-//                GUI.filterArchiveIsActive = false;
-//                break;
-//        }
-//        
-//        loadTable(tabs.get(selectedTab).getTable());
-//        GUI.cleanAllColumnFilterStatus(tabs.get(selectedTab).getTable());
+
         // set label record information
         labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
                 
@@ -1170,16 +1125,22 @@ public class Analyster extends JFrame implements ITableConstants{
 
     }//GEN-LAST:event_btnClearAllFilterActionPerformed
 
-
+    /**
+     * jMenuItemOthersLoadDataActionPerformed
+     * @param evt 
+     */
     private void jMenuItemOthersLoadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOthersLoadDataActionPerformed
+
+        loadTable(tabs.get(getSelectedTab()).getTable());
         
-        String selectedTab = getSelectedTab();
-        
-        loadTable(tabs.get(selectedTab).getTable());
         // set label record information
-        labelRecords.setText(tabs.get(selectedTab).getRecordsLabel()); 
+        labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
     }//GEN-LAST:event_jMenuItemOthersLoadDataActionPerformed
 
+    /**
+     * jArchiveRecordActionPerformed
+     * @param evt 
+     */
     private void jArchiveRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jArchiveRecordActionPerformed
 
         int rowSelected = assignmentTable.getSelectedRows().length;
@@ -1242,6 +1203,10 @@ public class Analyster extends JFrame implements ITableConstants{
         }
     }//GEN-LAST:event_jArchiveRecordActionPerformed
 
+    /**
+     * jActivateRecordActionPerformed
+     * @param evt 
+     */
     private void jActivateRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jActivateRecordActionPerformed
        
         int rowSelected = archiveTable.getSelectedRows().length;
@@ -1284,7 +1249,10 @@ public class Analyster extends JFrame implements ITableConstants{
         }
     }//GEN-LAST:event_jActivateRecordActionPerformed
 
-//Filter is generated everytime that table is selected.
+    /**
+     * tabbedPanelStateChanged
+     * @param evt 
+     */
     private void tabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelStateChanged
 
         changeTabbedPanelState();
@@ -1297,6 +1265,10 @@ public class Analyster extends JFrame implements ITableConstants{
         modifiedDataList.clear();    // when selected table changed, clear former edit history
     }//GEN-LAST:event_tabbedPanelStateChanged
 
+    /**
+     * jCheckBoxMenuItemViewLogActionPerformed
+     * @param evt 
+     */
     private void jCheckBoxMenuItemViewLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemViewLogActionPerformed
 
         if(jCheckBoxMenuItemViewLog.isSelected()){
@@ -1317,6 +1289,10 @@ public class Analyster extends JFrame implements ITableConstants{
         }
     }//GEN-LAST:event_jCheckBoxMenuItemViewLogActionPerformed
 
+    /**
+     * jCheckBoxMenuItemViewSQLActionPerformed
+     * @param evt 
+     */
     private void jCheckBoxMenuItemViewSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemViewSQLActionPerformed
  
         /**
@@ -1351,6 +1327,10 @@ public class Analyster extends JFrame implements ITableConstants{
         }
     }//GEN-LAST:event_jCheckBoxMenuItemViewSQLActionPerformed
 
+    /**
+     * jTableChanged
+     * @param e 
+     */
     private void jTableChanged(TableModelEvent e) {
 
         int row = e.getFirstRow();
@@ -1358,19 +1338,20 @@ public class Analyster extends JFrame implements ITableConstants{
         int id;
         Object value;
         
-        String selectedTab = getSelectedTab();
-        
-        id = (Integer) tabs.get(selectedTab).getTable().getModel().getValueAt(row, 0);
-        value = tabs.get(selectedTab).getTable().getModel().getValueAt(row, col);
+        id = (Integer) tabs.get(getSelectedTab()).getTable().getModel().getValueAt(row, 0);
+        value = tabs.get(getSelectedTab()).getTable().getModel().getValueAt(row, col);
 
         ModifiedData modifiedData = new ModifiedData();
         modifiedData.setColumnIndex(col);
         modifiedData.setId(id);
-        modifiedData.setTableName(selectedTab);
+        modifiedData.setTableName(getSelectedTab());
         modifiedData.setValueModified(value);
         modifiedDataList.add(modifiedData);
     }
 
+    /**
+     * loadData
+     */
     public void loadData() {
         loadTables(tabs);
     }
@@ -1560,11 +1541,6 @@ public class Analyster extends JFrame implements ITableConstants{
         int rowIndex = table.getSelectedRow(); // this returns the row index
         if (rowIndex != -1) {
             Object selectedField = table.getValueAt(rowIndex, columnIndex);
-            // apply filter
-//            tabs.get(table.getName()).getFilter().apply(columnIndex, selectedField);
-//            GUI.columnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());
-            // set label record information
-            
             tabs.get(getSelectedTab()).getFilter().addFilterItem(columnIndex, selectedField);
             tabs.get(getSelectedTab()).getFilter().applyFilter();
             labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
@@ -1579,11 +1555,6 @@ public class Analyster extends JFrame implements ITableConstants{
     private void clearFilterDoubleClick(MouseEvent e, JTable table) {
         
         int columnIndex = table.getColumnModel().getColumnIndexAtX(e.getX());
-        
-//        tabs.get(table.getName()).getFilter().apply(columnIndex, tabs.get(table.getName()).getFilter().getDistinctColumnItems(columnIndex));
-//        GUI.cleanColumnFilterStatus(columnIndex, tabs.get(table.getName()).getFilter().getTable());// clean green background
-        // set label record information
-        
         tabs.get(getSelectedTab()).getFilter().removeFilterItems(columnIndex);
         tabs.get(getSelectedTab()).getFilter().applyFilter();
         labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
@@ -1623,8 +1594,6 @@ public class Analyster extends JFrame implements ITableConstants{
         table.setRowSorter(sorter);
         
         setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
-        //setColumnFormat(tabs.get(REPORTS_TABLE_NAME).getColWidthPercent(), reportTable);
-        //setColumnFormat(tabs.get(ARCHIVE_TABLE_NAME).getColWidthPercent(), archiveTable);
     }
 
     /**
@@ -1704,8 +1673,11 @@ public class Analyster extends JFrame implements ITableConstants{
         }
     }
     
-
-    // Keep the float in Table Editor by separating editing part out here
+    /**
+     * batchEdit
+     * Keep the float in Table Editor by separating editing part out here
+     * @param editor 
+     */
     public void batchEdit(BatchEditWindow editor) {
         
         int row[], id, col = 1, i, j, num;
@@ -1737,6 +1709,11 @@ public class Analyster extends JFrame implements ITableConstants{
 
     }
 
+    /**
+     * updateTable
+     * @param table
+     * @param modifiedDataList 
+     */
     private void updateTable(JTable table, List<ModifiedData> modifiedDataList) {
         table.getModel().addTableModelListener(table);
         try {
@@ -1752,16 +1729,29 @@ public class Analyster extends JFrame implements ITableConstants{
         }
     }
 
+    /**
+     * getSelectedTable
+     * gets the selected tab
+     * @return 
+     */
     public JTable getSelectedTable() {  //get JTable by  selected Tab
         return tabs.get(getSelectedTab()).getTable();
     }
 
+    /**
+     * setLastUpdateTime
+     * sets the last update time label
+     */
     public void setLastUpdateTime() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = dateFormat.format(new Date());
         labelTimeLastUpdate.setText("Last updated: " + time);
     }
     
+    /**
+     * setKeyboardFocusManager
+     * sets the keyboard focus manager
+     */
     private void setKeyboardFocusManager() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {// Allow to TAB-
 
@@ -1844,15 +1834,10 @@ public class Analyster extends JFrame implements ITableConstants{
     public Statement getStatement() {
         return statement;
     }
-    
-    
-    
-    
-    /***************************************************************************
-     **************** LoadTables Methods ***************************************
-     ***************************************************************************/
+
     
     /**
+     * initTotalRowCounts
      *  called once to initialize the total row counts of each tabs table
      * @param tabs
      * @return 
@@ -1879,6 +1864,7 @@ public class Analyster extends JFrame implements ITableConstants{
     
     
     /**
+     * loadTables
      * This method takes a tabs Map and loads all the tabs/tables
      * @param tabs
      * @return 
@@ -1898,6 +1884,7 @@ public class Analyster extends JFrame implements ITableConstants{
     
 
       /**
+       * loadTable
        * This method takes a table and loads it
        * Does not need to pass the table back since it is passed by reference
        * However, it can make the code clearer and it's good practice to return
@@ -1914,29 +1901,6 @@ public class Analyster extends JFrame implements ITableConstants{
             e.printStackTrace();
         }
         setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
-          
-//        // new JTableFilter instance and takes table to set filter
-//        jTableFilter = new JTableFilter(tabs.get(table.getName()).getTable());
-//
-//        // set actions visible to true
-//        jTableFilter.setActionsVisible(true);
-//        
-//        // Add the TableFilterColumnPopup
-//        // this code was in the apply() before any other code in the method
-//        tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
-//        tableFilterColumnPopup.setEnabled(true);
-//        tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
-//        tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
-//
-//        // apply changes to tableRowFilterSupport
-//        // This method still needs refactoring -> legacy code
-//        jTableFilter.apply();
-//
-//        // set filter to tabs table
-//        tabs.get(table.getName()).setFilter(jTableFilter);
-//
-//        // set filtered table in tabs using the filter to filter and return table
-//        tabs.get(table.getName()).setFilteredTable(tabs.get(table.getName()).getFilter().getTable());
             
         // this enables or disables the menu components for this tab
         jActivateRecord.setEnabled(tabs.get(table.getName()).isActivateRecordMenuItemEnabled()); 
@@ -1959,15 +1923,15 @@ public class Analyster extends JFrame implements ITableConstants{
             e.printStackTrace();
         }
         
-//        // reapply filter
-//        tabs.get(getSelectedTab()).getFilter().reapplyFilters();
-        
     }
     
-    /***************************************************************************
-     ********************* DeleteRecords Method ********************************
-     ***************************************************************************/
-    
+    /**
+     * deleteRecordsSelected
+     * deletes the selected records
+     * @param table
+     * @return
+     * @throws HeadlessException 
+     */
     public String deleteRecordsSelected( JTable table) throws HeadlessException {
         String sqlDelete = ""; // String for the SQL Statement
         String tableName = table.getName(); // name of the table
@@ -2015,10 +1979,13 @@ public class Analyster extends JFrame implements ITableConstants{
         return sqlDelete;
     }
     
-    /***************************************************************************
-     * *********************** Connection Method *******************************
-     ***************************************************************************/
-    
+    /**
+     * connection
+     * @param sql
+     * @param table
+     * @return
+     * @throws SQLException 
+     */
     public String connection(String sql, JTable table) throws SQLException {
 
         Vector data = new Vector();
@@ -2059,11 +2026,13 @@ public class Analyster extends JFrame implements ITableConstants{
         return null;
     }
     
-    
-    /***************************************************************************
-     * *********************** uploadRecord Method *******************************
-     ***************************************************************************/
-    
+    /**
+     * uploadRecord
+     * @param table
+     * @param modifiedDataList
+     * @return
+     * @throws SQLException 
+     */
     public String uploadRecord(JTable table, List<ModifiedData> modifiedDataList) throws SQLException {
         int id, col;
         Object value;
