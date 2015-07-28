@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import javafx.scene.input.MouseButton;
 
 
 public class Analyster extends JFrame implements ITableConstants{
@@ -1068,13 +1069,8 @@ public class Analyster extends JFrame implements ITableConstants{
         String selectedTab = getSelectedTab();
         String sqlDelete;
 
-       try{
-            sqlDelete = deleteRecordsSelected(tabs.get(selectedTab).getTable());
-            logWindow.sendMessages(sqlDelete);
-            
-        }catch(NullPointerException e){
-            throwUnknownTableException(selectedTab, e);
-        } 
+        sqlDelete = deleteRecordsSelected(tabs.get(selectedTab).getTable());
+        logWindow.sendMessages(sqlDelete);
     }
 
 
@@ -1383,7 +1379,7 @@ public class Analyster extends JFrame implements ITableConstants{
                     }
                     
                     // Right mouse clicks
-                    else if(SwingUtilities.isRightMouseButton(e)){
+                    else if(SwingUtilities.isRightMouseButton(e) || e.getButton() == MouseEvent.BUTTON3){
                         if (e.getClickCount() == 1){
                             
                             // this calls the column popup menu
@@ -1395,6 +1391,15 @@ public class Analyster extends JFrame implements ITableConstants{
                 }
             });
         }
+        
+        // add keyListener to the table header
+        // this is for mac ctrl buttion down, not sure if needed yet
+//        header.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyPressed(KeyEvent ke) {
+//                
+//            }
+//        });
         
         // add mouselistener to the table
         table.addMouseListener(
@@ -1654,24 +1659,6 @@ public class Analyster extends JFrame implements ITableConstants{
 
         }
     }
-
-    /**
-     * This method handles unknown table exceptions
-     * It takes the value of the selected tab that caused the exception
-     * It also takes the exception to print the stack trace
-     * @param selectedTab
-     */
-    public void throwUnknownTableException(String selectedTab, Exception e) {
-        try {
-            String errorMessage = "ERROR: unknown table: " + selectedTab;
-            throw new NoSuchFieldException(errorMessage);
-        } catch (NoSuchFieldException ex) {
-            ex.setStackTrace(e.getStackTrace());
-            ex.printStackTrace();
-            // post to log.txt
-            getLogwind().sendMessages(ex.getMessage());
-        }
-    }
     
     /**
      * batchEdit
@@ -1779,7 +1766,7 @@ public class Analyster extends JFrame implements ITableConstants{
                         JTable table = (JTable) e.getComponent().getParent();
                         int column = table.getSelectedColumn();
                         if (table.getColumnName(column).toLowerCase().contains("date")) {
-                            if (e.getID() != 401) {
+                            if (e.getID() != 401) { // 401 = key down, 402 = key released
                                 return false;
                             } else {
                                 JTextField selectCom = (JTextField) e.getComponent();
@@ -1933,8 +1920,10 @@ public class Analyster extends JFrame implements ITableConstants{
      * @throws HeadlessException 
      */
     public String deleteRecordsSelected( JTable table) throws HeadlessException {
+        
         String sqlDelete = ""; // String for the SQL Statement
         String tableName = table.getName(); // name of the table
+        
         int[] selectedRows = table.getSelectedRows(); // array of the rows selected
         int rowCount = selectedRows.length; // the number of rows selected
         if (rowCount != -1) {
@@ -1949,11 +1938,11 @@ public class Analyster extends JFrame implements ITableConstants{
                     sqlDelete += ", " + selectedID;
                 
             }
+            
+            // close the sql statement
+            sqlDelete += ");";
                 
             try {
-
-                // close the sql statement
-                sqlDelete += ");";
 
                 // delete records from database
                 statement.executeUpdate(sqlDelete); 
