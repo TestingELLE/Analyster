@@ -417,10 +417,6 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
                         if(cellValue.toString().equalsIgnoreCase(distinctItem.toString())){
                             itemsFound++;
                         }
-                        // notes only shows the first 20 char so if startsWith is also checked
-                        else if(cellValue.toString().startsWith(distinctItem.toString())){
-                            itemsFound++;
-                        }
                     }
                 }
         }

@@ -1,30 +1,34 @@
 
 package com.elle.analyster.presentation.filter;
 
+import java.util.ArrayList;
+import javax.swing.JCheckBox;
+
 /**
  *CLASS: CheckBoxItem
  * This class to store information about check box item objects.
  * @author cigreja
  */
-public class CheckBoxItem {
+public class CheckBoxItem extends JCheckBox{
     
     // attributes
-    private String distinct;      // original distinct value used by filter
+    private ArrayList<String> distinctItems;      // original distinct value used by filter
     private String capped;        // capped value that is diplayed for checkbox item selection
     private int count;            // count of distinct items to display along side the check box selections
 
-    public CheckBoxItem(String distinct, String capped, int count) {
-        this.distinct = distinct;
+    public CheckBoxItem(String capped) {
+        super(capped);
+        distinctItems = new ArrayList<>();
         this.capped = capped;
-        this.count = count;
+        count = 0;
     }
 
-    public String getDistinct() {
-        return distinct;
+    public ArrayList<String> getDistinctItems() {
+        return distinctItems;
     }
 
-    public void setDistinct(String distinct) {
-        this.distinct = distinct;
+    public void setDistinctItems(ArrayList<String> distinctItems) {
+        this.distinctItems = distinctItems;
     }
 
     public String getCapped() {
@@ -43,6 +47,9 @@ public class CheckBoxItem {
         this.count = count;
     }
 
+    public void incrementCount(){
+        count++;
+    }
     
     
     
