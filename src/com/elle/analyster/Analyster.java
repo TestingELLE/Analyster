@@ -38,28 +38,22 @@ public class Analyster extends JFrame implements ITableConstants{
     private final String CREATION_DATE = "2015-07-27";  
     private final String VERSION = "0.6.9";   
     
-    private Map<String,Tab> tabs = new HashMap<>(); // stores individual tab information
-
-    private JTableHeader header;
-    private AddRecordsWindow  addRecords;
-    
-    private static Analyster instance;
-    private LogWindow logWindow = new LogWindow(); 
-    
-    protected static boolean isFiltering = true;
-    private List<ModifiedData> modifiedDataList = new ArrayList<>();    // record the locations of changed cell
-    
-    private LoginWindow loginWindow;
-    
-    private BatchEditWindow tableEditor;
-    
-    private EditDatabaseWindow editDBWindow;
-    
+    // attributes
+    private Map<String,Tab> tabs; // stores individual tab information
+    private List<ModifiedData> modifiedDataList;    // record the locations of changed cell
     private Statement statement;
-    
     private String database;
     
+    // components
+    private static Analyster instance;
+    private JTableHeader header;
+    private AddRecordsWindow  addRecords;
+    private LogWindow logWindow;
+    private LoginWindow loginWindow;
+    private BatchEditWindow tableEditor;
+    private EditDatabaseWindow editDBWindow;
     
+
     /**
      * CONSTRUCTOR
      */
@@ -73,10 +67,13 @@ public class Analyster extends JFrame implements ITableConstants{
         // the statement is used for sql statements with the database connection
         // the statement is created in LoginWindow and passed to Analyster.
         this.statement = statement;
+        instance = this;                         // this is used to call an instance of Analyster 
+        modifiedDataList = new ArrayList<>();    // record the locations of changed cell
+        logWindow = new LogWindow(); 
         
-        // this is used to call an instance of Analyster 
-        instance = this;  
-
+        // initialize tabs
+        tabs = new HashMap();
+        
         // create tab objects -> this has to be before initcomponents();
         tabs.put(ASSIGNMENTS_TABLE_NAME, new Tab());
         tabs.put(REPORTS_TABLE_NAME, new Tab());
@@ -823,7 +820,7 @@ public class Analyster extends JFrame implements ITableConstants{
 
     private void textFieldForSearchMouseClicked(MouseEvent evt) {//GEN-FIRST:event_textFieldForSearchMouseClicked
 
-        textFieldForSearch.setText(null);
+        textFieldForSearch.setText(""); // clears text
     }//GEN-LAST:event_textFieldForSearchMouseClicked
 
     /**
@@ -835,56 +832,27 @@ public class Analyster extends JFrame implements ITableConstants{
     }//GEN-LAST:event_btnSearchActionPerformed
     
     /**
+     * This method is performed when the text field is used to search by
+     * either clicking the search button or the Enter key in the text field.
      * This method is called by the searchActionPerformed method
      * and the textForSearchKeyPressed method
      */
     public void filterBySearch() {
         
-        int columnIndex; // the column of the table
+        // this matches the combobox value with the column name value to get the column index
+        for(int col = 0; col < tabs.get(getSelectedTab()).getTable().getColumnCount(); col++)
+            if(tabs.get(getSelectedTab()).getTable().getColumnName(col)
+                    .equalsIgnoreCase(comboBoxSearch.getSelectedItem().toString())){
+                
+                String selectedField = textFieldForSearch.getText();  // store string from text box
         
-        if (comboBoxSearch.getSelectedItem().toString().equals(SYMBOL_COLUMN_NAME)) {
-            columnIndex = 1; // first column is the symbol column
-        } else {
-            columnIndex = 2; // the second column is the analyst column
-        }
-        
-        String selectedField = textFieldForSearch.getText();  // store string from text box
-        
-        // add item to filter
-        tabs.get(getSelectedTab()).getFilter().addFilterItem(columnIndex, selectedField);
-        tabs.get(getSelectedTab()).getFilter().applyFilter();
-        
-      
+                // add item to filter
+                tabs.get(getSelectedTab()).getFilter().addFilterItem(col, selectedField);
+                tabs.get(getSelectedTab()).getFilter().applyFilter();
 
-            // this called filter and pop up
-            
-            // new JTableFilter instance and takes table to set filter
-//            jTableFilter = new JTableFilter(tabs.get(selectedTab).getTable());
-//            
-//            // set actions visible to true
-//            jTableFilter.setActionsVisible(true);
-//            
-//            // Add the TableFilterColumnPopup
-//            // this code was in the apply() before any other code in the method
-//            tableFilterColumnPopup = new TableFilterColumnPopup(jTableFilter);
-//            tableFilterColumnPopup.setEnabled(true);
-//            tableFilterColumnPopup.setActionsVisible(jTableFilter.getActionsVisible());
-//            tableFilterColumnPopup.setUseTableRenderers( jTableFilter.getUseTableRenderers());
-//            
-//            // apply changes to tableRowFilterSupport
-//            // This method still needs refactoring -> legacy code
-//            jTableFilter.apply();
-//            
-//            // apply changes to filter
-//            jTableFilter.apply(columnIndex, selectedField);
-//            
-//            // this sets the column header green
-//            GUI.columnFilterStatus(columnIndex, tabs.get(selectedTab).getFilter().getTable());
-            
-            // set label record information
-            labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
-            
-        
+                // set label record information
+                labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
+            }
     }
     
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -989,14 +957,12 @@ public class Analyster extends JFrame implements ITableConstants{
             btnUploadChanges.setVisible(true);
             btnCancelEditMode.setVisible(true);
             btnBatchEdit.setVisible(true);
-            isFiltering = false;
         } else {
             jLabelEdit.setText("OFF");
             btnSwitchEditMode.setVisible(true);
             btnUploadChanges.setVisible(false);
             btnCancelEditMode.setVisible(false);
             btnBatchEdit.setVisible(true);
-            isFiltering = true;
         }
         
         for (Map.Entry<String, Tab> entry : tabs.entrySet()){
@@ -1425,9 +1391,7 @@ public class Analyster extends JFrame implements ITableConstants{
                     // Left mouse clicks
                     if (SwingUtilities.isLeftMouseButton(e)){
                         if (e.getClickCount() == 2) {
-                            if (isFiltering) {
-                                clearFilterDoubleClick(e, table);
-                            }
+                            clearFilterDoubleClick(e, table);
                         } 
 //                        else if (e.getClickCount() == 1) {
 //                            // why is nothing here?
