@@ -47,11 +47,11 @@ public class Analyster extends JFrame implements ITableConstants{
     // components
     private static Analyster instance;
     private JTableHeader header;
-    private AddRecordsWindow  addRecords;
+    private AddRecordsWindow  addRecordsWindow;
     private LogWindow logWindow;
     private LoginWindow loginWindow;
-    private BatchEditWindow tableEditor;
-    private EditDatabaseWindow editDBWindow;
+    private BatchEditWindow batchEditWindow;
+    private EditDatabaseWindow editDatabaseWindow;
     
 
     /**
@@ -67,7 +67,7 @@ public class Analyster extends JFrame implements ITableConstants{
         // the statement is used for sql statements with the database connection
         // the statement is created in LoginWindow and passed to Analyster.
         this.statement = statement;
-        instance = this;                         // this is used to call an instance of Analyster 
+        instance = this;                         // this is used to call this instance of Analyster 
         modifiedDataList = new ArrayList<>();    // record the locations of changed cell
         logWindow = new LogWindow(); 
         
@@ -993,20 +993,20 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
-        tableEditor = new BatchEditWindow(tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex()), this);
-        tableEditor.setVisible(true);
+        batchEditWindow = new BatchEditWindow(tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex()), this);
+        batchEditWindow.setVisible(true);
 
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
     private void jMenuEditDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuEditDBActionPerformed
-        editDBWindow = new EditDatabaseWindow();
-        editDBWindow.setLocationRelativeTo(this);
-        editDBWindow.setVisible(true);
+        editDatabaseWindow = new EditDatabaseWindow();
+        editDatabaseWindow.setLocationRelativeTo(this);
+        editDatabaseWindow.setVisible(true);
     }//GEN-LAST:event_jMenuEditDBActionPerformed
 
     private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
-        addRecords = new AddRecordsWindow();
-        addRecords.setVisible(true);
+        addRecordsWindow = new AddRecordsWindow();
+        addRecordsWindow.setVisible(true);
         
         // update records
         labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel());
