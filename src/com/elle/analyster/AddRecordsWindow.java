@@ -6,6 +6,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,6 +23,7 @@ public class AddRecordsWindow extends JFrame {
     private String tableName;
     private int numRowsAdded;  // number of rows added counter
     private Map<String,Tab> tabs;  // used to update the records label
+    private Statement statement;
     
     // components
     private Analyster analyster;
@@ -38,6 +40,7 @@ public class AddRecordsWindow extends JFrame {
         analyster = Analyster.getInstance();
         logWindow = analyster.getLogwind();
         tabs = analyster.getTabs();
+        statement = analyster.getStatement();
         
         // set this window to appear in the middle of Analyster
         this.setLocationRelativeTo(analyster);
@@ -48,17 +51,8 @@ public class AddRecordsWindow extends JFrame {
         // set the label header
         this.setTitle("Add Records to " + tableName);
         
-        // get column names for selected Analyster table
-        columnNames = analyster.getTabs().get(tableName).getTableColNames();
-        
-        // we don't want the ID column 
-        columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
-        
-        // set the table model - add 10 empty rows
-        model = new DefaultTableModel(columnNames, 10);
-        
-        // add the table model to the table
-        table.setModel(model);
+        // create a new empty table
+        createEmptyTable();
         
         // sets the keyboard focus manager
         setKeyboardFocusManager(); 
@@ -181,93 +175,191 @@ public class AddRecordsWindow extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
+    /**
+     * jSubmitActionPerformed
+     * This is performed when the submit button is executed.
+     * Refactored by Carlos Igreja 7-28-2015
+     * @param evt 
+     */
     private void jSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSubmitActionPerformed
-//        Vector data, row = new Vector();
-        String title = " (";    // element of Sql statement
-        ArrayList<String> rows = new ArrayList<>();
-        String rowData;
-        boolean flag = false;   // if add successfully, set it true
 
-        int i = 0, j = 0, num = 0;
-        int colNum = table.getColumnCount();
-
-        for (i = 0; i < colNum - 1; i++) {
-            title += columnNames[i] + ",";
-        }
-        title += columnNames[colNum - 1] + ") ";
-
-        // rows comprise all the new information for inserting
-        i = 0;
-
-        numRowsAdded = 0; // reset numRowsAdded counter
+        String colName = "";        // column name
+        Object cellValue = null;    // store cell value
+        int col = 0;                // column index
+        int row = 0;                // row index
+        String errorMsg = "";            // error message
+        int emptyCells = 0;             // number of empty cells in a row
         
-        while (i != table.getRowCount() && table.getValueAt(i, 0) != null) {    // within accessible rows && not null next line
-            rowData = "(";
-
-            while (j < colNum - 1) {
-                // first, check date format if it's date column
-                if (columnNames[j].equals("dateAssigned") || columnNames[j].equals("analysisDate")) {     
-                    if (table.getValueAt(i, j).toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")) {
-                        rowData += "'" + table.getValueAt(i, j).toString() + "',";
-                    } else if (table.getValueAt(i, j).toString() == null) {
-                        rowData += null + ",";    // default date for null input
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Date format is incorrect!");
-                        break;
+        // validate data
+        try{
+        
+            // check data
+            for(row = 0; row < table.getRowCount(); row++){
+                
+                // reset empty cell count
+                emptyCells = 0;
+                
+                // first test if row is empty
+                for(col = 0; col < table.getColumnCount(); col++){
+                    
+                    // get value of cell
+                    cellValue = table.getValueAt(row, col);
+                    
+                    // check each column for a value
+                    if(cellValue == null || cellValue.toString().equals("")){
+                        emptyCells++;
                     }
-                // second, check if null
-                } else if (table.getValueAt(i, j) == null) {      
-                    rowData += null + ",";
-                } else {
-                    rowData += "'" + table.getValueAt(i, j).toString() + "',";
                 }
-                j++;
-            }
-            if (table.getValueAt(i, j) == null) {
-                rowData += null + ")";
-            } else {
-                rowData += "'" + table.getValueAt(i, j).toString() + "')";
-            }
-            rows.add(rowData);
-            numRowsAdded++; // increment a row added to row added counter
-            i++;
-            j = 0;
-        }
-        num = i;
+                
+                // continue to next row if this one is empty
+                if(emptyCells == table.getColumnCount()){
+                    continue;   
+                }
 
-        // insert the new rows one by one
-        for (i = 0; i < num; i++) {
-            try {
-                String sqlChange = "INSERT INTO " + tableName + title + " VALUES " + rows.get(i);
-                System.out.println(sqlChange);
-                analyster.getStatement().executeUpdate(sqlChange);
-                logWindow.sendMessages(sqlChange);
-                flag = true;
-            } catch (SQLException ex) {
-                ex.getErrorCode();
-                JOptionPane.showMessageDialog(null, "Upload failed! ");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error!");
-                ex.getStackTrace();
-            }
-        }
+                for(col = 0; col < table.getColumnCount(); col++){
+                    
+                    // get column name
+                    colName = table.getColumnName(col);
+                    
+                    // get value of cell
+                    cellValue = table.getValueAt(row, col);
 
-        if (flag) {
-            JOptionPane.showMessageDialog(null, "Add successfully!");
-            analyster.loadData();
-            analyster.setLastUpdateTime();
-            
-            // update record label
-            String selectedTab = analyster.getSelectedTab();
-            tabs.get(selectedTab).addToTotalRowCount(numRowsAdded);   // update total records
-            String records = tabs.get(selectedTab).getRecordsLabel();
-            analyster.getRecordsLabel().setText(records);
+                        switch(colName){
+                        case "symbol":
+                            if(cellValue == null || cellValue.toString().equals("")){
+                                errorMsg = "Symbol cannot be null";
+                                    throw new Exception();
+                            }
+                            break;
+                        case "analyst":
+                            break;
+                        case "priority":
+                            break;
+                        case "dateAssigned":
+                            if(cellValue != null)
+                                if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                                    errorMsg = "Date format not correct: YYYY-MM-DD";
+                                    throw new Exception();
+                                }
+                            break;
+                        case "dateDone":
+                            if(cellValue != null)
+                                if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                                    errorMsg = "Date format not correct: YYYY-MM-DD";
+                                    throw new Exception();
+                                }
+                            break;
+                        case "notes":
+                            break;
+                        case "author":
+                            break;
+                        case "analysisDate":
+                            if(cellValue != null)
+                                if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                                    errorMsg = "Date format not correct: YYYY-MM-DD";
+                                    throw new Exception();
+                                }
+                            break;
+                        case "path":
+                            break;
+                        case "document":
+                            break;
+                        case "notesL":
+                            break;
+                        default:
+                            break;
+                            
+                    }// end switch
+                }// end row for loop
+            }// end col for loop
         
+            // once data checked, execute sql statement
+            // first get the insert statement for the table
+            String insertInto = "INSERT INTO " + tableName + " (";
+
+            // this table should already not include the primary key
+            for (col = 0; col < table.getColumnCount(); col++){
+                if(col != table.getColumnCount() -1)
+                    insertInto += table.getColumnName(col) + ", ";
+                else
+                    insertInto += table.getColumnName(col) + ") ";
+            }
+            
+            numRowsAdded = 0; // reset numRowsAdded counter
+            
+            // Now get the values to add to the database
+            String values = "";  
+            for(row = 0; row < table.getRowCount(); row++){
+                values = "VALUES (";  // start the values statement
+                for(col = 0; col < table.getColumnCount(); col++){
+                    
+                    // get cell value
+                    cellValue = table.getValueAt(row, col);
+                    
+                    // format the cell value for sql
+                    if(cellValue != null){
+                        
+                        // if cell is empty it must be null
+                        if(cellValue.toString().equals("")){
+                            cellValue = null;
+                        }
+                        
+                        // if the cell is not empty it must have single quotes
+                        else {
+                            cellValue = "'" + cellValue + "'";
+                        }
+                    }
+                    
+                    // skip empty rows
+                    // this must be after the format cell value so the "" => null
+                    if(col == 0 && cellValue == null){
+                        break;                      
+                    }
+                    
+                    // add each value for each column to the values statement
+                    if(col != table.getColumnCount() -1){
+                        values += cellValue + ", ";
+                    }
+                    else {
+                        values += cellValue + ");";
+                    }
+                }
+                
+                // execute the sql statement
+                if(!values.equals("VALUES (")){      //skip if nothing was added
+                    statement.executeUpdate(insertInto + values);
+                    numRowsAdded++;   // increment the number of rows added
+                    System.out.println(insertInto + values); // for debugging
+                    logWindow.sendMessages(insertInto + values);
+                }
+                
+            }
+
+            // update table and records label
+            String selectedTab = analyster.getSelectedTab();          // get selected tab
+            analyster.loadTable(tabs.get(selectedTab).getTable());    // load table data from database
+            analyster.setLastUpdateTime();                            // set the last update time from database
+            tabs.get(selectedTab).addToTotalRowCount(numRowsAdded);   // add the number of records added to the total records count
+            String records = tabs.get(selectedTab).getRecordsLabel(); // store the records label string
+            analyster.getRecordsLabel().setText(records);             // update the records label text
+            JOptionPane.showMessageDialog(null, "Add successfully!"); // show dialog box that upload was successful
+            
+            // create a new table with default 10 rows
+            createEmptyTable();
+            
+        }// end try
+        
+        catch(SQLException sqlException) {
+            JOptionPane.showMessageDialog(null, "Upload failed!");
+            sqlException.printStackTrace();
         }
-        this.dispose();
+        catch(Exception exception){
+            JOptionPane.showMessageDialog(null, "Error with " + colName + " in row " + (row + 1) + ".\n" + errorMsg);
+            exception.printStackTrace();
+        }
     }//GEN-LAST:event_jSubmitActionPerformed
 
+    
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
 
     }//GEN-LAST:event_tableMouseClicked
@@ -339,6 +431,43 @@ public class AddRecordsWindow extends JFrame {
                 return false; 
             }
         });
+    }
+    
+    /**
+     * createEmptyTable
+     * creates an empty table with default 10 rows
+     */
+    private void createEmptyTable() {
+        // get column names for selected Analyster table
+        columnNames = analyster.getTabs().get(tableName).getTableColNames();
+        
+        // we don't want the ID column 
+        columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
+        
+        // set the table model - add 10 empty rows
+        model = new DefaultTableModel(columnNames, 10);
+        
+        // add the table model to the table
+        table.setModel(model);
+    }
+    
+    /**
+     * createEmptyTable
+     * creates an empty table with the specified amount of rows
+     * @param rows  // number of rows to add to table
+     */
+    private void createEmptyTable(int rows) {
+        // get column names for selected Analyster table
+        columnNames = analyster.getTabs().get(tableName).getTableColNames();
+        
+        // we don't want the ID column 
+        columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
+        
+        // set the table model - add 10 empty rows
+        model = new DefaultTableModel(columnNames, rows);
+        
+        // add the table model to the table
+        table.setModel(model);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
