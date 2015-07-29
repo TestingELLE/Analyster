@@ -298,7 +298,7 @@ public class ColumnPopupMenu extends JPopupMenu{
                 
                 // check every checkboxItem
                 for(CheckBoxItem item: checkBoxItems.get(col)){
-                    
+
                     // find the checkbox item
                     if(item.getCapped().equals(cappedValue)){
                         if(!item.getDistinctItems().contains(cellValue.toString())){
@@ -316,7 +316,12 @@ public class ColumnPopupMenu extends JPopupMenu{
             
             // now change the text for each checkbox to include the counts
             for(CheckBoxItem item: checkBoxItems.get(col)){
-                if(!item.getText().equals("(All)")){
+                
+                // for checkbox item (All) add to distinctinct item list for filtering
+                if(item.getText().equals("(All)")){
+                    item.getDistinctItems().add("(All)");
+                }     
+                else if(!item.getText().equals("(All)")){
                     String capped = item.getCapped();      // the capped value
                     int count = item.getCount();           // the count of values
                     item.setText(capped + " (" + count +  ")");
