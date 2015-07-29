@@ -183,11 +183,11 @@ public class AddRecordsWindow extends JFrame {
      */
     private void jSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSubmitActionPerformed
 
-        String colName = "";        // column name
-        Object cellValue = null;    // store cell value
-        int col = 0;                // column index
-        int row = 0;                // row index
-        String errorMsg = "";            // error message
+        String colName = "";            // column name
+        Object cellValue = null;        // store cell value
+        int col = 0;                    // column index
+        int row = 0;                    // row index
+        String errorMsg = "";           // error message
         int emptyCells = 0;             // number of empty cells in a row
         
         // validate data
@@ -234,6 +234,8 @@ public class AddRecordsWindow extends JFrame {
                         case "analyst":
                             break;
                         case "priority":
+                            errorMsg = "Priority must be an Integer";
+                            int integer = Integer.parseInt(cellValue.toString());
                             break;
                         case "dateAssigned":
                             if(cellValue != null)
