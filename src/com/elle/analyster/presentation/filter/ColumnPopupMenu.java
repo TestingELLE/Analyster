@@ -34,8 +34,6 @@ public class ColumnPopupMenu extends JPopupMenu{
     // attributes
     private CheckBoxList checkBoxList;
     private TableFilter filter;
-    //private ArrayList<JCheckBox> checkBoxItems; // items in checklist
-    private Map<Integer,ArrayList<JCheckBox>> distinctItems; // distinct items for options
     private Map<Integer,ArrayList<CheckBoxItem>> checkBoxItems; // distinct items for options
     private int columnIndex; // selected colunm
     
@@ -52,14 +50,7 @@ public class ColumnPopupMenu extends JPopupMenu{
         initComponents();
         this.filter = filter;
         
-        // initialize distinctItems
-        distinctItems = new HashMap<>(); 
-        for(int i = 0; i < filter.getTable().getColumnCount(); i++){
-            distinctItems.put(i, new ArrayList<>());
-        }
-        
-        // load all distinct items
-        //loadAllDistinctItems();
+        // load all check box items
         loadAllCheckBoxItems();
         
         // initialize analyster and tabs 
@@ -186,11 +177,15 @@ public class ColumnPopupMenu extends JPopupMenu{
             return;
         }
 
-        setColumnIndex(vColumnIndex);
-        loadList(vColumnIndex);
-        
-        // show pop-up
-        this.show(header, headerRect.x, header.getHeight());
+        // we do not include the pop up for the primary key column (ID)
+        // it is not used to filter
+        if(vColumnIndex != 0){
+            setColumnIndex(vColumnIndex);
+            loadList(vColumnIndex);
+
+            // show pop-up
+            this.show(header, headerRect.x, header.getHeight());
+        }
     }
     
     /**
@@ -230,53 +225,7 @@ public class ColumnPopupMenu extends JPopupMenu{
     }
     
     /**
-     * loadDistinctItems
-     * This is to load all of the distinct options to initialize or when
-     * needed to refresh the list. Database change or refresh for example.
-     */
-    public void loadAllDistinctItems(){
-        
-        
-        // this is just items to search for
-        // we decided to cap long values - notes for example
-        int cap = 20;       // cap the String length of list options
-        String value = "";  // store current object string value
-
-        // for every column
-        for(int col = 0; col < filter.getTable().getColumnCount(); col++){
-            
-            ArrayList<Object> filterItems = new ArrayList<>(filter.getFilterItems().get(col));
-            ArrayList<String> cappedItems = new ArrayList<>();
-            
-            // add distinct items
-            for(Object fItem: filterItems){
-                
-                // cap the String length of list options
-                // causing errors
-                if(fItem.toString().length() > cap){
-                    value = fItem.toString().substring(0, cap);
-                }
-                else{
-                    value = fItem.toString();
-                }
-                
-                // use capped items array to store new disctinct capped items
-                if(cappedItems.isEmpty()){
-                    cappedItems.add(value);    // add first item for comparison
-                    distinctItems.get(col).add(new JCheckBox(value));
-                }
-                else{
-                    if(!cappedItems.contains(value)){
-                        distinctItems.get(col).add(new JCheckBox(value));
-                    }
-                }
-            }
-            
-        }
-    }
-    
-    /**
-     * loadAllDistinctItemsNew
+     * loadAllCheckBoxItems
      */
     public void loadAllCheckBoxItems(){
         
@@ -292,8 +241,8 @@ public class ColumnPopupMenu extends JPopupMenu{
         // initialize checkBoxItems
         checkBoxItems = new HashMap<>(); 
         
-        // for every column
-        for(col = 0; col < filter.getTable().getColumnCount(); col++){
+        // check every column except first because it is the primary key and not used to filter
+        for(col = 1; col < filter.getTable().getColumnCount(); col++){
             
             // get disctinct items
             ArrayList<Object> filterItems = new ArrayList<>(filter.getFilterItems().get(col));
@@ -422,22 +371,6 @@ public class ColumnPopupMenu extends JPopupMenu{
      */
     public void setCheckBoxItems(Map<Integer,ArrayList<CheckBoxItem>> checkBoxItems) {
         this.checkBoxItems = checkBoxItems;
-    }
-
-    /**
-     * getDistinctItems
-     * @return 
-     */
-    public Map<Integer, ArrayList<JCheckBox>> getDistinctItems() {
-        return distinctItems;
-    }
-
-    /**
-     * setDistinctItems
-     * @param distinctItems 
-     */
-    public void setDistinctItems(Map<Integer, ArrayList<JCheckBox>> distinctItems) {
-        this.distinctItems = distinctItems;
     }
 
     /**

@@ -390,7 +390,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         int numColsfiltered = filterItems.size();     // number of cols filtered
         int itemsFound = 0;                           // items found must match the total columns filtered
         
-        // check every column
+        // check every column 
         for( int col = 0; col < model.getColumnCount(); col++ ) {
 
             if ( filterItems.get(col).isEmpty() ){
