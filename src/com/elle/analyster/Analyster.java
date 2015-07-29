@@ -1563,17 +1563,6 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
     /**
-     * sqlQuery
-     * this returns an sql query to retrieve all the data for that table
-     * @param tableName
-     * @return 
-     */
-    public String sqlQuery(String tableName) { //Creat Query to select * from DB.
-        String SqlQuery = "SELECT * FROM " + tableName + " ORDER BY symbol ASC";
-        return SqlQuery;
-    }
-
-    /**
      * tableReload
      * This creates a new model and adds it to the table
      * @param table
@@ -1696,11 +1685,15 @@ public class Analyster extends JFrame implements ITableConstants{
     /**
      * updateTable
      * Updates database with edited data
+     * This is called from batch edit & uploadChanges
      * @param table
      * @param modifiedDataList 
      */
     private void updateTable(JTable table, List<ModifiedData> modifiedDataList) {
-        table.getModel().addTableModelListener(table);
+        
+        // should probably not be here
+        // this method is to update the database, that is all it should do.
+        table.getModel().addTableModelListener(table); 
         
         //String uploadQuery = uploadRecord(table, modifiedDataList);
         int id, col;
@@ -1731,8 +1724,6 @@ public class Analyster extends JFrame implements ITableConstants{
                 logWindow.sendMessages(e.getSQLState() + "\n");
             }
         }
-
-        loadTableWithFilter();   // Reload with table filter
 
         JOptionPane.showMessageDialog(this, "Edits uploaded!");
         
@@ -1997,8 +1988,9 @@ public class Analyster extends JFrame implements ITableConstants{
      * @return
      * @throws SQLException 
      */
-    public String connection(String sql, JTable table) throws SQLException {
+    public String connection(JTable table) throws SQLException {
 
+        String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
         Vector data = new Vector();
         Vector columnNames = new Vector();
         int columns;
