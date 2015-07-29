@@ -1695,22 +1695,47 @@ public class Analyster extends JFrame implements ITableConstants{
 
     /**
      * updateTable
+     * Updates database with edited data
      * @param table
      * @param modifiedDataList 
      */
     private void updateTable(JTable table, List<ModifiedData> modifiedDataList) {
         table.getModel().addTableModelListener(table);
-        try {
-            String uploadQuery = uploadRecord(table, modifiedDataList);
-            loadTableWithFilter();
+        
+        //String uploadQuery = uploadRecord(table, modifiedDataList);
+        int id, col;
+        Object value;
+        String sqlChange = null;
 
-            JOptionPane.showMessageDialog(this, "Edits uploaded!");
-            logWindow.sendMessages(uploadQuery);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Upload failed!");
-            logWindow.sendMessages(e.getMessage());
-            logWindow.sendMessages(e.getSQLState() + "\n");
+        for (ModifiedData modifiedData : modifiedDataList) {
+            String tableName = modifiedData.getTableName();
+            id = modifiedData.getId();
+            col = modifiedData.getColumnIndex();
+            value = modifiedData.getValueModified();
+            try {
+
+                if ("".equals(value)) {
+                    value = null;
+                    sqlChange = "UPDATE " + tableName + " SET " + table.getColumnName(col)
+                            + " = " + value + " WHERE ID = " + id + ";";
+                } else {
+                    sqlChange = "UPDATE " + tableName + " SET " + table.getColumnName(col)
+                            + " = '" + value + "' WHERE ID = " + id + ";";
+                }
+                System.out.println(sqlChange);
+                statement.executeUpdate(sqlChange);
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Upload failed!");
+                logWindow.sendMessages(e.getMessage());
+                logWindow.sendMessages(e.getSQLState() + "\n");
+            }
         }
+
+        loadTableWithFilter();   // Reload with table filter
+
+        JOptionPane.showMessageDialog(this, "Edits uploaded!");
+        
     }
 
     /**
@@ -2010,45 +2035,6 @@ public class Analyster extends JFrame implements ITableConstants{
         System.out.println("Table added succesfully");
 
         return null;
-    }
-    
-    /**
-     * uploadRecord
-     * @param table
-     * @param modifiedDataList
-     * @return
-     * @throws SQLException 
-     */
-    public String uploadRecord(JTable table, List<ModifiedData> modifiedDataList) throws SQLException {
-        int id, col;
-        Object value;
-        String sqlChange = null;
-
-        for (ModifiedData modifiedData : modifiedDataList) {
-            String tableName = modifiedData.getTableName();
-            id = modifiedData.getId();
-            col = modifiedData.getColumnIndex();
-            value = modifiedData.getValueModified();
-            try {
-
-                if ("".equals(value)) {
-                    value = null;
-                    sqlChange = "UPDATE " + tableName + " SET " + table.getColumnName(col)
-                            + " = " + value + " WHERE ID = " + id + ";";
-                } else {
-                    sqlChange = "UPDATE " + tableName + " SET " + table.getColumnName(col)
-                            + " = '" + value + "' WHERE ID = " + id + ";";
-                }
-                System.out.println(sqlChange);
-                statement.executeUpdate(sqlChange);
-                table.setAutoCreateRowSorter(true);
-
-            } catch (SQLException ex) {
-                System.out.println("Error: ");
-                ex.printStackTrace();
-            }
-        }
-        return sqlChange;
     }
     
     // @formatter:off
