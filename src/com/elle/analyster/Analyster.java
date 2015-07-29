@@ -53,6 +53,9 @@ public class Analyster extends JFrame implements ITableConstants{
     private BatchEditWindow batchEditWindow;
     private EditDatabaseWindow editDatabaseWindow;
     
+    // ctrl key for mac
+    private boolean ctrlPressed;
+    
 
     /**
      * CONSTRUCTOR
@@ -70,7 +73,8 @@ public class Analyster extends JFrame implements ITableConstants{
         instance = this;                         // this is used to call this instance of Analyster 
         modifiedDataList = new ArrayList<>();    // record the locations of changed cell
         logWindow = new LogWindow(); 
-        
+        ctrlPressed = false;                     // is the ctrl button pressed
+                                                 // this is used for mac ctrl-click
         // initialize tabs
         tabs = new HashMap();
         
@@ -1364,41 +1368,35 @@ public class Analyster extends JFrame implements ITableConstants{
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     
-                    // Left mouse clicks
-                    if (SwingUtilities.isLeftMouseButton(e)){
-                        if (e.getClickCount() == 2) {
-                            clearFilterDoubleClick(e, table);
-                        } 
-//                        else if (e.getClickCount() == 1) {
-//                            // why is nothing here?
-//                            // Shouldnt this order the columns?
-//                            // or perhaps it is already a built in feature to the JTable?
-                              // I commented it out for now because it might cause issues with the sorter
-//                        }
-                    }
-                    
-                    // Right mouse clicks
-                    else if(SwingUtilities.isRightMouseButton(e) || e.getButton() == MouseEvent.BUTTON3){
-                        if (e.getClickCount() == 1){
-                            
-                            // this calls the column popup menu
-                            tabs.get(table.getName()) 
-                                    .getColumnPopupMenu().showPopupMenu(e);
-                        }
-                    }
-                    
+                    if (e.getClickCount() == 2) {
+                        clearFilterDoubleClick(e, table);
+                    } 
+
+                    // this is for the mac ctrl-click and two button mouse don't need ctrl
+                    else if ((e.getClickCount() == 1 && ctrlPressed) || (SwingUtilities.isRightMouseButton(e))) {
+
+                        // this calls the column popup menu
+                        tabs.get(table.getName()) 
+                                .getColumnPopupMenu().showPopupMenu(e);
+
+                    } 
                 }
             });
         }
         
         // add keyListener to the table header
-        // this is for mac ctrl buttion down, not sure if needed yet
-//        header.addKeyListener(new KeyAdapter() {
-//            @Override
-//            public void keyPressed(KeyEvent ke) {
-//                
-//            }
-//        });
+        // this is for mac ctrl button down
+        header.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent ke) {
+                ctrlPressed = ke.isControlDown();
+            }
+            
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                ctrlPressed = ke.isControlDown();
+            }
+        });
         
         // add mouselistener to the table
         table.addMouseListener(
