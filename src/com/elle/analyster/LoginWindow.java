@@ -396,24 +396,6 @@ public class LoginWindow extends JFrame {
             statement = connection.createStatement();
             System.out.println("Connection successfully");
             
-            // create an Analyster object
-            // it takes the statement that can execute sql queries with the DB
-            analyster = new Analyster(statement);
-            
-            // pass the log window to analyster
-            analyster.setLogWindow(logWindow);
-            
-            // pass the database to Analyster
-            // it is used in sql statements
-            analyster.setDatabase(database);
-            
-            // show Analyster
-            analyster.setLocationRelativeTo(this);
-            analyster.setVisible(true);
-            
-            // terminate this object
-            this.dispose(); // returns used resources
-            
         } catch (Exception ex) {
 
             JOptionPane.showMessageDialog(null,
@@ -425,6 +407,24 @@ public class LoginWindow extends JFrame {
             logWindow.sendMessages(ex.getMessage());
             jPassword.setText("");
         }
+        
+        // create an Analyster object
+        // it takes the statement that can execute sql queries with the DB
+        analyster = new Analyster(statement);
+
+        // pass the log window to analyster
+        analyster.setLogWindow(logWindow);
+
+        // pass the database to Analyster
+        // it is used in sql statements
+        analyster.setDatabase(database);
+
+        // show Analyster
+        analyster.setLocationRelativeTo(this);
+        analyster.setVisible(true);
+
+        // terminate this object
+        this.dispose(); // returns used resources
 
     }
     

@@ -179,7 +179,7 @@ public class ColumnPopupMenu extends JPopupMenu{
 
         // we do not include the pop up for the primary key column (ID)
         // it is not used to filter
-        if(vColumnIndex != 0){
+        if(vColumnIndex > 0){
             setColumnIndex(vColumnIndex);
             loadList(vColumnIndex);
 
@@ -208,16 +208,16 @@ public class ColumnPopupMenu extends JPopupMenu{
         
         // get filtered items
         ArrayList<Object> fItems = filter.getFilterItems().get(col);
-        ArrayList<CheckBoxItem> dItems = checkBoxItems.get(col);
+        ArrayList<CheckBoxItem> cbItems = checkBoxItems.get(col);
         
         // reset all checks to false
         removeAllChecks(col);
         
         // apply checks to filtered items
-        for(CheckBoxItem dItem: dItems){
+        for(CheckBoxItem cbItem: cbItems){
             for(Object fItem: fItems){
-                if(dItem.getDistinctItems().contains(fItem.toString())){
-                    dItem.setSelected(true);
+                if(cbItem.getDistinctItems().contains(fItem.toString())){
+                    cbItem.setSelected(true);
                 }
             }
         }
@@ -226,6 +226,7 @@ public class ColumnPopupMenu extends JPopupMenu{
     
     /**
      * loadAllCheckBoxItems
+     * This is used to load all column data.
      */
     public void loadAllCheckBoxItems(){
         
@@ -245,7 +246,7 @@ public class ColumnPopupMenu extends JPopupMenu{
         for(col = 1; col < filter.getTable().getColumnCount(); col++){
             
             // get disctinct items
-            ArrayList<Object> filterItems = new ArrayList<>(filter.getFilterItems().get(col));
+            ArrayList<Object> filterItems = new ArrayList<>(getDistinctItems(col));
             
             // create an array list for the capped values
             ArrayList<String> cappedItems = new ArrayList<>();
@@ -272,6 +273,11 @@ public class ColumnPopupMenu extends JPopupMenu{
             
             // new checkbox item ArrayList
             checkBoxItems.put(col, new ArrayList<>());
+            
+            // add the (All) selection
+            CheckBoxItem checkAll = new CheckBoxItem("(All)");
+            checkAll.getDistinctItems().add("(All)");
+            checkBoxItems.get(col).add(checkAll);
             
             // fill the array with checkbox items
             for(String cappedItem: cappedItems){
@@ -328,6 +334,43 @@ public class ColumnPopupMenu extends JPopupMenu{
                 }
             }
         }
+    }
+    
+    /**
+     * loadCappedItems
+     * This caps the lengths of the selections 
+     * and loads them up on the arrayList for that column.
+     * @param col    // column index
+     * @param cap    // cap length for strings
+     */
+    public void loadCappedItems(int col, int cap){
+        // TODO
+    }
+    
+    /**
+     * getDistinctItems
+     * This returns an array of all the distinctItems in a column
+     * @param col
+     * @return 
+     */
+    public ArrayList<String> getDistinctItems(int col){
+        
+        ArrayList<String> distinctItems = new ArrayList<>();
+        Object cellValue = null;
+        
+        for(int row = 0; row < filter.getTable().getModel().getRowCount(); row++){
+            
+            cellValue = filter.getTable().getModel().getValueAt(row, col);
+            
+            if(cellValue == null){
+                cellValue = "";
+            }
+
+            if(!distinctItems.contains(cellValue.toString())){
+                distinctItems.add(cellValue.toString());
+            }
+        }
+        return distinctItems;
     }
 
     /**

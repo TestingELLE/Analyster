@@ -234,8 +234,11 @@ public class AddRecordsWindow extends JFrame {
                         case "analyst":
                             break;
                         case "priority":
-                            errorMsg = "Priority must be an Integer";
-                            int integer = Integer.parseInt(cellValue.toString());
+                            if(cellValue != null)
+                                if(!cellValue.toString().equals("")){
+                                    errorMsg = "Priority must be an Integer";
+                                    int integer = Integer.parseInt(cellValue.toString());
+                                }
                             break;
                         case "dateAssigned":
                             if(cellValue != null)
@@ -340,6 +343,9 @@ public class AddRecordsWindow extends JFrame {
             // update table and records label
             String selectedTab = analyster.getSelectedTab();          // get selected tab
             analyster.loadTable(tabs.get(selectedTab).getTable());    // load table data from database
+            tabs.get(selectedTab).getFilter().applyFilter();                    // apply filter
+            tabs.get(selectedTab).getFilter().applyColorHeaders();              // apply color headers
+            tabs.get(selectedTab).getColumnPopupMenu().loadAllCheckBoxItems();  // refresh the data for the column pop up
             analyster.setLastUpdateTime();                            // set the last update time from database
             tabs.get(selectedTab).addToTotalRowCount(numRowsAdded);   // add the number of records added to the total records count
             String records = tabs.get(selectedTab).getRecordsLabel(); // store the records label string

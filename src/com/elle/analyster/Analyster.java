@@ -859,15 +859,12 @@ public class Analyster extends JFrame implements ITableConstants{
             }
     }
     
+    // not sure what this is
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
 
+        loadTable(assignmentTable);
+        loadTable(reportTable);
 
-        try{
-            connection(assignmentTable);
-            connection(reportTable);
-        } catch (SQLException ex) {
-            logWindow.sendMessages(ex.getMessage());
-        }
 
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
@@ -891,7 +888,7 @@ public class Analyster extends JFrame implements ITableConstants{
         
         updateTable(tabs.get(selectedTab).getTable(), modifiedDataList);
 
-        loadTableWithFilter(); // refresh table
+//        loadTableWithFilter(); // refresh table
         
         makeTableEditable(jLabelEdit.getText().equals("OFF")?true:false);
         
@@ -909,7 +906,7 @@ public class Analyster extends JFrame implements ITableConstants{
         String command = jTextAreaSQL.getText().substring(commandStart);  
         if (command.toLowerCase().contains("select")){
             try {
-                connection(command, assignmentTable);
+                executeSQL(command, assignmentTable);
             } catch (SQLException e) {
                 logWindow.sendMessages(e.getMessage());  
             }
@@ -1093,7 +1090,7 @@ public class Analyster extends JFrame implements ITableConstants{
 
         String sqlC = "select A.* from Assignments A left join t_analysts T\n" + "on A.analyst = T.analyst\n" + "where T.active = 1\n" + "order by A.symbol";
         try {
-            connection(sqlC, assignmentTable);
+            executeSQL(sqlC, assignmentTable);
         } catch (SQLException e) {
             logWindow.sendMessages(e.getMessage());  
         }
@@ -1496,7 +1493,7 @@ public class Analyster extends JFrame implements ITableConstants{
                                 break;
                             case 1:
                                 // if Revert, revert changes
-                                loadTableWithFilter(); // reverts the model back
+//                                loadTableWithFilter(); // reverts the model back
                                 makeTableEditable(false); // exit edit mode;
                                 
                                 break;
@@ -1555,7 +1552,7 @@ public class Analyster extends JFrame implements ITableConstants{
     private void clearFilterDoubleClick(MouseEvent e, JTable table) {
         
         int columnIndex = table.getColumnModel().getColumnIndexAtX(e.getX());
-        tabs.get(getSelectedTab()).getFilter().removeFilterItems(columnIndex);
+        tabs.get(getSelectedTab()).getFilter().clearColFilter(columnIndex);
         tabs.get(getSelectedTab()).getFilter().applyFilter();
         labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
     }
@@ -1897,8 +1894,6 @@ public class Analyster extends JFrame implements ITableConstants{
             System.out.println("SQL Error:");
             ex.printStackTrace();
         }
-
-        tableReload(table, data, columnNames);  // Table model (table visualization) set up
         
         EditableTableModel model = new EditableTableModel(data, columnNames);
         TableRowSorter sorter = new TableRowSorter<>(model);
@@ -1915,33 +1910,21 @@ public class Analyster extends JFrame implements ITableConstants{
         
         setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
         
+        // if filter is set then apply it
+        if(tabs.get(getSelectedTab()).getFilter() != null){
+            
+        }
+
+        // this enables or disables the menu components for this tab
+        // shouldn't need to set these here - only on tab change
+        jActivateRecord.setEnabled(tabs.get(table.getName()).isActivateRecordMenuItemEnabled()); 
+        jArchiveRecord.setEnabled(tabs.get(table.getName()).isArchiveRecordMenuItemEnabled()); 
+        
         
         
         System.out.println("Table added succesfully");
         
-        setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
-            
-        // this enables or disables the menu components for this tab
-        jActivateRecord.setEnabled(tabs.get(table.getName()).isActivateRecordMenuItemEnabled()); 
-        jArchiveRecord.setEnabled(tabs.get(table.getName()).isArchiveRecordMenuItemEnabled()); 
-        
         return table;
-    }
-    
-    /**
-     * loadTableWithFilterTest
-     * 
-     */
-    public void loadTableWithFilter(){
-        
-        // refresh table
-        try {
-            connection(sqlQuery(tabs.get(getSelectedTab()).getTableName()), tabs.get(getSelectedTab()).getTable());
-        } catch (SQLException e) {
-            System.out.println("SQL Error:");
-            e.printStackTrace();
-        }
-        
     }
     
     /**
@@ -1980,7 +1963,7 @@ public class Analyster extends JFrame implements ITableConstants{
                 statement.executeUpdate(sqlDelete); 
 
                 // refresh table and retain filters
-                loadTableWithFilter();
+//                loadTableWithFilter();
 
                 // output pop up dialog that a record was deleted 
                 JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");
@@ -2001,15 +1984,15 @@ public class Analyster extends JFrame implements ITableConstants{
     }
     
     /**
-     * executeSQLTextArea
-     * This executes the sql statement in the sql panel text area 
+     * executeSQL
+     * This executes the sql statement
      * and gets the data from the database.
      * @param sql
      * @param table
      * @return
      * @throws SQLException 
      */
-    public String executeSQLTextArea(String sql, JTable table) throws SQLException {
+    public String executeSQL(String sql, JTable table) throws SQLException {
 
         Vector data = new Vector();
         Vector columnNames = new Vector();
@@ -2043,7 +2026,21 @@ public class Analyster extends JFrame implements ITableConstants{
             ex.printStackTrace();
         }
 
-        tableReload(table, data, columnNames);  // Table model (table visualization) set up
+        EditableTableModel model = new EditableTableModel(data, columnNames);
+        TableRowSorter sorter = new TableRowSorter<>(model);
+
+        model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                jTableChanged(e);
+            }
+        });
+
+        table.setModel(model);
+        table.setRowSorter(sorter);
+        
+        setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
+        
         System.out.println("Table added succesfully");
 
         return null;
