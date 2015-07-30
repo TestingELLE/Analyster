@@ -863,10 +863,8 @@ public class Analyster extends JFrame implements ITableConstants{
 
 
         try{
-            String sqlC = "select * from " + ASSIGNMENTS_TABLE_NAME;
-            connection(sqlC, assignmentTable);
-            String sqlD = "select * from " + REPORTS_TABLE_NAME;
-            connection(sqlD, reportTable);
+            connection(assignmentTable);
+            connection(reportTable);
         } catch (SQLException ex) {
             logWindow.sendMessages(ex.getMessage());
         }
@@ -1563,31 +1561,6 @@ public class Analyster extends JFrame implements ITableConstants{
     }
 
     /**
-     * tableReload
-     * This creates a new model and adds it to the table
-     * @param table
-     * @param data
-     * @param columnNames 
-     */
-    public void tableReload(final JTable table, Vector data, Vector columnNames) {
-        
-        EditableTableModel model = new EditableTableModel(data, columnNames);
-        TableRowSorter sorter = new TableRowSorter<>(model);
-
-        model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                jTableChanged(e);
-            }
-        });
-
-        table.setModel(model);
-        table.setRowSorter(sorter);
-        
-        setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
-    }
-
-    /**
      * setColumnFormat
      * sets column format for each table
      * @param width
@@ -1892,14 +1865,60 @@ public class Analyster extends JFrame implements ITableConstants{
        */
     public JTable loadTable(JTable table) {
         
-        // make sure column percents are set in tabs first
-        
+        String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
+        Vector data = new Vector();
+        Vector columnNames = new Vector();
+        int columns;
+
+        ResultSet rs = null;
+        ResultSetMetaData metaData = null;
         try {
-            connection(sqlQuery(table.getName()), table);
-        } catch (SQLException e) {
+            rs = statement.executeQuery(sql);
+            metaData = rs.getMetaData();
+        } catch (Exception ex) {
             System.out.println("SQL Error:");
-            e.printStackTrace();
+            ex.printStackTrace();
         }
+        try {
+            columns = metaData.getColumnCount();
+            for (int i = 1; i <= columns; i++) {
+                columnNames.addElement(metaData.getColumnName(i));
+            }
+            while (rs.next()) {
+                Vector row = new Vector(columns);
+                for (int i = 1; i <= columns; i++) {
+                    row.addElement(rs.getObject(i));
+                }
+                data.addElement(row);
+            }
+            rs.close();
+
+        } catch (SQLException ex) {
+            System.out.println("SQL Error:");
+            ex.printStackTrace();
+        }
+
+        tableReload(table, data, columnNames);  // Table model (table visualization) set up
+        
+        EditableTableModel model = new EditableTableModel(data, columnNames);
+        TableRowSorter sorter = new TableRowSorter<>(model);
+
+        model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                jTableChanged(e);
+            }
+        });
+
+        table.setModel(model);
+        table.setRowSorter(sorter);
+        
+        setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
+        
+        
+        
+        System.out.println("Table added succesfully");
+        
         setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
             
         // this enables or disables the menu components for this tab
@@ -1982,15 +2001,16 @@ public class Analyster extends JFrame implements ITableConstants{
     }
     
     /**
-     * connection
+     * executeSQLTextArea
+     * This executes the sql statement in the sql panel text area 
+     * and gets the data from the database.
      * @param sql
      * @param table
      * @return
      * @throws SQLException 
      */
-    public String connection(JTable table) throws SQLException {
+    public String executeSQLTextArea(String sql, JTable table) throws SQLException {
 
-        String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
         Vector data = new Vector();
         Vector columnNames = new Vector();
         int columns;
