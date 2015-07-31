@@ -1,6 +1,7 @@
 
-package com.elle.analyster;
+package com.elle.analyster.presentation;
 
+import com.elle.analyster.logic.Tab;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -26,7 +27,7 @@ public class AddRecordsWindow extends JFrame {
     private Statement statement;
     
     // components
-    private Analyster analyster;
+    private AnalysterWindow analyster;
     private LogWindow logWindow;
     private DefaultTableModel model;
 
@@ -37,7 +38,7 @@ public class AddRecordsWindow extends JFrame {
         
         // initialize components
         initComponents();
-        analyster = Analyster.getInstance();
+        analyster = AnalysterWindow.getInstance();
         logWindow = analyster.getLogwind();
         tabs = analyster.getTabs();
         statement = analyster.getStatement();

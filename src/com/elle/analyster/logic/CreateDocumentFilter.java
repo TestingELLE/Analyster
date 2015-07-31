@@ -1,4 +1,4 @@
-package com.elle.analyster.presentation.filter;
+package com.elle.analyster.logic;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

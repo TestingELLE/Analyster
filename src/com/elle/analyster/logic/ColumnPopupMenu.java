@@ -1,8 +1,8 @@
 
-package com.elle.analyster.presentation.filter;
+package com.elle.analyster.logic;
 
-import com.elle.analyster.Analyster;
-import com.elle.analyster.Tab;
+import com.elle.analyster.presentation.AnalysterWindow;
+import com.elle.analyster.logic.Tab;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -38,7 +38,7 @@ public class ColumnPopupMenu extends JPopupMenu{
     private int columnIndex; // selected colunm
     
     // for updating the records label when a filter is applied
-    private Analyster analyster;
+    private AnalysterWindow analyster;
     private Map<String,Tab> tabs;
     
     /**
@@ -55,7 +55,7 @@ public class ColumnPopupMenu extends JPopupMenu{
         
         // initialize analyster and tabs 
         // for updating the records label when filter is applied
-        analyster = Analyster.getInstance();
+        analyster = AnalysterWindow.getInstance();
         tabs = analyster.getTabs();
     }
     

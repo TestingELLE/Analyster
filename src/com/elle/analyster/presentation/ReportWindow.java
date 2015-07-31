@@ -1,5 +1,5 @@
 
-package com.elle.analyster;
+package com.elle.analyster.presentation;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -24,18 +24,18 @@ import javax.swing.table.TableColumn;
  *
  * @author Tina
  */
-public class ReportWin extends JDialog {
+public class ReportWindow extends JDialog {
 
     /**
      * Creates new form ReportWin
      */
-    public ReportWin(java.awt.Frame parent, boolean modal) {
+    public ReportWindow(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         connection(sqlC);
     }
 
-    public ReportWin() {
+    public ReportWindow() {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -49,20 +49,21 @@ public class ReportWin extends JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ReportWin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ReportWin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ReportWin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ReportWin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         // Create and display the dialog
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ReportWin dialog = new ReportWin(new JFrame(), true);
+                ReportWindow dialog = new ReportWindow(new JFrame(), true);
                 /*dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -96,7 +97,6 @@ public class ReportWin extends JDialog {
         table = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(700, 550));
         setMinimumSize(new java.awt.Dimension(550, 200));
 
         addNew.setText("New");
@@ -503,20 +503,20 @@ public class ReportWin extends JDialog {
      }
      }
      } catch (ClassNotFoundException ex) {
-     java.util.logging.Logger.getLogger(ReportWin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+     java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
      } catch (InstantiationException ex) {
-     java.util.logging.Logger.getLogger(ReportWin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+     java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
      } catch (IllegalAccessException ex) {
-     java.util.logging.Logger.getLogger(ReportWin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+     java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
      } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-     java.util.logging.Logger.getLogger(ReportWin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+     java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
      }
      //</editor-fold>
 
      // Create and display the dialog
      java.awt.EventQueue.invokeLater(new Runnable() {
      public void run() {
-     ReportWin dialog = new ReportWin(new javax.swing.JFrame(), true);
+     ReportWindow dialog = new ReportWindow(new javax.swing.JFrame(), true);
      dialog.addWindowListener(new java.awt.event.WindowAdapter() {
      @Override
      public void windowClosing(java.awt.event.WindowEvent e) {

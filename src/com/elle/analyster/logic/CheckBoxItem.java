@@ -1,5 +1,5 @@
 
-package com.elle.analyster.presentation.filter;
+package com.elle.analyster.logic;
 
 import java.util.ArrayList;
 import javax.swing.JCheckBox;

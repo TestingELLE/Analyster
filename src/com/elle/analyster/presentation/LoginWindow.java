@@ -7,7 +7,7 @@
  * @since June 30, 2015
  * @version 0.6.5b
  */
-package com.elle.analyster;
+package com.elle.analyster.presentation;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -34,7 +34,7 @@ public class LoginWindow extends JFrame {
     private Statement statement;     // statement object used to execute sql queries
     
     // class component instances
-    private Analyster analyster;
+    private AnalysterWindow analyster;
     private EditDatabaseWindow editDatabaseList;
     private LogWindow logWindow;
     
@@ -410,7 +410,7 @@ public class LoginWindow extends JFrame {
         
         // create an Analyster object
         // it takes the statement that can execute sql queries with the DB
-        analyster = new Analyster(statement);
+        analyster = new AnalysterWindow(statement);
 
         // pass the log window to analyster
         analyster.setLogWindow(logWindow);

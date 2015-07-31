@@ -20,7 +20,7 @@
         <zipfileset src="${dist.jar}" excludes="META-INF/*" />
         <zipfileset src="lib/mysql-connector-java-5.1.23-bin.jar" excludes="META-INF/*" />
         <manifest>
-            <attribute name="Main-Class" value="com.elle.analyster.Main"/>
+            <attribute name="Main-Class" value="com.elle.analyster.Analyster"/>
         </manifest>
       </jar>
       <delete dir="dist"/>

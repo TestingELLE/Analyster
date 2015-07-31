@@ -1,4 +1,4 @@
-package com.elle.analyster.domain;
+package com.elle.analyster.database;
 
 /**
  * Created with IntelliJ IDEA.

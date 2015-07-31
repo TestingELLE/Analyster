@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.elle.analyster;
+package com.elle.analyster.presentation;
 
 import javax.swing.DefaultComboBoxModel;
 
@@ -18,7 +18,7 @@ public class BatchEditWindow extends javax.swing.JFrame {
      * @param selectedTable
      * @param a
      */
-    public BatchEditWindow(String selectedTable, Analyster a) {
+    public BatchEditWindow(String selectedTable, AnalysterWindow a) {
         initComponents();
         analyster = a;
         // set the interface to the middle of the window
@@ -215,7 +215,7 @@ public class BatchEditWindow extends javax.swing.JFrame {
 //        });
 //    }
     
-    Analyster analyster;
+    AnalysterWindow analyster;
     
     String newString;
     String category;

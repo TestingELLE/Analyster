@@ -1,8 +1,7 @@
 
-package com.elle.analyster;
+package com.elle.analyster.logic;
 
-import com.elle.analyster.presentation.filter.ColumnPopupMenu;
-import com.elle.analyster.presentation.filter.TableFilter;
+import com.elle.analyster.presentation.AnalysterWindow;
 import javax.swing.JTable;
 
 /**
@@ -236,7 +235,7 @@ public class Tab implements ITableConstants{
                 } catch (NoSuchFieldException ex) {
                     ex.printStackTrace();
                     // post to log.txt
-                    Analyster.getInstance().getLogwind().sendMessages(ex.getMessage());
+                    AnalysterWindow.getInstance().getLogwind().sendMessages(ex.getMessage());
                 }
         
                 break;

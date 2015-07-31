@@ -1,5 +1,5 @@
 
-package com.elle.analyster;
+package com.elle.analyster.logic;
 
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
