@@ -24,10 +24,10 @@ import java.util.List;
 public class LoginWindow extends JFrame {
 
     // class attributes 
-    private String selectedServer;          // selected server
-    private String selectedDB;              // selected selectedDB
-    private String userName;                // userName to login 
-    private String userPassword;                // userPassword to login
+    private String selectedServer;              // selected server
+    private String selectedDB;                  // selected database
+    private String userName;                    // user name to login 
+    private String userPassword;                // user password to login
     
     // class component instances
     private AnalysterWindow analyster;
@@ -314,9 +314,8 @@ public class LoginWindow extends JFrame {
 
     /**
      *  Loads the names of the databases from a text file
- 
-  this is if the actual selectedDB list is edited in EditDatabaseWindow 
- then it updates the combobox with the new values in LoginWindow.
+     * this is if the actual selectedDB list is edited in EditDatabaseWindow
+     * then it updates the combobox with the new values in LoginWindow.
      */
     public void loadDBList() {
         String temp = null;
@@ -360,6 +359,9 @@ public class LoginWindow extends JFrame {
 
     }
 
+    /**
+     * login
+     */
     public void login() {
         
         // get user data

@@ -11,6 +11,8 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 /**
  *
@@ -32,7 +34,7 @@ public class AddRecordsWindow extends JFrame {
     private DefaultTableModel model;
 
     /**
-     * Creates new form ReportWin <-- does it really?
+     * Creates new form AddRecordsWindow
      */
     public AddRecordsWindow() {
         
@@ -458,6 +460,15 @@ public class AddRecordsWindow extends JFrame {
         
         // add the table model to the table
         table.setModel(model);
+        
+        // add tableModelListener
+        table.getModel().addTableModelListener(new TableModelListener() {
+
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                validateCell(e);
+            }
+        });
     }
     
     /**
@@ -477,6 +488,82 @@ public class AddRecordsWindow extends JFrame {
         
         // add the table model to the table
         table.setModel(model);
+        
+        // add tableModelListener
+        table.getModel().addTableModelListener(new TableModelListener() {
+
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                validateCell(e);
+            }
+        });
+    }
+    
+    /**
+     * validateCell
+     * @param e 
+     */
+    public void validateCell(TableModelEvent e){
+        
+        String colName = table.getColumnName(e.getColumn()); // column name
+        int row = e.getFirstRow();                           // row index
+        int col = e.getColumn();                             // column index
+        Object cellValue = table.getValueAt(row, col);       // store cell value
+        String errorMsg = "Error with " + colName 
+                + " in row " + (row + 1) + ".\n";            // error message
+
+            switch(colName){
+            case "symbol":
+                if(cellValue == null || cellValue.toString().equals("")){
+                    errorMsg += "Symbol cannot be null";
+                    JOptionPane.showMessageDialog(table, errorMsg);
+                }
+                break;
+            case "analyst":
+                break;
+            case "priority":
+                if(cellValue != null)
+                    if(!cellValue.toString().matches("[1-5]{1}")){
+                        errorMsg += "Priority must be an Integer (1-5)";
+                        JOptionPane.showMessageDialog(table, errorMsg);
+                        
+                    }
+                break;
+            case "dateAssigned":
+                if(cellValue != null)
+                    if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                        errorMsg += "Date format not correct: YYYY-MM-DD";
+                        JOptionPane.showMessageDialog(table, errorMsg);
+                    }
+                break;
+            case "dateDone":
+                if(cellValue != null)
+                    if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                        errorMsg += "Date format not correct: YYYY-MM-DD";
+                        JOptionPane.showMessageDialog(table, errorMsg);
+                    }
+                break;
+            case "notes":
+                break;
+            case "author":
+                break;
+            case "analysisDate":
+                if(cellValue != null)
+                    if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                        errorMsg += "Date format not correct: YYYY-MM-DD";
+                        JOptionPane.showMessageDialog(table, errorMsg);
+                    }
+                break;
+            case "path":
+                break;
+            case "document":
+                break;
+            case "notesL":
+                break;
+            default:
+                break;
+
+        }// end switch
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
