@@ -51,7 +51,7 @@ public class ColumnPopupMenu extends JPopupMenu{
         this.filter = filter;
         
         // load all check box items
-        loadAllCheckBoxItems();
+        //loadAllCheckBoxItems();
         
         // initialize analyster and tabs 
         // for updating the records label when filter is applied

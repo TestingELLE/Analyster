@@ -1,6 +1,7 @@
 
 package com.elle.analyster.presentation.filter;
 
+import com.elle.analyster.EditableTableModel;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,23 +39,33 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         this.table = table;
         
         // set table sorter
-        sorter = new TableRowSorter<TableModel>(table.getModel());
-        table.setRowSorter(sorter);
+//        sorter = new TableRowSorter<TableModel>(table.getModel());
+//        table.setRowSorter(sorter);
         
-        // initialize filterItems
-        filterItems = new HashMap<>(); 
-        for(int i = 0; i < table.getColumnCount(); i++){
-            filterItems.put(i, new ArrayList<>());
-        }
+        
         
         // initialize the color for the table header when it is filtering
         color = Color.GREEN; // default color is green
         
         isFiltering = false;
         
-        applyFilter(); // apply filter
+//        applyFilter(); // apply filter
     }
     
+    /**
+     * initFilterItems
+     * Initilizes the filter item arrays.
+     * This should be called once at the startup of the application
+     * and after a table model has been set to the table.
+     */
+    public void initFilterItems(){
+        
+        // initialize filterItems
+        filterItems = new HashMap<>(); 
+        for(int i = 0; i < table.getColumnCount(); i++){
+            filterItems.put(i, new ArrayList<>());
+        }
+    }
     /**
      * addDistinctItem
      * @param col
@@ -139,6 +150,16 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         sorter = new TableRowSorter<TableModel>(table.getModel());
         table.setRowSorter(sorter);
         sorter.setRowFilter(this);
+    }
+    
+    /**
+     * applyFilter
+     */
+    public void applyFilter(EditableTableModel model){
+        
+        sorter = new TableRowSorter<TableModel>(model);
+        sorter.setRowFilter(this);
+        table.setRowSorter(sorter);
     }
     
     /**
@@ -270,7 +291,6 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     public void clearColFilter(int columnIndex){
         removeFilterItems(columnIndex);    // remove the filters for the column
         removeColorHeader(columnIndex);    // remove the header highlight
-        isFiltering = false;               // no filters are applied 
     }
     
     /**

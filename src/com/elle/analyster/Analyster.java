@@ -145,12 +145,6 @@ public class Analyster extends JFrame implements ITableConstants{
         btnBatchEdit.setVisible(true);
         jTextAreaSQL.setVisible(true);
         
-        // load data from database to tables
-        loadTables(tabs);
-            
-        // set initial record counts of now full tables
-        initTotalRowCounts(tabs);
-        
         // add filters for each table
         // must be before setting ColumnPopupMenu because this is its parameter
         tabs.get(ASSIGNMENTS_TABLE_NAME).setFilter(new TableFilter(assignmentTable));
@@ -169,6 +163,14 @@ public class Analyster extends JFrame implements ITableConstants{
         
         // set the mouseListeners and KeyListeneres to the tables
         setTerminalsFunction(tabs);
+        
+        // load data from database to tables
+        loadTables(tabs);
+            
+        // set initial record counts of now full tables
+        // this should only need to be called once at start up of Analyster.
+        // total counts are removed or added in the Tab class
+        initTotalRowCounts(tabs);
         
         // set title of window to Analyster
         this.setTitle("Analyster");
@@ -882,13 +884,9 @@ public class Analyster extends JFrame implements ITableConstants{
      */
     public void uploadChanges(){
         
-         // upload two tables separately
-        
-        String selectedTab = getSelectedTab();
-        
-        updateTable(tabs.get(selectedTab).getTable(), modifiedDataList);
+        updateTable(tabs.get(getSelectedTab()).getTable(), modifiedDataList);
 
-//        loadTableWithFilter(); // refresh table
+        loadTable(tabs.get(getSelectedTab()).getTable()); // refresh table
         
         makeTableEditable(jLabelEdit.getText().equals("OFF")?true:false);
         
@@ -1111,10 +1109,12 @@ public class Analyster extends JFrame implements ITableConstants{
         // clear all filters
         tabs.get(getSelectedTab()).getFilter().clearAllFilters();
         tabs.get(getSelectedTab()).getFilter().applyFilter();
+        tabs.get(getSelectedTab()).getFilter().applyColorHeaders();
 
         // set label record information
         labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
                 
+        // clear modified data
         modifiedDataList.clear();
 
     }//GEN-LAST:event_btnClearAllFilterActionPerformed
@@ -1125,6 +1125,7 @@ public class Analyster extends JFrame implements ITableConstants{
      */
     private void jMenuItemOthersLoadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOthersLoadDataActionPerformed
 
+        // reload table from database
         loadTable(tabs.get(getSelectedTab()).getTable());
         
         // set label record information
@@ -1493,7 +1494,7 @@ public class Analyster extends JFrame implements ITableConstants{
                                 break;
                             case 1:
                                 // if Revert, revert changes
-//                                loadTableWithFilter(); // reverts the model back
+                                loadTable(table); // reverts the model back
                                 makeTableEditable(false); // exit edit mode;
                                 
                                 break;
@@ -1649,6 +1650,9 @@ public class Analyster extends JFrame implements ITableConstants{
                 modifiedDataBatchEdit.add(modifiedData);
             }
             updateTable(table, modifiedDataBatchEdit);
+            
+            // reload table 
+            loadTable(table);
 
     }
 
@@ -1896,7 +1900,6 @@ public class Analyster extends JFrame implements ITableConstants{
         }
         
         EditableTableModel model = new EditableTableModel(data, columnNames);
-        TableRowSorter sorter = new TableRowSorter<>(model);
 
         model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
             @Override
@@ -1905,24 +1908,30 @@ public class Analyster extends JFrame implements ITableConstants{
             }
         });
 
+        // this has to be set here or else I get errors
+        // I tried passing the model to the filter and setting it there
+        // but it caused errors
         table.setModel(model);
-        table.setRowSorter(sorter);
         
-        setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
-        
-        // if filter is set then apply it
-        if(tabs.get(getSelectedTab()).getFilter() != null){
-            
+        // check that the filter items are initialized
+        if(tabs.get(table.getName()).getFilter().getFilterItems() == null){
+            tabs.get(table.getName()).getFilter().initFilterItems();
         }
+        
+        // apply filter
+        tabs.get(table.getName()).getFilter().applyFilter();
+        tabs.get(table.getName()).getFilter().applyColorHeaders();
+        
+        // load all checkbox items for the checkbox column pop up filter
+        tabs.get(table.getName()).getColumnPopupMenu().loadAllCheckBoxItems();
+        
+        // set column format
+        setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
 
-        // this enables or disables the menu components for this tab
-        // shouldn't need to set these here - only on tab change
-        jActivateRecord.setEnabled(tabs.get(table.getName()).isActivateRecordMenuItemEnabled()); 
-        jArchiveRecord.setEnabled(tabs.get(table.getName()).isArchiveRecordMenuItemEnabled()); 
+        // update last time the table was updated
+        setLastUpdateTime();
         
-        
-        
-        System.out.println("Table added succesfully");
+        System.out.println("Table loaded succesfully");
         
         return table;
     }
@@ -1963,7 +1972,7 @@ public class Analyster extends JFrame implements ITableConstants{
                 statement.executeUpdate(sqlDelete); 
 
                 // refresh table and retain filters
-//                loadTableWithFilter();
+                loadTable(tabs.get(getSelectedTab()).getTable());
 
                 // output pop up dialog that a record was deleted 
                 JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");
