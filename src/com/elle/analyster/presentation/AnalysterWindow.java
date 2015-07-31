@@ -1,5 +1,6 @@
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.CreateDocumentFilter;
 import com.elle.analyster.logic.EditableTableModel;
@@ -44,7 +45,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     // attributes
     private Map<String,Tab> tabs; // stores individual tab information
     private List<ModifiedData> modifiedDataList;    // record the locations of changed cell
-    private Statement statement;
+    private static Statement statement;
     private String database;
     
     // components
@@ -63,7 +64,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     /**
      * CONSTRUCTOR
      */
-    public AnalysterWindow(Statement statement) {
+    public AnalysterWindow() {
         
         /**
          * Note: initComponents() executes the tabpaneChanged method.
@@ -72,7 +73,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         // the statement is used for sql statements with the database connection
         // the statement is created in LoginWindow and passed to Analyster.
-        this.statement = statement;
+        statement = DBConnection.statement;
         instance = this;                         // this is used to call this instance of Analyster 
         modifiedDataList = new ArrayList<>();    // record the locations of changed cell
         logWindow = new LogWindow(); 

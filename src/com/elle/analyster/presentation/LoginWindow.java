@@ -9,15 +9,14 @@
  */
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.database.DBConnection;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +24,10 @@ import java.util.List;
 public class LoginWindow extends JFrame {
 
     // class attributes 
-    private String server;           // server url
-    private String database;         // database name
-    //private String db_url;           // server url + database name
-    private String username;         // username to login 
-    private String password;         // password to login
-    //private Connection connection;   // connection to database 
-    //private Statement statement;     // statement object used to execute sql queries
+    private String selectedServer;          // selected server
+    private String selectedDB;              // selected selectedDB
+    private String userName;                // userName to login 
+    private String userPassword;                // userPassword to login
     
     // class component instances
     private AnalysterWindow analyster;
@@ -44,7 +40,7 @@ public class LoginWindow extends JFrame {
         initComponents();
         logWindow = new LogWindow(); // this is for reporting connections to log
         
-        // load database selections from the text file for the combobox
+        // load selectedDB selections from the text file for the combobox
         loadDBList(); 
  
         // show window
@@ -302,7 +298,7 @@ public class LoginWindow extends JFrame {
 
     private void btnEditDBActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnEditDBActionPerformed
         
-        // create a new edit database window
+        // create a new edit selectedDB window
         editDatabaseList = new EditDatabaseWindow(this); // maybe we can make it not dependant on this
         editDatabaseList.setLocationRelativeTo(this);
         editDatabaseList.setVisible(true);
@@ -319,7 +315,7 @@ public class LoginWindow extends JFrame {
     /**
      *  Loads the names of the databases from a text file
  
-  this is if the actual database list is edited in EditDatabaseWindow 
+  this is if the actual selectedDB list is edited in EditDatabaseWindow 
  then it updates the combobox with the new values in LoginWindow.
      */
     public void loadDBList() {
@@ -365,58 +361,41 @@ public class LoginWindow extends JFrame {
     }
 
     public void login() {
-        String selectedServer = comboBoxServer.getSelectedItem().toString();
-        char[] pw;
-
-        // load url for server
-        if (selectedServer.equals("AWS")) //            db_url = "jdbc:mysql://elle.csndtbcukajz.us-west-2.rds.amazonaws.com:3306/dummy";
-        {
-            server = "jdbc:mysql://elle.csndtbcukajz.us-west-2.rds.amazonaws.com:3306/";
-        } else if (selectedServer.equals("Local")) //            db_url = "jdbc:mysql://localhost:3306/test";
-        {
-            server = "jdbc:mysql://localhost:3306/";
-        } else {
-            server = null;
-        }
         
-        // load database name
-        database = comboBoxDatabase.getSelectedItem().toString();
-        db_url = server + database;
-        username = textFieldUsername.getText();
-        pw = passwordFieldPW.getPassword();
-        password = String.valueOf(pw);
+        // get user data
+        selectedServer = comboBoxServer.getSelectedItem().toString();
+        selectedDB = comboBoxDatabase.getSelectedItem().toString();
+        userName = textFieldUsername.getText();
+        char[] pw = passwordFieldPW.getPassword();
+        userPassword = String.valueOf(pw);
 
-        String jdbc_driver = "com.mysql.jdbc.Driver";
+        // connect to database
         try {
-            Class.forName(jdbc_driver);
             logWindow.sendMessages("\nStart to connect local database...");
-            connection = DriverManager.getConnection(db_url, username, password);
+            DBConnection.connect(selectedServer, selectedDB, userName, userPassword);
             logWindow.sendMessages("Connect successfully!\n");
-            statement = connection.createStatement();
-            System.out.println("Connection successfully");
             
-        } catch (Exception ex) {
+        } 
+        catch (SQLException ex) {
 
             JOptionPane.showMessageDialog(null,
                     "Invalid password. Try again.",
                     "Error Message",
                     JOptionPane.ERROR_MESSAGE);
 
-            System.out.println("Cannot open local database -- make sure it is configured properly.");
             logWindow.sendMessages(ex.getMessage());
             passwordFieldPW.setText("");
         }
         
         // create an Analyster object
-        // it takes the statement that can execute sql queries with the DB
-        analyster = new AnalysterWindow(statement);
+        analyster = new AnalysterWindow();
 
         // pass the log window to analyster
         analyster.setLogWindow(logWindow);
 
-        // pass the database to Analyster
+        // pass the selectedDB to Analyster
         // it is used in sql statements
-        analyster.setDatabase(database);
+        analyster.setDatabase(selectedDB);
 
         // show Analyster
         analyster.setLocationRelativeTo(this);
