@@ -27,11 +27,11 @@ public class LoginWindow extends JFrame {
     // class attributes 
     private String server;           // server url
     private String database;         // database name
-    private String db_url;           // server url + database name
+    //private String db_url;           // server url + database name
     private String username;         // username to login 
     private String password;         // password to login
-    private Connection connection;   // connection to database 
-    private Statement statement;     // statement object used to execute sql queries
+    //private Connection connection;   // connection to database 
+    //private Statement statement;     // statement object used to execute sql queries
     
     // class component instances
     private AnalysterWindow analyster;
@@ -65,17 +65,17 @@ public class LoginWindow extends JFrame {
         jPanel2 = new javax.swing.JPanel();
         jInputPanel = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jServer = new javax.swing.JComboBox();
+        comboBoxServer = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jPassword = new javax.swing.JPasswordField();
-        jUsername = new javax.swing.JTextField();
+        passwordFieldPW = new javax.swing.JPasswordField();
+        textFieldUsername = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jDatabase = new javax.swing.JComboBox();
+        comboBoxDatabase = new javax.swing.JComboBox();
         jButtonPanel = new javax.swing.JPanel();
-        jCancelButton = new javax.swing.JButton();
-        loginButton = new javax.swing.JButton();
-        jEditDB = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        btnLogin = new javax.swing.JButton();
+        btnEditDB = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,10 +116,10 @@ public class LoginWindow extends JFrame {
 
         jLabel4.setText("Server");
 
-        jServer.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AWS", "Local" }));
-        jServer.addActionListener(new java.awt.event.ActionListener() {
+        comboBoxServer.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AWS", "Local" }));
+        comboBoxServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jServerActionPerformed(evt);
+                comboBoxServerActionPerformed(evt);
             }
         });
 
@@ -127,44 +127,44 @@ public class LoginWindow extends JFrame {
 
         jLabel3.setText("Password");
 
-        jPassword.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jPassword.addActionListener(new java.awt.event.ActionListener() {
+        passwordFieldPW.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        passwordFieldPW.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordActionPerformed(evt);
+                passwordFieldPWActionPerformed(evt);
             }
         });
-        jPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+        passwordFieldPW.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jPasswordKeyPressed(evt);
+                passwordFieldPWKeyPressed(evt);
             }
         });
 
-        jUsername.addActionListener(new java.awt.event.ActionListener() {
+        textFieldUsername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jUsernameActionPerformed(evt);
+                textFieldUsernameActionPerformed(evt);
             }
         });
 
         jLabel5.setText("Database");
 
-        jDatabase.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "dummy", "Elle2015" }));
-        jDatabase.addActionListener(new java.awt.event.ActionListener() {
+        comboBoxDatabase.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "dummy", "Elle2015" }));
+        comboBoxDatabase.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jDatabaseActionPerformed(evt);
+                comboBoxDatabaseActionPerformed(evt);
             }
         });
 
-        jCancelButton.setText("Cancel/ Log off");
-        jCancelButton.addActionListener(new java.awt.event.ActionListener() {
+        btnCancel.setText("Cancel/ Log off");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCancelButtonActionPerformed(evt);
+                btnCancelActionPerformed(evt);
             }
         });
 
-        loginButton.setText("Log in");
-        loginButton.addActionListener(new java.awt.event.ActionListener() {
+        btnLogin.setText("Log in");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginButtonActionPerformed(evt);
+                btnLoginActionPerformed(evt);
             }
         });
 
@@ -174,9 +174,9 @@ public class LoginWindow extends JFrame {
             jButtonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jButtonPanelLayout.createSequentialGroup()
                 .addGap(69, 69, 69)
-                .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addComponent(jCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jButtonPanelLayout.setVerticalGroup(
@@ -184,15 +184,15 @@ public class LoginWindow extends JFrame {
             .addGroup(jButtonPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jButtonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(loginButton)
-                    .addComponent(jCancelButton))
+                    .addComponent(btnLogin)
+                    .addComponent(btnCancel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jEditDB.setText("Edit");
-        jEditDB.addActionListener(new java.awt.event.ActionListener() {
+        btnEditDB.setText("Edit");
+        btnEditDB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jEditDBActionPerformed(evt);
+                btnEditDBActionPerformed(evt);
             }
         });
 
@@ -209,18 +209,18 @@ public class LoginWindow extends JFrame {
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPassword)
-                            .addComponent(jUsername)))
+                            .addComponent(passwordFieldPW)
+                            .addComponent(textFieldUsername)))
                     .addGroup(jInputPanelLayout.createSequentialGroup()
                         .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jServer, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jDatabase, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(comboBoxServer, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(comboBoxDatabase, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jEditDB)
+                .addComponent(btnEditDB)
                 .addContainerGap())
             .addComponent(jButtonPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -229,21 +229,21 @@ public class LoginWindow extends JFrame {
             .addGroup(jInputPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboBoxServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jEditDB))
+                    .addComponent(comboBoxDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditDB))
                 .addGap(18, 18, 18)
                 .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(11, 11, 11)
                 .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(passwordFieldPW, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -267,10 +267,10 @@ public class LoginWindow extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCancelButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jCancelButtonActionPerformed
+    private void btnCancelActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         this.close();
         
-    }//GEN-LAST:event_jCancelButtonActionPerformed
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * Close down application properly
@@ -281,40 +281,40 @@ public class LoginWindow extends JFrame {
         this.dispose();
         System.exit(0); // Terminates the currently running Java Virtual Machine.
     }
-    private void loginButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+    private void btnLoginActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         login();
-    }//GEN-LAST:event_loginButtonActionPerformed
+    }//GEN-LAST:event_btnLoginActionPerformed
 
-    private void jPasswordKeyPressed(KeyEvent evt) {//GEN-FIRST:event_jPasswordKeyPressed
+    private void passwordFieldPWKeyPressed(KeyEvent evt) {//GEN-FIRST:event_passwordFieldPWKeyPressed
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             login();
         }
-    }//GEN-LAST:event_jPasswordKeyPressed
+    }//GEN-LAST:event_passwordFieldPWKeyPressed
 
-    private void jDatabaseActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jDatabaseActionPerformed
+    private void comboBoxDatabaseActionPerformed(ActionEvent evt) {//GEN-FIRST:event_comboBoxDatabaseActionPerformed
 
 
-    }//GEN-LAST:event_jDatabaseActionPerformed
+    }//GEN-LAST:event_comboBoxDatabaseActionPerformed
 
-    private void jServerActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jServerActionPerformed
+    private void comboBoxServerActionPerformed(ActionEvent evt) {//GEN-FIRST:event_comboBoxServerActionPerformed
 
-    }//GEN-LAST:event_jServerActionPerformed
+    }//GEN-LAST:event_comboBoxServerActionPerformed
 
-    private void jEditDBActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jEditDBActionPerformed
+    private void btnEditDBActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnEditDBActionPerformed
         
         // create a new edit database window
         editDatabaseList = new EditDatabaseWindow(this); // maybe we can make it not dependant on this
         editDatabaseList.setLocationRelativeTo(this);
         editDatabaseList.setVisible(true);
-    }//GEN-LAST:event_jEditDBActionPerformed
+    }//GEN-LAST:event_btnEditDBActionPerformed
 
-    private void jUsernameActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jUsernameActionPerformed
+    private void textFieldUsernameActionPerformed(ActionEvent evt) {//GEN-FIRST:event_textFieldUsernameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jUsernameActionPerformed
+    }//GEN-LAST:event_textFieldUsernameActionPerformed
 
-    private void jPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordActionPerformed
+    private void passwordFieldPWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldPWActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordActionPerformed
+    }//GEN-LAST:event_passwordFieldPWActionPerformed
 
     /**
      *  Loads the names of the databases from a text file
@@ -348,7 +348,7 @@ public class LoginWindow extends JFrame {
 
             } else {
                 String[] arr = dbList.toArray(new String[dbList.size()]);
-                jDatabase.setModel(new DefaultComboBoxModel(arr));
+                comboBoxDatabase.setModel(new DefaultComboBoxModel(arr));
             }
         } catch (Exception e) {
 
@@ -365,7 +365,7 @@ public class LoginWindow extends JFrame {
     }
 
     public void login() {
-        String selectedServer = jServer.getSelectedItem().toString();
+        String selectedServer = comboBoxServer.getSelectedItem().toString();
         char[] pw;
 
         // load url for server
@@ -380,16 +380,15 @@ public class LoginWindow extends JFrame {
         }
         
         // load database name
-        database = jDatabase.getSelectedItem().toString();
+        database = comboBoxDatabase.getSelectedItem().toString();
         db_url = server + database;
-        username = jUsername.getText();
-        pw = jPassword.getPassword();
+        username = textFieldUsername.getText();
+        pw = passwordFieldPW.getPassword();
         password = String.valueOf(pw);
 
         String jdbc_driver = "com.mysql.jdbc.Driver";
         try {
             Class.forName(jdbc_driver);
-            //connect to the local database for test now
             logWindow.sendMessages("\nStart to connect local database...");
             connection = DriverManager.getConnection(db_url, username, password);
             logWindow.sendMessages("Connect successfully!\n");
@@ -405,7 +404,7 @@ public class LoginWindow extends JFrame {
 
             System.out.println("Cannot open local database -- make sure it is configured properly.");
             logWindow.sendMessages(ex.getMessage());
-            jPassword.setText("");
+            passwordFieldPW.setText("");
         }
         
         // create an Analyster object
@@ -429,10 +428,12 @@ public class LoginWindow extends JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnEditDB;
+    private javax.swing.JButton btnLogin;
+    private javax.swing.JComboBox comboBoxDatabase;
+    private javax.swing.JComboBox comboBoxServer;
     private javax.swing.JPanel jButtonPanel;
-    private javax.swing.JButton jCancelButton;
-    private javax.swing.JComboBox jDatabase;
-    private javax.swing.JButton jEditDB;
     private javax.swing.JPanel jInputPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -440,11 +441,9 @@ public class LoginWindow extends JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPassword;
-    private javax.swing.JComboBox jServer;
     private javax.swing.JPanel jTextPanel;
-    private javax.swing.JTextField jUsername;
-    private javax.swing.JButton loginButton;
+    private javax.swing.JPasswordField passwordFieldPW;
+    private javax.swing.JTextField textFieldUsername;
     // End of variables declaration//GEN-END:variables
 
 }
