@@ -7,7 +7,7 @@
     <import file="nbproject/build-impl.xml"/>
     
     <!-- set the version of ProjectManager here -->
-    <property name="version" value="Analyster-0.6.9c"/>
+    <property name="version" value="Analyster-0.6.9d"/>
     
     <!-- This creates the jar that we want with the included dependancies -->
     <!-- There should be no need to edit this code -->
