@@ -1367,10 +1367,12 @@ public class Analyster extends JFrame implements ITableConstants{
                     if (e.getClickCount() == 2) {
                         clearFilterDoubleClick(e, table);
                     } 
-
+                    
                     // this is for the mac ctrl-click and two button mouse don't need ctrl
                     else if ((e.getClickCount() == 1 && ctrlPressed) || (SwingUtilities.isRightMouseButton(e))) {
 
+                        System.out.println("ctrlPressed = " + ctrlPressed);
+                        
                         // this calls the column popup menu
                         tabs.get(table.getName()) 
                                 .getColumnPopupMenu().showPopupMenu(e);
@@ -1379,20 +1381,6 @@ public class Analyster extends JFrame implements ITableConstants{
                 }
             });
         }
-        
-        // add keyListener to the table header
-        // this is for mac ctrl button down
-        header.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent ke) {
-                ctrlPressed = ke.isControlDown();
-            }
-            
-            @Override
-            public void keyReleased(KeyEvent ke) {
-                ctrlPressed = ke.isControlDown();
-            }
-        });
         
         // add mouselistener to the table
         table.addMouseListener(
@@ -1748,7 +1736,9 @@ public class Analyster extends JFrame implements ITableConstants{
                             }
                         }
                     }
-                } else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
+                } 
+                
+                else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
                     if (jLabelEdit.getText().equals("ON ")) {                       // Default Date input with today's date
                         JTable table = (JTable) e.getComponent().getParent();
                         int column = table.getSelectedColumn();
@@ -1767,6 +1757,11 @@ public class Analyster extends JFrame implements ITableConstants{
                         }
                     }
                 }
+                
+                else {
+                    ctrlPressed = e.isControlDown();
+                }
+                
                 return false;
             }
         }
