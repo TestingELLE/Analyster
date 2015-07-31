@@ -4,194 +4,194 @@
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="menuBar">
       <SubComponents>
-        <Menu class="javax.swing.JMenu" name="jMenuFile">
+        <Menu class="javax.swing.JMenu" name="menuFile">
           <Properties>
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFileVersion">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemVersion">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Version"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemFileVersionActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemVersionActionPerformed"/>
               </Events>
             </MenuItem>
-            <Menu class="javax.swing.JMenu" name="jMenuSelectConn">
+            <Menu class="javax.swing.JMenu" name="menuSelectConn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Select Connection"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+                <MenuItem class="javax.swing.JMenuItem" name="menuItemAWSAssign">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="AWS Assignments"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem3ActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemAWSAssignActionPerformed"/>
                   </Events>
                 </MenuItem>
               </SubComponents>
             </Menu>
-            <Menu class="javax.swing.JMenu" name="jMenuPrint">
+            <Menu class="javax.swing.JMenu" name="menuPrint">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Print"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItemPrintGUI">
+                <MenuItem class="javax.swing.JMenuItem" name="menuItemPrintGUI">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Print GUI"/>
                   </Properties>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItemPrintDisplay">
+                <MenuItem class="javax.swing.JMenuItem" name="menuItemPrintDisplay">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Print Display Window"/>
                   </Properties>
                 </MenuItem>
               </SubComponents>
             </Menu>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemSaveFile">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemSaveFile">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Save File"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemLogOff">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemLogOff">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Log out"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemLogOffActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemLogOffActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenuEdit">
+        <Menu class="javax.swing.JMenu" name="menuEdit">
           <Properties>
             <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuEditDB">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemManageDBs">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Manage databases"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuEditDBActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemManageDBsActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jDeleteRecord">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemDeleteRecord">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Delete Record"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jDeleteRecordActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemDeleteRecordActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jArchiveRecord">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemArchiveRecord">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Archive Record"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jArchiveRecordActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemArchiveRecordActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jActivateRecord">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemActivateRecord">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Activate Record"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jActivateRecordActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemActivateRecordActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenuFind">
+        <Menu class="javax.swing.JMenu" name="menuFind">
           <Properties>
             <Property name="text" type="java.lang.String" value="Find"/>
           </Properties>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenuReport">
+        <Menu class="javax.swing.JMenu" name="menuReports">
           <Properties>
             <Property name="text" type="java.lang.String" value="Reports"/>
           </Properties>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenuView">
+        <Menu class="javax.swing.JMenu" name="menuView">
           <Properties>
             <Property name="text" type="java.lang.String" value="View"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemViewAssig">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemViewAssign">
               <Properties>
                 <Property name="text" type="java.lang.String" value="View Assignments Columns"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemViewReports">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemViewReports">
               <Properties>
                 <Property name="text" type="java.lang.String" value="View Reports Columns"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemViewAllAssig">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemViewAllAssign">
               <Properties>
                 <Property name="text" type="java.lang.String" value="View All Assignments"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemViewAllAssigActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemViewAllAssignActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemViewActiveAssig">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemViewActiveAssign">
               <Properties>
                 <Property name="text" type="java.lang.String" value="View Active Assigments"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemViewActiveAssigActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemViewActiveAssignActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenuOther">
+        <Menu class="javax.swing.JMenu" name="menuTools">
           <Properties>
             <Property name="text" type="java.lang.String" value="Tools"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemOthersLoadData">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemReloadData">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Reload data"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemOthersLoadDataActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemReloadDataActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="jCheckBoxMenuItemViewLog">
+            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="menuItemLogChkBx">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Log"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxMenuItemViewLogActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemLogChkBxActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="jCheckBoxMenuItemViewSQL">
+            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="menuItemSQLCmdChkBx">
               <Properties>
                 <Property name="text" type="java.lang.String" value="SQL Command"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxMenuItemViewSQLActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemSQLCmdChkBxActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenuHelp">
+        <Menu class="javax.swing.JMenu" name="menuHelp">
           <Properties>
             <Property name="text" type="java.lang.String" value="Help"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemOtherReport">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemRepBugSugg">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Report a bug/suggestion"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemOtherReportActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemRepBugSuggActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

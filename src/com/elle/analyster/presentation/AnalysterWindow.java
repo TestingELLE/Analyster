@@ -220,33 +220,33 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         btnCancelSQL = new javax.swing.JButton();
         btnCloseSQL = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
-        jMenuFile = new javax.swing.JMenu();
-        jMenuItemFileVersion = new javax.swing.JMenuItem();
-        jMenuSelectConn = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuPrint = new javax.swing.JMenu();
-        jMenuItemPrintGUI = new javax.swing.JMenuItem();
-        jMenuItemPrintDisplay = new javax.swing.JMenuItem();
-        jMenuItemSaveFile = new javax.swing.JMenuItem();
-        jMenuItemLogOff = new javax.swing.JMenuItem();
-        jMenuEdit = new javax.swing.JMenu();
-        jMenuEditDB = new javax.swing.JMenuItem();
-        jDeleteRecord = new javax.swing.JMenuItem();
-        jArchiveRecord = new javax.swing.JMenuItem();
-        jActivateRecord = new javax.swing.JMenuItem();
-        jMenuFind = new javax.swing.JMenu();
-        jMenuReport = new javax.swing.JMenu();
-        jMenuView = new javax.swing.JMenu();
-        jMenuItemViewAssig = new javax.swing.JMenuItem();
-        jMenuItemViewReports = new javax.swing.JMenuItem();
-        jMenuItemViewAllAssig = new javax.swing.JMenuItem();
-        jMenuItemViewActiveAssig = new javax.swing.JMenuItem();
-        jMenuOther = new javax.swing.JMenu();
-        jMenuItemOthersLoadData = new javax.swing.JMenuItem();
-        jCheckBoxMenuItemViewLog = new javax.swing.JCheckBoxMenuItem();
-        jCheckBoxMenuItemViewSQL = new javax.swing.JCheckBoxMenuItem();
-        jMenuHelp = new javax.swing.JMenu();
-        jMenuItemOtherReport = new javax.swing.JMenuItem();
+        menuFile = new javax.swing.JMenu();
+        menuItemVersion = new javax.swing.JMenuItem();
+        menuSelectConn = new javax.swing.JMenu();
+        menuItemAWSAssign = new javax.swing.JMenuItem();
+        menuPrint = new javax.swing.JMenu();
+        menuItemPrintGUI = new javax.swing.JMenuItem();
+        menuItemPrintDisplay = new javax.swing.JMenuItem();
+        menuItemSaveFile = new javax.swing.JMenuItem();
+        menuItemLogOff = new javax.swing.JMenuItem();
+        menuEdit = new javax.swing.JMenu();
+        menuItemManageDBs = new javax.swing.JMenuItem();
+        menuItemDeleteRecord = new javax.swing.JMenuItem();
+        menuItemArchiveRecord = new javax.swing.JMenuItem();
+        menuItemActivateRecord = new javax.swing.JMenuItem();
+        menuFind = new javax.swing.JMenu();
+        menuReports = new javax.swing.JMenu();
+        menuView = new javax.swing.JMenu();
+        menuItemViewAssign = new javax.swing.JMenuItem();
+        menuItemViewReports = new javax.swing.JMenuItem();
+        menuItemViewAllAssign = new javax.swing.JMenuItem();
+        menuItemViewActiveAssign = new javax.swing.JMenuItem();
+        menuTools = new javax.swing.JMenu();
+        menuItemReloadData = new javax.swing.JMenuItem();
+        menuItemLogChkBx = new javax.swing.JCheckBoxMenuItem();
+        menuItemSQLCmdChkBx = new javax.swing.JCheckBoxMenuItem();
+        menuHelp = new javax.swing.JMenu();
+        menuItemRepBugSugg = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(894, 560));
@@ -643,162 +643,162 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         tabbedPanel.getAccessibleContext().setAccessibleName("Reports");
         tabbedPanel.getAccessibleContext().setAccessibleParent(tabbedPanel);
 
-        jMenuFile.setText("File");
+        menuFile.setText("File");
 
-        jMenuItemFileVersion.setText("Version");
-        jMenuItemFileVersion.addActionListener(new java.awt.event.ActionListener() {
+        menuItemVersion.setText("Version");
+        menuItemVersion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemFileVersionActionPerformed(evt);
+                menuItemVersionActionPerformed(evt);
             }
         });
-        jMenuFile.add(jMenuItemFileVersion);
+        menuFile.add(menuItemVersion);
 
-        jMenuSelectConn.setText("Select Connection");
+        menuSelectConn.setText("Select Connection");
 
-        jMenuItem3.setText("AWS Assignments");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        menuItemAWSAssign.setText("AWS Assignments");
+        menuItemAWSAssign.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                menuItemAWSAssignActionPerformed(evt);
             }
         });
-        jMenuSelectConn.add(jMenuItem3);
+        menuSelectConn.add(menuItemAWSAssign);
 
-        jMenuFile.add(jMenuSelectConn);
+        menuFile.add(menuSelectConn);
 
-        jMenuPrint.setText("Print");
+        menuPrint.setText("Print");
 
-        jMenuItemPrintGUI.setText("Print GUI");
-        jMenuPrint.add(jMenuItemPrintGUI);
+        menuItemPrintGUI.setText("Print GUI");
+        menuPrint.add(menuItemPrintGUI);
 
-        jMenuItemPrintDisplay.setText("Print Display Window");
-        jMenuPrint.add(jMenuItemPrintDisplay);
+        menuItemPrintDisplay.setText("Print Display Window");
+        menuPrint.add(menuItemPrintDisplay);
 
-        jMenuFile.add(jMenuPrint);
+        menuFile.add(menuPrint);
 
-        jMenuItemSaveFile.setText("Save File");
-        jMenuFile.add(jMenuItemSaveFile);
+        menuItemSaveFile.setText("Save File");
+        menuFile.add(menuItemSaveFile);
 
-        jMenuItemLogOff.setText("Log out");
-        jMenuItemLogOff.addActionListener(new java.awt.event.ActionListener() {
+        menuItemLogOff.setText("Log out");
+        menuItemLogOff.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemLogOffActionPerformed(evt);
+                menuItemLogOffActionPerformed(evt);
             }
         });
-        jMenuFile.add(jMenuItemLogOff);
+        menuFile.add(menuItemLogOff);
 
-        menuBar.add(jMenuFile);
+        menuBar.add(menuFile);
 
-        jMenuEdit.setText("Edit");
+        menuEdit.setText("Edit");
 
-        jMenuEditDB.setText("Manage databases");
-        jMenuEditDB.addActionListener(new java.awt.event.ActionListener() {
+        menuItemManageDBs.setText("Manage databases");
+        menuItemManageDBs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuEditDBActionPerformed(evt);
+                menuItemManageDBsActionPerformed(evt);
             }
         });
-        jMenuEdit.add(jMenuEditDB);
+        menuEdit.add(menuItemManageDBs);
 
-        jDeleteRecord.setText("Delete Record");
-        jDeleteRecord.addActionListener(new java.awt.event.ActionListener() {
+        menuItemDeleteRecord.setText("Delete Record");
+        menuItemDeleteRecord.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jDeleteRecordActionPerformed(evt);
+                menuItemDeleteRecordActionPerformed(evt);
             }
         });
-        jMenuEdit.add(jDeleteRecord);
+        menuEdit.add(menuItemDeleteRecord);
 
-        jArchiveRecord.setText("Archive Record");
-        jArchiveRecord.addActionListener(new java.awt.event.ActionListener() {
+        menuItemArchiveRecord.setText("Archive Record");
+        menuItemArchiveRecord.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jArchiveRecordActionPerformed(evt);
+                menuItemArchiveRecordActionPerformed(evt);
             }
         });
-        jMenuEdit.add(jArchiveRecord);
+        menuEdit.add(menuItemArchiveRecord);
 
-        jActivateRecord.setText("Activate Record");
-        jActivateRecord.addActionListener(new java.awt.event.ActionListener() {
+        menuItemActivateRecord.setText("Activate Record");
+        menuItemActivateRecord.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jActivateRecordActionPerformed(evt);
+                menuItemActivateRecordActionPerformed(evt);
             }
         });
-        jMenuEdit.add(jActivateRecord);
+        menuEdit.add(menuItemActivateRecord);
 
-        menuBar.add(jMenuEdit);
+        menuBar.add(menuEdit);
 
-        jMenuFind.setText("Find");
-        menuBar.add(jMenuFind);
+        menuFind.setText("Find");
+        menuBar.add(menuFind);
 
-        jMenuReport.setText("Reports");
-        menuBar.add(jMenuReport);
+        menuReports.setText("Reports");
+        menuBar.add(menuReports);
 
-        jMenuView.setText("View");
+        menuView.setText("View");
 
-        jMenuItemViewAssig.setText("View Assignments Columns");
-        jMenuItemViewAssig.setEnabled(false);
-        jMenuView.add(jMenuItemViewAssig);
+        menuItemViewAssign.setText("View Assignments Columns");
+        menuItemViewAssign.setEnabled(false);
+        menuView.add(menuItemViewAssign);
 
-        jMenuItemViewReports.setText("View Reports Columns");
-        jMenuItemViewReports.setEnabled(false);
-        jMenuView.add(jMenuItemViewReports);
+        menuItemViewReports.setText("View Reports Columns");
+        menuItemViewReports.setEnabled(false);
+        menuView.add(menuItemViewReports);
 
-        jMenuItemViewAllAssig.setText("View All Assignments");
-        jMenuItemViewAllAssig.setEnabled(false);
-        jMenuItemViewAllAssig.addActionListener(new java.awt.event.ActionListener() {
+        menuItemViewAllAssign.setText("View All Assignments");
+        menuItemViewAllAssign.setEnabled(false);
+        menuItemViewAllAssign.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemViewAllAssigActionPerformed(evt);
+                menuItemViewAllAssignActionPerformed(evt);
             }
         });
-        jMenuView.add(jMenuItemViewAllAssig);
+        menuView.add(menuItemViewAllAssign);
 
-        jMenuItemViewActiveAssig.setText("View Active Assigments");
-        jMenuItemViewActiveAssig.setEnabled(false);
-        jMenuItemViewActiveAssig.addActionListener(new java.awt.event.ActionListener() {
+        menuItemViewActiveAssign.setText("View Active Assigments");
+        menuItemViewActiveAssign.setEnabled(false);
+        menuItemViewActiveAssign.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemViewActiveAssigActionPerformed(evt);
+                menuItemViewActiveAssignActionPerformed(evt);
             }
         });
-        jMenuView.add(jMenuItemViewActiveAssig);
+        menuView.add(menuItemViewActiveAssign);
 
-        menuBar.add(jMenuView);
+        menuBar.add(menuView);
 
-        jMenuOther.setText("Tools");
+        menuTools.setText("Tools");
 
-        jMenuItemOthersLoadData.setText("Reload data");
-        jMenuItemOthersLoadData.addActionListener(new java.awt.event.ActionListener() {
+        menuItemReloadData.setText("Reload data");
+        menuItemReloadData.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemOthersLoadDataActionPerformed(evt);
+                menuItemReloadDataActionPerformed(evt);
             }
         });
-        jMenuOther.add(jMenuItemOthersLoadData);
+        menuTools.add(menuItemReloadData);
 
-        jCheckBoxMenuItemViewLog.setText("Log");
-        jCheckBoxMenuItemViewLog.addActionListener(new java.awt.event.ActionListener() {
+        menuItemLogChkBx.setText("Log");
+        menuItemLogChkBx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxMenuItemViewLogActionPerformed(evt);
+                menuItemLogChkBxActionPerformed(evt);
             }
         });
-        jMenuOther.add(jCheckBoxMenuItemViewLog);
+        menuTools.add(menuItemLogChkBx);
 
-        jCheckBoxMenuItemViewSQL.setText("SQL Command");
-        jCheckBoxMenuItemViewSQL.addActionListener(new java.awt.event.ActionListener() {
+        menuItemSQLCmdChkBx.setText("SQL Command");
+        menuItemSQLCmdChkBx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxMenuItemViewSQLActionPerformed(evt);
+                menuItemSQLCmdChkBxActionPerformed(evt);
             }
         });
-        jMenuOther.add(jCheckBoxMenuItemViewSQL);
+        menuTools.add(menuItemSQLCmdChkBx);
 
-        menuBar.add(jMenuOther);
+        menuBar.add(menuTools);
 
-        jMenuHelp.setText("Help");
+        menuHelp.setText("Help");
 
-        jMenuItemOtherReport.setText("Report a bug/suggestion");
-        jMenuItemOtherReport.addActionListener(new java.awt.event.ActionListener() {
+        menuItemRepBugSugg.setText("Report a bug/suggestion");
+        menuItemRepBugSugg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemOtherReportActionPerformed(evt);
+                menuItemRepBugSuggActionPerformed(evt);
             }
         });
-        jMenuHelp.add(jMenuItemOtherReport);
+        menuHelp.add(menuItemRepBugSugg);
 
-        menuBar.add(jMenuHelp);
+        menuBar.add(menuHelp);
 
         setJMenuBar(menuBar);
 
@@ -820,12 +820,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItemFileVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFileVersionActionPerformed
+    private void menuItemVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemVersionActionPerformed
 
         JOptionPane.showMessageDialog(this, "Creation Date: "
                 + CREATION_DATE + "\n"
                 + "Version: " + VERSION);
-    }//GEN-LAST:event_jMenuItemFileVersionActionPerformed
+    }//GEN-LAST:event_menuItemVersionActionPerformed
 
     private void textFieldForSearchMouseClicked(MouseEvent evt) {//GEN-FIRST:event_textFieldForSearchMouseClicked
 
@@ -865,13 +865,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     }
     
     // not sure what this is
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void menuItemAWSAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAWSAssignActionPerformed
 
         loadTable(assignmentTable);
         loadTable(reportTable);
 
 
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_menuItemAWSAssignActionPerformed
 
     private void btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadChangesActionPerformed
 
@@ -897,9 +897,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         setLastUpdateTime();    // update time
     }
     
-    private void jMenuItemOtherReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOtherReportActionPerformed
+    private void menuItemRepBugSuggActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepBugSuggActionPerformed
 //        new ReportWin();// Create Report
-    }//GEN-LAST:event_jMenuItemOtherReportActionPerformed
+    }//GEN-LAST:event_menuItemRepBugSuggActionPerformed
 
     private void btnEnterSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterSQLActionPerformed
 
@@ -934,7 +934,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private void btnCloseSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseSQLActionPerformed
 
         jPanelSQL.setVisible(false);
-        jCheckBoxMenuItemViewSQL.setSelected(false);
+        menuItemSQLCmdChkBx.setSelected(false);
     }//GEN-LAST:event_btnCloseSQLActionPerformed
 
     private void btnSwitchEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchEditModeActionPerformed
@@ -982,8 +982,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private void changeTabbedPanelState() {
 
         // this enables or disables the menu components for this tab
-        jActivateRecord.setEnabled(tabs.get(getSelectedTab()).isActivateRecordMenuItemEnabled()); 
-        jArchiveRecord.setEnabled(tabs.get(getSelectedTab()).isArchiveRecordMenuItemEnabled()); 
+        menuItemActivateRecord.setEnabled(tabs.get(getSelectedTab()).isActivateRecordMenuItemEnabled()); 
+        menuItemArchiveRecord.setEnabled(tabs.get(getSelectedTab()).isArchiveRecordMenuItemEnabled()); 
         
         // show or hide the add records button
         btnAddRecords.setVisible(tabs.get(getSelectedTab()).isAddRecordsBtnVisible());
@@ -998,11 +998,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
-    private void jMenuEditDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuEditDBActionPerformed
+    private void menuItemManageDBsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemManageDBsActionPerformed
         editDatabaseWindow = new EditDatabaseWindow();
         editDatabaseWindow.setLocationRelativeTo(this);
         editDatabaseWindow.setVisible(true);
-    }//GEN-LAST:event_jMenuEditDBActionPerformed
+    }//GEN-LAST:event_menuItemManageDBsActionPerformed
 
     private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
         addRecordsWindow = new AddRecordsWindow();
@@ -1031,7 +1031,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * Log Off menu item action performed
      * @param evt 
      */
-    private void jMenuItemLogOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLogOffActionPerformed
+    private void menuItemLogOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLogOffActionPerformed
         Object[] options = {"Reconnect", "Log Out"};  // the titles of buttons
 
         int n = JOptionPane.showOptionDialog(this, "Would you like to reconnect?", "Log off",
@@ -1056,14 +1056,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             case 1:
                 System.exit(0); // Quit
         }
-    }//GEN-LAST:event_jMenuItemLogOffActionPerformed
+    }//GEN-LAST:event_menuItemLogOffActionPerformed
 
     /**
-     * jDeleteRecordActionPerformed
+     * menuItemDeleteRecordActionPerformed
      * Delete records menu item action performed
      * @param evt 
      */
-    private void jDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
+    private void menuItemDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
         
         String selectedTab = getSelectedTab();
         String sqlDelete;
@@ -1078,16 +1078,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * calls load data method
      * @param evt 
      */
-    private void jMenuItemViewAllAssigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemViewAllAssigActionPerformed
+    private void menuItemViewAllAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemViewAllAssignActionPerformed
         loadData();
-    }//GEN-LAST:event_jMenuItemViewAllAssigActionPerformed
+    }//GEN-LAST:event_menuItemViewAllAssignActionPerformed
 
     /**
      * jMenuItemViewActiveAssigActionPerformed
      * load only active data from analyst
      * @param evt 
      */
-    private void jMenuItemViewActiveAssigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemViewActiveAssigActionPerformed
+    private void menuItemViewActiveAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemViewActiveAssignActionPerformed
 
         String sqlC = "select A.* from Assignments A left join t_analysts T\n" + "on A.analyst = T.analyst\n" + "where T.active = 1\n" + "order by A.symbol";
         try {
@@ -1100,7 +1100,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
         // set label record information
         labelRecords.setText(tabs.get(ASSIGNMENTS_TABLE_NAME).getRecordsLabel()); 
-    }//GEN-LAST:event_jMenuItemViewActiveAssigActionPerformed
+    }//GEN-LAST:event_menuItemViewActiveAssignActionPerformed
 
     /**
      * btnClearAllFilterActionPerformed
@@ -1126,20 +1126,20 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * jMenuItemOthersLoadDataActionPerformed
      * @param evt 
      */
-    private void jMenuItemOthersLoadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOthersLoadDataActionPerformed
+    private void menuItemReloadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemReloadDataActionPerformed
 
         // reload table from database
         loadTable(tabs.get(getSelectedTab()).getTable());
         
         // set label record information
         labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
-    }//GEN-LAST:event_jMenuItemOthersLoadDataActionPerformed
+    }//GEN-LAST:event_menuItemReloadDataActionPerformed
 
     /**
      * jArchiveRecordActionPerformed
      * @param evt 
      */
-    private void jArchiveRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jArchiveRecordActionPerformed
+    private void menuItemArchiveRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemArchiveRecordActionPerformed
 
         int rowSelected = assignmentTable.getSelectedRows().length;
         int[] rowsSelected = assignmentTable.getSelectedRows();
@@ -1199,13 +1199,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         } else {
             JOptionPane.showMessageDialog(null, "Please, select one task!");
         }
-    }//GEN-LAST:event_jArchiveRecordActionPerformed
+    }//GEN-LAST:event_menuItemArchiveRecordActionPerformed
 
     /**
      * jActivateRecordActionPerformed
      * @param evt 
      */
-    private void jActivateRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jActivateRecordActionPerformed
+    private void menuItemActivateRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemActivateRecordActionPerformed
        
         int rowSelected = archiveTable.getSelectedRows().length;
         int[] rowsSelected = archiveTable.getSelectedRows();
@@ -1245,7 +1245,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         } else {
             JOptionPane.showMessageDialog(null, "Please, select one task!");
         }
-    }//GEN-LAST:event_jActivateRecordActionPerformed
+    }//GEN-LAST:event_menuItemActivateRecordActionPerformed
 
     /**
      * tabbedPanelStateChanged
@@ -1267,9 +1267,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * jCheckBoxMenuItemViewLogActionPerformed
      * @param evt 
      */
-    private void jCheckBoxMenuItemViewLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemViewLogActionPerformed
+    private void menuItemLogChkBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLogChkBxActionPerformed
 
-        if(jCheckBoxMenuItemViewLog.isSelected()){
+        if(menuItemLogChkBx.isSelected()){
             
             logWindow.setLocationRelativeTo(this);
             logWindow.setVisible(true); // show log window
@@ -1278,20 +1278,20 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             logWindow.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e){
-                        jCheckBoxMenuItemViewLog.setSelected(false);
+                        menuItemLogChkBx.setSelected(false);
                     }
                 });
         }else{
             // hide log window
             logWindow.setVisible(false);
         }
-    }//GEN-LAST:event_jCheckBoxMenuItemViewLogActionPerformed
+    }//GEN-LAST:event_menuItemLogChkBxActionPerformed
 
     /**
      * jCheckBoxMenuItemViewSQLActionPerformed
      * @param evt 
      */
-    private void jCheckBoxMenuItemViewSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemViewSQLActionPerformed
+    private void menuItemSQLCmdChkBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSQLCmdChkBxActionPerformed
  
         /**
          * ************* Strange behavior *************************
@@ -1311,7 +1311,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
          * jPanelSQL.getHeight(); // this returns 0
          */
         
-        if(jCheckBoxMenuItemViewSQL.isSelected()){
+        if(menuItemSQLCmdChkBx.isSelected()){
             
             // show sql panel
             jPanelSQL.setVisible(true);
@@ -1323,7 +1323,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             jPanelSQL.setVisible(false);
             this.setSize(this.getWidth(), 560);
         }
-    }//GEN-LAST:event_jCheckBoxMenuItemViewSQLActionPerformed
+    }//GEN-LAST:event_menuItemSQLCmdChkBxActionPerformed
 
     /**
      * jTableChanged
@@ -2069,35 +2069,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private javax.swing.JButton btnSwitchEditMode;
     private javax.swing.JButton btnUploadChanges;
     private javax.swing.JComboBox comboBoxSearch;
-    private javax.swing.JMenuItem jActivateRecord;
-    private javax.swing.JMenuItem jArchiveRecord;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItemViewLog;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItemViewSQL;
-    private javax.swing.JMenuItem jDeleteRecord;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabelEdit;
-    private javax.swing.JMenu jMenuEdit;
-    private javax.swing.JMenuItem jMenuEditDB;
-    private javax.swing.JMenu jMenuFile;
-    private javax.swing.JMenu jMenuFind;
-    private javax.swing.JMenu jMenuHelp;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItemFileVersion;
-    private javax.swing.JMenuItem jMenuItemLogOff;
-    private javax.swing.JMenuItem jMenuItemOtherReport;
-    private javax.swing.JMenuItem jMenuItemOthersLoadData;
-    private javax.swing.JMenuItem jMenuItemPrintDisplay;
-    private javax.swing.JMenuItem jMenuItemPrintGUI;
-    private javax.swing.JMenuItem jMenuItemSaveFile;
-    private javax.swing.JMenuItem jMenuItemViewActiveAssig;
-    private javax.swing.JMenuItem jMenuItemViewAllAssig;
-    private javax.swing.JMenuItem jMenuItemViewAssig;
-    private javax.swing.JMenuItem jMenuItemViewReports;
-    private javax.swing.JMenu jMenuOther;
-    private javax.swing.JMenu jMenuPrint;
-    private javax.swing.JMenu jMenuReport;
-    private javax.swing.JMenu jMenuSelectConn;
-    private javax.swing.JMenu jMenuView;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEdit;
     private javax.swing.JPanel jPanelSQL;
@@ -2109,6 +2082,33 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private javax.swing.JLabel labelRecords;
     private javax.swing.JLabel labelTimeLastUpdate;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuEdit;
+    private javax.swing.JMenu menuFile;
+    private javax.swing.JMenu menuFind;
+    private javax.swing.JMenu menuHelp;
+    private javax.swing.JMenuItem menuItemAWSAssign;
+    private javax.swing.JMenuItem menuItemActivateRecord;
+    private javax.swing.JMenuItem menuItemArchiveRecord;
+    private javax.swing.JMenuItem menuItemDeleteRecord;
+    private javax.swing.JCheckBoxMenuItem menuItemLogChkBx;
+    private javax.swing.JMenuItem menuItemLogOff;
+    private javax.swing.JMenuItem menuItemManageDBs;
+    private javax.swing.JMenuItem menuItemPrintDisplay;
+    private javax.swing.JMenuItem menuItemPrintGUI;
+    private javax.swing.JMenuItem menuItemReloadData;
+    private javax.swing.JMenuItem menuItemRepBugSugg;
+    private javax.swing.JCheckBoxMenuItem menuItemSQLCmdChkBx;
+    private javax.swing.JMenuItem menuItemSaveFile;
+    private javax.swing.JMenuItem menuItemVersion;
+    private javax.swing.JMenuItem menuItemViewActiveAssign;
+    private javax.swing.JMenuItem menuItemViewAllAssign;
+    private javax.swing.JMenuItem menuItemViewAssign;
+    private javax.swing.JMenuItem menuItemViewReports;
+    private javax.swing.JMenu menuPrint;
+    private javax.swing.JMenu menuReports;
+    private javax.swing.JMenu menuSelectConn;
+    private javax.swing.JMenu menuTools;
+    private javax.swing.JMenu menuView;
     private javax.swing.JTable reportTable;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabbedPanel;
