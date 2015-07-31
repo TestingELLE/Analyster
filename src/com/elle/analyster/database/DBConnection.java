@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.elle.analyster.database;
 
 import java.io.FileWriter;
@@ -22,7 +18,10 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- *
+ * DBConnection
+ * This class makes the connection with the server and database 
+ * and then the statement object is static and usable throughout
+ * the application. 
  * @author cigreja
  */
 public class DBConnection {
@@ -51,8 +50,11 @@ public class DBConnection {
              
     }
     
-
-    // read customer data from xml file
+    /**
+     * readServers
+     * read servers data from xml file
+     * @return 
+     */
     public static ArrayList<Server> readServers()
     {
         ArrayList<Server> servers = new ArrayList<>();
@@ -100,7 +102,11 @@ public class DBConnection {
         return servers;
     }
 
-    // write customer data to xml file
+    /**
+     * writeServers
+     * write server data to xml file
+     * @param servers 
+     */
     public static void writeServers(ArrayList<Server> servers)
     {
         // create the XMLOutputFactory object
@@ -110,7 +116,7 @@ public class DBConnection {
             FileWriter fileWriter = new FileWriter(SERVERS_FILENAME);
             XMLStreamWriter writer = outputFactory.createXMLStreamWriter(fileWriter);
             
-            // write the customers to the file
+            // write the servers to the file
             writer.writeStartDocument("1.0");
             writer.writeStartElement("servers");
             for (Server server : servers){
