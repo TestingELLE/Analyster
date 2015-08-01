@@ -21,6 +21,8 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LogWindow extends JFrame{
     
@@ -29,9 +31,10 @@ public class LogWindow extends JFrame{
 	private final TextArea logText;
 	private final String FILENAME = "log.txt";
         private final ArrayList<LogMessage> logMessages = new ArrayList<>();
-        private final JPanel jPanelLogWindowButtons;
-        private final JButton jBtnClearAll;
-        private final JButton jBtnClearAllButToday;
+        private final JPanel panelLogWindowButtons;
+//        private final JButton btnClearAll;
+        private final JButton btnClearAllButToday;
+        private final JButton btnDeleteAllButToday;
         //private final JCheckBox jCheckBoxOrder;  // this is replaced with showAll button
         private JButton showAll;
         //private final JLabel jLabelOrder; // label for checkbox
@@ -64,20 +67,27 @@ public class LogWindow extends JFrame{
 		this.add(scrollPane, scrollPanelConstraints);
                 
                 // create a panel for buttons
-                jPanelLogWindowButtons = new JPanel();
+                panelLogWindowButtons = new JPanel();
                 
                 // create buttons 
-                jBtnClearAll = new JButton("Clear All");
-                jBtnClearAll.addActionListener(new java.awt.event.ActionListener() {
+//                btnClearAll = new JButton("Clear All");
+//                btnClearAll.addActionListener(new java.awt.event.ActionListener() {
+//                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                        btnClearAllActionPerformed(evt);
+//                    }
+//                });
+                
+                btnClearAllButToday = new JButton("Clear All But Today");
+                btnClearAllButToday.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        jBtnClearAllActionPerformed(evt);
+                        btnClearAllButTodayActionPerformed(evt);
                     }
                 });
                 
-                jBtnClearAllButToday = new JButton("Clear All But Today");
-                jBtnClearAllButToday.addActionListener(new java.awt.event.ActionListener() {
+                btnDeleteAllButToday = new JButton("Delete All But Today");
+                btnDeleteAllButToday.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        jBtnClearAllButTodayActionPerformed(evt);
+                        btnDeleteAllButTodayActionPerformed(evt);
                     }
                 });
                 
@@ -99,11 +109,12 @@ public class LogWindow extends JFrame{
                 
                 
                 // add buttons to panel
-                jPanelLogWindowButtons.add(jBtnClearAll);
-                jPanelLogWindowButtons.add(jBtnClearAllButToday);
+//                panelLogWindowButtons.add(btnClearAll);
+                panelLogWindowButtons.add(btnClearAllButToday);
+                panelLogWindowButtons.add(btnDeleteAllButToday);
                 //jPanelLogWindowButtons.add(jCheckBoxOrder);
                 //jPanelLogWindowButtons.add(jLabelOrder);
-                jPanelLogWindowButtons.add(showAll);
+                panelLogWindowButtons.add(showAll);
                 
                 // set constraints for the buttons panel
                 GridBagConstraints buttonsPanelConstraints = new GridBagConstraints();
@@ -114,9 +125,10 @@ public class LogWindow extends JFrame{
                 buttonsPanelConstraints.gridy = 1; // second row cell
                 
                 // add panel to the frame
-                this.add(jPanelLogWindowButtons,buttonsPanelConstraints);
+                this.add(panelLogWindowButtons,buttonsPanelConstraints);
                 
                 this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                this.setPreferredSize(new Dimension(400, 400));
 
 		this.pack();
 		this.setVisible(false);    
@@ -202,9 +214,9 @@ public class LogWindow extends JFrame{
          * Clear all button: When the Clear all button is clicked, 
          * all the messages are removed from the scroll pane text box.
          */
-        private void jBtnClearAllActionPerformed(ActionEvent evt) {
-            logText.setText(""); 
-        }
+//        private void btnClearAllActionPerformed(ActionEvent evt) {
+//            logText.setText(""); 
+//        }
         
         /**
          * Clear all but today button action performed: 
@@ -212,12 +224,12 @@ public class LogWindow extends JFrame{
          * all the messages are removed from the scroll panel text box,
          * except todays.
          */
-        private void jBtnClearAllButTodayActionPerformed(ActionEvent evt) {
+        private void btnClearAllButTodayActionPerformed(ActionEvent evt) {
             
             // store log messages in an array of log messages
             storeLogMessages(); // get most current messages to array
             
-           /****************** CHECK BOX ORDER FEATURE ********************/
+                /****************** CHECK BOX ORDER FEATURE ********************/
 //            // get the order of messages
 //            if(jCheckBoxOrder.isSelected()){
 //                // sorts by most recent date first
@@ -235,12 +247,62 @@ public class LogWindow extends JFrame{
             logText.setText(""); // clear text box
             for(LogMessage logMessage : logMessages){
                 
+//                // if date is today then print to screen
+//                if(logMessage.getDate().getYear() == date.getYear()
+//                        && logMessage.getDate().getMonth()== date.getMonth()
+//                        && logMessage.getDate().getDay()== date.getDay()){
+//                    logText.append("-------------------------" + dateFormat.format(logMessage.getDate()) + "-------------------------");
+//                    logText.append(logMessage.getMessage());
+//                }
+                
                 // if date is today then print to screen
                 if(logMessage.getDate().getYear() == date.getYear()
                         && logMessage.getDate().getMonth()== date.getMonth()
-                        && logMessage.getDate().getDay()== date.getDay()){
+                        && logMessage.getDate().getDate()== date.getDate()){
                     logText.append("-------------------------" + dateFormat.format(logMessage.getDate()) + "-------------------------");
                     logText.append(logMessage.getMessage());
+                }
+            }  
+        }
+        
+        /**
+         * Clear all but today button action performed: 
+         * When the Clear all but today button is clicked, 
+         * all the messages are removed from the scroll panel text box,
+         * except todays.
+         */
+        private void btnDeleteAllButTodayActionPerformed(ActionEvent evt) {
+            
+            // store log messages in an array of log messages
+            storeLogMessages(); // get most current messages to array
+            
+           /****************** CHECK BOX ORDER FEATURE ********************/
+//            // get the order of messages
+//            if(jCheckBoxOrder.isSelected()){
+//                // sorts by most recent date first
+//                Collections.sort(logMessages, new LogMessage.SortByMostRecentDateFirst());
+//            }else if(!jCheckBoxOrder.isSelected()){
+//                // sorts by most recent date last
+//                Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
+//            }
+            
+            // clear the text file
+            clearTextFile();
+                
+            // sorts by most recent date last
+            Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
+            
+            // compare date with todays date and print to screen
+            Date date = new Date(); // get todays date
+            logText.setText(""); // clear text box
+            for(LogMessage logMessage : logMessages){
+                
+                // if date is today then print to screen
+                if(logMessage.getDate().getYear() == date.getYear()
+                        && logMessage.getDate().getMonth()== date.getMonth()
+                        && logMessage.getDate().getDate()== date.getDate()){
+                    writeToTextFile("-------------------------" + dateFormat.format(logMessage.getDate()) + "-------------------------");
+                    writeToTextFile(logMessage.getMessage());
                 }
             }  
         }
@@ -340,6 +402,22 @@ public class LogWindow extends JFrame{
                 catch(IOException e){e.printStackTrace();} 
                 catch (ParseException ex) { ex.printStackTrace();} 
             }  
+        }
+        
+        /**
+         * clearTextFile
+         * clear the text file
+         */
+        public void clearTextFile(){
+            
+            // clear the log.text file
+            try {
+                PrintWriter pw = new PrintWriter(FILENAME);
+                pw.close();
+            } 
+            catch (FileNotFoundException ex) {
+                Logger.getLogger(LogWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     /**
