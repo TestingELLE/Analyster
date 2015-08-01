@@ -63,6 +63,9 @@ public class AddRecordsWindow extends JFrame {
         // sets the keyboard focus manager
         setKeyboardFocusManager();   
         
+        // add listeners
+        addListeners();
+        
     }
 
     /**
@@ -415,7 +418,8 @@ public class AddRecordsWindow extends JFrame {
                         int column = table.getSelectedColumn();
                         if (column == table.getRowCount() || column == 0) {
                             return false;
-                        } else {
+                        } 
+                        else {
                             table.getComponentAt(row, column).requestFocus();
                             table.editCellAt(row, column);
                             JTextField selectCom = (JTextField) table.getEditorComponent();
@@ -493,15 +497,14 @@ public class AddRecordsWindow extends JFrame {
 
             @Override
             public void tableChanged(TableModelEvent e) {
-                validateCell(e);
                 
                 // enable submit button
-                if(table.isEditing()){
-                    btnSubmit.setEnabled(false);
-                }
-                else{
-                    btnSubmit.setEnabled(true);
-                }
+                //btnSubmit.setEnabled(!table.isEditing());
+                btnSubmit.setEnabled(true);
+                
+                // chec the cell for valid entry
+                validateCell(e);
+                
             }
         });
         
@@ -516,11 +519,17 @@ public class AddRecordsWindow extends JFrame {
                         int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the row index
                         if (rowIndex != -1 && columnIndex != -1) {
 
+                            // enable submit button
+                            //btnSubmit.setEnabled(!table.isEditing());
+                            if(table.isEditing())
+                                btnSubmit.setEnabled(false);
+
                             // make it the active editing cell
-                            table.changeSelection(rowIndex, columnIndex, false, false);
+                            //table.changeSelection(rowIndex, columnIndex, false, false);
 
                             //selectAllText(e);
                         }
+
                         
                     }// end mouseClicked
 

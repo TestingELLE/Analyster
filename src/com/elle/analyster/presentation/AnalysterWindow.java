@@ -50,7 +50,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     
     // components
     private static AnalysterWindow instance;
-    private JTableHeader header;
     private AddRecordsWindow  addRecordsWindow;
     private LogWindow logWindow;
     private LoginWindow loginWindow;
@@ -1362,7 +1361,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     public void setTerminalsFunction(final JTable table) { 
         
         // this adds a mouselistener to the table header
-        header = table.getTableHeader();
+        JTableHeader header = table.getTableHeader();
         if (header != null) {
             header.addMouseListener(new MouseAdapter() {
                 @Override
@@ -1563,7 +1562,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
         //Center column header
         int widthFixedColumns = 0;
-        header = table.getTableHeader();
+        JTableHeader header = table.getTableHeader();
         if (!(header.getDefaultRenderer() instanceof AlignmentTableHeaderCellRenderer)) {
             header.setDefaultRenderer(new AlignmentTableHeaderCellRenderer(header.getDefaultRenderer()));
         }
