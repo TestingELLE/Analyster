@@ -128,7 +128,7 @@ public class LogWindow extends JFrame{
                 this.add(panelLogWindowButtons,buttonsPanelConstraints);
                 
                 this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                this.setPreferredSize(new Dimension(400, 400));
+                this.setPreferredSize(new Dimension(600, 400));
 
 		this.pack();
 		this.setVisible(false);    
@@ -305,7 +305,12 @@ public class LogWindow extends JFrame{
                     writeToTextFile(logMessage.getMessage());
                 }
             }  
+            
+            // reload the messages from the file
+            readMessages();
+            storeLogMessages();
         }
+        
         
         /**
          * Order check box: When the order check box is checked, 
