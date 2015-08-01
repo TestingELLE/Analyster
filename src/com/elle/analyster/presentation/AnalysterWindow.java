@@ -1613,14 +1613,22 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     public void batchEdit(BatchEditWindow editor) {
         
-        int row[], id, col = 1, i, j, num;
+        int rows[];                     // selected rows
+        int id;
+        int col = 1;
+        int i; 
+        int j; 
+        int rowCount;
+        String newString;
+        String columnName;
+        
         JTable table = getSelectedTable();   // current Table
-        String newString, columnName;
+        
+        // not sure I need this
         table.setAutoCreateRowSorter(false);
+        
         List<ModifiedData> modifiedDataBatchEdit = new ArrayList<>();
-        newString = editor.newString;
-        row = table.getSelectedRows();
-        num = table.getSelectedRowCount();
+        
         columnName = editor.category;
         for (i = 0; i < table.getColumnCount(); i++) {
             if (columnName.equals(table.getColumnName(i))) {
@@ -1628,20 +1636,36 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 break;
             }
         }
-            for (i = 0; i <= num - 1; i++) {
-                int row2 = table.convertRowIndexToModel(row[i]);
-                id = (Integer)table.getModel().getValueAt(row2,0);
-                ModifiedData modifiedData = new ModifiedData();
-                modifiedData.setColumnIndex(col);
-                modifiedData.setTableName(table.getName());
-                modifiedData.setId(id);
-                modifiedData.setValueModified(newString);
-                modifiedDataBatchEdit.add(modifiedData);
-            }
-            updateTable(table, modifiedDataBatchEdit);
-            
-            // reload table 
-            loadTable(table);
+        
+        rows = table.getSelectedRows();
+        rowCount = table.getSelectedRowCount();
+        newString = editor.newString;
+        
+        for (i = 0; i <= rowCount - 1; i++) {
+            int row2 = table.convertRowIndexToModel(rows[i]);
+            id = (Integer)table.getModel().getValueAt(row2,0);
+            ModifiedData modifiedData = new ModifiedData();
+            modifiedData.setColumnIndex(col);
+            modifiedData.setTableName(table.getName());
+            modifiedData.setId(id);
+            modifiedData.setValueModified(newString);
+            modifiedDataBatchEdit.add(modifiedData);
+        }
+        
+        updateTable(table, modifiedDataBatchEdit);
+        
+        // get the filter items for this column
+        ArrayList<Object> filterItems 
+                = new ArrayList<>(tabs.get(getSelectedTab()).getFilter().getFilterItems().get(col));
+
+        // add item to the array
+        filterItems.add(newString);
+        
+        // add the array to the filter items list
+        tabs.get(getSelectedTab()).getFilter().addFilterItems(col, filterItems);
+        
+        // reload table 
+        loadTable(table);
 
     }
 

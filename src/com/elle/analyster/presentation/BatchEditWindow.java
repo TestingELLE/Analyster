@@ -1,17 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.elle.analyster.presentation;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
 
 /**
  *
  * @author Louis W.
  */
-public class BatchEditWindow extends javax.swing.JFrame {
+public class BatchEditWindow extends JFrame {
     
     /**
      * Creates new form TableEdit
