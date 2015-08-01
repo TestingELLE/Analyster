@@ -26,13 +26,33 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public class DBConnection {
     
-    public static Statement statement;
+    private static String server;
+    private static String database;
+    private static String usersName;
+    private static String usersPassword;
+    private static Connection connection;
+    private static Statement statement;
     private static final String SERVERS_FILENAME = "servers.xml";
     
+    /**
+     * connect
+     * creates a connection to the server and database and also
+     * creates a statement for executing sql statements.
+     * @param selectedServer
+     * @param selectedDB
+     * @param userName
+     * @param userPassword
+     * @throws SQLException 
+     */
     public static void connect(String selectedServer, String selectedDB, String userName, String userPassword) throws SQLException{
         
+        server = selectedServer;
+        database = selectedDB;
+        usersName = userName;
+        usersPassword = userPassword;
+        
+        
         String url = "";
-        Connection connection;
         ArrayList<Server> servers = readServers();
         
         // load url for server
@@ -48,6 +68,125 @@ public class DBConnection {
         statement = connection.createStatement();
         System.out.println("Connection successfully");
              
+    }
+    
+    /**
+     * open
+     * opens the connection to the server and database.
+     * This is used to reopen connections and prevent timeouts
+     * from servers.
+     * @throws SQLException 
+     */
+    public static void open() throws SQLException{
+        connect(server, database, usersName, usersPassword);
+    }
+    
+    /**
+     * close
+     * closes the connection to the server and database.
+     * This is used to close the connection when the transaction
+     * is finished.
+     * @throws SQLException 
+     */
+    public static void close() throws SQLException{
+        statement.close();
+        connection.close();
+    }
+
+    /**
+     * getServer
+     * @return 
+     */
+    public static String getServer() {
+        return server;
+    }
+
+    /**
+     * setServer
+     * @param server 
+     */
+    public static void setServer(String server) {
+        DBConnection.server = server;
+    }
+
+    /**
+     * getDatabase
+     * @return 
+     */
+    public static String getDatabase() {
+        return database;
+    }
+
+    /**
+     * setDatabase
+     * @param database 
+     */
+    public static void setDatabase(String database) {
+        DBConnection.database = database;
+    }
+
+    /**
+     * getUsersName
+     * @return 
+     */
+    public static String getUsersName() {
+        return usersName;
+    }
+
+    /**
+     * setUsersName
+     * @param usersName 
+     */
+    public static void setUsersName(String usersName) {
+        DBConnection.usersName = usersName;
+    }
+
+    /**
+     * getUsersPassword
+     * @return 
+     */
+    public static String getUsersPassword() {
+        return usersPassword;
+    }
+
+    /**
+     * setUsersPassword
+     * @param usersPassword 
+     */
+    public static void setUsersPassword(String usersPassword) {
+        DBConnection.usersPassword = usersPassword;
+    }
+
+    /**
+     * getConnection
+     * @return 
+     */
+    public static Connection getConnection() {
+        return connection;
+    }
+
+    /**
+     * setConnection
+     * @param connection 
+     */
+    public static void setConnection(Connection connection) {
+        DBConnection.connection = connection;
+    }
+
+    /**
+     * getStatement
+     * @return 
+     */
+    public static Statement getStatement() {
+        return statement;
+    }
+
+    /**
+     * setStatement
+     * @param statement 
+     */
+    public static void setStatement(Statement statement) {
+        DBConnection.statement = statement;
     }
     
     /**

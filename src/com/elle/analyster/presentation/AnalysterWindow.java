@@ -73,7 +73,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         // the statement is used for sql statements with the database connection
         // the statement is created in LoginWindow and passed to Analyster.
-        statement = DBConnection.statement;
+        statement = DBConnection.getStatement();
         instance = this;                         // this is used to call this instance of Analyster 
         modifiedDataList = new ArrayList<>();    // record the locations of changed cell
         logWindow = new LogWindow(); 
