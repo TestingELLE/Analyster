@@ -28,8 +28,8 @@ public class DBConnection {
     
     private static String server;
     private static String database;
-    private static String usersName;
-    private static String usersPassword;
+    private static String userName;
+    private static String userPassword;
     private static Connection connection;
     private static Statement statement;
     private static final String SERVERS_FILENAME = "servers.xml";
@@ -46,10 +46,10 @@ public class DBConnection {
      */
     public static void connect(String selectedServer, String selectedDB, String userName, String userPassword) throws SQLException{
         
-        server = selectedServer;
-        database = selectedDB;
-        usersName = userName;
-        usersPassword = userPassword;
+        DBConnection.server = selectedServer;
+        DBConnection.database = selectedDB;
+        DBConnection.userName = userName;
+        DBConnection.userPassword = userPassword;
         
         
         String url = "";
@@ -78,7 +78,7 @@ public class DBConnection {
      * @throws SQLException 
      */
     public static void open() throws SQLException{
-        connect(server, database, usersName, usersPassword);
+        connect(server, database, userName, userPassword);
     }
     
     /**
@@ -129,32 +129,32 @@ public class DBConnection {
      * getUsersName
      * @return 
      */
-    public static String getUsersName() {
-        return usersName;
+    public static String getUserName() {
+        return userName;
     }
 
     /**
      * setUsersName
-     * @param usersName 
+     * @param userName 
      */
-    public static void setUsersName(String usersName) {
-        DBConnection.usersName = usersName;
+    public static void setUserName(String userName) {
+        DBConnection.userName = userName;
     }
 
     /**
      * getUsersPassword
      * @return 
      */
-    public static String getUsersPassword() {
-        return usersPassword;
+    public static String getUserPassword() {
+        return userPassword;
     }
 
     /**
      * setUsersPassword
-     * @param usersPassword 
+     * @param userPassword 
      */
-    public static void setUsersPassword(String usersPassword) {
-        DBConnection.usersPassword = usersPassword;
+    public static void setUserPassword(String userPassword) {
+        DBConnection.userPassword = userPassword;
     }
 
     /**
