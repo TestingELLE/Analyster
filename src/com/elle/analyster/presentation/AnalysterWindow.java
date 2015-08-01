@@ -39,8 +39,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-07-31";  
-    private final String VERSION = "0.6.9e";   
+    private final String CREATION_DATE = "2015-08-1";  
+    private final String VERSION = "0.7.0";   
     
     // attributes
     private Map<String,Tab> tabs; // stores individual tab information
@@ -55,10 +55,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private LoginWindow loginWindow;
     private BatchEditWindow batchEditWindow;
     private EditDatabaseWindow editDatabaseWindow;
-    
-    // ctrl key for mac
-    private boolean ctrlPressed;
-    
 
     /**
      * CONSTRUCTOR
@@ -76,8 +72,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         instance = this;                         // this is used to call this instance of Analyster 
         modifiedDataList = new ArrayList<>();    // record the locations of changed cell
         logWindow = new LogWindow(); 
-        ctrlPressed = false;                     // is the ctrl button pressed
-                                                 // this is used for mac ctrl-click
+
         // initialize tabs
         tabs = new HashMap();
         
@@ -1370,15 +1365,30 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                     if (e.getClickCount() == 2) {
                         clearFilterDoubleClick(e, table);
                     } 
-                    
-                    // this is for the mac ctrl-click and two button mouse don't need ctrl
-                    else if ((e.getClickCount() == 1 && ctrlPressed) || (SwingUtilities.isRightMouseButton(e))) {
-                        
+                }
+                
+                /**
+                 * Popup menus are triggered differently on different platforms
+                 * Therefore, isPopupTrigger should be checked in both 
+                 * mousePressed and mouseReleased
+                 * events for for proper cross-platform functionality
+                 * @param e 
+                 */
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (e.isPopupTrigger()) {
                         // this calls the column popup menu
                         tabs.get(table.getName()) 
                                 .getColumnPopupMenu().showPopupMenu(e);
-
-                    } 
+                    }
+                }
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (e.isPopupTrigger()) {
+                        // this calls the column popup menu
+                        tabs.get(table.getName()) 
+                                .getColumnPopupMenu().showPopupMenu(e);
+                    }
                 }
             });
         }
@@ -1781,10 +1791,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                             }
                         }
                     }
-                }
-                
-                else {
-                    ctrlPressed = e.isControlDown();
                 }
                 
                 return false;
