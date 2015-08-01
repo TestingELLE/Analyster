@@ -1374,8 +1374,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                     
                     // this is for the mac ctrl-click and two button mouse don't need ctrl
                     else if ((e.getClickCount() == 1 && ctrlPressed) || (SwingUtilities.isRightMouseButton(e))) {
-
-                        System.out.println("ctrlPressed = " + ctrlPressed);
                         
                         // this calls the column popup menu
                         tabs.get(table.getName()) 

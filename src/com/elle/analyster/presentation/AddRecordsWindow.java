@@ -5,7 +5,10 @@ import com.elle.analyster.logic.Tab;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -24,8 +27,8 @@ public class AddRecordsWindow extends JFrame {
     // attributes
     private String[] columnNames;
     private String tableName;
-    private int numRowsAdded;  // number of rows added counter
-    private Map<String,Tab> tabs;  // used to update the records label
+    private int numRowsAdded;           // number of rows added counter
+    private Map<String,Tab> tabs;       // used to update the records label
     private Statement statement;
     
     // components
@@ -58,7 +61,7 @@ public class AddRecordsWindow extends JFrame {
         createEmptyTable();
         
         // sets the keyboard focus manager
-        setKeyboardFocusManager(); 
+        setKeyboardFocusManager();   
         
     }
 
@@ -74,9 +77,9 @@ public class AddRecordsWindow extends JFrame {
         jPanel3 = new javax.swing.JPanel();
         scrollpane = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
-        jSubmit = new javax.swing.JButton();
-        jCancel = new javax.swing.JButton();
-        jAddRow = new javax.swing.JButton();
+        btnSubmit = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        btnAddRow = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(550, 200));
@@ -117,24 +120,24 @@ public class AddRecordsWindow extends JFrame {
         });
         scrollpane.setViewportView(table);
 
-        jSubmit.setText("Submit");
-        jSubmit.addActionListener(new java.awt.event.ActionListener() {
+        btnSubmit.setText("Submit");
+        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jSubmitActionPerformed(evt);
+                btnSubmitActionPerformed(evt);
             }
         });
 
-        jCancel.setText("Cancel");
-        jCancel.addActionListener(new java.awt.event.ActionListener() {
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCancelActionPerformed(evt);
+                btnCancelActionPerformed(evt);
             }
         });
 
-        jAddRow.setText("+");
-        jAddRow.addActionListener(new java.awt.event.ActionListener() {
+        btnAddRow.setText("+");
+        btnAddRow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddRowActionPerformed(evt);
+                btnAddRowActionPerformed(evt);
             }
         });
 
@@ -144,11 +147,11 @@ public class AddRecordsWindow extends JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jAddRow)
+                .addComponent(btnAddRow)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 445, Short.MAX_VALUE)
-                .addComponent(jSubmit)
+                .addComponent(btnSubmit)
                 .addGap(18, 18, 18)
-                .addComponent(jCancel)
+                .addComponent(btnCancel)
                 .addContainerGap())
             .addComponent(scrollpane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -158,9 +161,9 @@ public class AddRecordsWindow extends JFrame {
                 .addComponent(scrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
                 .addGap(12, 12, 12)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jSubmit)
-                    .addComponent(jCancel)
-                    .addComponent(jAddRow))
+                    .addComponent(btnSubmit)
+                    .addComponent(btnCancel)
+                    .addComponent(btnAddRow))
                 .addGap(12, 12, 12))
         );
 
@@ -184,7 +187,7 @@ public class AddRecordsWindow extends JFrame {
      * Refactored by Carlos Igreja 7-28-2015
      * @param evt 
      */
-    private void jSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSubmitActionPerformed
+    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
 
         String colName = "";            // column name
         Object cellValue = null;        // store cell value
@@ -368,22 +371,22 @@ public class AddRecordsWindow extends JFrame {
             JOptionPane.showMessageDialog(null, "Error with " + colName + " in row " + (row + 1) + ".\n" + errorMsg);
             exception.printStackTrace();
         }
-    }//GEN-LAST:event_jSubmitActionPerformed
+    }//GEN-LAST:event_btnSubmitActionPerformed
 
     
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
 
     }//GEN-LAST:event_tableMouseClicked
 
-    private void jCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         this.dispose();
-    }//GEN-LAST:event_jCancelActionPerformed
+    }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void jAddRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddRowActionPerformed
+    private void btnAddRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRowActionPerformed
 
         // add an empty row to the table
         model.addRow(new Object[]{});
-    }//GEN-LAST:event_jAddRowActionPerformed
+    }//GEN-LAST:event_btnAddRowActionPerformed
 
     private void tableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableKeyPressed
 
@@ -421,7 +424,8 @@ public class AddRecordsWindow extends JFrame {
                         }
                     }
 
-                } else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
+                } 
+                else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
                     JTable table = (JTable) e.getComponent().getParent();
                     int column = table.getSelectedColumn();
                     if (table.getColumnName(column).toLowerCase().contains("date")) {
@@ -460,15 +464,6 @@ public class AddRecordsWindow extends JFrame {
         
         // add the table model to the table
         table.setModel(model);
-        
-        // add tableModelListener
-        table.getModel().addTableModelListener(new TableModelListener() {
-
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                validateCell(e);
-            }
-        });
     }
     
     /**
@@ -489,12 +484,75 @@ public class AddRecordsWindow extends JFrame {
         // add the table model to the table
         table.setModel(model);
         
+    }
+    
+    public void addListeners(){
+        
         // add tableModelListener
         table.getModel().addTableModelListener(new TableModelListener() {
 
             @Override
             public void tableChanged(TableModelEvent e) {
                 validateCell(e);
+                
+                // enable submit button
+                if(table.isEditing()){
+                    btnSubmit.setEnabled(false);
+                }
+                else{
+                    btnSubmit.setEnabled(true);
+                }
+            }
+        });
+        
+        // add mouselistener to the table
+        table.addMouseListener(
+                new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+
+                        // get selected cell
+                        int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
+                        int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the row index
+                        if (rowIndex != -1 && columnIndex != -1) {
+
+                            // make it the active editing cell
+                            table.changeSelection(rowIndex, columnIndex, false, false);
+
+                            //selectAllText(e);
+                        }
+                        
+                    }// end mouseClicked
+
+                    private void selectAllText(MouseEvent e) {// Select all text inside jTextField
+
+                        JTable table = (JTable) e.getComponent();
+                        int row = table.getSelectedRow();
+                        int column = table.getSelectedColumn();
+                        if (column != 0) {
+                            table.getComponentAt(row, column).requestFocus();
+                            table.editCellAt(row, column);
+                            JTextField selectCom = (JTextField) table.getEditorComponent();
+                            if (selectCom != null) {
+                                selectCom.requestFocusInWindow();
+                                selectCom.selectAll();
+                            }
+                        }
+
+                    }
+                }
+        );
+        
+        // add keyListener to the table
+        table.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                
+                // in editing mode this should ask to upload changes when enter key press
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    
+                    // check if cell is being edited
+                }
             }
         });
     }
@@ -567,10 +625,10 @@ public class AddRecordsWindow extends JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jAddRow;
-    private javax.swing.JButton jCancel;
+    private javax.swing.JButton btnAddRow;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnSubmit;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JButton jSubmit;
     private javax.swing.JScrollPane scrollpane;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
