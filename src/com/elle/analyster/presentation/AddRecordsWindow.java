@@ -369,6 +369,12 @@ public class AddRecordsWindow extends JFrame {
                         }// default date input with today's date}
                     }
                 }
+                
+                // this is called while in the cell editing to finish editing
+                else if (e.getKeyCode() == KeyEvent.VK_ENTER && table.isEditing()) {
+                    
+                    btnSubmit.setEnabled(true);
+                }
                 return false; 
             }
         });
@@ -411,6 +417,12 @@ public class AddRecordsWindow extends JFrame {
         table.setModel(model);
     }
     
+    /**
+     * addTableListeners
+     * This is called to add the listeners to the table 
+     * The listeners added are the TableModel listener
+     * the MouseListener and the KeyListener
+     */
     public void addTableListeners(){
         
         // add tableModelListener
@@ -419,68 +431,25 @@ public class AddRecordsWindow extends JFrame {
             @Override
             public void tableChanged(TableModelEvent e) {
                 
-                // enable submit button
-                //btnSubmit.setEnabled(!table.isEditing());
-                //btnSubmit.setEnabled(!table.isEditing()); 
-                
-                // chec the cell for valid entry
+                // check the cell for valid entry
                 validateCell(e);
                 
             }
         });
         
         // add mouselistener to the table
-        table.addMouseListener(
-                new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-
-                        // get selected cell
-                        int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
-                        int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the row index
-                        if (rowIndex != -1 && columnIndex != -1) {
-
-                            // enable submit button
-                            btnSubmit.setEnabled(!table.isEditing());
-//                            if(table.isEditing())
-//                                btnSubmit.setEnabled(false);
-
-                            // make it the active editing cell
-                            //table.changeSelection(rowIndex, columnIndex, false, false);
-
-                            //selectAllText(e);
-                        }
-                        
-                    }// end mouseClicked
+        table.addMouseListener( new MouseAdapter() {
                     
-                    @Override
-                    public void mousePressed(MouseEvent e){
-                        btnSubmit.setEnabled(!table.isEditing());
-                    }
-                    
-                    @Override
-                    public void mouseReleased(MouseEvent e){
-                        btnSubmit.setEnabled(!table.isEditing()); 
-                    }
+            @Override
+            public void mousePressed(MouseEvent e){
 
-                    private void selectAllText(MouseEvent e) {// Select all text inside jTextField
+                // select all text
+                selectAllText(e);
 
-                        JTable table = (JTable) e.getComponent();
-                        int row = table.getSelectedRow();
-                        int column = table.getSelectedColumn();
-                        if (column != 0) {
-                            table.getComponentAt(row, column).requestFocus();
-                            table.editCellAt(row, column);
-                            JTextField selectCom = (JTextField) table.getEditorComponent();
-                            if (selectCom != null) {
-                                selectCom.requestFocusInWindow();
-                                selectCom.selectAll();
-                            }
-                        }
-
-                    }
-                }
-        );
+                // grey out submit button
+                btnSubmit.setEnabled(false);
+            }
+        });
         
         // add keyListener to the table
         table.addKeyListener(new KeyAdapter() {
@@ -491,11 +460,31 @@ public class AddRecordsWindow extends JFrame {
                 // in editing mode this should ask to upload changes when enter key press
                 if (ke.getKeyCode() == KeyEvent.VK_ENTER && !table.isEditing()) {
                     
-                    //submit();
-                    System.out.println("submitted");
+                    submit();
                 }
             }
         });
+    }
+    
+    /**
+     * selectAllText
+     * Select all text inside jTextField or a cell
+     * @param e 
+     */
+    private void selectAllText(MouseEvent e) {
+
+        JTable table = (JTable) e.getComponent();
+        int row = table.getSelectedRow();
+        int column = table.getSelectedColumn();
+        if (column != -1) {
+            table.getComponentAt(row, column).requestFocus();
+            table.editCellAt(row, column);
+            JTextField selectCom = (JTextField) table.getEditorComponent();
+            if (selectCom != null) {
+                selectCom.requestFocusInWindow();
+                selectCom.selectAll();
+            }
+        }
     }
     
     /**
