@@ -15,6 +15,8 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -209,7 +211,7 @@ public class AddRecordsWindow extends JFrame {
         int row = 0;                             // row index
         
         // check if data is valid
-        if(validateData()){
+        if(!validateData()){
             
             // once data checked, execute sql statement
             // first get the insert statement for the table
@@ -268,16 +270,21 @@ public class AddRecordsWindow extends JFrame {
                     if(!values.equals("VALUES (")){      //skip if nothing was added
                         statement.executeUpdate(insertInto + values);
                         numRowsAdded++;   // increment the number of rows added
-                        //logWindow.sendMessages(insertInto + values);
-                        System.out.println("getLocalizedMessage" + " = " + statement.getWarnings().getLocalizedMessage()); // for debugging
-                        System.out.println("getMessage" + " = " + statement.getWarnings().getMessage()); // for debugging
-                        System.out.println("toString" + " = " + statement.getWarnings().toString()); // for debugging
                     }
                 }
                 catch(SQLException sqlException) {
-                    JOptionPane.showMessageDialog(null, "Upload failed!");
-                    sqlException.printStackTrace();
-                }// end try-catch
+                    try {
+                        JOptionPane.showMessageDialog(null, "Upload failed!");
+
+                        if(statement.getWarnings().getMessage() != null)
+                            logWindow.sendMessages("Upload failed:" + statement.getWarnings().getMessage()); 
+                        
+                        sqlException.printStackTrace();
+                    } // end try-catch
+                    catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
 
             if(numRowsAdded > 0){
@@ -501,59 +508,59 @@ public class AddRecordsWindow extends JFrame {
         boolean error = false;                               // error occurred
 
             switch(colName){
-            case "symbol":
-                if(cellValue == null || cellValue.toString().equals("")){
-                    errorMsg += "Symbol cannot be null";
-                    error = true;
-                }
-                break;
-            case "analyst":
-                break;
-            case "priority":
-                if(cellValue != null && !cellValue.toString().equals(""))
-                    if(!cellValue.toString().matches("[1-5]{1}")){
-                        errorMsg += "Priority must be an Integer (1-5)";
+                case "symbol":
+                    if(cellValue == null || cellValue.toString().equals("")){
+                        errorMsg += "Symbol cannot be null";
                         error = true;
                     }
-                break;
-            case "dateAssigned":
-                if(cellValue != null && !cellValue.toString().equals("")){
-                    if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                        errorMsg += "Date format not correct: YYYY-MM-DD";
-                        error = true;
+                    break;
+                case "analyst":
+                    break;
+                case "priority":
+                    if(cellValue != null && !cellValue.toString().equals(""))
+                        if(!cellValue.toString().matches("[1-5]{1}")){
+                            errorMsg += "Priority must be an Integer (1-5)";
+                            error = true;
+                        }
+                    break;
+                case "dateAssigned":
+                    if(cellValue != null && !cellValue.toString().equals("")){
+                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
+                            errorMsg += "Date format not correct: YYYY-MM-DD";
+                            error = true;
+                        }
                     }
-                }
-                break;
-            case "dateDone":
-                if(cellValue != null && !cellValue.toString().equals("")){
-                    if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                        errorMsg += "Date format not correct: YYYY-MM-DD";
-                        error = true;
+                    break;
+                case "dateDone":
+                    if(cellValue != null && !cellValue.toString().equals("")){
+                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
+                            errorMsg += "Date format not correct: YYYY-MM-DD";
+                            error = true;
+                        }
                     }
-                }
-                break;
-            case "notes":
-                break;
-            case "author":
-                break;
-            case "analysisDate":
-                if(cellValue != null && !cellValue.toString().equals("")){
-                    if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                        errorMsg += "Date format not correct: YYYY-MM-DD";
-                        error = true;
+                    break;
+                case "notes":
+                    break;
+                case "author":
+                    break;
+                case "analysisDate":
+                    if(cellValue != null && !cellValue.toString().equals("")){
+                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
+                            errorMsg += "Date format not correct: YYYY-MM-DD";
+                            error = true;
+                        }
                     }
-                }
-                break;
-            case "path":
-                break;
-            case "document":
-                break;
-            case "notesL":
-                break;
-            default:
-                break;
+                    break;
+                case "path":
+                    break;
+                case "document":
+                    break;
+                case "notesL":
+                    break;
+                default:
+                    break;
 
-        }// end switch
+            }// end switch
             
         if(error){
             JOptionPane.showMessageDialog(table, errorMsg);
@@ -620,57 +627,57 @@ public class AddRecordsWindow extends JFrame {
                 errorMsg = "Error with " + colName + " in row " + (row + 1) + ".\n"; 
 
                 switch(colName){
-                case "symbol":
-                    if(cellValue == null || cellValue.toString().equals("")){
-                        errorMsg += "Symbol cannot be null";
-                        error = true;
-                    }
-                    break;
-                case "analyst":
-                    break;
-                case "priority":
-                    if(cellValue != null)
-                        if(!cellValue.toString().matches("[1-5]{1}")){
-                            errorMsg += "Priority must be an Integer (1-5)";
+                    case "symbol":
+                        if(cellValue == null || cellValue.toString().equals("")){
+                            errorMsg += "Symbol cannot be null";
                             error = true;
                         }
-                    break;
-                case "dateAssigned":
-                    if(cellValue != null){
-                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                            errorMsg += "Date format not correct: YYYY-MM-DD";
-                            error = true;
+                        break;
+                    case "analyst":
+                        break;
+                    case "priority":
+                        if(cellValue != null && !cellValue.toString().equals(""))
+                            if(!cellValue.toString().matches("[1-5]{1}")){
+                                errorMsg += "Priority must be an Integer (1-5)";
+                                error = true;
+                            }
+                        break;
+                    case "dateAssigned":
+                        if(cellValue != null && !cellValue.toString().equals("")){
+                            if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
+                                errorMsg += "Date format not correct: YYYY-MM-DD";
+                                error = true;
+                            }
                         }
-                    }
-                    break;
-                case "dateDone":
-                    if(cellValue != null){
-                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                            errorMsg += "Date format not correct: YYYY-MM-DD";
-                            error = true;
+                        break;
+                    case "dateDone":
+                        if(cellValue != null && !cellValue.toString().equals("")){
+                            if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
+                                errorMsg += "Date format not correct: YYYY-MM-DD";
+                                error = true;
+                            }
                         }
-                    }
-                    break;
-                case "notes":
-                    break;
-                case "author":
-                    break;
-                case "analysisDate":
-                    if(cellValue != null){
-                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                            errorMsg += "Date format not correct: YYYY-MM-DD";
-                            error = true;
+                        break;
+                    case "notes":
+                        break;
+                    case "author":
+                        break;
+                    case "analysisDate":
+                        if(cellValue != null && !cellValue.toString().equals("")){
+                            if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
+                                errorMsg += "Date format not correct: YYYY-MM-DD";
+                                error = true;
+                            }
                         }
-                    }
-                    break;
-                case "path":
-                    break;
-                case "document":
-                    break;
-                case "notesL":
-                    break;
-                default:
-                    break;
+                        break;
+                    case "path":
+                        break;
+                    case "document":
+                        break;
+                    case "notesL":
+                        break;
+                    default:
+                        break;
 
                 }// end switch
             }// end col for loop
