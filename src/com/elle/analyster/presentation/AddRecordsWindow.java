@@ -2,6 +2,7 @@
 package com.elle.analyster.presentation;
 
 import com.elle.analyster.logic.Tab;
+import com.elle.analyster.logic.Validator;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -203,98 +204,96 @@ public class AddRecordsWindow extends JFrame {
      */
     private void submit(){
         
-        String colName = "";                     // column name
         Object cellValue = null;                 // store cell value
         int col = 0;                             // column index
         int row = 0;                             // row index
-        String errorMsg = "";                    // error message
-        boolean isDataValid = validateData();    // is data valid
         
-        if(isDataValid){
+        // check if data is valid
+        if(validateData()){
             
-        }
-        // once data checked, execute sql statement
-        // first get the insert statement for the table
-        String insertInto = "INSERT INTO " + tableName + " (";
+            // once data checked, execute sql statement
+            // first get the insert statement for the table
+            String insertInto = "INSERT INTO " + tableName + " (";
 
-        // this table should already not include the primary key
-        for (col = 0; col < table.getColumnCount(); col++){
-            if(col != table.getColumnCount() -1)
-                insertInto += table.getColumnName(col) + ", ";
-            else
-                insertInto += table.getColumnName(col) + ") ";
-        }
+            // this table should already not include the primary key
+            for (col = 0; col < table.getColumnCount(); col++){
+                if(col != table.getColumnCount() -1)
+                    insertInto += table.getColumnName(col) + ", ";
+                else
+                    insertInto += table.getColumnName(col) + ") ";
+            }
 
-        numRowsAdded = 0; // reset numRowsAdded counter
+            numRowsAdded = 0; // reset numRowsAdded counter
 
-        // Now get the values to add to the database
-        String values = "";  
-        for(row = 0; row < table.getRowCount(); row++){
-            values = "VALUES (";  // start the values statement
-            for(col = 0; col < table.getColumnCount(); col++){
+            // Now get the values to add to the database
+            String values = "";  
+            for(row = 0; row < table.getRowCount(); row++){
+                values = "VALUES (";  // start the values statement
+                for(col = 0; col < table.getColumnCount(); col++){
 
-                // get cell value
-                cellValue = table.getValueAt(row, col);
+                    // get cell value
+                    cellValue = table.getValueAt(row, col);
 
-                // format the cell value for sql
-                if(cellValue != null){
+                    // format the cell value for sql
+                    if(cellValue != null){
 
-                    // if cell is empty it must be null
-                    if(cellValue.toString().equals("")){
-                        cellValue = null;
+                        // if cell is empty it must be null
+                        if(cellValue.toString().equals("")){
+                            cellValue = null;
+                        }
+
+                        // if the cell is not empty it must have single quotes
+                        else {
+                            cellValue = "'" + cellValue + "'";
+                        }
                     }
 
-                    // if the cell is not empty it must have single quotes
+                    // skip empty rows
+                    // this must be after the format cell value so the "" => null
+                    if(col == 0 && cellValue == null){
+                        break;                      
+                    }
+
+                    // add each value for each column to the values statement
+                    if(col != table.getColumnCount() -1){
+                        values += cellValue + ", ";
+                    }
                     else {
-                        cellValue = "'" + cellValue + "'";
+                        values += cellValue + ");";
                     }
                 }
 
-                // skip empty rows
-                // this must be after the format cell value so the "" => null
-                if(col == 0 && cellValue == null){
-                    break;                      
+                try{
+                    // execute the sql statement
+                    if(!values.equals("VALUES (")){      //skip if nothing was added
+                        statement.executeUpdate(insertInto + values);
+                        numRowsAdded++;   // increment the number of rows added
+                        //logWindow.sendMessages(insertInto + values);
+                        System.out.println("getLocalizedMessage" + " = " + statement.getWarnings().getLocalizedMessage()); // for debugging
+                        System.out.println("getMessage" + " = " + statement.getWarnings().getMessage()); // for debugging
+                        System.out.println("toString" + " = " + statement.getWarnings().toString()); // for debugging
+                    }
                 }
-
-                // add each value for each column to the values statement
-                if(col != table.getColumnCount() -1){
-                    values += cellValue + ", ";
-                }
-                else {
-                    values += cellValue + ");";
-                }
+                catch(SQLException sqlException) {
+                    JOptionPane.showMessageDialog(null, "Upload failed!");
+                    sqlException.printStackTrace();
+                }// end try-catch
             }
 
-            try{
-                // execute the sql statement
-                if(!values.equals("VALUES (")){      //skip if nothing was added
-                    statement.executeUpdate(insertInto + values);
-                    numRowsAdded++;   // increment the number of rows added
-                    //logWindow.sendMessages(insertInto + values);
-                    System.out.println("getLocalizedMessage" + " = " + statement.getWarnings().getLocalizedMessage()); // for debugging
-                    System.out.println("getMessage" + " = " + statement.getWarnings().getMessage()); // for debugging
-                    System.out.println("toString" + " = " + statement.getWarnings().toString()); // for debugging
-                }
+            if(numRowsAdded > 0){
+                // update table and records label
+                String selectedTab = analyster.getSelectedTab();                          // get selected tab
+                analyster.loadTable(tabs.get(selectedTab).getTable());                    // load table data from database
+                tabs.get(selectedTab).getFilter().applyFilter();                          // apply filter
+                tabs.get(selectedTab).getFilter().applyColorHeaders();                    // apply color headers
+                tabs.get(selectedTab).getColumnPopupMenu().loadAllCheckBoxItems();        // refresh the data for the column pop up
+                analyster.setLastUpdateTime();                                            // set the last update time from database
+                tabs.get(selectedTab).addToTotalRowCount(numRowsAdded);                   // add the number of records added to the total records count
+                String records = tabs.get(selectedTab).getRecordsLabel();                 // store the records label string
+                analyster.getRecordsLabel().setText(records);                             // update the records label text
+                JOptionPane.showMessageDialog(null, numRowsAdded + " Add successfully!"); // show dialog box that upload was successful
+                createEmptyTable();                                                       // create a new table with default 10 rows
             }
-            catch(SQLException sqlException) {
-                JOptionPane.showMessageDialog(null, "Upload failed!");
-                sqlException.printStackTrace();
-            }// end try-catch
-        }
-
-        if(numRowsAdded > 0){
-            // update table and records label
-            String selectedTab = analyster.getSelectedTab();                          // get selected tab
-            analyster.loadTable(tabs.get(selectedTab).getTable());                    // load table data from database
-            tabs.get(selectedTab).getFilter().applyFilter();                          // apply filter
-            tabs.get(selectedTab).getFilter().applyColorHeaders();                    // apply color headers
-            tabs.get(selectedTab).getColumnPopupMenu().loadAllCheckBoxItems();        // refresh the data for the column pop up
-            analyster.setLastUpdateTime();                                            // set the last update time from database
-            tabs.get(selectedTab).addToTotalRowCount(numRowsAdded);                   // add the number of records added to the total records count
-            String records = tabs.get(selectedTab).getRecordsLabel();                 // store the records label string
-            analyster.getRecordsLabel().setText(records);                             // update the records label text
-            JOptionPane.showMessageDialog(null, numRowsAdded + " Add successfully!"); // show dialog box that upload was successful
-            createEmptyTable();                                                       // create a new table with default 10 rows
         }
     }
     
@@ -511,36 +510,39 @@ public class AddRecordsWindow extends JFrame {
             case "analyst":
                 break;
             case "priority":
-                if(cellValue != null)
+                if(cellValue != null && !cellValue.toString().equals(""))
                     if(!cellValue.toString().matches("[1-5]{1}")){
                         errorMsg += "Priority must be an Integer (1-5)";
                         error = true;
                     }
                 break;
             case "dateAssigned":
-                if(cellValue != null)
-                    if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                if(cellValue != null && !cellValue.toString().equals("")){
+                    if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
                         errorMsg += "Date format not correct: YYYY-MM-DD";
                         error = true;
                     }
+                }
                 break;
             case "dateDone":
-                if(cellValue != null)
-                    if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                if(cellValue != null && !cellValue.toString().equals("")){
+                    if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
                         errorMsg += "Date format not correct: YYYY-MM-DD";
                         error = true;
                     }
+                }
                 break;
             case "notes":
                 break;
             case "author":
                 break;
             case "analysisDate":
-                if(cellValue != null)
-                    if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                if(cellValue != null && !cellValue.toString().equals("")){
+                    if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
                         errorMsg += "Date format not correct: YYYY-MM-DD";
                         error = true;
                     }
+                }
                 break;
             case "path":
                 break;
@@ -634,29 +636,32 @@ public class AddRecordsWindow extends JFrame {
                         }
                     break;
                 case "dateAssigned":
-                    if(cellValue != null)
-                        if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                    if(cellValue != null){
+                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
                             errorMsg += "Date format not correct: YYYY-MM-DD";
                             error = true;
                         }
+                    }
                     break;
                 case "dateDone":
-                    if(cellValue != null)
-                        if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                    if(cellValue != null){
+                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
                             errorMsg += "Date format not correct: YYYY-MM-DD";
                             error = true;
                         }
+                    }
                     break;
                 case "notes":
                     break;
                 case "author":
                     break;
                 case "analysisDate":
-                    if(cellValue != null)
-                        if(!cellValue.toString().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+                    if(cellValue != null){
+                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
                             errorMsg += "Date format not correct: YYYY-MM-DD";
                             error = true;
                         }
+                    }
                     break;
                 case "path":
                     break;
