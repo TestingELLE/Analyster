@@ -1350,10 +1350,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     }
 
     /**
+     * setTableListeners
      * This adds mouselisteners and keylisteners to tables.
      * @param table 
      */
-    public void setTerminalsFunction(final JTable table) { 
+    public void setTableListeners(final JTable table) { 
         
         // this adds a mouselistener to the table header
         JTableHeader header = table.getTableHeader();
@@ -1370,8 +1371,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 /**
                  * Popup menus are triggered differently on different platforms
                  * Therefore, isPopupTrigger should be checked in both 
-                 * mousePressed and mouseReleased
-                 * events for for proper cross-platform functionality
+                 * mousePressed and mouseReleased events for proper 
+                 * cross-platform functionality.
                  * @param e 
                  */
                 @Override
@@ -1512,9 +1513,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     }
     
     /**
-     * setTerminalsFunction
-     * This method overloads the seTerminalFunctions 
-     * to take tabs instead of a single table
+     * setTableListeners
+ This method overloads the seTerminalFunctions 
+ to take tabs instead of a single table
      * @param tabs
      * @return 
      */
@@ -1522,7 +1523,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         for (Map.Entry<String, Tab> entry : tabs.entrySet())
         {
-            setTerminalsFunction(tabs.get(entry.getKey()).getTable());
+            setTableListeners(tabs.get(entry.getKey()).getTable());
         }
         return tabs;
     }
@@ -1874,7 +1875,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         for (Map.Entry<String, Tab> entry : tabs.entrySet())
         {
             loadTable(tabs.get(entry.getKey()).getTable());
-            setTerminalsFunction(tabs.get(entry.getKey()).getTable());
+            setTableListeners(tabs.get(entry.getKey()).getTable());
         }
 
         setLastUpdateTime();
