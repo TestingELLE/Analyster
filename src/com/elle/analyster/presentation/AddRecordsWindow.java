@@ -209,7 +209,7 @@ public class AddRecordsWindow extends JFrame {
         int row = 0;                             // row index
         
         // check if data is valid
-        if(validateData()){
+        if(!validateData()){
             
             // once data checked, execute sql statement
             // first get the insert statement for the table
@@ -274,8 +274,10 @@ public class AddRecordsWindow extends JFrame {
                     try {
                         JOptionPane.showMessageDialog(null, "Upload failed!");
 
-                        if(statement.getWarnings().getMessage() != null)
-                            logWindow.sendMessages("Upload failed:" + statement.getWarnings().getMessage()); 
+                        if(statement.getWarnings().getMessage() != null){
+                            logWindow.writeToTextFile("Upload failed:"); 
+                            logWindow.writeToTextFile(statement.getWarnings().getMessage()); 
+                        }
                         
                         sqlException.printStackTrace();
                     } // end try-catch
