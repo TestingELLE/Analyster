@@ -234,7 +234,6 @@ public class ColumnPopupMenu extends JPopupMenu{
         // we decided to cap long values - notes for example
         int cap = 20;              // cap the String length of list options
         Object cellValue = null;   // cell value
-        String value = "";         // current object string value
         String cappedValue = "";   // capped string value
         int col = 0;               // column index
         int row = 0;               // row index
@@ -245,46 +244,10 @@ public class ColumnPopupMenu extends JPopupMenu{
         // check every column except first because it is the primary key and not used to filter
         for(col = 1; col < filter.getTable().getColumnCount(); col++){
             
-            // get disctinct items
-            ArrayList<Object> filterItems = new ArrayList<>(getDistinctItems(col));
+            // load capped items and add checkbox items to the list
+            loadCappedItems(col, cap);
             
-            // create an array list for the capped values
-            ArrayList<String> cappedItems = new ArrayList<>();
-            
-            // get all the capped items
-            for(Object fItem: filterItems){
-                
-                // cap the String length of list options
-                if(fItem.toString().length() > cap){
-                    value = fItem.toString().substring(0, cap);
-                }
-                else{
-                    value = fItem.toString();
-                }
-                
-                // store all capped values in an array
-                if(cappedItems.isEmpty()){
-                    cappedItems.add(value);
-                }
-                else if(!cappedItems.contains(value)){
-                    cappedItems.add(value);
-                }
-            }
-            
-            // new checkbox item ArrayList
-            checkBoxItems.put(col, new ArrayList<>());
-            
-            // add the (All) selection
-            CheckBoxItem checkAll = new CheckBoxItem("(All)");
-            checkAll.getDistinctItems().add("(All)");
-            checkBoxItems.get(col).add(checkAll);
-            
-            // fill the array with checkbox items
-            for(String cappedItem: cappedItems){
-                checkBoxItems.get(col).add(new CheckBoxItem(cappedItem));
-            }
-            
-            // now go through every row 
+            // now go through every row and add each disctinct item and count
             for(row = 0; row < filter.getTable().getModel().getRowCount(); row++){
                 
                 cellValue = filter.getTable().getModel().getValueAt(row, col);
@@ -344,7 +307,48 @@ public class ColumnPopupMenu extends JPopupMenu{
      * @param cap    // cap length for strings
      */
     public void loadCappedItems(int col, int cap){
-        // TODO
+        
+        // String value of object
+        String value = "";         
+        
+        // get disctinct items
+        ArrayList<Object> filterItems = new ArrayList<>(getDistinctItems(col));
+
+        // create an array list for the capped values
+        ArrayList<String> cappedItems = new ArrayList<>();
+
+        // get all the capped items
+        for(Object fItem: filterItems){
+
+            // cap the String length of list options
+            if(fItem.toString().length() > cap){
+                value = fItem.toString().substring(0, cap);
+            }
+            else{
+                value = fItem.toString();
+            }
+
+            // store all capped values in an array
+            if(cappedItems.isEmpty()){
+                cappedItems.add(value);
+            }
+            else if(!cappedItems.contains(value)){
+                cappedItems.add(value);
+            }
+        }
+
+        // new checkbox item ArrayList
+        checkBoxItems.put(col, new ArrayList<>());
+
+        // add the (All) selection
+        CheckBoxItem checkAll = new CheckBoxItem("(All)");
+        checkAll.getDistinctItems().add("(All)");
+        checkBoxItems.get(col).add(checkAll);
+
+        // fill the array with checkbox items
+        for(String cappedItem: cappedItems){
+            checkBoxItems.get(col).add(new CheckBoxItem(cappedItem));
+        }
     }
     
     /**
