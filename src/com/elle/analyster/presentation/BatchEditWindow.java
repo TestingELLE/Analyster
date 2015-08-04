@@ -156,16 +156,20 @@ public class BatchEditWindow extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * clears the text field
+     * @param evt 
+     */
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         textFieldNewValue.setText("");
     }//GEN-LAST:event_btnCancelActionPerformed
 
+    /**
+     * submit changes to the database
+     * @param evt 
+     */
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
-        
-        //this.setVisible(false);
-
-        //analysterWindow.batchEdit(this);
-        
+ 
         int rows[];                     // selected rows
         int id;                         // id = primary key of record
         int columnIndex;                // column index
@@ -218,8 +222,12 @@ public class BatchEditWindow extends JFrame {
         analysterWindow.loadTable(table);
     }//GEN-LAST:event_btnConfirmActionPerformed
 
+    /**
+     * This terminates the window and returns resources
+     * @param evt 
+     */
     private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
-        this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_btnQuitActionPerformed
 
     private void textFieldNewValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldNewValueActionPerformed
