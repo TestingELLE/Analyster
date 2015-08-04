@@ -24,12 +24,15 @@ public class Tab implements ITableConstants{
     private int recordsShown;                    // number of records shown on table
     private String[] tableColNames;              // column header names
     private String[] searchFields;               // search combobox options
+    private String[] batchEditFields;            // batch edit combobox options
     private ColumnPopupMenu ColumnPopupMenu;     // column filter pop up menu
     
-    // these menu items are enabled differently for each tab
+    // these items are enabled differently for each tab
     private boolean activateRecordMenuItemEnabled; // enables activate record menu item
     private boolean archiveRecordMenuItemEnabled;  // enables archive record menu item
     private boolean addRecordsBtnVisible;          // sets the add records button visible
+    private boolean batchEditBtnVisible;           // sets the batch edit button visible
+    
 
     
     /**
@@ -45,6 +48,7 @@ public class Tab implements ITableConstants{
         activateRecordMenuItemEnabled = false;
         archiveRecordMenuItemEnabled = false;
         addRecordsBtnVisible = false;
+        batchEditBtnVisible = false;
     }
     
     /**
@@ -168,6 +172,22 @@ public class Tab implements ITableConstants{
 
     public void setColumnPopupMenu(ColumnPopupMenu ColumnPopupMenu) {
         this.ColumnPopupMenu = ColumnPopupMenu;
+    }
+
+    public String[] getBatchEditFields() {
+        return batchEditFields;
+    }
+
+    public void setBatchEditFields(String[] batchEditFields) {
+        this.batchEditFields = batchEditFields;
+    }
+
+    public boolean isBatchEditBtnVisible() {
+        return batchEditBtnVisible;
+    }
+
+    public void setBatchEditBtnVisible(boolean batchEditBtnVisible) {
+        this.batchEditBtnVisible = batchEditBtnVisible;
     }
     
     

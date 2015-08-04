@@ -1,8 +1,14 @@
 
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.database.ModifiedData;
+import com.elle.analyster.logic.Tab;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JTable;
 
 /**
  *
@@ -11,34 +17,31 @@ import javax.swing.JFrame;
 public class BatchEditWindow extends JFrame {
     
     // attributes
-    AnalysterWindow analyster;
-    String newString;
-    String category;
-    String[] reportsList = {"author", "analysisDate", "notes", "symbol"};
+    private AnalysterWindow analysterWindow;
+    private Map<String,Tab> tabs;
+    private String selectedTab;
+
     
     /**
+     * CONSTRUCTOR
      * Creates new form TableEdit
      * @param selectedTable
-     * @param a
+     * @param analysterWindow
      */
-    public BatchEditWindow(String selectedTable, AnalysterWindow a) {
+    public BatchEditWindow() {
         initComponents();
-        analyster = a;
-        // set the interface to the middle of the window
-        this.setLocationRelativeTo(a);
-        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        analysterWindow = AnalysterWindow.getInstance();
+        tabs = analysterWindow.getTabs();
+        selectedTab = analysterWindow.getSelectedTab();
         
-        this.setTitle("Table Editor");
-        if (selectedTable.equals("Reports")) {
-            // Reload the list for combobox  ** Important
-            comboBoxFieldSelect.setModel(new DefaultComboBoxModel(reportsList));
-        }
-//        this.setVisible(true);
-    }
-    
-    public String getNewValue() {
-        newString = textFieldNewValue.getText();
-        return newString;
+        comboBoxFieldSelect
+                .setModel(new DefaultComboBoxModel(tabs.get(selectedTab)
+                        .getBatchEditFields()));
+        
+        // set the interface to the middle of the window
+        this.setLocationRelativeTo(analysterWindow);
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        this.setTitle("Batch Editor");
     }
 
     /**
@@ -158,13 +161,61 @@ public class BatchEditWindow extends JFrame {
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
-        newString = textFieldNewValue.getText();
-        category = String.valueOf(comboBoxFieldSelect.getSelectedItem());
-        this.setVisible(false);
         
-        // go back to analyster with newString set *** IMPORTANT
+        //this.setVisible(false);
 
-        analyster.batchEdit(this);
+        //analysterWindow.batchEdit(this);
+        
+        int rows[];                     // selected rows
+        int id;                         // id = primary key of record
+        int columnIndex;                // column index
+        int rowIndex;                   // row index
+        int rowCount;                   // number of rows
+        String newValue;                // new value to replace old value(s)
+        String columnName;              // column name   
+        JTable table;                   // the selected table
+        
+        newValue = textFieldNewValue.getText();
+        columnName = String.valueOf(comboBoxFieldSelect.getSelectedItem());
+        table = tabs.get(selectedTab).getTable();
+        
+        List<ModifiedData> modifiedDataBatchEdit = new ArrayList<>();
+        
+        // get column index for the combobox selection
+        for (columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++) {
+            if (columnName.equals(table.getColumnName(columnIndex))) {
+                break;
+            }
+        }
+        
+        rows = table.getSelectedRows();
+        rowCount = table.getSelectedRowCount();
+        
+        for (rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            id = (Integer)table.getModel().getValueAt(rows[rowIndex],0);
+            ModifiedData modifiedData = new ModifiedData();
+            modifiedData.setColumnIndex(columnIndex);
+            modifiedData.setTableName(table.getName());
+            modifiedData.setId(id);
+            modifiedData.setValueModified(newValue);
+            modifiedDataBatchEdit.add(modifiedData);
+        }
+        
+        analysterWindow.updateTable(table, modifiedDataBatchEdit);
+        
+        // get the filter items for this column
+        ArrayList<Object> filterItems 
+                = new ArrayList<>(tabs.get(selectedTab)
+                        .getFilter().getFilterItems().get(columnIndex));
+
+        // add item to the array
+        filterItems.add(newValue);
+        
+        // add the array to the filter items list
+        tabs.get(selectedTab).getFilter().addFilterItems(columnIndex, filterItems);
+        
+        // reload table 
+        analysterWindow.loadTable(table);
     }//GEN-LAST:event_btnConfirmActionPerformed
 
     private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
@@ -182,7 +233,6 @@ public class BatchEditWindow extends JFrame {
     private void comboBoxFieldSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxFieldSelectActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comboBoxFieldSelectActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;

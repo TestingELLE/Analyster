@@ -91,6 +91,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         tabs.get(REPORTS_TABLE_NAME).setSearchFields(REPORTS_SEARCH_FIELDS);
         tabs.get(ARCHIVE_TABLE_NAME).setSearchFields(ARCHIVE_SEARCH_FIELDS);
         
+        // set the search fields for the comboBox for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setBatchEditFields(ASSIGNMENTS_BATCHEDIT_CB_FIELDS);
+        tabs.get(REPORTS_TABLE_NAME).setBatchEditFields(REPORTS_BATCHEDIT_CB_FIELDS);
+        tabs.get(ARCHIVE_TABLE_NAME).setBatchEditFields(ARCHIVE_BATCHEDIT_CB_FIELDS);
+        
         // set column width percents to tables of the tab objects
         tabs.get(ASSIGNMENTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
         tabs.get(REPORTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_REPORTS);
@@ -110,6 +115,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         tabs.get(ASSIGNMENTS_TABLE_NAME).setAddRecordsBtnVisible(true);
         tabs.get(REPORTS_TABLE_NAME).setAddRecordsBtnVisible(true);
         tabs.get(ARCHIVE_TABLE_NAME).setAddRecordsBtnVisible(false);
+        
+        // set batch edit button visible for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setBatchEditBtnVisible(true);
+        tabs.get(REPORTS_TABLE_NAME).setBatchEditBtnVisible(true);
+        tabs.get(ARCHIVE_TABLE_NAME).setBatchEditBtnVisible(false);
         
         initComponents(); // generated code
         
@@ -980,17 +990,17 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         menuItemActivateRecord.setEnabled(tabs.get(getSelectedTab()).isActivateRecordMenuItemEnabled()); 
         menuItemArchiveRecord.setEnabled(tabs.get(getSelectedTab()).isArchiveRecordMenuItemEnabled()); 
         
-        // show or hide the add records button
+        // show or hide the add records button and the batch edit button
         btnAddRecords.setVisible(tabs.get(getSelectedTab()).isAddRecordsBtnVisible());
+        btnBatchEdit.setVisible(tabs.get(getSelectedTab()).isBatchEditBtnVisible());
         
         // set label record information
         labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel());    
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
-        batchEditWindow = new BatchEditWindow(tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex()), this);
+        batchEditWindow = new BatchEditWindow();
         batchEditWindow.setVisible(true);
-
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
     private void menuItemManageDBsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemManageDBsActionPerformed
@@ -1420,7 +1430,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                                 
                                 // get selected cell
                                 int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
-                                int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the row index
+                                int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the rowIndex index
                                 if (rowIndex != -1 && columnIndex != -1) {
                                     
                                     // make it the active editing cell
@@ -1475,7 +1485,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                         // Upload Changes? Yes or No?
                         Object[] options = {"Commit", "Revert"};  // the titles of buttons
                         
-                        // store selected row before the table is refreshed
+                        // store selected rowIndex before the table is refreshed
                         int rowIndex = table.getSelectedRow();
 
                         int selectedOption = JOptionPane.showOptionDialog(AnalysterWindow.getInstance(), 
@@ -1503,7 +1513,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                                 break;
                         }   
                         
-                        // highligh previously selected row
+                        // highligh previously selected rowIndex
                         if (rowIndex != -1) 
                             table.setRowSelectionInterval(rowIndex, rowIndex);
                     }
@@ -1536,7 +1546,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     public void filterByDoubleClick(JTable table) {
         
         int columnIndex = table.getSelectedColumn(); // this returns the column index
-        int rowIndex = table.getSelectedRow(); // this returns the row index
+        int rowIndex = table.getSelectedRow(); // this returns the rowIndex index
         if (rowIndex != -1) {
             Object selectedField = table.getValueAt(rowIndex, columnIndex);
             tabs.get(getSelectedTab()).getFilter().addFilterItem(columnIndex, selectedField);
@@ -1616,69 +1626,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
         }
     }
-    
-    /**
-     * batchEdit
-     * Keep the float in Table Editor by separating editing part out here
-     * @param editor 
-     */
-    public void batchEdit(BatchEditWindow editor) {
-        
-        int rows[];                     // selected rows
-        int id;
-        int col = 1;
-        int i; 
-        int j; 
-        int rowCount;
-        String newString;
-        String columnName;
-        
-        JTable table = getSelectedTable();   // current Table
-        
-        // not sure I need this
-        table.setAutoCreateRowSorter(false);
-        
-        List<ModifiedData> modifiedDataBatchEdit = new ArrayList<>();
-        
-        columnName = editor.category;
-        for (i = 0; i < table.getColumnCount(); i++) {
-            if (columnName.equals(table.getColumnName(i))) {
-                col = i;
-                break;
-            }
-        }
-        
-        rows = table.getSelectedRows();
-        rowCount = table.getSelectedRowCount();
-        newString = editor.newString;
-        
-        for (i = 0; i <= rowCount - 1; i++) {
-            int row2 = table.convertRowIndexToModel(rows[i]);
-            id = (Integer)table.getModel().getValueAt(row2,0);
-            ModifiedData modifiedData = new ModifiedData();
-            modifiedData.setColumnIndex(col);
-            modifiedData.setTableName(table.getName());
-            modifiedData.setId(id);
-            modifiedData.setValueModified(newString);
-            modifiedDataBatchEdit.add(modifiedData);
-        }
-        
-        updateTable(table, modifiedDataBatchEdit);
-        
-        // get the filter items for this column
-        ArrayList<Object> filterItems 
-                = new ArrayList<>(tabs.get(getSelectedTab()).getFilter().getFilterItems().get(col));
-
-        // add item to the array
-        filterItems.add(newString);
-        
-        // add the array to the filter items list
-        tabs.get(getSelectedTab()).getFilter().addFilterItems(col, filterItems);
-        
-        // reload table 
-        loadTable(table);
-
-    }
 
     /**
      * updateTable
@@ -1687,7 +1634,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * @param table
      * @param modifiedDataList 
      */
-    private void updateTable(JTable table, List<ModifiedData> modifiedDataList) {
+    public void updateTable(JTable table, List<ModifiedData> modifiedDataList) {
         
         // should probably not be here
         // this method is to update the database, that is all it should do.
@@ -1839,7 +1786,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     
     /**
      * initTotalRowCounts
-     *  called once to initialize the total row counts of each tabs table
+  called once to initialize the total rowIndex counts of each tabs table
      * @param tabs
      * @return 
      */
@@ -1982,7 +1929,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 int row = selectedRows[i];
                 Integer selectedID = (Integer) table.getValueAt(row, 0); // Add Note to selected taskID
                 
-                if(i == 0) // this is the first row
+                if(i == 0) // this is the first rowIndex
                     sqlDelete += "DELETE FROM " + database + "." + tableName 
                             + " WHERE " + table.getColumnName(0) + " IN (" + selectedID; // 0 is the first column index = primary key
                 else // this adds the rest of the rows
@@ -2005,7 +1952,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");
 
                 // set label record information
-                tabs.get(tableName).subtractFromTotalRowCount(rowCount); // update total row count
+                tabs.get(tableName).subtractFromTotalRowCount(rowCount); // update total rowIndex count
                 labelRecords.setText(tabs.get(tableName).getRecordsLabel()); // update label
 
             } catch (SQLException e) {
