@@ -209,7 +209,7 @@ public class AddRecordsWindow extends JFrame {
         int row = 0;                             // row index
         
         // check if data is valid
-        if(!validateData()){
+        if(validateData()){
             
             // once data checked, execute sql statement
             // first get the insert statement for the table
