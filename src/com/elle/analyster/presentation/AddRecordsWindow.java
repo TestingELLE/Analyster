@@ -15,8 +15,6 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -211,7 +209,7 @@ public class AddRecordsWindow extends JFrame {
         int row = 0;                             // row index
         
         // check if data is valid
-        if(!validateData()){
+        if(validateData()){
             
             // once data checked, execute sql statement
             // first get the insert statement for the table
