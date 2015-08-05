@@ -1,16 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package com.elle.analyster.presentation;
-
-/**
- *
- * @author Tina
- */
-
 
 import com.elle.analyster.logic.LogMessage;
 import java.awt.*;
@@ -22,8 +11,6 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LogWindow extends JFrame{
     
@@ -132,7 +119,7 @@ public class LogWindow extends JFrame{
             this.add(panelLogWindowButtons,buttonsPanelConstraints);
 
             this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            this.setPreferredSize(new Dimension(600, 400));
+            this.setPreferredSize(new Dimension(860, 540));
 
             this.pack();
             this.setVisible(false);    
@@ -336,6 +323,7 @@ public class LogWindow extends JFrame{
 
         // print log messages to log window text box
         for (LogMessage logMessage : logMessages) {
+            logText.append("\n");
             logText.append(HYPHENS + dateFormat.format(logMessage.getDate()) + HYPHENS);
             logText.append(logMessage.getMessage());
         }
@@ -349,7 +337,6 @@ public class LogWindow extends JFrame{
     private void storeLogMessages(){
 
         File file = new File(FILENAME);
-        String FIELD_SEP = LogWindow.HYPHENS;
         logMessages.clear(); // clear array of any elements
         Date date = new Date();
         String message = "";
@@ -365,19 +352,25 @@ public class LogWindow extends JFrame{
 
                 // read all log messages stored in the log file
                 // and store them into the array list
-                String line = in.readLine(); // start while loop if not empty
+                String line = in.readLine(); 
                 while(line != null)
                 {
+                    // first get date between hyphens
                     if(line.startsWith(HYPHENS)){
-                        String[] columns = line.split(FIELD_SEP);
+                        String[] columns = line.split(HYPHENS);
                         date = dateFormat.parse(columns[1]);
                         message = ""; // reset message string
 
                         line = in.readLine();
                     }
+                    
+                    // get message until next date
                     else{
                         message = message + "\n" + line;
                         line = in.readLine();
+                        
+                        // if next line is null or next date 
+                        // then store this logmessage
                         if(line == null || line.startsWith(HYPHENS)){
                             logMessages.add(new LogMessage(date, message));  
                         }

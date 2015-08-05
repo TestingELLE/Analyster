@@ -274,14 +274,14 @@ public class AddRecordsWindow extends JFrame {
                     try {
                         JOptionPane.showMessageDialog(null, "Upload failed!");
 
-                        if(statement.getWarnings().getMessage() != null){
-                            logWindow.writeToTextFile("Upload failed:"); 
-                            logWindow.writeToTextFile(statement.getWarnings().getMessage()); 
+                        if (statement.getWarnings().getMessage() != null){
+                            logWindow.addMessageWithDate(statement.getWarnings().getMessage());
+                            System.out.println(statement.getWarnings().getMessage());
+                            statement.clearWarnings();
                         }
-                        
-                        sqlException.printStackTrace();
                     } // end try-catch
                     catch (SQLException ex) {
+                        // this should never be called
                         ex.printStackTrace();
                     }
                 }
