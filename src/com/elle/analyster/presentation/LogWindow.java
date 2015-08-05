@@ -50,7 +50,16 @@ public class LogWindow extends JFrame{
 
 		logText = new TextArea(5, 30);
 		logText.setEditable(false);
+                
+                //was testing the JList
+                // I need a no horizontal scroll and a wrap
+                // going to come back to this
+//                JList list = new JList();
+//                list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+//                list.add(logText);
+//                list.setVisibleRowCount(0);
 		scrollPane = new JScrollPane(logText);
+                //scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
                 // change layout of frame
                 this.setLayout(new GridBagLayout());
