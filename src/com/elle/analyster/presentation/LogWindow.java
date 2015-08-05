@@ -145,24 +145,9 @@ public class LogWindow extends JFrame{
                 // write to log file
                 Date date = new Date();
                 writeToTextFile("-------------------------" + dateFormat.format(date) + "-------------------------"); 
-                
+
                 // read log messages from the log file
 		readMessages();
-	}
-
-
-	public String fillSQLCommand(String str) {
-
-		String output;
-		if (str.startsWith("#")) {
-			output = "SELECT *\nFROM trades\nWHERE Symbol = " + "'"
-					+ str.substring(1) + "'";
-		} else {
-			String[] lst = str.split(" ");
-			output = "SELECT *\nFROM trades\nWHERE Trade_Time BETWEEN " + "'"
-					+ lst[0].substring(1) + "' AND '" + lst[1] + "'";
-		}
-		return output;
 	}
 
 	public void sendMessages(String str) {
@@ -206,7 +191,7 @@ public class LogWindow extends JFrame{
 			}
 			FileWriter fileWriter = new FileWriter(FILENAME, true);
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-			bufferedWriter.write(str);
+			bufferedWriter.write(str );
 			bufferedWriter.newLine();
 			if (str.endsWith("\n"))
 				bufferedWriter.newLine();
