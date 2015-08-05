@@ -373,9 +373,9 @@ public class LoginWindow extends JFrame {
 
         // connect to database
         try {
-            logWindow.sendMessages("Start to connect local database...");
+            logWindow.addMessageWithDate("Start to connect local database...");
             DBConnection.connect(selectedServer, selectedDB, userName, userPassword);
-            logWindow.sendMessages("Connect successfully!");
+            logWindow.addMessageWithDate("Connect successfully!");
             
         } 
         catch (SQLException ex) {
@@ -385,7 +385,7 @@ public class LoginWindow extends JFrame {
                     "Error Message",
                     JOptionPane.ERROR_MESSAGE);
 
-            logWindow.sendMessages(ex.getMessage());
+            logWindow.addMessageWithDate(ex.getMessage());
             passwordFieldPW.setText("");
         }
         

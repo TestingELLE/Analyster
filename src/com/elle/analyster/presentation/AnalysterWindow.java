@@ -71,7 +71,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         statement = DBConnection.getStatement();
         instance = this;                         // this is used to call this instance of Analyster 
         modifiedDataList = new ArrayList<>();    // record the locations of changed cell
-        logWindow = new LogWindow(); 
 
         // initialize tabs
         tabs = new HashMap();
@@ -914,7 +913,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             try {
                 executeSQL(command, assignmentTable);
             } catch (SQLException e) {
-                logWindow.sendMessages(e.getMessage());  
+                logWindow.addMessageWithDate(e.getMessage());  
             }
         } else {
             
@@ -1074,7 +1073,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         String sqlDelete;
 
         sqlDelete = deleteRecordsSelected(tabs.get(selectedTab).getTable());
-        logWindow.sendMessages(sqlDelete);
+        logWindow.addMessageWithDate(sqlDelete);
     }
 
 
@@ -1098,7 +1097,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         try {
             executeSQL(sqlC, assignmentTable);
         } catch (SQLException e) {
-            logWindow.sendMessages(e.getMessage());  
+            logWindow.addMessageWithDate(e.getMessage());  
         }
 
         setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
@@ -1191,7 +1190,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 }
                 try {
                     statement.executeUpdate(sqlInsert);
-//                    logwind.sendMessages(sqlInsert);
+//                    logwind.addMessageWithDate(sqlInsert);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -1234,7 +1233,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 }
                 try {
                     statement.executeUpdate(sqlInsert);
-//                    ana.getLogwind().sendMessages(sqlInsert);
+//                    ana.getLogwind().addMessageWithDate(sqlInsert);
                 } catch (SQLException e) {
                     e.printStackTrace();
                     System.out.println(e.toString());
@@ -1665,8 +1664,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Upload failed!");
-                logWindow.sendMessages(e.getMessage());
-                logWindow.sendMessages(e.getSQLState() + "\n");
+                logWindow.addMessageWithDate(e.getMessage());
+                logWindow.addMessageWithDate(e.getSQLState() + "\n");
             }
         }
 

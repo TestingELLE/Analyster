@@ -253,9 +253,9 @@ public class Tab implements ITableConstants{
                     String errorMessage = "ERROR: unknown table";
                     throw new NoSuchFieldException(errorMessage);
                 } catch (NoSuchFieldException ex) {
-                    ex.printStackTrace();
                     // post to log.txt
-                    AnalysterWindow.getInstance().getLogwind().sendMessages(ex.getMessage());
+                    AnalysterWindow.getInstance().getLogwind().addMessageWithDate(ex.getMessage());
+                    ex.printStackTrace();
                 }
         
                 break;

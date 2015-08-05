@@ -12,6 +12,7 @@ package com.elle.analyster.presentation;
  */
 
 
+import com.elle.analyster.logic.LogMessage;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
@@ -138,18 +139,10 @@ public class LogWindow extends JFrame{
 
             // write to log file
             Date date = new Date();
-            writeToTextFile(HYPHENS + dateFormat.format(date) + HYPHENS ); 
+            addMessage(HYPHENS + dateFormat.format(date) + HYPHENS ); 
 
             // read log messages from the log file
             readMessages();
-    }
-
-    public void sendMessages(String str) {
-            Date date = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat(
-                            "yyyy-MM-dd hh:mm:ss a");
-            writeToTextFile(dateFormat.format(date) + ": " + str);
-            readCurrentMessages(dateFormat.format(date) + ": " + str);
     }
 
     public void readCurrentMessages(String str) {
@@ -158,44 +151,61 @@ public class LogWindow extends JFrame{
     }
 
     public void readMessages() {
-            String line = "";
-            try {
-                    FileReader fileReader = new FileReader(FILENAME);
-                    BufferedReader bufferedReader = new BufferedReader(fileReader);
-                    line = bufferedReader.readLine();
-                    while (line != null) {
-                        logText.append("\n");
-                        logText.append(line);
-                        line = bufferedReader.readLine();
-                    }
-                    bufferedReader.close();
-            } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(this,
-                                    "Error: Fail to read the log file");
-            } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Unknown error");
+        String line = "";
+        try {
+            FileReader fileReader = new FileReader(FILENAME);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            line = bufferedReader.readLine();
+            while (line != null) {
+                logText.append("\n");
+                logText.append(line);
+                line = bufferedReader.readLine();
             }
+            bufferedReader.close();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this,
+                            "Error: Fail to read the log file");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Unknown error");
+        }
     }
 
-    public void writeToTextFile(String str) {
-            File file = new File(FILENAME);
-            try {
-                    if (!file.exists()) {
-                            file.createNewFile();
-                    }
-                    FileWriter fileWriter = new FileWriter(FILENAME, true);
-                    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                    if (str.startsWith("---"))
-                            bufferedWriter.newLine();
-                    bufferedWriter.write(str );
-                    bufferedWriter.newLine();
-                    bufferedWriter.close();
-            } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(this,
-                                    "Error: Fail to write the log file");
-            } catch (Exception ex) {
-                    JOptionPane.showConfirmDialog(this, "Unknow error");
+    /**
+     * addMessage
+     * @param str 
+     */
+    public void addMessage(String str) {
+        
+        File file = new File(FILENAME);
+        try {
+            if (!file.exists()) {
+                    file.createNewFile();
             }
+            FileWriter fileWriter = new FileWriter(FILENAME, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            if (str.startsWith(HYPHENS))
+                    bufferedWriter.newLine();
+            bufferedWriter.write(str );
+            bufferedWriter.newLine();
+            bufferedWriter.close();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this,
+                            "Error: Fail to write the log file");
+        } catch (Exception ex) {
+            JOptionPane.showConfirmDialog(this, "Unknow error");
+        }
+    }
+    
+    /**
+     * addMessageWithDate
+     * @param str 
+     */
+    public void addMessageWithDate(String str) {
+            Date date = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat(
+                            "yyyy-MM-dd hh:mm:ss a");
+            addMessage(dateFormat.format(date) + ": " + str);
+            readCurrentMessages(dateFormat.format(date) + ": " + str);
     }
 
     /**
@@ -273,8 +283,8 @@ public class LogWindow extends JFrame{
             if(logMessage.getDate().getYear() == date.getYear()
                     && logMessage.getDate().getMonth()== date.getMonth()
                     && logMessage.getDate().getDate()== date.getDate()){
-                writeToTextFile(HYPHENS + dateFormat.format(logMessage.getDate()) + HYPHENS);
-                writeToTextFile(logMessage.getMessage());
+                addMessage(HYPHENS + dateFormat.format(logMessage.getDate()) + HYPHENS);
+                addMessage(logMessage.getMessage());
             }
         }  
 
@@ -358,7 +368,7 @@ public class LogWindow extends JFrame{
                 String line = in.readLine(); // start while loop if not empty
                 while(line != null)
                 {
-                    if(line.startsWith("----")){
+                    if(line.startsWith(HYPHENS)){
                         String[] columns = line.split(FIELD_SEP);
                         date = dateFormat.parse(columns[1]);
                         message = ""; // reset message string
@@ -368,7 +378,7 @@ public class LogWindow extends JFrame{
                     else{
                         message = message + "\n" + line;
                         line = in.readLine();
-                        if(line == null || line.startsWith("----")){
+                        if(line == null || line.startsWith(HYPHENS)){
                             logMessages.add(new LogMessage(date, message));  
                         }
                     }                  
@@ -376,8 +386,14 @@ public class LogWindow extends JFrame{
 
                 in.close(); // close the input stream
             }
-            catch(IOException e){e.printStackTrace();} 
-            catch (ParseException ex) { ex.printStackTrace();} 
+            catch(IOException e){
+                addMessageWithDate(e.getMessage());
+                e.printStackTrace();
+            } 
+            catch (ParseException ex) {
+                addMessageWithDate(ex.getMessage());
+                ex.printStackTrace();
+            }
         }  
     }
 
@@ -393,41 +409,8 @@ public class LogWindow extends JFrame{
             pw.close();
         } 
         catch (FileNotFoundException ex) {
-            Logger.getLogger(LogWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * LogMessages class
-     * this class stores log message information
-     */
-    private static class LogMessage {
-
-        private final Date date;
-        private final String message;
-        
-        public LogMessage(Date date, String message) {
-            this.date = date;
-            this.message = message;
-        }
-        
-        public Date getDate(){ return date;}
-        public String getMessage(){return message;}
-        
-        public static class SortByMostRecentDateFirst implements Comparator<LogMessage>
-        {
-            @Override
-            public int compare(LogMessage c, LogMessage c1) {
-                return c1.getDate().compareTo(c.getDate());
-            }    
-        }
-        
-        public static class SortByMostRecentDateLast implements Comparator<LogMessage>
-        {
-            @Override
-            public int compare(LogMessage c, LogMessage c1) {
-                return c.getDate().compareTo(c1.getDate());
-            }    
+            addMessageWithDate(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 }
