@@ -32,12 +32,11 @@ public class LogWindow extends JFrame{
 	private final String FILENAME = "log.txt";
         private final ArrayList<LogMessage> logMessages = new ArrayList<>();
         private final JPanel panelLogWindowButtons;
-//        private final JButton btnClearAll;
         private final JButton btnClearAllButToday;
         private final JButton btnDeleteAllButToday;
-        //private final JCheckBox jCheckBoxOrder;  // this is replaced with showAll button
+        //private final JCheckBox jCheckBoxOrder;  // check box for order of dates
         private JButton showAll;
-        //private final JLabel jLabelOrder; // label for checkbox
+        //private final JLabel jLabelOrder; // label for checkbox order
         private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
 
         // constructor
@@ -79,13 +78,6 @@ public class LogWindow extends JFrame{
                 panelLogWindowButtons = new JPanel();
                 
                 // create buttons 
-//                btnClearAll = new JButton("Clear All");
-//                btnClearAll.addActionListener(new java.awt.event.ActionListener() {
-//                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                        btnClearAllActionPerformed(evt);
-//                    }
-//                });
-                
                 btnClearAllButToday = new JButton("Clear All But Today");
                 btnClearAllButToday.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -205,14 +197,6 @@ public class LogWindow extends JFrame{
 	}
         
         /**
-         * Clear all button: When the Clear all button is clicked, 
-         * all the messages are removed from the scroll pane text box.
-         */
-//        private void btnClearAllActionPerformed(ActionEvent evt) {
-//            logText.setText(""); 
-//        }
-        
-        /**
          * Clear all but today button action performed: 
          * When the Clear all but today button is clicked, 
          * all the messages are removed from the scroll panel text box,
@@ -240,14 +224,6 @@ public class LogWindow extends JFrame{
             Date date = new Date(); // get todays date
             logText.setText(""); // clear text box
             for(LogMessage logMessage : logMessages){
-                
-//                // if date is today then print to screen
-//                if(logMessage.getDate().getYear() == date.getYear()
-//                        && logMessage.getDate().getMonth()== date.getMonth()
-//                        && logMessage.getDate().getDay()== date.getDay()){
-//                    logText.append("-------------------------" + dateFormat.format(logMessage.getDate()) + "-------------------------");
-//                    logText.append(logMessage.getMessage());
-//                }
                 
                 // if date is today then print to screen
                 if(logMessage.getDate().getYear() == date.getYear()
