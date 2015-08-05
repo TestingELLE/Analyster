@@ -26,73 +26,75 @@ import java.util.logging.Logger;
 
 public class LogWindow extends JFrame{
     
-    
-	private final JScrollPane scrollPane;
-	private final TextArea logText;
-	private final String FILENAME = "log.txt";
-        private final ArrayList<LogMessage> logMessages = new ArrayList<>();
-        private final JPanel panelLogWindowButtons;
-        private final JButton btnClearAllButToday;
-        private final JButton btnDeleteAllButToday;
-        //private final JCheckBox jCheckBoxOrder;  // check box for order of dates
-        private JButton showAll;
-        //private final JLabel jLabelOrder; // label for checkbox order
-        private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
+    // constants
+    private final String FILENAME = "log.txt";
+    private static final String HYPHENS = "-------------------------"; // delimiter
+    private JScrollPane scrollPane;
+    private TextArea logText;
 
-        // constructor
-	public LogWindow() {
-		
-		this.setTitle("Log Window");
-		ImageIcon imag = new ImageIcon(
-				"Images/elle gui image.jpg");
-		this.setIconImage(imag.getImage());
+    private final ArrayList<LogMessage> logMessages = new ArrayList<>();
+    private final JPanel panelLogWindowButtons;
+    private final JButton btnClearAllButToday;
+    private final JButton btnDeleteAllButToday;
+    //private final JCheckBox jCheckBoxOrder;  // check box for order of dates
+    private JButton showAll;
+    //private final JLabel jLabelOrder; // label for checkbox order
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
 
-		logText = new TextArea(5, 30);
-		logText.setEditable(false);
-                
-                //was testing the JList
-                // I need a no horizontal scroll and a wrap
-                // going to come back to this
+    // constructor
+    public LogWindow() {
+
+            this.setTitle("Log Window");
+            ImageIcon imag = new ImageIcon(
+                            "Images/elle gui image.jpg");
+            this.setIconImage(imag.getImage());
+
+            logText = new TextArea(5, 30);
+            logText.setEditable(false);
+
+            //was testing the JList
+            // I need a no horizontal scroll and a wrap
+            // going to come back to this
 //                JList list = new JList();
 //                list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 //                list.add(logText);
 //                list.setVisibleRowCount(0);
-		scrollPane = new JScrollPane(logText);
-                //scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
-                // change layout of frame
-                this.setLayout(new GridBagLayout());
-                
-                // set constraints for the scroll panel
-                GridBagConstraints scrollPanelConstraints = new GridBagConstraints();
-                scrollPanelConstraints.fill = GridBagConstraints.BOTH;
-                scrollPanelConstraints.weightx = 1; // takes up whole x axis
-                scrollPanelConstraints.weighty = 1; // takes up most y axis with room for buttons
-                scrollPanelConstraints.gridx = 0; // first col cell
-                scrollPanelConstraints.gridy = 0; // first row cell
-                
-                // add scroll panel to frame
-		this.add(scrollPane, scrollPanelConstraints);
-                
-                // create a panel for buttons
-                panelLogWindowButtons = new JPanel();
-                
-                // create buttons 
-                btnClearAllButToday = new JButton("Clear All But Today");
-                btnClearAllButToday.addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        btnClearAllButTodayActionPerformed(evt);
-                    }
-                });
-                
-                btnDeleteAllButToday = new JButton("Delete All But Today");
-                btnDeleteAllButToday.addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        btnDeleteAllButTodayActionPerformed(evt);
-                    }
-                });
-                
-                /********* THIS IS THE CHECKBOX ORDER FEATURE *****************/
+            scrollPane = new JScrollPane(logText);
+            //scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+            // change layout of frame
+            this.setLayout(new GridBagLayout());
+
+            // set constraints for the scroll panel
+            GridBagConstraints scrollPanelConstraints = new GridBagConstraints();
+            scrollPanelConstraints.fill = GridBagConstraints.BOTH;
+            scrollPanelConstraints.weightx = 1; // takes up whole x axis
+            scrollPanelConstraints.weighty = 1; // takes up most y axis with room for buttons
+            scrollPanelConstraints.gridx = 0; // first col cell
+            scrollPanelConstraints.gridy = 0; // first row cell
+
+            // add scroll panel to frame
+            this.add(scrollPane, scrollPanelConstraints);
+
+            // create a panel for buttons
+            panelLogWindowButtons = new JPanel();
+
+            // create buttons 
+            btnClearAllButToday = new JButton("Clear All But Today");
+            btnClearAllButToday.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnClearAllButTodayActionPerformed(evt);
+                }
+            });
+
+            btnDeleteAllButToday = new JButton("Delete All But Today");
+            btnDeleteAllButToday.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnDeleteAllButTodayActionPerformed(evt);
+                }
+            });
+
+            /********* THIS IS THE CHECKBOX ORDER FEATURE *****************/
 //                jCheckBoxOrder = new JCheckBox();
 //                jCheckBoxOrder.addActionListener(new java.awt.event.ActionListener() {
 //                    public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,192 +102,192 @@ public class LogWindow extends JFrame{
 //                    }
 //                });
 ////                jLabelOrder = new JLabel("Order");
-                
-                showAll = new JButton("Show All");
-                showAll.addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        showAllActionPerformed(evt);
-                    }
-                });
-                
-                
-                // add buttons to panel
+
+            showAll = new JButton("Show All");
+            showAll.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    showAllActionPerformed(evt);
+                }
+            });
+
+
+            // add buttons to panel
 //                panelLogWindowButtons.add(btnClearAll);
-                panelLogWindowButtons.add(btnClearAllButToday);
-                panelLogWindowButtons.add(btnDeleteAllButToday);
-                //jPanelLogWindowButtons.add(jCheckBoxOrder);
-                //jPanelLogWindowButtons.add(jLabelOrder);
-                panelLogWindowButtons.add(showAll);
-                
-                // set constraints for the buttons panel
-                GridBagConstraints buttonsPanelConstraints = new GridBagConstraints();
-                buttonsPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-                buttonsPanelConstraints.weightx = 1; // takes up whole x axis
-                buttonsPanelConstraints.weighty = 0; // takes up enough y axis just for buttons
-                buttonsPanelConstraints.gridx = 0; // first col cell
-                buttonsPanelConstraints.gridy = 1; // second row cell
-                
-                // add panel to the frame
-                this.add(panelLogWindowButtons,buttonsPanelConstraints);
-                
-                this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                this.setPreferredSize(new Dimension(600, 400));
+            panelLogWindowButtons.add(btnClearAllButToday);
+            panelLogWindowButtons.add(btnDeleteAllButToday);
+            //jPanelLogWindowButtons.add(jCheckBoxOrder);
+            //jPanelLogWindowButtons.add(jLabelOrder);
+            panelLogWindowButtons.add(showAll);
 
-		this.pack();
-		this.setVisible(false);    
-                
-                // write to log file
-                Date date = new Date();
-                writeToTextFile("-------------------------" + dateFormat.format(date) + "-------------------------"); 
+            // set constraints for the buttons panel
+            GridBagConstraints buttonsPanelConstraints = new GridBagConstraints();
+            buttonsPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+            buttonsPanelConstraints.weightx = 1; // takes up whole x axis
+            buttonsPanelConstraints.weighty = 0; // takes up enough y axis just for buttons
+            buttonsPanelConstraints.gridx = 0; // first col cell
+            buttonsPanelConstraints.gridy = 1; // second row cell
 
-                // read log messages from the log file
-		readMessages();
-	}
+            // add panel to the frame
+            this.add(panelLogWindowButtons,buttonsPanelConstraints);
 
-	public void sendMessages(String str) {
-		Date date = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd hh:mm:ss a");
-		writeToTextFile(dateFormat.format(date) + ": " + str);
-		readCurrentMessages(dateFormat.format(date) + ": " + str);
-	}
+            this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.setPreferredSize(new Dimension(600, 400));
 
-	public void readCurrentMessages(String str) {
-		logText.append(str);
-		logText.append("\n");
-	}
+            this.pack();
+            this.setVisible(false);    
 
-	public void readMessages() {
-		String line = "";
-		try {
-			FileReader fileReader = new FileReader(FILENAME);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			line = bufferedReader.readLine();
-			while (line != null) {
-				logText.append(line);
-				logText.append("\n");
-				line = bufferedReader.readLine();
-			}
-			bufferedReader.close();
-		} catch (IOException ex) {
-			JOptionPane.showMessageDialog(this,
-					"Error: Fail to read the log file");
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(this, "Unknown error");
-		}
-	}
+            // write to log file
+            Date date = new Date();
+            writeToTextFile(HYPHENS + dateFormat.format(date) + HYPHENS ); 
 
-	public void writeToTextFile(String str) {
-		File file = new File(FILENAME);
-		try {
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-			FileWriter fileWriter = new FileWriter(FILENAME, true);
-			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-			bufferedWriter.write(str );
-			bufferedWriter.newLine();
-			if (str.endsWith("\n"))
-				bufferedWriter.newLine();
-			bufferedWriter.close();
-		} catch (IOException ex) {
-			JOptionPane.showMessageDialog(this,
-					"Error: Fail to write the log file");
-		} catch (Exception ex) {
-			JOptionPane.showConfirmDialog(this, "Unknow error");
-		}
-	}
-        
-        /**
-         * Clear all but today button action performed: 
-         * When the Clear all but today button is clicked, 
-         * all the messages are removed from the scroll panel text box,
-         * except todays.
-         */
-        private void btnClearAllButTodayActionPerformed(ActionEvent evt) {
-            
-            // store log messages in an array of log messages
-            storeLogMessages(); // get most current messages to array
-            
-                /****************** CHECK BOX ORDER FEATURE ********************/
-//            // get the order of messages
-//            if(jCheckBoxOrder.isSelected()){
-//                // sorts by most recent date first
-//                Collections.sort(logMessages, new LogMessage.SortByMostRecentDateFirst());
-//            }else if(!jCheckBoxOrder.isSelected()){
-//                // sorts by most recent date last
-//                Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
-//            }
-                
-            // sorts by most recent date last
-            Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
-            
-            // compare date with todays date and print to screen
-            Date date = new Date(); // get todays date
-            logText.setText(""); // clear text box
-            for(LogMessage logMessage : logMessages){
-                
-                // if date is today then print to screen
-                if(logMessage.getDate().getYear() == date.getYear()
-                        && logMessage.getDate().getMonth()== date.getMonth()
-                        && logMessage.getDate().getDate()== date.getDate()){
-                    logText.append("-------------------------" + dateFormat.format(logMessage.getDate()) + "-------------------------");
-                    logText.append(logMessage.getMessage());
-                }
-            }  
-        }
-        
-        /**
-         * Clear all but today button action performed: 
-         * When the Clear all but today button is clicked, 
-         * all the messages are removed from the scroll panel text box,
-         * except todays.
-         */
-        private void btnDeleteAllButTodayActionPerformed(ActionEvent evt) {
-            
-            // store log messages in an array of log messages
-            storeLogMessages(); // get most current messages to array
-            
-           /****************** CHECK BOX ORDER FEATURE ********************/
-//            // get the order of messages
-//            if(jCheckBoxOrder.isSelected()){
-//                // sorts by most recent date first
-//                Collections.sort(logMessages, new LogMessage.SortByMostRecentDateFirst());
-//            }else if(!jCheckBoxOrder.isSelected()){
-//                // sorts by most recent date last
-//                Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
-//            }
-            
-            // clear the text file
-            clearTextFile();
-                
-            // sorts by most recent date last
-            Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
-            
-            // compare date with todays date and print to screen
-            Date date = new Date(); // get todays date
-            logText.setText(""); // clear text box
-            for(LogMessage logMessage : logMessages){
-                
-                // if date is today then print to screen
-                if(logMessage.getDate().getYear() == date.getYear()
-                        && logMessage.getDate().getMonth()== date.getMonth()
-                        && logMessage.getDate().getDate()== date.getDate()){
-                    writeToTextFile("-------------------------" + dateFormat.format(logMessage.getDate()) + "-------------------------");
-                    writeToTextFile(logMessage.getMessage());
-                }
-            }  
-            
-            // reload the messages from the file
+            // read log messages from the log file
             readMessages();
-            storeLogMessages();
-        }
-        
-        
-        /**
-         * Order check box: When the order check box is checked, 
-         * all the messages are reversed in order in the scroll pane text box.
-         */
+    }
+
+    public void sendMessages(String str) {
+            Date date = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat(
+                            "yyyy-MM-dd hh:mm:ss a");
+            writeToTextFile(dateFormat.format(date) + ": " + str);
+            readCurrentMessages(dateFormat.format(date) + ": " + str);
+    }
+
+    public void readCurrentMessages(String str) {
+        logText.append("\n");
+        logText.append(str);
+    }
+
+    public void readMessages() {
+            String line = "";
+            try {
+                    FileReader fileReader = new FileReader(FILENAME);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    line = bufferedReader.readLine();
+                    while (line != null) {
+                        logText.append("\n");
+                        logText.append(line);
+                        line = bufferedReader.readLine();
+                    }
+                    bufferedReader.close();
+            } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this,
+                                    "Error: Fail to read the log file");
+            } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Unknown error");
+            }
+    }
+
+    public void writeToTextFile(String str) {
+            File file = new File(FILENAME);
+            try {
+                    if (!file.exists()) {
+                            file.createNewFile();
+                    }
+                    FileWriter fileWriter = new FileWriter(FILENAME, true);
+                    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                    if (str.startsWith("---"))
+                            bufferedWriter.newLine();
+                    bufferedWriter.write(str );
+                    bufferedWriter.newLine();
+                    bufferedWriter.close();
+            } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this,
+                                    "Error: Fail to write the log file");
+            } catch (Exception ex) {
+                    JOptionPane.showConfirmDialog(this, "Unknow error");
+            }
+    }
+
+    /**
+     * Clear all but today button action performed: 
+     * When the Clear all but today button is clicked, 
+     * all the messages are removed from the scroll panel text box,
+     * except todays.
+     */
+    private void btnClearAllButTodayActionPerformed(ActionEvent evt) {
+
+        // store log messages in an array of log messages
+        storeLogMessages(); // get most current messages to array
+
+            /****************** CHECK BOX ORDER FEATURE ********************/
+//            // get the order of messages
+//            if(jCheckBoxOrder.isSelected()){
+//                // sorts by most recent date first
+//                Collections.sort(logMessages, new LogMessage.SortByMostRecentDateFirst());
+//            }else if(!jCheckBoxOrder.isSelected()){
+//                // sorts by most recent date last
+//                Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
+//            }
+
+        // sorts by most recent date last
+        Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
+
+        // compare date with todays date and print to screen
+        Date date = new Date(); // get todays date
+        logText.setText(""); // clear text box
+        for(LogMessage logMessage : logMessages){
+
+            // if date is today then print to screen
+            if(logMessage.getDate().getYear() == date.getYear()
+                    && logMessage.getDate().getMonth()== date.getMonth()
+                    && logMessage.getDate().getDate()== date.getDate()){
+                logText.append(HYPHENS + dateFormat.format(logMessage.getDate()) + HYPHENS);
+                logText.append(logMessage.getMessage());
+            }
+        }  
+    }
+
+    /**
+     * Clear all but today button action performed: 
+     * When the Clear all but today button is clicked, 
+     * all the messages are removed from the scroll panel text box,
+     * except todays.
+     */
+    private void btnDeleteAllButTodayActionPerformed(ActionEvent evt) {
+
+        // store log messages in an array of log messages
+        storeLogMessages(); // get most current messages to array
+
+       /****************** CHECK BOX ORDER FEATURE ********************/
+//            // get the order of messages
+//            if(jCheckBoxOrder.isSelected()){
+//                // sorts by most recent date first
+//                Collections.sort(logMessages, new LogMessage.SortByMostRecentDateFirst());
+//            }else if(!jCheckBoxOrder.isSelected()){
+//                // sorts by most recent date last
+//                Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
+//            }
+
+        // clear the text file
+        clearTextFile();
+
+        // sorts by most recent date last
+        Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
+
+        // compare date with todays date and print to screen
+        Date date = new Date(); // get todays date
+        logText.setText(""); // clear text box
+        for(LogMessage logMessage : logMessages){
+
+            // if date is today then print to screen
+            if(logMessage.getDate().getYear() == date.getYear()
+                    && logMessage.getDate().getMonth()== date.getMonth()
+                    && logMessage.getDate().getDate()== date.getDate()){
+                writeToTextFile(HYPHENS + dateFormat.format(logMessage.getDate()) + HYPHENS);
+                writeToTextFile(logMessage.getMessage());
+            }
+        }  
+
+        // reload the messages from the file
+        readMessages();
+        storeLogMessages();
+    }
+
+
+    /**
+     * Order check box: When the order check box is checked, 
+     * all the messages are reversed in order in the scroll pane text box.
+     */
 //        private void jCheckBoxOrderActionPerformed(ActionEvent evt) {
 //            
 //            // store log messages in an array of log messages
@@ -307,93 +309,93 @@ public class LogWindow extends JFrame{
 //                logText.append(logMessage.getMessage());
 //            }
 //        }
-        
-        /**
-         * Show all message with most recent appearing at the bottom
-         * @param evt 
-         */
-        private void showAllActionPerformed(ActionEvent evt){
-            
-            // store log messages in an array of log messages
-            storeLogMessages(); // get most current messages to array
-            
-            // sorts by least recent date first
-            Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
-            
-            logText.setText(""); // clear text box
-            
-            // print log messages to log window text box
-            for (LogMessage logMessage : logMessages) {
-                logText.append("-------------------------" + dateFormat.format(logMessage.getDate()) + "-------------------------");
-                logText.append(logMessage.getMessage());
-            }
+
+    /**
+     * Show all message with most recent appearing at the bottom
+     * @param evt 
+     */
+    private void showAllActionPerformed(ActionEvent evt){
+
+        // store log messages in an array of log messages
+        storeLogMessages(); // get most current messages to array
+
+        // sorts by least recent date first
+        Collections.sort(logMessages, new LogMessage.SortByMostRecentDateLast());
+
+        logText.setText(""); // clear text box
+
+        // print log messages to log window text box
+        for (LogMessage logMessage : logMessages) {
+            logText.append(HYPHENS + dateFormat.format(logMessage.getDate()) + HYPHENS);
+            logText.append(logMessage.getMessage());
         }
-        
-        /**
-         * storeLogMessages: Method
-         * Stores each LogMessage object in an array. 
-         * This is to be able to easily retrieve specific data according to specific times or dates.
-         */
-        private void storeLogMessages(){
-            
-            File file = new File(FILENAME);
-            String FIELD_SEP = "-------------------------";
-            logMessages.clear(); // clear array of any elements
-            Date date = new Date();
-            String message = "";
-		
-            if (file.exists())  // prevent the FileNotFoundException
+    }
+
+    /**
+     * storeLogMessages: Method
+     * Stores each LogMessage object in an array. 
+     * This is to be able to easily retrieve specific data according to specific times or dates.
+     */
+    private void storeLogMessages(){
+
+        File file = new File(FILENAME);
+        String FIELD_SEP = LogWindow.HYPHENS;
+        logMessages.clear(); // clear array of any elements
+        Date date = new Date();
+        String message = "";
+
+        if (file.exists())  // prevent the FileNotFoundException
+        {
+            try
             {
-                try
+
+                BufferedReader in = 
+                     new BufferedReader(
+                     new FileReader(FILENAME));
+
+                // read all log messages stored in the log file
+                // and store them into the array list
+                String line = in.readLine(); // start while loop if not empty
+                while(line != null)
                 {
-                    
-                    BufferedReader in = 
-                         new BufferedReader(
-                         new FileReader(FILENAME));
+                    if(line.startsWith("----")){
+                        String[] columns = line.split(FIELD_SEP);
+                        date = dateFormat.parse(columns[1]);
+                        message = ""; // reset message string
 
-                    // read all log messages stored in the log file
-                    // and store them into the array list
-                    String line = in.readLine(); // start while loop if not empty
-                    while(line != null)
-                    {
-                        if(line.startsWith("----")){
-                            String[] columns = line.split(FIELD_SEP);
-                            date = dateFormat.parse(columns[1]);
-                            message = ""; // reset message string
-                            
-                            line = in.readLine();
-                        }
-                        else{
-                            message = message + "\n" + line;
-                            line = in.readLine();
-                            if(line == null || line.startsWith("----")){
-                                logMessages.add(new LogMessage(date, message));  
-                            }
-                        }                  
+                        line = in.readLine();
                     }
-
-                    in.close(); // close the input stream
+                    else{
+                        message = message + "\n" + line;
+                        line = in.readLine();
+                        if(line == null || line.startsWith("----")){
+                            logMessages.add(new LogMessage(date, message));  
+                        }
+                    }                  
                 }
-                catch(IOException e){e.printStackTrace();} 
-                catch (ParseException ex) { ex.printStackTrace();} 
-            }  
-        }
-        
-        /**
-         * clearTextFile
-         * clear the text file
-         */
-        public void clearTextFile(){
-            
-            // clear the log.text file
-            try {
-                PrintWriter pw = new PrintWriter(FILENAME);
-                pw.close();
-            } 
-            catch (FileNotFoundException ex) {
-                Logger.getLogger(LogWindow.class.getName()).log(Level.SEVERE, null, ex);
+
+                in.close(); // close the input stream
             }
+            catch(IOException e){e.printStackTrace();} 
+            catch (ParseException ex) { ex.printStackTrace();} 
+        }  
+    }
+
+    /**
+     * clearTextFile
+     * clear the text file
+     */
+    public void clearTextFile(){
+
+        // clear the log.text file
+        try {
+            PrintWriter pw = new PrintWriter(FILENAME);
+            pw.close();
+        } 
+        catch (FileNotFoundException ex) {
+            Logger.getLogger(LogWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
 
     /**
      * LogMessages class

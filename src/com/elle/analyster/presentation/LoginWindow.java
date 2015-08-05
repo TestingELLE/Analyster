@@ -373,9 +373,9 @@ public class LoginWindow extends JFrame {
 
         // connect to database
         try {
-            logWindow.sendMessages("\nStart to connect local database...");
+            logWindow.sendMessages("Start to connect local database...");
             DBConnection.connect(selectedServer, selectedDB, userName, userPassword);
-            logWindow.sendMessages("Connect successfully!\n");
+            logWindow.sendMessages("Connect successfully!");
             
         } 
         catch (SQLException ex) {
