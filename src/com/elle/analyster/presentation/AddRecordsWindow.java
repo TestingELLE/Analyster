@@ -347,6 +347,7 @@ public class AddRecordsWindow extends JFrame {
 
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
+                
                 if(e.getComponent() instanceof JTable){
                     if (e.getKeyCode() == KeyEvent.VK_TAB) {
 //                        if(!table.isEditing()){
@@ -363,6 +364,7 @@ public class AddRecordsWindow extends JFrame {
 //                            }
 //                        }
 
+                        System.out.println("tab dispatch");
                     } 
                     else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
                         JTable table = (JTable) e.getComponent().getParent();
@@ -380,29 +382,64 @@ public class AddRecordsWindow extends JFrame {
                                 selectCom.setText(today);
                             }// default date input with today's date}
                         }
+                        System.out.println("date dispatch");
                     }
 
                     // this is called while in the cell editing to finish editing
-                    else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    else if (e.getKeyCode() == KeyEvent.VK_ENTER && !table.isEditing()) {
 
-                        if(isTableEditing){
-                            btnSubmit.setEnabled(true);
-                        }
-                        else if(!isTableEditing){
-                            submit();
+                        // clear the row(s)
+                        if(e.getID() == KeyEvent.KEY_PRESSED){
+                            if(table.getSelectionBackground() == Color.RED){
+                                int[] rows = table.getSelectedRows();
+
+                                if(rows != null){
+                                    for(int row : rows){
+                                        for(int col = 0; col < table.getColumnCount(); col++){
+                                            table.getModel().setValueAt("", row, col);
+                                        }
+                                    }
+                                }
+                                table.setSelectionBackground(defaultSelectedBG);
+                            }
+                            
+                            // submit the data
+                            else if(table.getSelectionBackground() != Color.RED){
+                                submit();
+                            }
+
+                            // enable the submit button
+                            btnSubmit.setEnabled(!table.isEditing());
+                            System.out.println("enter dispatch");
+
                         }
                     }
 
-                    // this is called while in the cell editing to finish editing
-                    else if (e.getKeyCode() == KeyEvent.VK_DELETE && table.isEditing()) {
+                    // this toggles the red bg for clearing row data
+                    else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 
-                        deleteKeyAction(e);
-                        return true;
+                        if(e.getID() == KeyEvent.KEY_RELEASED){
+                            if(table.isEditing())
+                                table.getCellEditor().stopCellEditing();
+
+                            if(table.getSelectionBackground() == defaultSelectedBG){
+                                table.setSelectionBackground(Color.RED);
+                            }
+                            else{
+                                table.setSelectionBackground(defaultSelectedBG);
+                            }
+                            System.out.println("delete dispatch");
+                        }
                     }
                     else{
-                        btnSubmit.setEnabled(false);
+                        if(e.getID() == KeyEvent.KEY_RELEASED){
+                            System.out.println(table.isEditing());
+                            btnSubmit.setEnabled(!table.isEditing());
+                            System.out.println("else dispatch");
+                        }
                     }
-                }
+                } // end table component condition
+
                 return false; 
             }
         });
@@ -723,7 +760,7 @@ public class AddRecordsWindow extends JFrame {
      * @param keyEvent 
      */
     private void deleteKeyAction(KeyEvent keyEvent){
-        
+                
         if(table.isEditing())
             table.getCellEditor().stopCellEditing();
 
