@@ -1,6 +1,7 @@
 
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.logic.EditWindow;
 import com.elle.analyster.logic.LogMessage;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,57 +33,57 @@ public class LogWindow extends JFrame{
     // constructor
     public LogWindow() {
 
-            this.setTitle("Log Window");
-            ImageIcon imag = new ImageIcon(
-                            "Images/elle gui image.jpg");
-            this.setIconImage(imag.getImage());
+        this.setTitle("Log Window");
+        ImageIcon imag = new ImageIcon(
+                        "Images/elle gui image.jpg");
+        this.setIconImage(imag.getImage());
 
-            logText = new TextArea(5, 30);
-            logText.setEditable(false);
+        logText = new TextArea(5, 30);
+        logText.setEditable(false);
 
-            //was testing the JList
-            // I need a no horizontal scroll and a wrap
-            // going to come back to this
+        //was testing the JList
+        // I need a no horizontal scroll and a wrap
+        // going to come back to this
 //                JList list = new JList();
 //                list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 //                list.add(logText);
 //                list.setVisibleRowCount(0);
-            scrollPane = new JScrollPane(logText);
-            //scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane = new JScrollPane(logText);
+        //scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-            // change layout of frame
-            this.setLayout(new GridBagLayout());
+        // change layout of frame
+        this.setLayout(new GridBagLayout());
 
-            // set constraints for the scroll panel
-            GridBagConstraints scrollPanelConstraints = new GridBagConstraints();
-            scrollPanelConstraints.fill = GridBagConstraints.BOTH;
-            scrollPanelConstraints.weightx = 1; // takes up whole x axis
-            scrollPanelConstraints.weighty = 1; // takes up most y axis with room for buttons
-            scrollPanelConstraints.gridx = 0; // first col cell
-            scrollPanelConstraints.gridy = 0; // first row cell
+        // set constraints for the scroll panel
+        GridBagConstraints scrollPanelConstraints = new GridBagConstraints();
+        scrollPanelConstraints.fill = GridBagConstraints.BOTH;
+        scrollPanelConstraints.weightx = 1; // takes up whole x axis
+        scrollPanelConstraints.weighty = 1; // takes up most y axis with room for buttons
+        scrollPanelConstraints.gridx = 0; // first col cell
+        scrollPanelConstraints.gridy = 0; // first row cell
 
-            // add scroll panel to frame
-            this.add(scrollPane, scrollPanelConstraints);
+        // add scroll panel to frame
+        this.add(scrollPane, scrollPanelConstraints);
 
-            // create a panel for buttons
-            panelLogWindowButtons = new JPanel();
+        // create a panel for buttons
+        panelLogWindowButtons = new JPanel();
 
-            // create buttons 
-            btnClearAllButToday = new JButton("Clear All But Today");
-            btnClearAllButToday.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    btnClearAllButTodayActionPerformed(evt);
-                }
-            });
+        // create buttons 
+        btnClearAllButToday = new JButton("Clear All But Today");
+        btnClearAllButToday.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearAllButTodayActionPerformed(evt);
+            }
+        });
 
-            btnDeleteAllButToday = new JButton("Delete All But Today");
-            btnDeleteAllButToday.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    btnDeleteAllButTodayActionPerformed(evt);
-                }
-            });
+        btnDeleteAllButToday = new JButton("Delete All But Today");
+        btnDeleteAllButToday.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteAllButTodayActionPerformed(evt);
+            }
+        });
 
-            /********* THIS IS THE CHECKBOX ORDER FEATURE *****************/
+        /********* THIS IS THE CHECKBOX ORDER FEATURE *****************/
 //                jCheckBoxOrder = new JCheckBox();
 //                jCheckBoxOrder.addActionListener(new java.awt.event.ActionListener() {
 //                    public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -91,45 +92,45 @@ public class LogWindow extends JFrame{
 //                });
 ////                jLabelOrder = new JLabel("Order");
 
-            showAll = new JButton("Show All");
-            showAll.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    showAllActionPerformed(evt);
-                }
-            });
+        showAll = new JButton("Show All");
+        showAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showAllActionPerformed(evt);
+            }
+        });
 
 
-            // add buttons to panel
+        // add buttons to panel
 //                panelLogWindowButtons.add(btnClearAll);
-            panelLogWindowButtons.add(btnClearAllButToday);
-            panelLogWindowButtons.add(btnDeleteAllButToday);
-            //jPanelLogWindowButtons.add(jCheckBoxOrder);
-            //jPanelLogWindowButtons.add(jLabelOrder);
-            panelLogWindowButtons.add(showAll);
+        panelLogWindowButtons.add(btnClearAllButToday);
+        panelLogWindowButtons.add(btnDeleteAllButToday);
+        //jPanelLogWindowButtons.add(jCheckBoxOrder);
+        //jPanelLogWindowButtons.add(jLabelOrder);
+        panelLogWindowButtons.add(showAll);
 
-            // set constraints for the buttons panel
-            GridBagConstraints buttonsPanelConstraints = new GridBagConstraints();
-            buttonsPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-            buttonsPanelConstraints.weightx = 1; // takes up whole x axis
-            buttonsPanelConstraints.weighty = 0; // takes up enough y axis just for buttons
-            buttonsPanelConstraints.gridx = 0; // first col cell
-            buttonsPanelConstraints.gridy = 1; // second row cell
+        // set constraints for the buttons panel
+        GridBagConstraints buttonsPanelConstraints = new GridBagConstraints();
+        buttonsPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+        buttonsPanelConstraints.weightx = 1; // takes up whole x axis
+        buttonsPanelConstraints.weighty = 0; // takes up enough y axis just for buttons
+        buttonsPanelConstraints.gridx = 0; // first col cell
+        buttonsPanelConstraints.gridy = 1; // second row cell
 
-            // add panel to the frame
-            this.add(panelLogWindowButtons,buttonsPanelConstraints);
+        // add panel to the frame
+        this.add(panelLogWindowButtons,buttonsPanelConstraints);
 
-            this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            this.setPreferredSize(new Dimension(860, 540));
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setPreferredSize(new Dimension(860, 540));
 
-            this.pack();
-            this.setVisible(false);    
+        this.pack();
+        this.setVisible(false);    
 
-            // write to log file
-            Date date = new Date();
-            addMessage(HYPHENS + dateFormat.format(date) + HYPHENS ); 
+        // write to log file
+        Date date = new Date();
+        addMessage(HYPHENS + dateFormat.format(date) + HYPHENS ); 
 
-            // read log messages from the log file
-            readMessages();
+        // read log messages from the log file
+        readMessages();
     }
 
     public void readCurrentMessages(String str) {

@@ -1574,12 +1574,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * @param table 
      */
     public void setColumnFormat(float[] width, JTable table) {
+        
         // Center column content
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        
         //LEFT column content
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
         leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+        
         //Center column header
         int widthFixedColumns = 0;
         JTableHeader header = table.getTableHeader();
