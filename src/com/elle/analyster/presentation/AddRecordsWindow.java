@@ -399,6 +399,9 @@ public class AddRecordsWindow extends JFrame {
                         deleteKeyAction(e);
                         return true;
                     }
+                    else{
+                        btnSubmit.setEnabled(false);
+                    }
                 }
                 return false; 
             }
@@ -469,7 +472,7 @@ public class AddRecordsWindow extends JFrame {
                     validateCell(e);
                 }
                 
-                btnSubmit.setEnabled(isTableEditing);
+                btnSubmit.setEnabled(true);
             }
         });
         
@@ -477,9 +480,16 @@ public class AddRecordsWindow extends JFrame {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-                // if we click away the red delete should go away
-                if(table.getSelectionBackground() == Color.RED && !e.isControlDown()){
-                    table.setSelectionBackground(defaultSelectedBG);
+                
+                if(e.getClickCount() == 1){
+                    // if we click away the red delete should go away
+                    if(table.getSelectionBackground() == Color.RED && !e.isControlDown()){
+                        table.setSelectionBackground(defaultSelectedBG);
+                    }
+                }
+                // this enters edit mode
+                else if(e.getClickCount() == 2){
+                    btnSubmit.setEnabled(false);
                 }
             }
         });
