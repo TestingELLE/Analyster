@@ -19,7 +19,7 @@ public class LogWindow extends JFrame{
     private final String FILENAME = "log.txt";
     private static final String HYPHENS = "-------------------------"; // delimiter
     private JScrollPane scrollPane;
-    private TextArea logText;
+    private JTextArea logText;
 
     private final ArrayList<LogMessage> logMessages = new ArrayList<>();
     private final JPanel panelLogWindowButtons;
@@ -38,8 +38,9 @@ public class LogWindow extends JFrame{
                         "Images/elle gui image.jpg");
         this.setIconImage(imag.getImage());
 
-        logText = new TextArea(5, 30);
+        logText = new JTextArea(5, 30);
         logText.setEditable(false);
+        logText.setLineWrap(true);
 
         //was testing the JList
         // I need a no horizontal scroll and a wrap
