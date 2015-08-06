@@ -382,6 +382,13 @@ public class AddRecordsWindow extends JFrame {
                     
                     btnSubmit.setEnabled(true);
                 }
+                
+                // this is called while in the cell editing to finish editing
+                else if (e.getKeyCode() == KeyEvent.VK_DELETE && table.isEditing()) {
+                    
+                    deleteKeyAction(e);
+                    return true;
+                }
                 return false; 
             }
         });
@@ -445,10 +452,11 @@ public class AddRecordsWindow extends JFrame {
             @Override
             public void tableChanged(TableModelEvent e) {
                 
-                if(table.isEditing())
-                // check the cell for valid entry
-                validateCell(e);
-                
+                // if clearing row then do not validate
+                if(table.getSelectionBackground() != Color.RED){
+                    // check the cell for valid entry
+                    validateCell(e);
+                }
             }
         });
         
@@ -470,34 +478,16 @@ public class AddRecordsWindow extends JFrame {
         table.addKeyListener(new KeyAdapter() {
             
             @Override
-            public void keyPressed(KeyEvent ke) {
+            public void keyPressed(KeyEvent keyEvent) {
                 
                 // when not in editing mode this will submit the data
-                if (ke.getKeyCode() == KeyEvent.VK_ENTER && !table.isEditing()) {
-                    
+                if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER && !table.isEditing()) {
                     submit();
                 }
                 
                 // when not in editing mode this will color the row red
-                if (ke.getKeyCode() == KeyEvent.VK_DELETE && !table.isEditing()) {
-                    
-                    table.getCellEditor().stopCellEditing();
-                    
-                    if(table.getSelectionBackground() == defaultSelectedBG){
-                        table.setSelectionBackground(Color.RED);
-                    }
-                    else if(table.getSelectionBackground() == Color.RED){
-                        int[] rows = table.getSelectedRows();
-                    
-                        if(rows != null){
-                            for(int row : rows){
-                                for(int col = 0; col < table.getColumnCount(); col++){
-                                    table.getModel().setValueAt("", row, col);
-                                }
-                            }
-                        }
-                        table.setSelectionBackground(defaultSelectedBG);
-                    }
+                if (keyEvent.getKeyCode() == KeyEvent.VK_DELETE && !table.isEditing()) {
+                    deleteKeyAction(keyEvent);
                 }
             }
         });
@@ -720,6 +710,36 @@ public class AddRecordsWindow extends JFrame {
         }
         
         return !error;
+    }
+    
+    /**
+     * deleteKeyAction
+     * This is called when the delete key is pressed.
+     * This highlights rows red when pressed.
+     * It is used to clear the 
+     * cells values of entire rows.
+     * @param keyEvent 
+     */
+    private void deleteKeyAction(KeyEvent keyEvent){
+        
+        if(table.isEditing())
+            table.getCellEditor().stopCellEditing();
+
+        if(table.getSelectionBackground() == defaultSelectedBG){
+            table.setSelectionBackground(Color.RED);
+        }
+        else if(table.getSelectionBackground() == Color.RED){
+            int[] rows = table.getSelectedRows();
+
+            if(rows != null){
+                for(int row : rows){
+                    for(int col = 0; col < table.getColumnCount(); col++){
+                        table.getModel().setValueAt("", row, col);
+                    }
+                }
+            }
+            table.setSelectionBackground(defaultSelectedBG);
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
