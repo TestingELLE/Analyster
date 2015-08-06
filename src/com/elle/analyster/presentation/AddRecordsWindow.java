@@ -36,8 +36,8 @@ public class AddRecordsWindow extends JFrame {
     private LogWindow logWindow;
     private DefaultTableModel model;
     
-    // colors
     private Color defaultSelectedBG;
+    private boolean isTableEditing;
 
     /**
      * Creates new form AddRecordsWindow
@@ -71,6 +71,8 @@ public class AddRecordsWindow extends JFrame {
         
         // set this window to appear in the middle of Analyster
         this.setLocationRelativeTo(analyster);
+        
+        isTableEditing = false;
         
     }
 
@@ -345,49 +347,58 @@ public class AddRecordsWindow extends JFrame {
 
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (e.getComponent() instanceof JTable) {
-                        JTable table = (JTable) e.getComponent();
-                        int row = table.getSelectedRow();
+                if(e.getComponent() instanceof JTable){
+                    if (e.getKeyCode() == KeyEvent.VK_TAB) {
+//                        if(!table.isEditing()){
+//                            if (e.getComponent() instanceof JTable) {
+//                                JTable table = (JTable) e.getComponent();
+//                                int row = table.getSelectedRow();
+//                                int column = table.getSelectedColumn();
+//                                table.getComponentAt(row, column).requestFocus();
+//                                table.editCellAt(row, column);
+//                                JTextField selectCom = (JTextField) table.getEditorComponent();
+//                                selectCom.requestFocusInWindow();
+//                                selectCom.selectAll();
+//                                btnSubmit.setEnabled(!table.isEditing());
+//                            }
+//                        }
+
+                    } 
+                    else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
+                        JTable table = (JTable) e.getComponent().getParent();
                         int column = table.getSelectedColumn();
-                        table.getComponentAt(row, column).requestFocus();
-                        table.editCellAt(row, column);
-                        JTextField selectCom = (JTextField) table.getEditorComponent();
-                        selectCom.requestFocusInWindow();
-                        selectCom.selectAll();
-                        btnSubmit.setEnabled(!table.isEditing());
+                        if (table.getColumnName(column).toLowerCase().contains("date")) {
+                            if (e.getID() != 401) {
+                                return false;
+                            } else {
+                                JTextField selectCom = (JTextField) e.getComponent();
+                                selectCom.requestFocusInWindow();
+                                selectCom.selectAll();
+                                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                Date date = new Date();
+                                String today = dateFormat.format(date);
+                                selectCom.setText(today);
+                            }// default date input with today's date}
+                        }
                     }
 
-                } 
-                else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
-                    JTable table = (JTable) e.getComponent().getParent();
-                    int column = table.getSelectedColumn();
-                    if (table.getColumnName(column).toLowerCase().contains("date")) {
-                        if (e.getID() != 401) {
-                            return false;
-                        } else {
-                            JTextField selectCom = (JTextField) e.getComponent();
-                            selectCom.requestFocusInWindow();
-                            selectCom.selectAll();
-                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                            Date date = new Date();
-                            String today = dateFormat.format(date);
-                            selectCom.setText(today);
-                        }// default date input with today's date}
+                    // this is called while in the cell editing to finish editing
+                    else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+
+                        if(isTableEditing){
+                            btnSubmit.setEnabled(true);
+                        }
+                        else if(!isTableEditing){
+                            submit();
+                        }
                     }
-                }
-                
-                // this is called while in the cell editing to finish editing
-                else if (e.getKeyCode() == KeyEvent.VK_ENTER && table.isEditing()) {
-                    
-                    btnSubmit.setEnabled(true);
-                }
-                
-                // this is called while in the cell editing to finish editing
-                else if (e.getKeyCode() == KeyEvent.VK_DELETE && table.isEditing()) {
-                    
-                    deleteKeyAction(e);
-                    return true;
+
+                    // this is called while in the cell editing to finish editing
+                    else if (e.getKeyCode() == KeyEvent.VK_DELETE && table.isEditing()) {
+
+                        deleteKeyAction(e);
+                        return true;
+                    }
                 }
                 return false; 
             }
@@ -457,37 +468,18 @@ public class AddRecordsWindow extends JFrame {
                     // check the cell for valid entry
                     validateCell(e);
                 }
+                
+                btnSubmit.setEnabled(isTableEditing);
             }
         });
         
-        // add mouselistener to the table
-        table.addMouseListener( new MouseAdapter() {
-                    
+        // add mouseListener
+        table.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-
-                // select all text
-                selectAllText(e);
-
-                // grey out submit button
-                btnSubmit.setEnabled(false);
-            }
-        });
-        
-        // add keyListener to the table
-        table.addKeyListener(new KeyAdapter() {
-            
-            @Override
-            public void keyPressed(KeyEvent keyEvent) {
-                
-                // when not in editing mode this will submit the data
-                if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER && !table.isEditing()) {
-                    submit();
-                }
-                
-                // when not in editing mode this will color the row red
-                if (keyEvent.getKeyCode() == KeyEvent.VK_DELETE && !table.isEditing()) {
-                    deleteKeyAction(keyEvent);
+                // if we click away the red delete should go away
+                if(table.getSelectionBackground() == Color.RED && !e.isControlDown()){
+                    table.setSelectionBackground(defaultSelectedBG);
                 }
             }
         });
