@@ -27,7 +27,6 @@ public class AddRecordsWindow extends JFrame {
 
     // attributes
     private String[] columnNames;
-    private String tableName;
     private int numRowsAdded;           // number of rows added counter
     private Map<String,Tab> tabs;       // used to update the records label
     private Statement statement;
@@ -49,14 +48,8 @@ public class AddRecordsWindow extends JFrame {
         tabs = analyster.getTabs();
         statement = analyster.getStatement();
         
-        // set this window to appear in the middle of Analyster
-        this.setLocationRelativeTo(analyster);
-        
         // set the selected table name
-        tableName = analyster.getSelectedTab();
-        
-        // set the label header
-        this.setTitle("Add Records to " + tableName);
+        table.setName(analyster.getSelectedTab());
         
         // create a new empty table
         createEmptyTable();
@@ -66,6 +59,12 @@ public class AddRecordsWindow extends JFrame {
         
         // add listeners
         addTableListeners();
+        
+        // set the label header
+        this.setTitle("Add Records to " + table.getName());
+        
+        // set this window to appear in the middle of Analyster
+        this.setLocationRelativeTo(analyster);
         
     }
 
@@ -213,7 +212,7 @@ public class AddRecordsWindow extends JFrame {
             
             // once data checked, execute sql statement
             // first get the insert statement for the table
-            String insertInto = "INSERT INTO " + tableName + " (";
+            String insertInto = "INSERT INTO " + table.getName() + " (";
 
             // this table should already not include the primary key
             for (col = 0; col < table.getColumnCount(); col++){
@@ -392,7 +391,7 @@ public class AddRecordsWindow extends JFrame {
      */
     private void createEmptyTable() {
         // get column names for selected Analyster table
-        columnNames = analyster.getTabs().get(tableName).getTableColNames();
+        columnNames = analyster.getTabs().get(table.getName()).getTableColNames();
         
         // we don't want the ID column 
         columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
@@ -402,6 +401,15 @@ public class AddRecordsWindow extends JFrame {
         
         // add the table model to the table
         table.setModel(model);
+        
+        
+        // get table column width format
+        float[] widths = tabs.get(table.getName()).getColWidthPercent();
+        widths = Arrays.copyOfRange(widths, 1, widths.length);
+        
+        float[] test = tabs.get(table.getName()).getColWidthPercent();
+        
+        analyster.setColumnFormat(widths, table);
     }
     
     /**
@@ -411,7 +419,7 @@ public class AddRecordsWindow extends JFrame {
      */
     private void createEmptyTable(int rows) {
         // get column names for selected Analyster table
-        columnNames = analyster.getTabs().get(tableName).getTableColNames();
+        columnNames = analyster.getTabs().get(table.getName()).getTableColNames();
         
         // we don't want the ID column 
         columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
