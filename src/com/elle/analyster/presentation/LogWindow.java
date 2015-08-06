@@ -1,7 +1,7 @@
 
 package com.elle.analyster.presentation;
 
-import com.elle.analyster.logic.EditWindow;
+import com.elle.analyster.logic.WindowEditor;
 import com.elle.analyster.logic.LogMessage;
 import java.awt.*;
 import java.awt.event.ActionEvent;

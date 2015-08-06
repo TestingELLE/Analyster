@@ -10,11 +10,11 @@ import java.awt.Container;
 import javax.swing.AbstractButton;
 
 /**
- * EditWindow
- * This class has methods to edit windows
+ * WindowEditor
+ This class has methods to edit windows
  * @author cigreja
  */
-public class EditWindow {
+public class WindowEditor {
     
     /**
      * removeMinMaxClose

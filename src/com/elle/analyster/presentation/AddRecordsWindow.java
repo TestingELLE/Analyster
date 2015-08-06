@@ -35,6 +35,9 @@ public class AddRecordsWindow extends JFrame {
     private AnalysterWindow analyster;
     private LogWindow logWindow;
     private DefaultTableModel model;
+    
+    // colors
+    private Color defaultSelectedBG;
 
     /**
      * Creates new form AddRecordsWindow
@@ -50,6 +53,9 @@ public class AddRecordsWindow extends JFrame {
         
         // set the selected table name
         table.setName(analyster.getSelectedTab());
+        
+        // get default selected bg color
+        defaultSelectedBG = table.getSelectionBackground();
         
         // create a new empty table
         createEmptyTable();
@@ -86,7 +92,7 @@ public class AddRecordsWindow extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(550, 200));
-        setPreferredSize(new java.awt.Dimension(875, 227));
+        setPreferredSize(new java.awt.Dimension(894, 250));
         setSize(new java.awt.Dimension(894, 560));
 
         scrollpane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -344,19 +350,13 @@ public class AddRecordsWindow extends JFrame {
                         JTable table = (JTable) e.getComponent();
                         int row = table.getSelectedRow();
                         int column = table.getSelectedColumn();
-                        if (column == table.getRowCount() || column == 0) {
-                            return false;
-                        } 
-                        else {
-                            table.getComponentAt(row, column).requestFocus();
-                            table.editCellAt(row, column);
-                            JTextField selectCom = (JTextField) table.getEditorComponent();
-                            selectCom.requestFocusInWindow();
-                            selectCom.selectAll();
-                        }
+                        table.getComponentAt(row, column).requestFocus();
+                        table.editCellAt(row, column);
+                        JTextField selectCom = (JTextField) table.getEditorComponent();
+                        selectCom.requestFocusInWindow();
+                        selectCom.selectAll();
+                        btnSubmit.setEnabled(!table.isEditing());
                     }
-                    
-                    btnSubmit.setEnabled(!table.isEditing()); 
 
                 } 
                 else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
@@ -445,6 +445,7 @@ public class AddRecordsWindow extends JFrame {
             @Override
             public void tableChanged(TableModelEvent e) {
                 
+                if(table.isEditing())
                 // check the cell for valid entry
                 validateCell(e);
                 
@@ -471,10 +472,32 @@ public class AddRecordsWindow extends JFrame {
             @Override
             public void keyPressed(KeyEvent ke) {
                 
-                // in editing mode this should ask to upload changes when enter key press
+                // when not in editing mode this will submit the data
                 if (ke.getKeyCode() == KeyEvent.VK_ENTER && !table.isEditing()) {
                     
                     submit();
+                }
+                
+                // when not in editing mode this will color the row red
+                if (ke.getKeyCode() == KeyEvent.VK_DELETE && !table.isEditing()) {
+                    
+                    table.getCellEditor().stopCellEditing();
+                    
+                    if(table.getSelectionBackground() == defaultSelectedBG){
+                        table.setSelectionBackground(Color.RED);
+                    }
+                    else if(table.getSelectionBackground() == Color.RED){
+                        int[] rows = table.getSelectedRows();
+                    
+                        if(rows != null){
+                            for(int row : rows){
+                                for(int col = 0; col < table.getColumnCount(); col++){
+                                    table.getModel().setValueAt("", row, col);
+                                }
+                            }
+                        }
+                        table.setSelectionBackground(defaultSelectedBG);
+                    }
                 }
             }
         });
