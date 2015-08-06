@@ -86,6 +86,8 @@ public class AddRecordsWindow extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(550, 200));
+        setPreferredSize(new java.awt.Dimension(875, 227));
+        setSize(new java.awt.Dimension(894, 560));
 
         scrollpane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollpane.setMaximumSize(new java.awt.Dimension(260, 100));
@@ -161,7 +163,7 @@ public class AddRecordsWindow extends JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(scrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                .addComponent(scrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
                 .addGap(12, 12, 12)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSubmit)
@@ -406,8 +408,6 @@ public class AddRecordsWindow extends JFrame {
         // get table column width format
         float[] widths = tabs.get(table.getName()).getColWidthPercent();
         widths = Arrays.copyOfRange(widths, 1, widths.length);
-        
-        float[] test = tabs.get(table.getName()).getColWidthPercent();
         
         analyster.setColumnFormat(widths, table);
     }
