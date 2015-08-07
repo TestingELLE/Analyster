@@ -8,8 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -20,6 +23,7 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
     private Map<Integer,ArrayList<Integer>> cells;  // cells to color
     private String[][] data;                        // original model data
     private Color defaultCellColor;
+    private Color selectedCellColor;
 
     /**
      * CONSTRUCTOR 
@@ -35,6 +39,7 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
         
         // initialize the default cell color
         defaultCellColor = table.getBackground();
+        selectedCellColor = table.getSelectionBackground();
         
         // initialize data for the table model
         data = new String[table.getModel().getRowCount()][table.getColumnCount()];
@@ -77,8 +82,12 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
             component.setBackground(Color.GREEN);
         }
         else{
-            //component.setBackground(defaultCellColor);
-            component.setBackground(table.getBackground());
+            if(isSelected){
+                component.setBackground(selectedCellColor);
+            }
+            else{
+                component.setBackground(defaultCellColor);
+            }
         }
         
         return component;
