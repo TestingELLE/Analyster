@@ -9,6 +9,7 @@ import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
 import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_TABLE_NAME;
+import com.elle.analyster.logic.JTableCellRenderer;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -55,6 +56,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private LoginWindow loginWindow;
     private BatchEditWindow batchEditWindow;
     private EditDatabaseWindow editDatabaseWindow;
+
 
     /**
      * CONSTRUCTOR
@@ -179,9 +181,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // total counts are removed or added in the Tab class
         initTotalRowCounts(tabs);
         
+        // after table has loaded, add the cell renderers for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setCellRenderer(new JTableCellRenderer(assignmentTable));
+        tabs.get(REPORTS_TABLE_NAME).setCellRenderer(new JTableCellRenderer(reportTable));
+        tabs.get(ARCHIVE_TABLE_NAME).setCellRenderer(new JTableCellRenderer(archiveTable));
+        
         // set title of window to Analyster
         this.setTitle("Analyster");
-        
     }
 
     /**
@@ -852,7 +858,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     public void filterBySearch() {
         
-        // this matches the combobox value with the column name value to get the column index
+        // this matches the combobox newValue with the column name newValue to get the column index
         for(int col = 0; col < tabs.get(getSelectedTab()).getTable().getColumnCount(); col++)
             if(tabs.get(getSelectedTab()).getTable().getColumnName(col)
                     .equalsIgnoreCase(comboBoxSearch.getSelectedItem().toString())){
@@ -891,9 +897,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     public void uploadChanges(){
         
+        String tab = getSelectedTab();
+        JTableCellRenderer cellRenderer = tabs.get(tab).getCellRenderer();
+        
         updateTable(tabs.get(getSelectedTab()).getTable(), modifiedDataList);
 
         loadTable(tabs.get(getSelectedTab()).getTable()); // refresh table
+        
+        // clear cellrenderer
+        cellRenderer.clearCellRender();
+        
+        // reload cellrenderer old data
+        cellRenderer.reloadData();
         
         makeTableEditable(jLabelEdit.getText().equals("OFF")?true:false);
         
@@ -1018,8 +1033,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
     /**
      * This method listens if the enter key was pressed in the search text box.
-     * This allows the value to be entered without having to click the 
-     * search button.
+     * This allows the newValue to be entered without having to click the 
+ search button.
      * @param evt 
      */
     private void textFieldForSearchKeyPressed(KeyEvent evt) {//GEN-FIRST:event_textFieldForSearchKeyPressed
@@ -1132,8 +1147,17 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     private void menuItemReloadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemReloadDataActionPerformed
 
+        String tab = getSelectedTab();
+        JTableCellRenderer cellRenderer = tabs.get(tab).getCellRenderer();
+        
         // reload table from database
         loadTable(tabs.get(getSelectedTab()).getTable());
+        
+        // clear cellrenderer
+        cellRenderer.clearCellRender();
+        
+        // reload cellrenderer old data
+        cellRenderer.reloadData();
         
         // set label record information
         labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
@@ -1329,6 +1353,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         }
     }//GEN-LAST:event_menuItemSQLCmdChkBxActionPerformed
 
+    
     /**
      * jTableChanged
      * @param e 
@@ -1337,18 +1362,28 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
         int row = e.getFirstRow();
         int col = e.getColumn();
-        int id;
-        Object value;
-        
-        id = (Integer) tabs.get(getSelectedTab()).getTable().getModel().getValueAt(row, 0);
-        value = tabs.get(getSelectedTab()).getTable().getModel().getValueAt(row, col);
+        JTable table = tabs.get(getSelectedTab()).getTable();
+        JTableCellRenderer cellRender = tabs.get(getSelectedTab()).getCellRenderer();
+        int id = (Integer) table.getModel().getValueAt(row, 0);
+        Object oldValue = cellRender.getData()[row][col];
+        Object newValue = table.getModel().getValueAt(row, col);
 
-        ModifiedData modifiedData = new ModifiedData();
-        modifiedData.setColumnIndex(col);
-        modifiedData.setId(id);
-        modifiedData.setTableName(getSelectedTab());
-        modifiedData.setValueModified(value);
-        modifiedDataList.add(modifiedData);
+        // check that data is different
+        if(!newValue.equals(oldValue)){
+            ModifiedData modifiedData = new ModifiedData();
+            modifiedData.setColumnIndex(col);
+            modifiedData.setId(id);
+            modifiedData.setTableName(getSelectedTab());
+            modifiedData.setValueModified(newValue);
+            modifiedDataList.add(modifiedData);
+
+            // color the cell
+            cellRender.getCells().get(col).add(row);
+            table.getColumnModel().getColumn(col).setCellRenderer(cellRender);
+            
+            // update old value to new value
+            cellRender.getData()[row][col] = newValue;
+        }
     }
 
     /**
@@ -1469,7 +1504,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             public void keyReleased(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_F2) {
                     
-                    // I beleive this is meant to toggle edit mode
+                    // I believe this is meant to toggle edit mode
                     // so I passed the conditional
                     makeTableEditable(jLabelEdit.getText().equals("ON ")?false:true);
                 } 
@@ -1700,7 +1735,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * sets the keyboard focus manager
      */
     private void setKeyboardFocusManager() {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {// Allow to TAB-
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
 
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
@@ -1721,6 +1756,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                             }
                         }
                     }
+                    
                 } 
                 
                 else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
@@ -1745,8 +1781,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 
                 return false;
             }
-        }
-        );
+        });
     }
 
     public static AnalysterWindow getInstance() {

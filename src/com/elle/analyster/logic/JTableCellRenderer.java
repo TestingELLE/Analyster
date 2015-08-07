@@ -6,16 +6,12 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 /**
- *
+ * JTableCellRenderer
+ * This is a custom cell renderer to color cells
  * @author cigreja
  */
 public class JTableCellRenderer extends DefaultTableCellRenderer{
@@ -24,6 +20,7 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
     private String[][] data;                        // original model data
     private Color defaultCellColor;
     private Color selectedCellColor;
+    private JTable table;
 
     /**
      * CONSTRUCTOR 
@@ -31,6 +28,7 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
      */
     public JTableCellRenderer(JTable table) {
         
+        this.table = table;
         // initialize the Map of cells
         cells = new HashMap<>();
         for(int col = 0; col < table.getColumnCount(); col++){
@@ -43,14 +41,7 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
         
         // initialize data for the table model
         data = new String[table.getModel().getRowCount()][table.getColumnCount()];
-        for(int row = 0; row < table.getModel().getRowCount(); row++){
-            for(int col = 0; col < table.getColumnCount(); col++){
-                Object value = table.getModel().getValueAt(row, col);
-                if(value == null)
-                    value ="";
-                data[row][col]  = value.toString();
-            }
-        }
+        reloadData();
         
     }
 
@@ -70,6 +61,25 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
         this.data = data;
     }
     
+    public void clearCellRender(){
+        
+        // clear colors from cells
+        for(int col = 0; col < cells.size(); col++){
+            cells.get(col).clear();
+        }
+    }
+    
+    // this is temporary
+    public void reloadData(){
+        for(int row = 0; row < table.getModel().getRowCount(); row++){
+            for(int col = 0; col < table.getColumnCount(); col++){
+                Object value = table.getModel().getValueAt(row, col);
+                if(value == null)
+                    value ="";
+                data[row][col]  = value.toString();
+            }
+        }
+    }
     
     
     @Override
