@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,7 +17,8 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class JTableCellRenderer extends DefaultTableCellRenderer{
     
-    private Map<Integer,ArrayList<Integer>> cells;
+    private Map<Integer,ArrayList<Integer>> cells;  // cells to color
+    private String[][] data;                        // original model data
     private Color defaultCellColor;
 
     /**
@@ -33,21 +35,52 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
         
         // initialize the default cell color
         defaultCellColor = table.getBackground();
+        
+        // initialize data for the table model
+        data = new String[table.getModel().getRowCount()][table.getColumnCount()];
+        for(int row = 0; row < table.getModel().getRowCount(); row++){
+            for(int col = 0; col < table.getColumnCount(); col++){
+                Object value = table.getModel().getValueAt(row, col);
+                if(value == null)
+                    value ="";
+                data[row][col]  = value.toString();
+            }
+        }
+        
     }
+
+    public Map<Integer, ArrayList<Integer>> getCells() {
+        return cells;
+    }
+
+    public void setCells(Map<Integer, ArrayList<Integer>> cells) {
+        this.cells = cells;
+    }
+
+    public Object[][] getData() {
+        return data;
+    }
+
+    public void setData(String[][] data) {
+        this.data = data;
+    }
+    
+    
     
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col ){
         
-        JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+        Component component =  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
         
         // check if cell is in the list
         if(!cells.get(col).isEmpty() && cells.get(col).contains(row)){
-            label.setBackground(Color.GREEN);
+            component.setBackground(Color.GREEN);
         }
         else{
-            label.setBackground(defaultCellColor);
+            //component.setBackground(defaultCellColor);
+            component.setBackground(table.getBackground());
         }
         
-        return label;
+        return component;
     }
 }
