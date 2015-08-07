@@ -6,6 +6,7 @@ import com.elle.analyster.logic.CreateDocumentFilter;
 import com.elle.analyster.logic.EditableTableModel;
 import com.elle.analyster.logic.ITableConstants;
 import com.elle.analyster.database.ModifiedData;
+import com.elle.analyster.database.ModifiedTableData;
 import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
 import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_TABLE_NAME;
@@ -45,7 +46,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     
     // attributes
     private Map<String,Tab> tabs; // stores individual tab information
-    private List<ModifiedData> modifiedDataList;    // record the locations of changed cell
     private static Statement statement;
     private String database;
     
@@ -72,7 +72,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // the statement is created in LoginWindow and passed to Analyster.
         statement = DBConnection.getStatement();
         instance = this;                         // this is used to call this instance of Analyster 
-        modifiedDataList = new ArrayList<>();    // record the locations of changed cell
 
         // initialize tabs
         tabs = new HashMap();
@@ -181,10 +180,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // total counts are removed or added in the Tab class
         initTotalRowCounts(tabs);
         
-        // after table has loaded, add the cell renderers for each tab
+        // set the cell renderers for each tab
         tabs.get(ASSIGNMENTS_TABLE_NAME).setCellRenderer(new JTableCellRenderer(assignmentTable));
         tabs.get(REPORTS_TABLE_NAME).setCellRenderer(new JTableCellRenderer(reportTable));
         tabs.get(ARCHIVE_TABLE_NAME).setCellRenderer(new JTableCellRenderer(archiveTable));
+        
+        // set the modified table data objects for each tab
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableData(new ModifiedTableData(assignmentTable));
+        tabs.get(REPORTS_TABLE_NAME).setTableData(new ModifiedTableData(reportTable));
+        tabs.get(ARCHIVE_TABLE_NAME).setTableData(new ModifiedTableData(archiveTable));
         
         // set title of window to Analyster
         this.setTitle("Analyster");
@@ -898,22 +902,24 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     public void uploadChanges(){
         
         String tab = getSelectedTab();
+        JTable table = tabs.get(tab).getTable();
         JTableCellRenderer cellRenderer = tabs.get(tab).getCellRenderer();
+        ModifiedTableData data = tabs.get(tab).getTableData();
         
-        updateTable(tabs.get(getSelectedTab()).getTable(), modifiedDataList);
+        updateTable(table, data.getNewData());
 
-        loadTable(tabs.get(getSelectedTab()).getTable()); // refresh table
+        loadTable(table); // refresh table
         
         // clear cellrenderer
         cellRenderer.clearCellRender();
         
-        // reload cellrenderer old data
-        cellRenderer.reloadData();
+        // reload modified table data with current table model
+        data.reloadData();
         
         makeTableEditable(jLabelEdit.getText().equals("OFF")?true:false);
         
-        getModifiedDataList().clear();    // reset the arraylist to record future changes
-        setLastUpdateTime();    // update time
+        data.getNewData().clear();    // reset the arraylist to record future changes
+        setLastUpdateTime();          // update time
     }
     
     private void menuItemRepBugSuggActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepBugSuggActionPerformed
@@ -1135,9 +1141,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
         // set label record information
         labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
-                
-        // clear modified data
-        modifiedDataList.clear();
 
     }//GEN-LAST:event_btnClearAllFilterActionPerformed
 
@@ -1149,6 +1152,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
         String tab = getSelectedTab();
         JTableCellRenderer cellRenderer = tabs.get(tab).getCellRenderer();
+        ModifiedTableData data = tabs.get(tab).getTableData();
         
         // reload table from database
         loadTable(tabs.get(getSelectedTab()).getTable());
@@ -1156,8 +1160,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // clear cellrenderer
         cellRenderer.clearCellRender();
         
-        // reload cellrenderer old data
-        cellRenderer.reloadData();
+        // reload modified table data with current table model
+        data.reloadData();
         
         // set label record information
         labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
@@ -1288,7 +1292,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         if(tabs.get(getSelectedTab()).getSearchFields() != null)
             comboBoxSearch.setModel(new DefaultComboBoxModel(tabs.get(getSelectedTab()).getSearchFields()));
 
-        modifiedDataList.clear();    // when selected table changed, clear former edit history
     }//GEN-LAST:event_tabbedPanelStateChanged
 
     /**
@@ -1362,27 +1365,24 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
         int row = e.getFirstRow();
         int col = e.getColumn();
-        JTable table = tabs.get(getSelectedTab()).getTable();
-        JTableCellRenderer cellRender = tabs.get(getSelectedTab()).getCellRenderer();
-        int id = (Integer) table.getModel().getValueAt(row, 0);
-        Object oldValue = cellRender.getData()[row][col];
+        String tab = getSelectedTab();
+        JTable table = tabs.get(tab).getTable();
+        ModifiedTableData data = tabs.get(tab).getTableData();
+        Object oldValue = data.getOldData()[row][col];
         Object newValue = table.getModel().getValueAt(row, col);
 
         // check that data is different
         if(!newValue.equals(oldValue)){
-            ModifiedData modifiedData = new ModifiedData();
-            modifiedData.setColumnIndex(col);
-            modifiedData.setId(id);
-            modifiedData.setTableName(getSelectedTab());
-            modifiedData.setValueModified(newValue);
-            modifiedDataList.add(modifiedData);
+            
+            String tableName = table.getName();
+            String columnName = table.getColumnName(col);
+            int id = (Integer) table.getModel().getValueAt(row, 0);
+            data.getNewData().add(new ModifiedData(tableName, columnName, newValue, id));
 
             // color the cell
+            JTableCellRenderer cellRender = tabs.get(tab).getCellRenderer();
             cellRender.getCells().get(col).add(row);
             table.getColumnModel().getColumn(col).setCellRenderer(cellRender);
-            
-            // update old value to new value
-            cellRender.getData()[row][col] = newValue;
         }
     }
 
@@ -1678,29 +1678,31 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         table.getModel().addTableModelListener(table); 
         
         //String uploadQuery = uploadRecord(table, modifiedDataList);
-        int id, col;
-        Object value;
         String sqlChange = null;
 
         for (ModifiedData modifiedData : modifiedDataList) {
+            
             String tableName = modifiedData.getTableName();
-            id = modifiedData.getId();
-            col = modifiedData.getColumnIndex();
-            value = modifiedData.getValueModified();
+            String columnName = modifiedData.getColumnName();
+            Object value = modifiedData.getValue();
+            int id = modifiedData.getId();
+
             try {
 
                 if ("".equals(value)) {
                     value = null;
-                    sqlChange = "UPDATE " + tableName + " SET " + table.getColumnName(col)
+                    sqlChange = "UPDATE " + tableName + " SET " + columnName
                             + " = " + value + " WHERE ID = " + id + ";";
                 } else {
-                    sqlChange = "UPDATE " + tableName + " SET " + table.getColumnName(col)
+                    sqlChange = "UPDATE " + tableName + " SET " + columnName
                             + " = '" + value + "' WHERE ID = " + id + ";";
                 }
                 System.out.println(sqlChange);
                 statement.executeUpdate(sqlChange);
 
-            } catch (SQLException e) {
+            } 
+            
+            catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Upload failed!");
                 logWindow.addMessageWithDate(e.getMessage());
                 logWindow.addMessageWithDate(e.getSQLState() + "\n");
@@ -1794,10 +1796,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
     public LogWindow getLogwind() {
         return logWindow;
-    }
-
-    public List<ModifiedData> getModifiedDataList() {
-        return modifiedDataList;
     }
     
     public Map<String, Tab> getTabs() {

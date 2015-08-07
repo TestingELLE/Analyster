@@ -1,35 +1,31 @@
+
 package com.elle.analyster.database;
 
 /**
- * Created with IntelliJ IDEA.
- * User: danielabecker
- * Date: 6/5/15
- * Time: 5:52 PM
- * To change this template use File | Settings | File Templates.
+ * CLASS
+ * ModifiedData
+ * This is to create modified data objects.
  */
 public class ModifiedData {
-    private int id;
-    private int columnIndex;
-    private Object valueModified;
-    private String tableName;
 
-    public ModifiedData() {
+    private String tableName;      // the table name
+    private String columnName;     // this should be column name
+    private Object value;          // new value
+    private int id;                // id of the record
+    
 
-    }
-
-    public int getColumnIndex() {
-        return columnIndex;
-    }
-
-    public void setColumnIndex(int columnIndex) {
-        this.columnIndex = columnIndex;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
+    /**
+     * CONSTRUCTOR
+     * ModifiedData
+     * @param tableName
+     * @param id
+     * @param columnName
+     * @param value 
+     */
+    public ModifiedData(String tableName, String columnName, Object value, int id) {
+        this.tableName = tableName;
+        this.columnName = columnName;
+        this.value = value;
         this.id = id;
     }
 
@@ -37,15 +33,15 @@ public class ModifiedData {
         return tableName;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public String getColumnName() {
+        return columnName;
     }
 
-    public Object getValueModified() {
-        return valueModified;
+    public Object getValue() {
+        return value;
     }
-
-    public void setValueModified(Object valueModified) {
-        this.valueModified = valueModified;
+    
+    public int getId() {
+        return id;
     }
 }

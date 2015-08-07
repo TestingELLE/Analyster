@@ -20,7 +20,6 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
     private String[][] data;                        // original model data
     private Color defaultCellColor;
     private Color selectedCellColor;
-    private JTable table;
 
     /**
      * CONSTRUCTOR 
@@ -28,7 +27,6 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
      */
     public JTableCellRenderer(JTable table) {
         
-        this.table = table;
         // initialize the Map of cells
         cells = new HashMap<>();
         for(int col = 0; col < table.getColumnCount(); col++){
@@ -38,11 +36,6 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
         // initialize the default cell color
         defaultCellColor = table.getBackground();
         selectedCellColor = table.getSelectionBackground();
-        
-        // initialize data for the table model
-        data = new String[table.getModel().getRowCount()][table.getColumnCount()];
-        reloadData();
-        
     }
 
     public Map<Integer, ArrayList<Integer>> getCells() {
@@ -68,22 +61,13 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
             cells.get(col).clear();
         }
     }
-    
-    // this is temporary
-    public void reloadData(){
-        for(int row = 0; row < table.getModel().getRowCount(); row++){
-            for(int col = 0; col < table.getColumnCount(); col++){
-                Object value = table.getModel().getValueAt(row, col);
-                if(value == null)
-                    value ="";
-                data[row][col]  = value.toString();
-            }
-        }
-    }
-    
+
     
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col ){
+        
+        row = table.convertRowIndexToModel(row);
+        col = table.convertColumnIndexToModel(col);
         
         Component component =  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
         

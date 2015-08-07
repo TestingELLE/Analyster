@@ -2,6 +2,8 @@
 package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.ModifiedData;
+import com.elle.analyster.database.ModifiedTableData;
+import com.elle.analyster.logic.JTableCellRenderer;
 import com.elle.analyster.logic.Tab;
 import java.util.ArrayList;
 import java.util.List;
@@ -169,21 +171,17 @@ public class BatchEditWindow extends JFrame {
      * @param evt 
      */
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
- 
-        int rows[];                     // selected rows
-        int id;                         // id = primary key of record
-        int columnIndex;                // column index
-        int rowIndex;                   // row index
-        int rowCount;                   // number of rows
-        String newValue;                // new value to replace old value(s)
-        String columnName;              // column name   
-        JTable table;                   // the selected table
-        
-        newValue = textFieldNewValue.getText();
-        columnName = String.valueOf(comboBoxFieldSelect.getSelectedItem());
-        table = tabs.get(selectedTab).getTable();
-        
-        List<ModifiedData> modifiedDataBatchEdit = new ArrayList<>();
+
+        JTable table = tabs.get(selectedTab).getTable();                           // the selected table
+        ModifiedTableData data = tabs.get(selectedTab).getTableData();             // modified table data object
+        String columnName = String.valueOf(comboBoxFieldSelect.getSelectedItem()); // column name   
+        String newValue = textFieldNewValue.getText();                             // new value to replace old value(s)
+        int[] rows = table.getSelectedRows();                                      // selected rows
+        int columnIndex;                                                           // column index
+        int rowIndex;                                                              // row index
+        int rowCount = table.getSelectedRowCount();                                // number of rows
+
+        //List<ModifiedData> modifiedDataBatchEdit = new ArrayList<>();
         
         // get column index for the combobox selection
         for (columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++) {
@@ -191,35 +189,37 @@ public class BatchEditWindow extends JFrame {
                 break;
             }
         }
-        
-        rows = table.getSelectedRows();
-        rowCount = table.getSelectedRowCount();
-        
+
         for (rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            id = (Integer)table.getModel().getValueAt(rows[rowIndex],0);
-            ModifiedData modifiedData = new ModifiedData();
-            modifiedData.setColumnIndex(columnIndex);
-            modifiedData.setTableName(table.getName());
-            modifiedData.setId(id);
-            modifiedData.setValueModified(newValue);
-            modifiedDataBatchEdit.add(modifiedData);
+            
+            String tableName = table.getName();
+            int id = (Integer)table.getModel().getValueAt(rows[rowIndex],0);
+            data.getNewData().add(new ModifiedData(tableName, columnName, newValue, id));
+
+            // set the value to the table model
+            table.setValueAt(newValue, rows[rowIndex], columnIndex);
         }
         
-        analysterWindow.updateTable(table, modifiedDataBatchEdit);
+        //analysterWindow.updateTable(table, modifiedDataBatchEdit);
         
         // get the filter items for this column
         ArrayList<Object> filterItems 
                 = new ArrayList<>(tabs.get(selectedTab)
                         .getFilter().getFilterItems().get(columnIndex));
 
-        // add item to the array
-        filterItems.add(newValue);
-        
-        // add the array to the filter items list
-        tabs.get(selectedTab).getFilter().addFilterItems(columnIndex, filterItems);
+        if(!filterItems.isEmpty()){
+            if(!filterItems.contains(newValue)){
+                
+                // add item to the array
+                filterItems.add(newValue);
+                
+                // add the array to the filter items list
+                tabs.get(selectedTab).getFilter().addFilterItems(columnIndex, filterItems);
+            }
+        }
         
         // reload table 
-        analysterWindow.loadTable(table);
+        //analysterWindow.loadTable(table);
     }//GEN-LAST:event_btnConfirmActionPerformed
 
     /**
