@@ -6,7 +6,6 @@ import com.elle.analyster.logic.Validator;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,12 +36,20 @@ public class AddRecordsWindow extends JFrame {
     private DefaultTableModel model;
     
     private Color defaultSelectedBG;
-    private boolean isTableEditing;
 
+    private ArrayList<Integer> rowsNotEmpty; // only includes rows that have data
+    
+    // used to notify if the table is editing
+    // the table.isEditing method has issues from the tableModelListener
+    private boolean isEditing;  
+    
     /**
      * Creates new form AddRecordsWindow
      */
     public AddRecordsWindow() {
+        
+        rowsNotEmpty = new ArrayList<>();
+        isEditing = false;
         
         // initialize components
         initComponents();
@@ -66,13 +73,14 @@ public class AddRecordsWindow extends JFrame {
         // add listeners
         addTableListeners();
         
+        // submit button does not start enabled because the table is empty
+        btnSubmit.setEnabled(false);
+        
         // set the label header
         this.setTitle("Add Records to " + table.getName());
         
         // set this window to appear in the middle of Analyster
         this.setLocationRelativeTo(analyster);
-        
-        isTableEditing = false;
         
     }
 
@@ -325,6 +333,7 @@ public class AddRecordsWindow extends JFrame {
 
         // add an empty row to the table
         model.addRow(new Object[]{});
+
     }//GEN-LAST:event_btnAddRowActionPerformed
 
     private void tableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableKeyPressed
@@ -349,24 +358,8 @@ public class AddRecordsWindow extends JFrame {
             public boolean dispatchKeyEvent(KeyEvent e) {
                 
                 if(e.getComponent() instanceof JTable){
-                    if (e.getKeyCode() == KeyEvent.VK_TAB) {
-//                        if(!table.isEditing()){
-//                            if (e.getComponent() instanceof JTable) {
-//                                JTable table = (JTable) e.getComponent();
-//                                int row = table.getSelectedRow();
-//                                int column = table.getSelectedColumn();
-//                                table.getComponentAt(row, column).requestFocus();
-//                                table.editCellAt(row, column);
-//                                JTextField selectCom = (JTextField) table.getEditorComponent();
-//                                selectCom.requestFocusInWindow();
-//                                selectCom.selectAll();
-//                                btnSubmit.setEnabled(!table.isEditing());
-//                            }
-//                        }
-
-                        System.out.println("tab dispatch");
-                    } 
-                    else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
+                    // ctrl + D fills in the current date
+                    if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
                         JTable table = (JTable) e.getComponent().getParent();
                         int column = table.getSelectedColumn();
                         if (table.getColumnName(column).toLowerCase().contains("date")) {
@@ -385,7 +378,7 @@ public class AddRecordsWindow extends JFrame {
                         System.out.println("date dispatch");
                     }
 
-                    // this is called while in the cell editing to finish editing
+                    // this is called to either clear data or submit data
                     else if (e.getKeyCode() == KeyEvent.VK_ENTER && !table.isEditing()) {
 
                         // clear the row(s)
@@ -471,25 +464,6 @@ public class AddRecordsWindow extends JFrame {
     }
     
     /**
-     * createEmptyTable
-     * creates an empty table with the specified amount of rows
-     * @param rows  // number of rows to add to table
-     */
-    private void createEmptyTable(int rows) {
-        // get column names for selected Analyster table
-        columnNames = analyster.getTabs().get(table.getName()).getTableColNames();
-        
-        // we don't want the ID column 
-        columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
-        
-        // set the table model - add 10 empty rows
-        model = new DefaultTableModel(columnNames, rows);
-        
-        // add the table model to the table
-        table.setModel(model);
-    }
-    
-    /**
      * addTableListeners
      * This is called to add the listeners to the table 
      * The listeners added are the TableModel listener
@@ -502,15 +476,39 @@ public class AddRecordsWindow extends JFrame {
 
             @Override
             public void tableChanged(TableModelEvent e) {
-                
+
                 // if clearing row then do not validate
                 if(table.getSelectionBackground() != Color.RED){
                     // check the cell for valid entry
                     validateCell(e);
                 }
+
+                // get value of cell
+                int row = e.getFirstRow();
+                int col = e.getColumn();
+                Object value = table.getValueAt(row, col);
+
+                // if cell value is empty
+                if(value == null || value.equals("")){
+                    // check to see if it was a deletion
+                    if(rowsNotEmpty.contains(row)){
+                        checkForEmptyRows();
+                    }
+                }
+                // else add the row to the list as not empty
+                else{
+                    rowsNotEmpty.add(row);
+                }
+
+                // if list is empty then the table is empty
+                if(!rowsNotEmpty.isEmpty() && !isEditing){
+                    btnSubmit.setEnabled(true);
+                }
                 
-                btnSubmit.setEnabled(true);
+                // reset isEditing boolean
+                isEditing = false;
             }
+            
         });
         
         // add mouseListener
@@ -527,6 +525,8 @@ public class AddRecordsWindow extends JFrame {
                 // this enters edit mode
                 else if(e.getClickCount() == 2){
                     btnSubmit.setEnabled(false);
+                    isEditing = true;
+                    selectAllText(e);
                 }
             }
         });
@@ -752,32 +752,27 @@ public class AddRecordsWindow extends JFrame {
     }
     
     /**
-     * deleteKeyAction
-     * This is called when the delete key is pressed.
-     * This highlights rows red when pressed.
-     * It is used to clear the 
-     * cells values of entire rows.
-     * @param keyEvent 
+     * checkForEmptyRows
+     * This should be used when data is removed or deleted
      */
-    private void deleteKeyAction(KeyEvent keyEvent){
-                
-        if(table.isEditing())
-            table.getCellEditor().stopCellEditing();
-
-        if(table.getSelectionBackground() == defaultSelectedBG){
-            table.setSelectionBackground(Color.RED);
-        }
-        else if(table.getSelectionBackground() == Color.RED){
-            int[] rows = table.getSelectedRows();
-
-            if(rows != null){
-                for(int row : rows){
-                    for(int col = 0; col < table.getColumnCount(); col++){
-                        table.getModel().setValueAt("", row, col);
-                    }
+    public void checkForEmptyRows(){
+        
+        ArrayList<Integer> arrayCopy = new ArrayList(rowsNotEmpty);
+        rowsNotEmpty.clear();
+        
+        // check List for empty rows
+        for(int row: arrayCopy){
+            boolean isNotEmpty = false;
+            for(int col = 0; col < table.getColumnCount(); col++){
+                Object value = table.getValueAt(row, col);
+                if(value != null && !value.equals("")){
+                    isNotEmpty = true;
+                    break;
                 }
             }
-            table.setSelectionBackground(defaultSelectedBG);
+            if(isNotEmpty){
+                rowsNotEmpty.add(row);
+            }
         }
     }
     
