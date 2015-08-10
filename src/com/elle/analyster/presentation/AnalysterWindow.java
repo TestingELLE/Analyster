@@ -1878,11 +1878,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         for (Map.Entry<String, Tab> entry : tabs.entrySet())
         {
-            totalRecords = tabs.get(entry.getKey()).getTable().getRowCount();
-            tabs.get(entry.getKey()).setTotalRecords(totalRecords);
+            Tab tab = tabs.get(entry.getKey());
+            JTable table = tab.getTable();
+            totalRecords = table.getRowCount();
+            tab.setTotalRecords(totalRecords);
             
             if(isFirstTabRecordLabelSet == false){
-                labelRecords.setText(tabs.get(entry.getKey()).getRecordsLabel());
+                String recordsLabel = tab.getRecordsLabel();
+                labelRecords.setText(recordsLabel);
                 isFirstTabRecordLabelSet = true; // now its set
             }
         }
