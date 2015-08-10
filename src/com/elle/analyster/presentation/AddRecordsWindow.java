@@ -375,7 +375,6 @@ public class AddRecordsWindow extends JFrame {
                                 selectCom.setText(today);
                             }// default date input with today's date}
                         }
-                        System.out.println("date dispatch");
                     }
 
                     // this is called to either clear data or submit data
@@ -400,11 +399,6 @@ public class AddRecordsWindow extends JFrame {
                             else if(table.getSelectionBackground() != Color.RED){
                                 submit();
                             }
-
-                            // enable the submit button
-                            btnSubmit.setEnabled(!table.isEditing());
-                            System.out.println("enter dispatch");
-
                         }
                     }
 
@@ -421,14 +415,12 @@ public class AddRecordsWindow extends JFrame {
                             else{
                                 table.setSelectionBackground(defaultSelectedBG);
                             }
-                            System.out.println("delete dispatch");
                         }
                     }
                     else{
                         if(e.getID() == KeyEvent.KEY_RELEASED){
                             System.out.println(table.isEditing());
                             btnSubmit.setEnabled(!table.isEditing());
-                            System.out.println("else dispatch");
                         }
                     }
                 } // end table component condition
