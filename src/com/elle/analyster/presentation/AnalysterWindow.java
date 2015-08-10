@@ -1617,9 +1617,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private void clearFilterDoubleClick(MouseEvent e, JTable table) {
         
         int columnIndex = table.getColumnModel().getColumnIndexAtX(e.getX());
-        tabs.get(getSelectedTab()).getFilter().clearColFilter(columnIndex);
-        tabs.get(getSelectedTab()).getFilter().applyFilter();
-        labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
+        String tab = getSelectedTab();
+        TableFilter filter = tabs.get(tab).getFilter();
+        filter.clearColFilter(columnIndex);
+        filter.applyFilter();
+        String recordsLabel = tabs.get(tab).getRecordsLabel();
+        labelRecords.setText(recordsLabel);  
     }
 
     /**
