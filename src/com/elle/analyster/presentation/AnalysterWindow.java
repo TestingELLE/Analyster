@@ -2097,7 +2097,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         table.setModel(model);
         table.setRowSorter(sorter);
         
-        setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
+        String tab = getSelectedTab();
+        float[] colWidthPercent = tabs.get(tab).getColWidthPercent();
+        setColumnFormat(colWidthPercent, table);
         
         System.out.println("Table added succesfully");
 
