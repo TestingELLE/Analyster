@@ -1632,6 +1632,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         TableFilter filter = tabs.get(tab).getFilter();
         filter.clearColFilter(columnIndex);
         filter.applyFilter();
+        
+        // update records label
         String recordsLabel = tabs.get(tab).getRecordsLabel();
         labelRecords.setText(recordsLabel);  
     }
