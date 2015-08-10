@@ -907,10 +907,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     public void uploadChanges(){
         
-        String tab = getSelectedTabName();
-        JTable table = tabs.get(tab).getTable();
-        JTableCellRenderer cellRenderer = tabs.get(tab).getCellRenderer();
-        ModifiedTableData data = tabs.get(tab).getTableData();
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        JTable table = tab.getTable();
+        JTableCellRenderer cellRenderer = tab.getCellRenderer();
+        ModifiedTableData data = tab.getTableData();
         
         updateTable(table, data.getNewData());
 
