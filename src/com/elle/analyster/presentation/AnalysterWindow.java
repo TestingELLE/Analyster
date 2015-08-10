@@ -1120,10 +1120,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     private void menuItemDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
         
-        String selectedTab = getSelectedTab();
-        String sqlDelete;
-
-        sqlDelete = deleteRecordsSelected(tabs.get(selectedTab).getTable());
+        String tabName = getSelectedTab();
+        Tab tab = tabs.get(tabName);
+        JTable table = tab.getTable();
+        String sqlDelete = deleteRecordsSelected(table);
         logWindow.addMessageWithDate(sqlDelete);
     }
 
