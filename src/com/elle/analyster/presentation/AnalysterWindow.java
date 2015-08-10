@@ -169,7 +169,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(ARCHIVE_TABLE_NAME).getFilter()));
         
         // set the mouseListeners and KeyListeneres to the tables
-        setTerminalsFunction(tabs);
+        setTableListeners(tabs);
         
         // load data from database to tables
         loadTables(tabs);
@@ -1606,7 +1606,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * @param tabs
      * @return 
      */
-    public Map<String,Tab> setTerminalsFunction(Map<String,Tab> tabs) {
+    public Map<String,Tab> setTableListeners(Map<String,Tab> tabs) {
         
         for (Map.Entry<String, Tab> entry : tabs.entrySet())
         {
