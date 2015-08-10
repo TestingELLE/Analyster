@@ -2019,14 +2019,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 statement.executeUpdate(sqlDelete); 
 
                 // refresh table and retain filters
-                loadTable(tabs.get(getSelectedTab()).getTable());
+                loadTable(table);
 
                 // output pop up dialog that a record was deleted 
                 JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");
 
                 // set label record information
-                tabs.get(tableName).subtractFromTotalRowCount(rowCount); // update total rowIndex count
-                labelRecords.setText(tabs.get(tableName).getRecordsLabel()); // update label
+                String tab = getSelectedTab();
+                tabs.get(tab).subtractFromTotalRowCount(rowCount); // update total rowIndex count
+                String recordsLabel = tabs.get(tableName).getRecordsLabel();
+                labelRecords.setText(recordsLabel); // update label
 
             } catch (SQLException e) {
                 System.out.println("SQL Error:");
