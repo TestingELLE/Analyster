@@ -20,6 +20,7 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
     private String[][] data;                        // original model data
     private Color defaultCellColor;
     private Color selectedCellColor;
+    private Color modifiedCellColor;
 
     /**
      * CONSTRUCTOR 
@@ -36,6 +37,7 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
         // initialize the default cell color
         defaultCellColor = table.getBackground();
         selectedCellColor = table.getSelectionBackground();
+        modifiedCellColor = new Color(44,122,22);
     }
 
     public Map<Integer, ArrayList<Integer>> getCells() {
@@ -73,7 +75,7 @@ public class JTableCellRenderer extends DefaultTableCellRenderer{
         
         // check if cell is in the list
         if(!cells.get(col).isEmpty() && cells.get(col).contains(row)){
-            component.setBackground(Color.GREEN);
+            component.setBackground(modifiedCellColor);
         }
         else{
             if(isSelected){
