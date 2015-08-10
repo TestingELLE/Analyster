@@ -1304,9 +1304,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
         // this changes the search fields for the comboBox for each tab
         // this event is fired from initCompnents hence the null condition
-        if(tabs.get(getSelectedTab()).getSearchFields() != null)
-            comboBoxSearch.setModel(new DefaultComboBoxModel(tabs.get(getSelectedTab()).getSearchFields()));
-
+        String tab = getSelectedTab();
+        String[] searchFields = tabs.get(tab).getSearchFields();
+        if( searchFields != null){
+            comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
+        }
     }//GEN-LAST:event_tabbedPanelStateChanged
 
     /**
