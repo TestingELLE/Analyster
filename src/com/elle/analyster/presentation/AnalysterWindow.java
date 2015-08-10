@@ -1151,10 +1151,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             logWindow.addMessageWithDate(e.getMessage());  
         }
 
-        setColumnFormat(tabs.get(ASSIGNMENTS_TABLE_NAME).getColWidthPercent(), assignmentTable);
+        String tabName = ASSIGNMENTS_TABLE_NAME;
+        Tab tab = tabs.get(tabName);
+        float[] colWidthPercent = tab.getColWidthPercent();
+        JTable table = tab.getTable();
+        setColumnFormat(colWidthPercent, table);
 
         // set label record information
-        labelRecords.setText(tabs.get(ASSIGNMENTS_TABLE_NAME).getRecordsLabel()); 
+        String recordsLabel = tab.getRecordsLabel();
+        labelRecords.setText(recordsLabel); 
     }//GEN-LAST:event_menuItemViewActiveAssignActionPerformed
 
     /**
