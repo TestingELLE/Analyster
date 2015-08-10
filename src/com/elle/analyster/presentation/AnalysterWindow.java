@@ -1045,7 +1045,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         addRecordsWindow.setVisible(true);
         
         // update records
-        labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel());
+        String tab = getSelectedTab();
+        String recordsLabel = tabs.get(tab).getRecordsLabel();
+        labelRecords.setText(recordsLabel);
     }//GEN-LAST:event_btnAddRecordsActionPerformed
 
     /**
