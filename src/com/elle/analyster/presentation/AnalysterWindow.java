@@ -1904,8 +1904,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         for (Map.Entry<String, Tab> entry : tabs.entrySet())
         {
-            loadTable(tabs.get(entry.getKey()).getTable());
-            setTableListeners(tabs.get(entry.getKey()).getTable());
+            Tab tab = tabs.get(entry.getKey());
+            JTable table = tab.getTable();
+            loadTable(table);
+            setTableListeners(table);
         }
 
         setLastUpdateTime();
