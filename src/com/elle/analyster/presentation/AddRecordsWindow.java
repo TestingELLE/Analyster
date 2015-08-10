@@ -477,32 +477,35 @@ public class AddRecordsWindow extends JFrame {
             @Override
             public void tableChanged(TableModelEvent e) {
 
-                // if clearing row then do not validate
-                if(table.getSelectionBackground() != Color.RED){
-                    // check the cell for valid entry
-                    validateCell(e);
-                }
-
-                // get value of cell
-                int row = e.getFirstRow();
-                int col = e.getColumn();
-                Object value = table.getValueAt(row, col);
-
-                // if cell value is empty
-                if(value == null || value.equals("")){
-                    // check to see if it was a deletion
-                    if(rowsNotEmpty.contains(row)){
-                        checkForEmptyRows();
+                // isEditing is a class boolean triggered true on double click
+                if(!isEditing){
+                    // if clearing row then do not validate
+                    if(table.getSelectionBackground() != Color.RED){
+                        // check the cell for valid entry
+                        validateCell(e);
                     }
-                }
-                // else add the row to the list as not empty
-                else{
-                    rowsNotEmpty.add(row);
-                }
 
-                // if list is empty then the table is empty
-                if(!rowsNotEmpty.isEmpty() && !isEditing){
-                    btnSubmit.setEnabled(true);
+                    // get value of cell
+                    int row = e.getFirstRow();
+                    int col = e.getColumn();
+                    Object value = table.getValueAt(row, col);
+
+                    // if cell value is empty
+                    if(value == null || value.equals("")){
+                        // check to see if it was a deletion
+                        if(!rowsNotEmpty.isEmpty() && rowsNotEmpty.contains(row)){
+                            checkForEmptyRows();
+                        }
+                    }
+                    // else add the row to the list as not empty
+                    else{
+                        rowsNotEmpty.add(row);
+                    }
+
+                    // if list is empty then the table is empty
+                    if(!rowsNotEmpty.isEmpty() && !isEditing){
+                        btnSubmit.setEnabled(true);
+                    }
                 }
                 
                 // reset isEditing boolean
