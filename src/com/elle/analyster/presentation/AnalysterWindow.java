@@ -1742,7 +1742,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * @return 
      */
     public JTable getSelectedTable() {  //get JTable by  selected Tab
-        return tabs.get(getSelectedTab()).getTable();
+        String tab = getSelectedTab();
+        JTable table = tabs.get(tab).getTable();
+        return table;
     }
 
     /**
