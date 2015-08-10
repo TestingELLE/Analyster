@@ -861,20 +861,27 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     public void filterBySearch() {
         
+        String tab = getSelectedTab();
+        JTable table = tabs.get(tab).getTable();
+        String searchColName = comboBoxSearch.getSelectedItem().toString();
+        
         // this matches the combobox newValue with the column name newValue to get the column index
-        for(int col = 0; col < tabs.get(getSelectedTab()).getTable().getColumnCount(); col++)
-            if(tabs.get(getSelectedTab()).getTable().getColumnName(col)
-                    .equalsIgnoreCase(comboBoxSearch.getSelectedItem().toString())){
+        for(int col = 0; col < table.getColumnCount(); col++){
+            String tableColName = table.getColumnName(col);
+            if(tableColName.equalsIgnoreCase(searchColName)){
                 
-                String selectedField = textFieldForSearch.getText();  // store string from text box
+                String searchBoxValue = textFieldForSearch.getText();  // store string from text box
         
                 // add item to filter
-                tabs.get(getSelectedTab()).getFilter().addFilterItem(col, selectedField);
-                tabs.get(getSelectedTab()).getFilter().applyFilter();
+                TableFilter filter = tabs.get(tab).getFilter();
+                filter.addFilterItem(col, searchBoxValue);
+                filter.applyFilter();
 
                 // set label record information
-                labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
+                String recordsLabel = tabs.get(tab).getRecordsLabel();
+                labelRecords.setText(recordsLabel); 
             }
+        }
     }
     
     // not sure what this is
