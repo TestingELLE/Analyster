@@ -1010,19 +1010,28 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
     }//GEN-LAST:event_btnCancelEditModeActionPerformed
 
-    
+    /**
+     * changeTabbedPanelState
+     */
     private void changeTabbedPanelState() {
 
+        String tab = getSelectedTab();
+        boolean isActivateRecordMenuItemEnabled = tabs.get(tab).isActivateRecordMenuItemEnabled();
+        boolean isArchiveRecordMenuItemEnabled = tabs.get(tab).isArchiveRecordMenuItemEnabled();
+        boolean isAddRecordsBtnVisible = tabs.get(tab).isAddRecordsBtnVisible();
+        boolean isBatchEditBtnVisible = tabs.get(tab).isBatchEditBtnVisible();
+        
         // this enables or disables the menu components for this tab
-        menuItemActivateRecord.setEnabled(tabs.get(getSelectedTab()).isActivateRecordMenuItemEnabled()); 
-        menuItemArchiveRecord.setEnabled(tabs.get(getSelectedTab()).isArchiveRecordMenuItemEnabled()); 
+        menuItemActivateRecord.setEnabled(isActivateRecordMenuItemEnabled); 
+        menuItemArchiveRecord.setEnabled(isArchiveRecordMenuItemEnabled); 
         
         // show or hide the add records button and the batch edit button
-        btnAddRecords.setVisible(tabs.get(getSelectedTab()).isAddRecordsBtnVisible());
-        btnBatchEdit.setVisible(tabs.get(getSelectedTab()).isBatchEditBtnVisible());
+        btnAddRecords.setVisible(isAddRecordsBtnVisible);
+        btnBatchEdit.setVisible(isBatchEditBtnVisible);
         
         // set label record information
-        labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel());    
+        String recordsLabel = tabs.get(tab).getRecordsLabel();
+        labelRecords.setText(recordsLabel);    
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
