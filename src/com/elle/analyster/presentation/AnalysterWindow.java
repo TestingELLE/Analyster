@@ -947,6 +947,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         }
     }//GEN-LAST:event_btnEnterSQLActionPerformed
 
+    /**
+     * btnCancelSQLActionPerformed
+     * @param evt 
+     */
     private void btnCancelSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelSQLActionPerformed
         ((AbstractDocument) jTextAreaSQL.getDocument())
                 .setDocumentFilter(new CreateDocumentFilter(0));
@@ -996,6 +1000,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         }
     }
 
+    /**
+     * btnCancelEditModeActionPerformed
+     * @param evt 
+     */
     private void btnCancelEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelEditModeActionPerformed
 
         makeTableEditable(false); // exit edit mode;
@@ -1028,6 +1036,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         editDatabaseWindow.setVisible(true);
     }//GEN-LAST:event_menuItemManageDBsActionPerformed
 
+    /**
+     * btnAddRecordsActionPerformed
+     * @param evt 
+     */
     private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
         addRecordsWindow = new AddRecordsWindow();
         addRecordsWindow.setVisible(true);
@@ -1134,12 +1146,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private void btnClearAllFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllFilterActionPerformed
      
         // clear all filters
-        tabs.get(getSelectedTab()).getFilter().clearAllFilters();
-        tabs.get(getSelectedTab()).getFilter().applyFilter();
-        tabs.get(getSelectedTab()).getFilter().applyColorHeaders();
+        String tab = getSelectedTab();
+        TableFilter filter = tabs.get(tab).getFilter();
+        filter.clearAllFilters();
+        filter.applyFilter();
+        filter.applyColorHeaders();
 
         // set label record information
-        labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
+        String recordsLabel = tabs.get(tab).getRecordsLabel();
+        labelRecords.setText(recordsLabel); 
 
     }//GEN-LAST:event_btnClearAllFilterActionPerformed
 
