@@ -1178,7 +1178,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         data.reloadData();
         
         // set label record information
-        labelRecords.setText(tabs.get(getSelectedTab()).getRecordsLabel()); 
+        String recordsLabel = tabs.get(tab).getRecordsLabel();
+        labelRecords.setText(recordsLabel); 
     }//GEN-LAST:event_menuItemReloadDataActionPerformed
 
     /**
