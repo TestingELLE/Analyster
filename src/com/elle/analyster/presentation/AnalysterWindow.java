@@ -1971,19 +1971,24 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         table.setModel(model);
         
         // check that the filter items are initialized
-        if(tabs.get(table.getName()).getFilter().getFilterItems() == null){
-            tabs.get(table.getName()).getFilter().initFilterItems();
+        String tabName = table.getName();
+        Tab tab = tabs.get(tabName);
+        TableFilter filter = tab.getFilter();
+        if(filter.getFilterItems() == null){
+            filter.initFilterItems();
         }
         
         // apply filter
-        tabs.get(table.getName()).getFilter().applyFilter();
-        tabs.get(table.getName()).getFilter().applyColorHeaders();
+        filter.applyFilter();
+        filter.applyColorHeaders();
         
         // load all checkbox items for the checkbox column pop up filter
-        tabs.get(table.getName()).getColumnPopupMenu().loadAllCheckBoxItems();
+        ColumnPopupMenu columnPopupMenu = tab.getColumnPopupMenu();
+        columnPopupMenu.loadAllCheckBoxItems();
         
         // set column format
-        setColumnFormat(tabs.get(table.getName()).getColWidthPercent(), table);
+        float[] colWidthPercent = tab.getColWidthPercent();
+        setColumnFormat(colWidthPercent, table);
 
         // update last time the table was updated
         setLastUpdateTime();
