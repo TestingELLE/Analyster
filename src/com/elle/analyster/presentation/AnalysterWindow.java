@@ -861,8 +861,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     public void filterBySearch() {
         
-        String tab = getSelectedTabName();
-        JTable table = tabs.get(tab).getTable();
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        JTable table = tab.getTable();
         String searchColName = comboBoxSearch.getSelectedItem().toString();
         
         // this matches the combobox newValue with the column name newValue to get the column index
@@ -873,12 +874,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 String searchBoxValue = textFieldForSearch.getText();  // store string from text box
         
                 // add item to filter
-                TableFilter filter = tabs.get(tab).getFilter();
+                TableFilter filter = tab.getFilter();
                 filter.addFilterItem(col, searchBoxValue);
                 filter.applyFilter();
 
                 // set label record information
-                String recordsLabel = tabs.get(tab).getRecordsLabel();
+                String recordsLabel = tab.getRecordsLabel();
                 labelRecords.setText(recordsLabel); 
             }
         }
@@ -1024,11 +1025,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     private void changeTabbedPanelState() {
 
-        String tab = getSelectedTabName();
-        boolean isActivateRecordMenuItemEnabled = tabs.get(tab).isActivateRecordMenuItemEnabled();
-        boolean isArchiveRecordMenuItemEnabled = tabs.get(tab).isArchiveRecordMenuItemEnabled();
-        boolean isAddRecordsBtnVisible = tabs.get(tab).isAddRecordsBtnVisible();
-        boolean isBatchEditBtnVisible = tabs.get(tab).isBatchEditBtnVisible();
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        boolean isActivateRecordMenuItemEnabled = tab.isActivateRecordMenuItemEnabled();
+        boolean isArchiveRecordMenuItemEnabled = tab.isArchiveRecordMenuItemEnabled();
+        boolean isAddRecordsBtnVisible = tab.isAddRecordsBtnVisible();
+        boolean isBatchEditBtnVisible = tab.isBatchEditBtnVisible();
         
         // this enables or disables the menu components for this tabName
         menuItemActivateRecord.setEnabled(isActivateRecordMenuItemEnabled); 
@@ -1039,7 +1041,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         btnBatchEdit.setVisible(isBatchEditBtnVisible);
         
         // set label record information
-        String recordsLabel = tabs.get(tab).getRecordsLabel();
+        String recordsLabel = tab.getRecordsLabel();
         labelRecords.setText(recordsLabel);    
     }
 
@@ -1063,8 +1065,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         addRecordsWindow.setVisible(true);
         
         // update records
-        String tab = getSelectedTabName();
-        String recordsLabel = tabs.get(tab).getRecordsLabel();
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        String recordsLabel = tab.getRecordsLabel();
         labelRecords.setText(recordsLabel);
     }//GEN-LAST:event_btnAddRecordsActionPerformed
 
@@ -1171,14 +1174,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private void btnClearAllFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllFilterActionPerformed
      
         // clear all filters
-        String tab = getSelectedTabName();
-        TableFilter filter = tabs.get(tab).getFilter();
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        TableFilter filter = tab.getFilter();
         filter.clearAllFilters();
         filter.applyFilter();
         filter.applyColorHeaders();
 
         // set label record information
-        String recordsLabel = tabs.get(tab).getRecordsLabel();
+        String recordsLabel = tab.getRecordsLabel();
         labelRecords.setText(recordsLabel); 
 
     }//GEN-LAST:event_btnClearAllFilterActionPerformed
@@ -1331,8 +1335,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
         // this changes the search fields for the comboBox for each tabName
         // this event is fired from initCompnents hence the null condition
-        String tab = getSelectedTabName();
-        String[] searchFields = tabs.get(tab).getSearchFields();
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        String[] searchFields = tab.getSearchFields();
         if( searchFields != null){
             comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
         }
@@ -1627,11 +1632,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         int rowIndex = table.getSelectedRow(); // this returns the rowIndex index
         if (rowIndex != -1) {
             Object selectedField = table.getValueAt(rowIndex, columnIndex);
-            String tab = getSelectedTabName();
-            TableFilter filter = tabs.get(tab).getFilter();
+            String tabName = getSelectedTabName();
+            Tab tab = tabs.get(tabName);
+            TableFilter filter = tab.getFilter();
             filter.addFilterItem(columnIndex, selectedField);
             filter.applyFilter();
-            String recordsLabel = tabs.get(tab).getRecordsLabel();
+            String recordsLabel = tab.getRecordsLabel();
             labelRecords.setText(recordsLabel); 
         }
     }
@@ -1644,13 +1650,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private void clearFilterDoubleClick(MouseEvent e, JTable table) {
         
         int columnIndex = table.getColumnModel().getColumnIndexAtX(e.getX());
-        String tab = getSelectedTabName();
-        TableFilter filter = tabs.get(tab).getFilter();
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        TableFilter filter = tab.getFilter();
         filter.clearColFilter(columnIndex);
         filter.applyFilter();
         
         // update records label
-        String recordsLabel = tabs.get(tab).getRecordsLabel();
+        String recordsLabel = tab.getRecordsLabel();
         labelRecords.setText(recordsLabel);  
     }
 
@@ -1771,8 +1778,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * @return 
      */
     public JTable getSelectedTable() {  //get JTable by  selected Tab
-        String tab = getSelectedTabName();
-        JTable table = tabs.get(tab).getTable();
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        JTable table = tab.getTable();
         return table;
     }
 
@@ -2051,9 +2059,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");
 
                 // set label record information
-                String tab = getSelectedTabName();
-                tabs.get(tab).subtractFromTotalRowCount(rowCount); // update total rowIndex count
-                String recordsLabel = tabs.get(tableName).getRecordsLabel();
+                String tabName = getSelectedTabName();
+                Tab tab = tabs.get(tabName);
+                tab.subtractFromTotalRowCount(rowCount); // update total rowIndex count
+                String recordsLabel = tab.getRecordsLabel();
                 labelRecords.setText(recordsLabel); // update label
 
             } catch (SQLException e) {
@@ -2123,8 +2132,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         table.setModel(model);
         table.setRowSorter(sorter);
         
-        String tab = getSelectedTabName();
-        float[] colWidthPercent = tabs.get(tab).getColWidthPercent();
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        float[] colWidthPercent = tab.getColWidthPercent();
         setColumnFormat(colWidthPercent, table);
         
         System.out.println("Table added succesfully");
