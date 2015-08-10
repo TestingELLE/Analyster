@@ -478,7 +478,9 @@ public class AddRecordsWindow extends JFrame {
                     // if clearing row then do not validate
                     if(table.getSelectionBackground() != Color.RED){
                         // check the cell for valid entry
-                        validateCell(e);
+                        int row = e.getFirstRow();            // row index
+                        int col = e.getColumn();             // column index
+                        validateCell(row, col);
                     }
 
                     // get value of cell
@@ -554,13 +556,13 @@ public class AddRecordsWindow extends JFrame {
     
     /**
      * validateCell
-     * @param e 
+     * @param row
+     * @param col
+     * @return  returns true if valid or false if error
      */
-    public void validateCell(TableModelEvent e){
+    public boolean validateCell(int row, int col){
         
-        String colName = table.getColumnName(e.getColumn()); // column name
-        int row = e.getFirstRow();                           // row index
-        int col = e.getColumn();                             // column index
+        String colName = table.getColumnName(col);           // column name
         Object cellValue = table.getValueAt(row, col);       // store cell value
         String errorMsg = "Error with " + colName 
                 + " in row " + (row + 1) + ".\n";            // error message
@@ -623,8 +625,10 @@ public class AddRecordsWindow extends JFrame {
             
         if(error){
             JOptionPane.showMessageDialog(table, errorMsg);
-            btnSubmit.setEnabled(true); 
+            //btnSubmit.setEnabled(true); 
         }
+        
+        return !error;  // if there was an error, return false for failed
     }
     
     /**
@@ -636,126 +640,38 @@ public class AddRecordsWindow extends JFrame {
      * @return returns true if the data is all valid and false if the is a single error
      */
     public boolean validateData(){
-        
-        String colName = "";            // column name
-        Object cellValue = null;        // store cell value
+
         int col = 0;                    // column index
-        int row = 0;                    // row index
-        String errorMsg = "";           // error message
-        int emptyCells = 0;             // number of empty cells in a row
-        boolean error = false;          // error occurred
+        boolean isCellValid = true;    // if cell is valid entry 
         
-        // if rows are empty then the table is empty
+        // if table is empty
         if(!rowsNotEmpty.isEmpty()){
+            
             // check data
-            for(row = 0; row < table.getRowCount(); row++){
+            for(int row: rowsNotEmpty){
 
                 // if there was an error stop
-                if(error)break;
-
-                // reset empty cell count
-                emptyCells = 0;
-
-                // first test if row is empty
-                for(col = 0; col < table.getColumnCount(); col++){
-
-                    // get value of cell
-                    cellValue = table.getValueAt(row, col);
-
-                    // check each column for a value
-                    if(cellValue == null || cellValue.toString().equals("")){
-                        emptyCells++;
-                    }
-                }
-
-                // continue to next row if this one is empty
-                if(emptyCells == table.getColumnCount()){
-                    continue;   
-                }
+                if(!isCellValid)break;
 
                 for(col = 0; col < table.getColumnCount(); col++){
 
                     // if there was an error stop
-                    if(error)break;
-
-                    // get column name
-                    colName = table.getColumnName(col);
-
-                    // get value of cell
-                    cellValue = table.getValueAt(row, col);
+                    if(!isCellValid)break;
 
                     // begin error message
-                    errorMsg = "Error with " + colName + " in row " + (row + 1) + ".\n"; 
-
-                    switch(colName){
-                        case "symbol":
-                            if(cellValue == null || cellValue.toString().equals("")){
-                                errorMsg += "Symbol cannot be null";
-                                error = true;
-                            }
-                            break;
-                        case "analyst":
-                            break;
-                        case "priority":
-                            if(cellValue != null && !cellValue.toString().equals(""))
-                                if(!cellValue.toString().matches("[1-5]{1}")){
-                                    errorMsg += "Priority must be an Integer (1-5)";
-                                    error = true;
-                                }
-                            break;
-                        case "dateAssigned":
-                            if(cellValue != null && !cellValue.toString().equals("")){
-                                if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                                    errorMsg += "Date format not correct: YYYY-MM-DD";
-                                    error = true;
-                                }
-                            }
-                            break;
-                        case "dateDone":
-                            if(cellValue != null && !cellValue.toString().equals("")){
-                                if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                                    errorMsg += "Date format not correct: YYYY-MM-DD";
-                                    error = true;
-                                }
-                            }
-                            break;
-                        case "notes":
-                            break;
-                        case "author":
-                            break;
-                        case "analysisDate":
-                            if(cellValue != null && !cellValue.toString().equals("")){
-                                if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                                    errorMsg += "Date format not correct: YYYY-MM-DD";
-                                    error = true;
-                                }
-                            }
-                            break;
-                        case "path":
-                            break;
-                        case "document":
-                            break;
-                        case "notesL":
-                            break;
-                        default:
-                            break;
-
-                    }// end switch
+                    validateCell(row, col);
+                    
                 }// end col for loop
             }// end row for loop
 
-            if(error){
-                JOptionPane.showMessageDialog(table, errorMsg);
-            }
-
-            return !error;
+            return isCellValid;
         }
         
         // the table is empty
         else{
             
             JOptionPane.showMessageDialog(table, "Table is empty");
-            return error;
+            return !isCellValid;
         }
     }
     
