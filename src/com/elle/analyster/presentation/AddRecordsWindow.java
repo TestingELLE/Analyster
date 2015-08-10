@@ -59,7 +59,7 @@ public class AddRecordsWindow extends JFrame {
         statement = analyster.getStatement();
         
         // set the selected table name
-        table.setName(analyster.getSelectedTab());
+        table.setName(analyster.getSelectedTabName());
         
         // get default selected bg color
         defaultSelectedBG = table.getSelectionBackground();
@@ -306,7 +306,7 @@ public class AddRecordsWindow extends JFrame {
 
             if(numRowsAdded > 0){
                 // update table and records label
-                String selectedTab = analyster.getSelectedTab();                          // get selected tab
+                String selectedTab = analyster.getSelectedTabName();                          // get selected tab
                 analyster.loadTable(tabs.get(selectedTab).getTable());                    // load table data from database
                 tabs.get(selectedTab).getFilter().applyFilter();                          // apply filter
                 tabs.get(selectedTab).getFilter().applyColorHeaders();                    // apply color headers

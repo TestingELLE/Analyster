@@ -460,7 +460,7 @@ public class ColumnPopupMenu extends JPopupMenu{
         filter.applyFilter();
         
         // update record label
-        String selectedTab = analyster.getSelectedTab();
+        String selectedTab = analyster.getSelectedTabName();
         String records = tabs.get(selectedTab).getRecordsLabel();
         analyster.getRecordsLabel().setText(records);
     }  

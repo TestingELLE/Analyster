@@ -34,7 +34,7 @@ public class BatchEditWindow extends JFrame {
         initComponents();
         analysterWindow = AnalysterWindow.getInstance();
         tabs = analysterWindow.getTabs();
-        selectedTab = analysterWindow.getSelectedTab();
+        selectedTab = analysterWindow.getSelectedTabName();
         
         comboBoxFieldSelect
                 .setModel(new DefaultComboBoxModel(tabs.get(selectedTab)
