@@ -1600,9 +1600,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         int rowIndex = table.getSelectedRow(); // this returns the rowIndex index
         if (rowIndex != -1) {
             Object selectedField = table.getValueAt(rowIndex, columnIndex);
-            tabs.get(getSelectedTab()).getFilter().addFilterItem(columnIndex, selectedField);
-            tabs.get(getSelectedTab()).getFilter().applyFilter();
-            labelRecords.setText(tabs.get(table.getName()).getRecordsLabel()); 
+            String tab = getSelectedTab();
+            TableFilter filter = tabs.get(tab).getFilter();
+            filter.addFilterItem(columnIndex, selectedField);
+            filter.applyFilter();
+            String recordsLabel = tabs.get(tab).getRecordsLabel();
+            labelRecords.setText(recordsLabel); 
         }
     }
 
