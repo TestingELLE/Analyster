@@ -45,6 +45,12 @@ public class LoginWindow extends JFrame {
  
         // show window
         this.setTitle("Log in");
+        
+        // for debugging
+        comboBoxServer.setSelectedIndex(1);
+        textFieldUsername.setText("root");
+        passwordFieldPW.setText("password");
+        login();
     }
 
     /**
