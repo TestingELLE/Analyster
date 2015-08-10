@@ -393,6 +393,15 @@ public class AddRecordsWindow extends JFrame {
                                     }
                                 }
                                 table.setSelectionBackground(defaultSelectedBG);
+                                
+                                // check for empty rows/table
+                                checkForEmptyRows();
+                                if(rowsNotEmpty.isEmpty()){
+                                    btnSubmit.setEnabled(false);
+                                }
+                                else{
+                                    btnSubmit.setEnabled(true);
+                                }
                             }
                             
                             // submit the data
@@ -417,12 +426,7 @@ public class AddRecordsWindow extends JFrame {
                             }
                         }
                     }
-                    else{
-                        if(e.getID() == KeyEvent.KEY_RELEASED){
-                            System.out.println(table.isEditing());
-                            btnSubmit.setEnabled(!table.isEditing());
-                        }
-                    }
+
                 } // end table component condition
 
                 return false; 
