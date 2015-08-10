@@ -1001,9 +1001,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         }
         
         for (Map.Entry<String, Tab> entry : tabs.entrySet()){
-            
-            ((EditableTableModel)tabs.get(entry.getKey()).getTable().getModel())
-                    .setCellEditable(makeTableEditable);
+            Tab tab = tabs.get(entry.getKey());
+            JTable table = tab.getTable();
+            EditableTableModel model = ((EditableTableModel)table.getModel());
+            model.setCellEditable(makeTableEditable);
         }
     }
 
