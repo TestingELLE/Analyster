@@ -649,109 +649,118 @@ public class AddRecordsWindow extends JFrame {
         int emptyCells = 0;             // number of empty cells in a row
         boolean error = false;          // error occurred
         
-        // check data
-        for(row = 0; row < table.getRowCount(); row++){
-            
-            // if there was an error stop
-            if(error)break;
+        // if rows are empty then the table is empty
+        if(!rowsNotEmpty.isEmpty()){
+            // check data
+            for(row = 0; row < table.getRowCount(); row++){
 
-            // reset empty cell count
-            emptyCells = 0;
-
-            // first test if row is empty
-            for(col = 0; col < table.getColumnCount(); col++){
-
-                // get value of cell
-                cellValue = table.getValueAt(row, col);
-
-                // check each column for a value
-                if(cellValue == null || cellValue.toString().equals("")){
-                    emptyCells++;
-                }
-            }
-
-            // continue to next row if this one is empty
-            if(emptyCells == table.getColumnCount()){
-                continue;   
-            }
-
-            for(col = 0; col < table.getColumnCount(); col++){
-                
                 // if there was an error stop
                 if(error)break;
 
-                // get column name
-                colName = table.getColumnName(col);
+                // reset empty cell count
+                emptyCells = 0;
 
-                // get value of cell
-                cellValue = table.getValueAt(row, col);
-                
-                // begin error message
-                errorMsg = "Error with " + colName + " in row " + (row + 1) + ".\n"; 
+                // first test if row is empty
+                for(col = 0; col < table.getColumnCount(); col++){
 
-                switch(colName){
-                    case "symbol":
-                        if(cellValue == null || cellValue.toString().equals("")){
-                            errorMsg += "Symbol cannot be null";
-                            error = true;
-                        }
-                        break;
-                    case "analyst":
-                        break;
-                    case "priority":
-                        if(cellValue != null && !cellValue.toString().equals(""))
-                            if(!cellValue.toString().matches("[1-5]{1}")){
-                                errorMsg += "Priority must be an Integer (1-5)";
-                                error = true;
-                            }
-                        break;
-                    case "dateAssigned":
-                        if(cellValue != null && !cellValue.toString().equals("")){
-                            if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                                errorMsg += "Date format not correct: YYYY-MM-DD";
-                                error = true;
-                            }
-                        }
-                        break;
-                    case "dateDone":
-                        if(cellValue != null && !cellValue.toString().equals("")){
-                            if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                                errorMsg += "Date format not correct: YYYY-MM-DD";
-                                error = true;
-                            }
-                        }
-                        break;
-                    case "notes":
-                        break;
-                    case "author":
-                        break;
-                    case "analysisDate":
-                        if(cellValue != null && !cellValue.toString().equals("")){
-                            if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                                errorMsg += "Date format not correct: YYYY-MM-DD";
-                                error = true;
-                            }
-                        }
-                        break;
-                    case "path":
-                        break;
-                    case "document":
-                        break;
-                    case "notesL":
-                        break;
-                    default:
-                        break;
+                    // get value of cell
+                    cellValue = table.getValueAt(row, col);
 
-                }// end switch
-            }// end col for loop
-        }// end row for loop
-        
-        if(error){
-            JOptionPane.showMessageDialog(table, errorMsg);
-            btnSubmit.setEnabled(true); 
+                    // check each column for a value
+                    if(cellValue == null || cellValue.toString().equals("")){
+                        emptyCells++;
+                    }
+                }
+
+                // continue to next row if this one is empty
+                if(emptyCells == table.getColumnCount()){
+                    continue;   
+                }
+
+                for(col = 0; col < table.getColumnCount(); col++){
+
+                    // if there was an error stop
+                    if(error)break;
+
+                    // get column name
+                    colName = table.getColumnName(col);
+
+                    // get value of cell
+                    cellValue = table.getValueAt(row, col);
+
+                    // begin error message
+                    errorMsg = "Error with " + colName + " in row " + (row + 1) + ".\n"; 
+
+                    switch(colName){
+                        case "symbol":
+                            if(cellValue == null || cellValue.toString().equals("")){
+                                errorMsg += "Symbol cannot be null";
+                                error = true;
+                            }
+                            break;
+                        case "analyst":
+                            break;
+                        case "priority":
+                            if(cellValue != null && !cellValue.toString().equals(""))
+                                if(!cellValue.toString().matches("[1-5]{1}")){
+                                    errorMsg += "Priority must be an Integer (1-5)";
+                                    error = true;
+                                }
+                            break;
+                        case "dateAssigned":
+                            if(cellValue != null && !cellValue.toString().equals("")){
+                                if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
+                                    errorMsg += "Date format not correct: YYYY-MM-DD";
+                                    error = true;
+                                }
+                            }
+                            break;
+                        case "dateDone":
+                            if(cellValue != null && !cellValue.toString().equals("")){
+                                if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
+                                    errorMsg += "Date format not correct: YYYY-MM-DD";
+                                    error = true;
+                                }
+                            }
+                            break;
+                        case "notes":
+                            break;
+                        case "author":
+                            break;
+                        case "analysisDate":
+                            if(cellValue != null && !cellValue.toString().equals("")){
+                                if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
+                                    errorMsg += "Date format not correct: YYYY-MM-DD";
+                                    error = true;
+                                }
+                            }
+                            break;
+                        case "path":
+                            break;
+                        case "document":
+                            break;
+                        case "notesL":
+                            break;
+                        default:
+                            break;
+
+                    }// end switch
+                }// end col for loop
+            }// end row for loop
+
+            if(error){
+                JOptionPane.showMessageDialog(table, errorMsg);
+            }
+
+            return !error;
         }
         
-        return !error;
+        // the table is empty
+        else{
+            
+            JOptionPane.showMessageDialog(table, "Table is empty");
+            return error;
+        }
     }
     
     /**
