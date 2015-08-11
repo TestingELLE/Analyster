@@ -1,17 +1,5 @@
 package com.elle.analyster.logic;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author Tina
- */
-
-
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
@@ -21,41 +9,76 @@ import javax.swing.text.DocumentFilter;
  * - Not sure about this class. It has something to do with the sql text area. 
  * The problem was that it is used in generated code so I was unable to find out 
  * how to disable it to test it any further. I did not see anything in properties.
- * @author cigreja
+ * @author Tina
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class CreateDocumentFilter extends DocumentFilter {
 
-	private int promptPosition;
+    // attributes
+    private int promptPosition;
 
-	public CreateDocumentFilter(int promptPosition) {
-		this.promptPosition = promptPosition;
-	}
+    /**
+     * CreateDocumentFilter
+     * @param promptPosition 
+     */
+    public CreateDocumentFilter(int promptPosition) {
+        this.promptPosition = promptPosition;
+    }
 
-	@Override
-	public void insertString(final FilterBypass fb, final int offset,
-			final String string, final AttributeSet attr)
-			throws BadLocationException {
-		if (offset >= promptPosition) {
-			super.insertString(fb, offset, string, attr);
-		}
-	}
+    /**
+     * insertString
+     * @param fb
+     * @param offset
+     * @param string
+     * @param attr
+     * @throws BadLocationException 
+     */
+    @Override
+    public void insertString(final FilterBypass fb, final int offset,
+                    final String string, final AttributeSet attr)
+                    throws BadLocationException {
+        
+        if (offset >= promptPosition) {
+                super.insertString(fb, offset, string, attr);
+        }
+    }
 
-	@Override
-	public void remove(final FilterBypass fb, final int offset, final int length)
-			throws BadLocationException {
-		if (offset >= promptPosition) {
-			super.remove(fb, offset, length);
-		}
-	}
+    /**
+     * remove
+     * @param fb
+     * @param offset
+     * @param length
+     * @throws BadLocationException 
+     */
+    @Override
+    public void remove(final FilterBypass fb, final int offset, final int length)
+                    throws BadLocationException {
+        
+        if (offset >= promptPosition) {
+                super.remove(fb, offset, length);
+        }
+    }
 
-	@Override
-	public void replace(final FilterBypass fb, final int offset,
-			final int length, final String text, final AttributeSet attrs)
-			throws BadLocationException {
-		if (offset >= promptPosition) {
-			super.replace(fb, offset, length, text, attrs);
-		}
-	}
+    /**
+     * replace
+     * @param fb
+     * @param offset
+     * @param length
+     * @param text
+     * @param attrs
+     * @throws BadLocationException 
+     */
+    @Override
+    public void replace(final FilterBypass fb, final int offset,
+                    final int length, final String text, final AttributeSet attrs)
+                    throws BadLocationException {
+        
+        if (offset >= promptPosition) {
+                super.replace(fb, offset, length, text, attrs);
+        }
+    }
 
 }
 

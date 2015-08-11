@@ -2,9 +2,11 @@
 package com.elle.analyster.database;
 
 /**
- * CLASS
  * ModifiedData
  * This is to create modified data objects.
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class ModifiedData {
 

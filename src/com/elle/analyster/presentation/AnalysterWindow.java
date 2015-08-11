@@ -36,7 +36,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-
+/**
+ * AnalysterWindow
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
+ */
 public class AnalysterWindow extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars

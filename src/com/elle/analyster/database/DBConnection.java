@@ -22,7 +22,9 @@ import javax.xml.stream.XMLStreamWriter;
  * This class makes the connection with the server and database 
  * and then the statement object is static and usable throughout
  * the application. 
- * @author cigreja
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class DBConnection {
     

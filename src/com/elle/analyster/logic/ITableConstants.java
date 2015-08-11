@@ -6,10 +6,11 @@
 package com.elle.analyster.logic;
 
 /**
- * @author cigreja
- * @since  July 16, 2015
- * 
+ * ITableConstants
  * This interface stores all the table constants
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public interface ITableConstants {
     

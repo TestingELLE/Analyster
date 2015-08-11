@@ -17,7 +17,9 @@ import javax.swing.table.TableRowSorter;
  * TableFilter
  * This class takes a JTable and filters the view for searching data.
  * It also applies colors to the column headers when filtering.
- * @author cigreja
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class TableFilter extends RowFilter<TableModel, Integer> {
     

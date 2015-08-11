@@ -19,6 +19,9 @@ import javax.swing.JFrame;
 /**
  * ReportWindow
  * @author Tina
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class ReportWindow extends JDialog {
     

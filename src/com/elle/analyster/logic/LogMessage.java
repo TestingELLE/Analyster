@@ -8,6 +8,8 @@ import java.util.Date;
  * LogMessage class
  * this class stores log message information
  * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class LogMessage {
 

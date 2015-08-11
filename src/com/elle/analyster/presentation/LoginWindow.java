@@ -1,11 +1,9 @@
 
 /**
  * @author Louis W.
- * 
- * Refactored
  * @author Carlos Igreja
- * @since June 30, 2015
- * @version 0.6.5b
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 package com.elle.analyster.presentation;
 

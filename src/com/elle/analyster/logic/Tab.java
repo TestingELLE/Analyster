@@ -12,7 +12,8 @@ import javax.swing.JTable;
  * Each tab may have its own attributes and that is what this class
  * is for.
  * @author Carlos Igreja
- * @since  June 25, 2015
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class Tab implements ITableConstants{
 

@@ -11,8 +11,10 @@ import javax.swing.AbstractButton;
 
 /**
  * WindowEditor
- This class has methods to edit windows
- * @author cigreja
+ * This class has methods to edit windows
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class WindowEditor {
     

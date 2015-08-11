@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import javax.swing.JCheckBox;
 
 /**
- *CLASS: CheckBoxItem
+ * CLASS: CheckBoxItem
  * This class to store information about check box item objects.
- * @author cigreja
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class CheckBoxItem extends JCheckBox{
     

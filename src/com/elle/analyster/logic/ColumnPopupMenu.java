@@ -30,6 +30,8 @@ import javax.swing.table.TableColumnModel;
  * This class is the JPopupMenu used for the column filtering with the 
  * CheckBoxlist.
  * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class ColumnPopupMenu extends JPopupMenu{
     

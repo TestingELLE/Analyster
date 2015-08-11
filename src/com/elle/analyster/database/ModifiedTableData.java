@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import javax.swing.JTable;
 
 /**
- * CLASS
  * ModifiedTableData
  * This class is used to store table model data
  * and new data changed to the table model.
@@ -12,6 +11,9 @@ import javax.swing.JTable;
  * data to know if changes have been made.
  * The new changes can then be uploaded to the 
  * database.
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 
 public class ModifiedTableData{

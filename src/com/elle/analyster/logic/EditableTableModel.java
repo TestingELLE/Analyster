@@ -9,7 +9,9 @@ import java.util.Vector;
  * This class allows switching the table to editable and non editable
  * by overriding the isCellEditable method with a boolean to change
  * it on the fly.
- * @author cigreja
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class EditableTableModel extends DefaultTableModel {
 

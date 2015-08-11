@@ -10,9 +10,10 @@ import com.elle.analyster.presentation.LoginWindow;
 
 /**
  * Main
- * @author cigreja
- * 
  * This is the class that starts the application from the main method
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class Analyster {
     

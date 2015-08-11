@@ -4,7 +4,9 @@ package com.elle.analyster.database;
 /**
  * Server
  * This class is to create a server object.
- * @author cigreja
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class Server {
     

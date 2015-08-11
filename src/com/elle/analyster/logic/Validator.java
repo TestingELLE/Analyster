@@ -7,8 +7,10 @@ import java.util.Date;
 
 /**
  * Validator
- This class is used to validate data 
- * @author cigreja
+ * This class is used to validate data 
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class Validator {
     

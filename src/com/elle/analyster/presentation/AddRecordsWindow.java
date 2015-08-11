@@ -23,6 +23,8 @@ import javax.swing.event.TableModelListener;
  * AddRecordsWindow
  * @author Louis W.
  * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class AddRecordsWindow extends JFrame {
 

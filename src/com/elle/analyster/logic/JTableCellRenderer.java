@@ -12,7 +12,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 /**
  * JTableCellRenderer
  * This is a custom cell renderer to color cells
- * @author cigreja
+ * @author Carlos Igreja
+ * @since June 10, 2015
+ * @version 0.6.3
  */
 public class JTableCellRenderer extends DefaultTableCellRenderer{
     
