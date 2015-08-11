@@ -1872,6 +1872,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                             if (rowIndex != -1) 
                                 table.setRowSelectionInterval(rowIndex, rowIndex);
                         }
+                        
+                        // if enter is pressed then enable upload changes button
+                        btnUploadChanges.setEnabled(true);
                     }
             
                 }
