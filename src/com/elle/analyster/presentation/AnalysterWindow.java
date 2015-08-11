@@ -1571,50 +1571,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                     // so I passed the conditional
                     makeTableEditable(jLabelEdit.getText().equals("ON ")?false:true);
                 } 
-                
-                // in editing mode this should ask to upload changes when enter key press
-                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-                    
-                    // make sure in editing mode
-                    if(jLabelEdit.getText().equals("ON ")){
-
-                        // if finished display dialog box
-                        // Upload Changes? Yes or No?
-                        Object[] options = {"Commit", "Revert"};  // the titles of buttons
-                        
-                        // store selected rowIndex before the table is refreshed
-                        int rowIndex = table.getSelectedRow();
-
-                        int selectedOption = JOptionPane.showOptionDialog(AnalysterWindow.getInstance(), 
-                                "Would you like to upload changes?", "Upload Changes",
-                                JOptionPane.YES_NO_OPTION, 
-                                JOptionPane.QUESTION_MESSAGE,
-                                null, //do not use a custom Icon
-                                options, //the titles of buttons
-                                options[0]); //default button title
-
-                        switch (selectedOption) {
-                            case 0:            
-                                // if Commit, upload changes and return to editing
-                                uploadChanges();  // upload changes to database
-                                makeTableEditable(false); // exit edit mode;
-                                break;
-                            case 1:
-                                // if Revert, revert changes
-                                loadTable(table); // reverts the model back
-                                makeTableEditable(false); // exit edit mode;
-                                
-                                break;
-                            default:
-                                // do nothing -> cancel
-                                break;
-                        }   
-                        
-                        // highligh previously selected rowIndex
-                        if (rowIndex != -1) 
-                            table.setRowSelectionInterval(rowIndex, rowIndex);
-                    }
-                }
             }
         });
     }
@@ -1855,6 +1811,69 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                             }
                         }
                     }
+                }
+                
+                else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (e.getComponent() instanceof JTable) {
+                        JTable table = (JTable)e.getComponent();
+                    
+                        if(e.getID() == KeyEvent.KEY_PRESSED){
+                            System.out.println("pressed = " + table.isEditing());
+                        }
+
+                        if(e.getID() == KeyEvent.KEY_TYPED){
+                            System.out.println("typed = " + table.isEditing());
+                        }
+
+                        if(e.getID() == KeyEvent.KEY_RELEASED){
+                            System.out.println("released = " + table.isEditing());
+                        }
+
+                        System.out.println(table.isEditing());
+
+                        // make sure in editing mode
+                        if(jLabelEdit.getText().equals("ON ") 
+                                && !table.isEditing() 
+                                && e.getID() == KeyEvent.KEY_PRESSED){
+
+                            // if finished display dialog box
+                            // Upload Changes? Yes or No?
+                            Object[] options = {"Commit", "Revert"};  // the titles of buttons
+
+                            // store selected rowIndex before the table is refreshed
+                            int rowIndex = table.getSelectedRow();
+
+                            int selectedOption = JOptionPane.showOptionDialog(AnalysterWindow.getInstance(), 
+                                    "Would you like to upload changes?", "Upload Changes",
+                                    JOptionPane.YES_NO_OPTION, 
+                                    JOptionPane.QUESTION_MESSAGE,
+                                    null, //do not use a custom Icon
+                                    options, //the titles of buttons
+                                    options[0]); //default button title
+
+                            switch (selectedOption) {
+                                case 0:            
+                                    // if Commit, upload changes and return to editing
+                                    uploadChanges();  // upload changes to database
+                                    makeTableEditable(false); // exit edit mode;
+                                    break;
+                                case 1:
+                                    // if Revert, revert changes
+                                    loadTable(table); // reverts the model back
+                                    makeTableEditable(false); // exit edit mode;
+
+                                    break;
+                                default:
+                                    // do nothing -> cancel
+                                    break;
+                            }   
+
+                            // highligh previously selected rowIndex
+                            if (rowIndex != -1) 
+                                table.setRowSelectionInterval(rowIndex, rowIndex);
+                        }
+                    }
+            
                 }
                 
                 return false;
