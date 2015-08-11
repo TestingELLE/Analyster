@@ -37,6 +37,5 @@ public class Analyster {
         LoginWindow loginWindow = new LoginWindow();
         loginWindow.setLocationRelativeTo(null);
         loginWindow.setVisible(true);
-        loginWindow.dispose();  // used for faster debugging
     }
 }
