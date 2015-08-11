@@ -988,22 +988,30 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * @param makeTableEditable  // takes boolean true or false to make editable
      */
     public void makeTableEditable( boolean makeTableEditable) {
+        
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        boolean isAddRecordsBtnVisible = tab.isAddRecordsBtnVisible();
+        boolean isBatchEditBtnVisible = tab.isBatchEditBtnVisible();
+        
         if (makeTableEditable) {
             jLabelEdit.setText("ON ");
             btnSwitchEditMode.setVisible(false);
             btnUploadChanges.setVisible(true);
             btnCancelEditMode.setVisible(true);
-            btnBatchEdit.setVisible(true);
+            btnAddRecords.setVisible(false);
+            btnBatchEdit.setVisible(false);
         } else {
             jLabelEdit.setText("OFF");
             btnSwitchEditMode.setVisible(true);
             btnUploadChanges.setVisible(false);
             btnCancelEditMode.setVisible(false);
-            btnBatchEdit.setVisible(true);
+            btnAddRecords.setVisible(isAddRecordsBtnVisible);
+            btnBatchEdit.setVisible(isBatchEditBtnVisible);
         }
         
         for (Map.Entry<String, Tab> entry : tabs.entrySet()){
-            Tab tab = tabs.get(entry.getKey());
+            tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
             EditableTableModel model = ((EditableTableModel)table.getModel());
             model.setCellEditable(makeTableEditable);
@@ -1043,6 +1051,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // set label record information
         String recordsLabel = tab.getRecordsLabel();
         labelRecords.setText(recordsLabel);    
+        
+        // hide buttons if in edit mode
+        if(jLabelEdit.getText().equals("ON ")){
+            btnAddRecords.setVisible(false);
+            btnBatchEdit.setVisible(false);
+        }
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
