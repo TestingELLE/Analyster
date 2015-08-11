@@ -1561,6 +1561,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 }
         );
         
+        table.getModel().addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                jTableChanged(e);
+            }
+        });
+        
         // add keyListener to the table
         table.addKeyListener(new KeyAdapter() {
             @Override
@@ -2012,13 +2019,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         }
         
         EditableTableModel model = new EditableTableModel(data, columnNames);
-
-        model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                jTableChanged(e);
-            }
-        });
 
         // this has to be set here or else I get errors
         // I tried passing the model to the filter and setting it there
