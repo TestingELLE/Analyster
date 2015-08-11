@@ -659,7 +659,7 @@ public class AddRecordsWindow extends JFrame {
                     if(!isCellValid)break;
 
                     // begin error message
-                    validateCell(row, col);
+                    isCellValid = validateCell(row, col);
                     
                 }// end col for loop
             }// end row for loop
@@ -667,12 +667,7 @@ public class AddRecordsWindow extends JFrame {
             return isCellValid;
         }
         
-        // the table is empty
-        else{
-            
-            JOptionPane.showMessageDialog(table, "Table is empty");
-            return !isCellValid;
-        }
+        return false; // table is empty
     }
     
     /**
