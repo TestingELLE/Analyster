@@ -272,7 +272,7 @@ public class Tab implements ITableConstants{
                     throw new NoSuchFieldException(errorMessage);
                 } catch (NoSuchFieldException ex) {
                     // post to log.txt
-                    AnalysterWindow.getInstance().getLogwind().addMessageWithDate(ex.getMessage());
+                    AnalysterWindow.getInstance().getLogWindow().addMessageWithDate(ex.getMessage());
                     ex.printStackTrace();
                 }
         

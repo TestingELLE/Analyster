@@ -3,11 +3,8 @@ package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.EditableTableModel;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -18,12 +15,9 @@ import java.util.Vector;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
 /**
- *
+ * ReportWindow
  * @author Tina
  */
 public class ReportWindow extends JDialog {
@@ -31,55 +25,18 @@ public class ReportWindow extends JDialog {
     // attributes
     private Statement statement;
     private final String sqlQuery = "select * from Suggestions";
+    private LogWindow logWindow;
 
     /**
      * Creates new form ReportWin
      */
-    public ReportWindow(JFrame parent, boolean modal) {
-        super(parent, modal);
+    public ReportWindow() {
+        super(new JFrame(), true);
         initComponents();
         statement = DBConnection.getStatement();
         connection(sqlQuery);
-    }
-
-    public ReportWindow() {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        // Create and display the dialog
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ReportWindow dialog = new ReportWindow(new JFrame(), true);
-                /*dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });*/
-                dialog.setVisible(true);
-            }
-        });
+        AnalysterWindow analyster = AnalysterWindow.getInstance();
+        logWindow = analyster.getLogWindow();
     }
 
     /**
@@ -259,10 +216,18 @@ public class ReportWindow extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 
+    /**
+     * title_textActionPerformed
+     * @param evt 
+     */
     private void title_textActionPerformed(ActionEvent evt) {//GEN-FIRST:event_title_textActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_title_textActionPerformed
 
+    /**
+     * addNewActionPerformed
+     * @param evt 
+     */
     private void addNewActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addNewActionPerformed
         // TODO add your handling code here:
         title_text.setEditable(true);
@@ -277,6 +242,10 @@ public class ReportWindow extends JDialog {
         note_text.setText(null);
     }//GEN-LAST:event_addNewActionPerformed
 
+    /**
+     * submitActionPerformed
+     * @param evt 
+     */
     private void submitActionPerformed(ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
         // TODO add your handling code here:
 
@@ -307,6 +276,10 @@ public class ReportWindow extends JDialog {
 
     }//GEN-LAST:event_submitActionPerformed
 
+    /**
+     * tableMouseClicked
+     * @param evt 
+     */
     private void tableMouseClicked(MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
         // TODO add your handling code here:
         title_text.setEditable(false);
@@ -341,123 +314,53 @@ public class ReportWindow extends JDialog {
         }
     }//GEN-LAST:event_tableMouseClicked
     
-    
+    /**
+     * connection
+     * @param sql 
+     */
     public void connection(String sql) {
 
-	//String sql="select * from Suggesions";
-        //System.out.println(sql);
         Vector columnNames = new Vector();
-
         Vector data = new Vector();
-
         int columns = 0;
 
-        
         // get the result set
         ResultSet rs = null;
-
         ResultSetMetaData metaData = null;
 
         try {
-
             rs = statement.executeQuery(sql);
-
             metaData = rs.getMetaData();
-
+            
         } catch (Exception ex) {
-
             System.out.println("Error: " + ex);
-
         }
 
         try {
-
             columns = metaData.getColumnCount();
-
             for (int i = 1; i <= columns; i++) {
-
                 columnNames.addElement(metaData.getColumnName(i));
-
             }
 
             while (rs.next()) {
-
                 Vector row = new Vector(columns);
-
                 for (int i = 1; i <= columns; i++) {
-
                     row.addElement(rs.getObject(i));
-
                 }
-
                 data.addElement(row);
-				//System.out.println(data.size());
-                //System.out.println(row.size());
-
             }
 
             rs.close();
-
-			//stmt.close();
+            
         } catch (SQLException ex) {
-			//logwind.sendMessages(ex.getMessage());
-            //logwind.sendMessages(ex.getSQLState() + "\n");
-            System.out.println("Error: " + ex);
+	    System.out.println("Error: " + ex);
+            logWindow.addMessageWithDate(ex.getMessage());
         } catch (Exception ex) {
             System.out.println("Error: " + ex);
-            //logwind.sendMessages(ex.getMessage());
+            logWindow.addMessageWithDate(ex.getMessage());
         }
 
         table.setModel(new EditableTableModel(data, columnNames));   
-        
-        
-		//System.out.println(data.size());
-        //System.out.println(columnNames.size());
-        //table.setModel(new DefaultTableModel(data, columnNames));
-        //numOfRecords.setText("Number of records:" +data.size());
-
-		// table.getColumnClass(0);
-		// table.getColumnClass(2);
-		// table.isCellEditable(0, 0);
-		// table.isCellEditable(0, 2);
-		//table.setPreferredScrollableViewportSize(new Dimension(400, 300));
-		//TableColumn column;
-
-        /*for (int i = 0; i < table.getColumnCount(); i++) {
-
-         column = table.getColumnModel().getColumn(i);
-         column.setMinWidth(40);
-         column.setMaxWidth(200);
-
-         }*/
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        for (int col = 0; col < table.getColumnCount(); col++) {
-            TableColumn tableColumn = table.getColumnModel().getColumn(col);
-            int preferredWidth = tableColumn.getMinWidth();
-            int maxWidth = tableColumn.getMaxWidth();
-
-            for (int row = 0; row < table.getRowCount(); row++) {
-                TableCellRenderer cellRenderer = table.getCellRenderer(row, col);
-                Component c = table.prepareRenderer(cellRenderer, row, col);
-                int width = c.getPreferredSize().width + table.getIntercellSpacing().width + 5;
-                preferredWidth = Math.max(preferredWidth, width);
-                            //System.out.print(width + " ");
-                //  We've exceeded the maximum width, no need to check other rows
-
-                if (preferredWidth >= maxWidth) {
-                    preferredWidth = maxWidth;
-                    break;
-                }
-            }
-            //System.out.print(preferredWidth+ "\n");
-            tableColumn.setPreferredWidth(preferredWidth);
-
-        }
-
-        //table.getColumnModel().getColumn(4).setCellRenderer(new TextAreaRenderer.TextAreaRenderer());
-        table.setRowHeight(20);
-        System.out.println("Report table added successfully");
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

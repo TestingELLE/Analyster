@@ -7,7 +7,6 @@ package com.elle.analyster;
 
 import com.elle.analyster.presentation.AnalysterWindow;
 import com.elle.analyster.presentation.LoginWindow;
-import com.elle.analyster.presentation.ReportWindow;
 
 /**
  * Main
@@ -38,6 +37,5 @@ public class Analyster {
         loginWindow.setLocationRelativeTo(null);
         loginWindow.setVisible(true);
         loginWindow.dispose();  // used for faster debugging
-        // new ReportWindow().setVisible(true);  // debugging
     }
 }

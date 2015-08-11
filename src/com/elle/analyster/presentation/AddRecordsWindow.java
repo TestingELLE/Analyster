@@ -56,7 +56,7 @@ public class AddRecordsWindow extends JFrame {
         // initialize components
         initComponents();
         analyster = AnalysterWindow.getInstance();
-        logWindow = analyster.getLogwind();
+        logWindow = analyster.getLogWindow();
         tabs = analyster.getTabs();
         statement = analyster.getStatement();
         

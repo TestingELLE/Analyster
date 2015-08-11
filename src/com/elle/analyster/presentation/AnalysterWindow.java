@@ -55,6 +55,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private LoginWindow loginWindow;
     private BatchEditWindow batchEditWindow;
     private EditDatabaseWindow editDatabaseWindow;
+    private ReportWindow reportWindow;
 
 
     /**
@@ -928,7 +929,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     }
     
     private void menuItemRepBugSuggActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepBugSuggActionPerformed
-//        new ReportWin();// Create Report
+       reportWindow = new ReportWindow(); 
+       reportWindow.setLocationRelativeTo(this);
+       reportWindow.setVisible(true);
     }//GEN-LAST:event_menuItemRepBugSuggActionPerformed
 
     private void btnEnterSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterSQLActionPerformed
@@ -1309,7 +1312,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 }
                 try {
                     statement.executeUpdate(sqlInsert);
-//                    ana.getLogwind().addMessageWithDate(sqlInsert);
+//                    ana.getLogWindow().addMessageWithDate(sqlInsert);
                 } catch (SQLException e) {
                     e.printStackTrace();
                     System.out.println(e.toString());
@@ -1888,7 +1891,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         return labelRecords;
     }
 
-    public LogWindow getLogwind() {
+    public LogWindow getLogWindow() {
         return logWindow;
     }
     
