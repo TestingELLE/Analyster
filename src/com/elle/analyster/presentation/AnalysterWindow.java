@@ -168,9 +168,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         tabs.get(ARCHIVE_TABLE_NAME)
                 .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(ARCHIVE_TABLE_NAME).getFilter()));
         
-        // set the mouseListeners and KeyListeneres to the tables
-        setTableListeners(tabs);
-        
         // load data from database to tables
         loadTables(tabs);
             
@@ -939,13 +936,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         int commandStart = jTextAreaSQL.getText().lastIndexOf(">>") + 2;
         String command = jTextAreaSQL.getText().substring(commandStart);  
         if (command.toLowerCase().contains("select")){
-            try {
-                executeSQL(command, assignmentTable);
-            } catch (SQLException e) {
-                logWindow.addMessageWithDate(e.getMessage());  
-            }
+            loadTable(command, assignmentTable);
         } else {
-            
             try {
                     statement.executeUpdate(command);
             } catch (SQLException e) {
@@ -1163,11 +1155,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private void menuItemViewActiveAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemViewActiveAssignActionPerformed
 
         String sqlC = "select A.* from Assignments A left join t_analysts T\n" + "on A.analyst = T.analyst\n" + "where T.active = 1\n" + "order by A.symbol";
-        try {
-            executeSQL(sqlC, assignmentTable);
-        } catch (SQLException e) {
-            logWindow.addMessageWithDate(e.getMessage());  
-        }
+        loadTable(sqlC, assignmentTable);
 
         String tabName = ASSIGNMENTS_TABLE_NAME;
         Tab tab = tabs.get(tabName);
@@ -1561,6 +1549,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 }
         );
         
+        // add table model listener
         table.getModel().addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
             @Override
             public void tableChanged(TableModelEvent e) {
@@ -1986,6 +1975,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     public JTable loadTable(JTable table) {
         
         String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
+        loadTable(sql, table);
+        
+        return table;
+    }
+    
+    public JTable loadTable(String sql, JTable table) {
+        
         Vector data = new Vector();
         Vector columnNames = new Vector();
         int columns;
@@ -2028,12 +2024,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // check that the filter items are initialized
         String tabName = table.getName();
         Tab tab = tabs.get(tabName);
+        
+        // apply filter
         TableFilter filter = tab.getFilter();
         if(filter.getFilterItems() == null){
             filter.initFilterItems();
         }
-        
-        // apply filter
         filter.applyFilter();
         filter.applyColorHeaders();
         
@@ -2044,6 +2040,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // set column format
         float[] colWidthPercent = tab.getColWidthPercent();
         setColumnFormat(colWidthPercent, table);
+        
+        // set the listeners for the table
+        setTableListeners(table);
 
         // update last time the table was updated
         setLastUpdateTime();
@@ -2110,72 +2109,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             }
         }
         return sqlDelete;
-    }
-    
-    /**
-     * executeSQL
-     * This executes the sql statement
-     * and gets the data from the database.
-     * @param sql
-     * @param table
-     * @return
-     * @throws SQLException 
-     */
-    public String executeSQL(String sql, JTable table) throws SQLException {
-
-        Vector data = new Vector();
-        Vector columnNames = new Vector();
-        int columns;
-
-        ResultSet rs = null;
-        ResultSetMetaData metaData = null;
-        try {
-            rs = statement.executeQuery(sql);
-            metaData = rs.getMetaData();
-        } catch (Exception ex) {
-            System.out.println("SQL Error:");
-            ex.printStackTrace();
-        }
-        try {
-            columns = metaData.getColumnCount();
-            for (int i = 1; i <= columns; i++) {
-                columnNames.addElement(metaData.getColumnName(i));
-            }
-            while (rs.next()) {
-                Vector row = new Vector(columns);
-                for (int i = 1; i <= columns; i++) {
-                    row.addElement(rs.getObject(i));
-                }
-                data.addElement(row);
-            }
-            rs.close();
-
-        } catch (SQLException ex) {
-            System.out.println("SQL Error:");
-            ex.printStackTrace();
-        }
-
-        EditableTableModel model = new EditableTableModel(data, columnNames);
-        TableRowSorter sorter = new TableRowSorter<>(model);
-
-        model.addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                jTableChanged(e);
-            }
-        });
-
-        table.setModel(model);
-        table.setRowSorter(sorter);
-        
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        float[] colWidthPercent = tab.getColWidthPercent();
-        setColumnFormat(colWidthPercent, table);
-        
-        System.out.println("Table added succesfully");
-
-        return null;
     }
     
     // @formatter:off
