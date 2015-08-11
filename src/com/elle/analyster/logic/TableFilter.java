@@ -38,18 +38,10 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         
         this.table = table;
         
-        // set table sorter
-//        sorter = new TableRowSorter<TableModel>(table.getModel());
-//        table.setRowSorter(sorter);
-        
-        
-        
         // initialize the color for the table header when it is filtering
         color = Color.GREEN; // default color is green
         
         isFiltering = false;
-        
-//        applyFilter(); // apply filter
     }
     
     /**
@@ -267,7 +259,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     }
 
     /**
-     * getDistinctColumnItems
+     * getFilterItems
      * @return 
      */
     public Map<Integer, ArrayList<Object>> getFilterItems() {
@@ -275,7 +267,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
     }
 
     /**
-     * setDistinctColumnItems
+     * setFilterItems
      * @param distinctColumnItems 
      */
     public void setFilterItems(Map<Integer, ArrayList<Object>> distinctColumnItems) {

@@ -16,9 +16,11 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
@@ -27,13 +29,14 @@ import javax.swing.table.TableColumnModel;
  * ColumnPopupMenu
  * This class is the JPopupMenu used for the column filtering with the 
  * CheckBoxlist.
- * @author cigreja
+ * @author Carlos Igreja
  */
 public class ColumnPopupMenu extends JPopupMenu{
     
     // attributes
     private CheckBoxList checkBoxList;
     private TableFilter filter;
+    private JTable table;
     private Map<Integer,ArrayList<CheckBoxItem>> checkBoxItems; // distinct items for options
     private int columnIndex; // selected colunm
     
@@ -49,6 +52,7 @@ public class ColumnPopupMenu extends JPopupMenu{
     public ColumnPopupMenu(TableFilter filter){
         initComponents();
         this.filter = filter;
+        table = filter.getTable();
         
         // load all check box items
         //loadAllCheckBoxItems();
@@ -242,15 +246,15 @@ public class ColumnPopupMenu extends JPopupMenu{
         checkBoxItems = new HashMap<>(); 
         
         // check every column except first because it is the primary key and not used to filter
-        for(col = 1; col < filter.getTable().getColumnCount(); col++){
+        for(col = 1; col < table.getColumnCount(); col++){
             
             // load capped items and add checkbox items to the list
             loadCappedItems(col, cap);
             
             // now go through every row and add each disctinct item and count
-            for(row = 0; row < filter.getTable().getModel().getRowCount(); row++){
+            for(row = 0; row < table.getModel().getRowCount(); row++){
                 
-                cellValue = filter.getTable().getModel().getValueAt(row, col);
+                cellValue = table.getModel().getValueAt(row, col);
                 
                 // handle null exceptions
                 if(cellValue == null){
@@ -362,9 +366,9 @@ public class ColumnPopupMenu extends JPopupMenu{
         ArrayList<String> distinctItems = new ArrayList<>();
         Object cellValue = null;
         
-        for(int row = 0; row < filter.getTable().getModel().getRowCount(); row++){
+        for(int row = 0; row < table.getModel().getRowCount(); row++){
             
-            cellValue = filter.getTable().getModel().getValueAt(row, col);
+            cellValue = table.getModel().getValueAt(row, col);
             
             if(cellValue == null){
                 cellValue = "";
@@ -460,9 +464,11 @@ public class ColumnPopupMenu extends JPopupMenu{
         filter.applyFilter();
         
         // update record label
-        String selectedTab = analyster.getSelectedTabName();
-        String records = tabs.get(selectedTab).getRecordsLabel();
-        analyster.getRecordsLabel().setText(records);
+        String tabName = table.getName();
+        Tab tab = tabs.get(tabName);
+        String recordsLabelText = tab.getRecordsLabel();
+        JLabel recordsLabel = analyster.getRecordsLabel();
+        recordsLabel.setText(recordsLabelText);
     }  
     
     /**

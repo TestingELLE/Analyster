@@ -1,6 +1,8 @@
 
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.database.DBConnection;
+import com.elle.analyster.logic.EditableTableModel;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -25,14 +27,19 @@ import javax.swing.table.TableColumn;
  * @author Tina
  */
 public class ReportWindow extends JDialog {
+    
+    // attributes
+    private Statement statement;
+    private final String sqlQuery = "select * from Suggestions";
 
     /**
      * Creates new form ReportWin
      */
-    public ReportWindow(java.awt.Frame parent, boolean modal) {
+    public ReportWindow(JFrame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        connection(sqlC);
+        statement = DBConnection.getStatement();
+        connection(sqlQuery);
     }
 
     public ReportWindow() {
@@ -190,11 +197,11 @@ public class ReportWindow extends JDialog {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Date", "Author", "title", "Notes"
+                "ID", "Date", "Author", "Title", "Notes"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -280,8 +287,8 @@ public class ReportWindow extends JDialog {
             String sqlChange = "INSERT INTO Suggestions (Date, Author, title, Notes) VALUES ('"
                     + date + "','Tester','" + title_text.getText() + "','" + note_text.getText() + "')";
             //System.out.println(sqlChange);
-            stmt.executeUpdate(sqlChange);
-            connection(sqlC);
+            statement.executeUpdate(sqlChange);
+            connection(sqlQuery);
 	    			//logwind.sendMessages(sqlChange);
             //c.revalidate();
             title_text.setText(null);
@@ -290,7 +297,7 @@ public class ReportWindow extends JDialog {
             note_text.setEditable(false);
 
         } catch (SQLException ex) {
-	    			//logwind.sendMessages(ex.getMessage());
+	    //logwind.sendMessages(ex.getMessage());
             //logwind.sendMessages(ex.getSQLState() + "\n");
             System.out.println("sql Error: " + ex);
         } catch (Exception ex) {
@@ -309,7 +316,7 @@ public class ReportWindow extends JDialog {
         try {
             String sqlView = "select * from Suggestions where ID= " + table.getValueAt(row, 0) + ";";
             //System.out.println(sqlView);
-            rs = stmt.executeQuery(sqlView);
+            rs = statement.executeQuery(sqlView);
             /*int size= 0;
              if (rs != null)   
              {  
@@ -333,9 +340,11 @@ public class ReportWindow extends JDialog {
             //logwind.sendMessages(ex.getMessage());
         }
     }//GEN-LAST:event_tableMouseClicked
+    
+    
     public void connection(String sql) {
-        stmt = null;
-		//String sql="select * from Suggesions";
+
+	//String sql="select * from Suggesions";
         //System.out.println(sql);
         Vector columnNames = new Vector();
 
@@ -343,44 +352,15 @@ public class ReportWindow extends JDialog {
 
         int columns = 0;
 
-		// panel_display = new JPanel();
-        String db_url, username, password;
-
-        String jdbc_driver = "com.mysql.jdbc.Driver";
-
-        db_url = "jdbc:mysql://elle.csndtbcukajz.us-west-2.rds.amazonaws.com:3306/ELLE_Fundamentals";
-
-        username = "dbashicheng";
-
-        password = "shicheng1221";
-
-        try {
-
-            Class.forName(jdbc_driver);
-
-			//logwind.sendMessages("\nStart to connect AWS...");
-            Connection con = DriverManager.getConnection(db_url, username, password);
-
-			//logwind.sendMessages("Connect successfully!\n");
-            stmt = con.createStatement();
-
-            System.out.println("Report Connection successfully");
-
-        } catch (Exception ex) {
-
-            System.out.println("Cannot open AWS database -- make sure AWS is configured properly.");
-            //logwind.sendMessages(ex.getMessage());
-            System.exit(1);
-
-        }
-
+        
+        // get the result set
         ResultSet rs = null;
 
         ResultSetMetaData metaData = null;
 
         try {
 
-            rs = stmt.executeQuery(sql);
+            rs = statement.executeQuery(sql);
 
             metaData = rs.getMetaData();
 
@@ -428,13 +408,7 @@ public class ReportWindow extends JDialog {
             //logwind.sendMessages(ex.getMessage());
         }
 
-        /**
-         *  I commented this line out. The only line ! I am refactoring !
-         *  I don't know what this table is for but it is not used that I 
-         *  know off. If this is to be used, this is the only line of code
-         *  that was commented out. There is also the original file also !!
-         */
-        //table.setModel(new MyTableModel(data, columnNames,true));   // true - isCellEditable
+        table.setModel(new EditableTableModel(data, columnNames));   
         
         
 		//System.out.println(data.size());
@@ -485,51 +459,6 @@ public class ReportWindow extends JDialog {
         System.out.println("Report table added successfully");
 
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    //public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-     */
-    /*try {
-     for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-     if ("Nimbus".equals(info.getName())) {
-     javax.swing.UIManager.setLookAndFeel(info.getClassName());
-     break;
-     }
-     }
-     } catch (ClassNotFoundException ex) {
-     java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-     } catch (InstantiationException ex) {
-     java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-     } catch (IllegalAccessException ex) {
-     java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-     } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-     java.util.logging.Logger.getLogger(ReportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-     }
-     //</editor-fold>
-
-     // Create and display the dialog
-     java.awt.EventQueue.invokeLater(new Runnable() {
-     public void run() {
-     ReportWindow dialog = new ReportWindow(new javax.swing.JFrame(), true);
-     dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-     @Override
-     public void windowClosing(java.awt.event.WindowEvent e) {
-     System.exit(0);
-     }
-     });
-     dialog.setVisible(true);
-     }
-     });
-     }*/
-    //private Container c;
-    private Statement stmt;
-    private final String sqlC = "select * from Suggestions";
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNew;

@@ -1,7 +1,6 @@
 
 package com.elle.analyster.presentation;
 
-import com.elle.analyster.logic.WindowEditor;
 import com.elle.analyster.logic.LogMessage;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,6 +12,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * LogWindow
+ * @author cigreja
+ */
 public class LogWindow extends JFrame{
     
     // constants

@@ -3,10 +3,9 @@ package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.database.ModifiedTableData;
-import com.elle.analyster.logic.JTableCellRenderer;
 import com.elle.analyster.logic.Tab;
+import com.elle.analyster.logic.TableFilter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
@@ -20,25 +19,27 @@ public class BatchEditWindow extends JFrame {
     
     // attributes
     private AnalysterWindow analysterWindow;
-    private Map<String,Tab> tabs;
-    private String selectedTab;
+    private JTable table;
+    private Tab tab;
 
     
     /**
      * CONSTRUCTOR
-     * Creates new form TableEdit
+     * Creates new BatchEditWindow
      * @param selectedTable
      * @param analysterWindow
      */
     public BatchEditWindow() {
         initComponents();
         analysterWindow = AnalysterWindow.getInstance();
-        tabs = analysterWindow.getTabs();
-        selectedTab = analysterWindow.getSelectedTabName();
+        Map<String,Tab> tabs = analysterWindow.getTabs();
+        String tabName = analysterWindow.getSelectedTabName();
+        tab = tabs.get(tabName);
+        table = tab.getTable();
         
-        comboBoxFieldSelect
-                .setModel(new DefaultComboBoxModel(tabs.get(selectedTab)
-                        .getBatchEditFields()));
+        String[] batchEditFields = tab.getBatchEditFields();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(batchEditFields);
+        comboBoxFieldSelect.setModel(model);
         
         // set the interface to the middle of the window
         this.setLocationRelativeTo(analysterWindow);
@@ -172,16 +173,13 @@ public class BatchEditWindow extends JFrame {
      */
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
 
-        JTable table = tabs.get(selectedTab).getTable();                           // the selected table
-        ModifiedTableData data = tabs.get(selectedTab).getTableData();             // modified table data object
-        String columnName = String.valueOf(comboBoxFieldSelect.getSelectedItem()); // column name   
+        ModifiedTableData data = tab.getTableData();                               // modified table data object
+        String columnName = comboBoxFieldSelect.getSelectedItem().toString();      // column name   
         String newValue = textFieldNewValue.getText();                             // new value to replace old value(s)
         int[] rows = table.getSelectedRows();                                      // selected rows
         int columnIndex;                                                           // column index
         int rowIndex;                                                              // row index
         int rowCount = table.getSelectedRowCount();                                // number of rows
-
-        //List<ModifiedData> modifiedDataBatchEdit = new ArrayList<>();
         
         // get column index for the combobox selection
         for (columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++) {
@@ -203,9 +201,9 @@ public class BatchEditWindow extends JFrame {
         //analysterWindow.updateTable(table, modifiedDataBatchEdit);
         
         // get the filter items for this column
+        TableFilter filter = tab.getFilter();
         ArrayList<Object> filterItems 
-                = new ArrayList<>(tabs.get(selectedTab)
-                        .getFilter().getFilterItems().get(columnIndex));
+                = new ArrayList<>(filter.getFilterItems().get(columnIndex));
 
         if(!filterItems.isEmpty()){
             if(!filterItems.contains(newValue)){
@@ -214,7 +212,7 @@ public class BatchEditWindow extends JFrame {
                 filterItems.add(newValue);
                 
                 // add the array to the filter items list
-                tabs.get(selectedTab).getFilter().addFilterItems(columnIndex, filterItems);
+                filter.addFilterItems(columnIndex, filterItems);
             }
         }
         

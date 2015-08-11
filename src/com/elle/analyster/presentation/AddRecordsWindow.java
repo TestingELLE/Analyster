@@ -1,7 +1,9 @@
 
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.Tab;
+import com.elle.analyster.logic.TableFilter;
 import com.elle.analyster.logic.Validator;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,9 +20,9 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 /**
- *
+ * AddRecordsWindow
  * @author Louis W.
- * @author cigreja
+ * @author Carlos Igreja
  */
 public class AddRecordsWindow extends JFrame {
 
@@ -306,17 +308,29 @@ public class AddRecordsWindow extends JFrame {
 
             if(numRowsAdded > 0){
                 // update table and records label
-                String selectedTab = analyster.getSelectedTabName();                          // get selected tab
-                analyster.loadTable(tabs.get(selectedTab).getTable());                    // load table data from database
-                tabs.get(selectedTab).getFilter().applyFilter();                          // apply filter
-                tabs.get(selectedTab).getFilter().applyColorHeaders();                    // apply color headers
-                tabs.get(selectedTab).getColumnPopupMenu().loadAllCheckBoxItems();        // refresh the data for the column pop up
-                analyster.setLastUpdateTime();                                            // set the last update time from database
-                tabs.get(selectedTab).addToTotalRowCount(numRowsAdded);                   // add the number of records added to the total records count
-                String records = tabs.get(selectedTab).getRecordsLabel();                 // store the records label string
-                analyster.getRecordsLabel().setText(records);                             // update the records label text
-                JOptionPane.showMessageDialog(null, numRowsAdded + " Add successfully!"); // show dialog box that upload was successful
-                createEmptyTable();                                                       // create a new table with default 10 rows
+                String tabName = analyster.getSelectedTabName();              // tab name
+                Tab tab = tabs.get(tabName);                                  // selected tab
+                
+                JTable table = tab.getTable();                                // selected table
+                analyster.loadTable(table);                                   // load table data from database
+                
+                TableFilter filter = tab.getFilter();                         // table filter
+                filter.applyFilter();                                         // apply filter
+                filter.applyColorHeaders();                                   // apply color headers
+                
+                ColumnPopupMenu ColumnPopupMenu = tab.getColumnPopupMenu();   // column popup menu 
+                ColumnPopupMenu.loadAllCheckBoxItems();                       // refresh the data for the column pop up
+                
+                tab.addToTotalRowCount(numRowsAdded);                         // add the number of records added to the total records count
+                JLabel recordsLabel = analyster.getRecordsLabel();
+                String recordsLabelText = tab.getRecordsLabel();              // store the records label string
+                recordsLabel.setText(recordsLabelText);                       // update the records label text
+                
+                analyster.setLastUpdateTime();                                // set the last update time from database
+                
+                JOptionPane.showMessageDialog(this, 
+                        numRowsAdded + " Add successfully!");                 // show dialog box that upload was successful
+                createEmptyTable();                                           // create a new empty table with default 10 rows
             }
         }
     }
