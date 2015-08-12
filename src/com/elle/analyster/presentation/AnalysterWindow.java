@@ -45,8 +45,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-08-11";  
-    private final String VERSION = "0.8.3";   
+    private final String CREATION_DATE = "2015-08-12";  
+    private final String VERSION = "0.8.3a";   
     
     // attributes
     private Map<String,Tab> tabs; // stores individual tabName information
@@ -1813,20 +1813,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     if (e.getComponent() instanceof JTable) {
                         JTable table = (JTable)e.getComponent();
-                    
-                        if(e.getID() == KeyEvent.KEY_PRESSED){
-                            System.out.println("pressed = " + table.isEditing());
-                        }
-
-                        if(e.getID() == KeyEvent.KEY_TYPED){
-                            System.out.println("typed = " + table.isEditing());
-                        }
-
-                        if(e.getID() == KeyEvent.KEY_RELEASED){
-                            System.out.println("released = " + table.isEditing());
-                        }
-
-                        System.out.println(table.isEditing());
 
                         // make sure in editing mode
                         if(jLabelEdit.getText().equals("ON ") 
