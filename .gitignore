@@ -1,1 +1,5 @@
 /nbproject/
+/build/
+/dist/
+/src/com/elle/analyster/database/servers.xml
+/target/
