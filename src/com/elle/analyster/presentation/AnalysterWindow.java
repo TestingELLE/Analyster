@@ -1415,36 +1415,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         }
     }//GEN-LAST:event_menuItemSQLCmdChkBxActionPerformed
 
-    
-    /**
-     * jTableChanged
-     * @param e 
-     */
-    private void jTableChanged(TableModelEvent e) {
-
-        int row = e.getFirstRow();
-        int col = e.getColumn();
-        String tab = getSelectedTabName();
-        JTable table = tabs.get(tab).getTable();
-        ModifiedTableData data = tabs.get(tab).getTableData();
-        Object oldValue = data.getOldData()[row][col];
-        Object newValue = table.getModel().getValueAt(row, col);
-
-        // check that data is different
-        if(!newValue.equals(oldValue)){
-            
-            String tableName = table.getName();
-            String columnName = table.getColumnName(col);
-            int id = (Integer) table.getModel().getValueAt(row, 0);
-            data.getNewData().add(new ModifiedData(tableName, columnName, newValue, id));
-
-            // color the cell
-            JTableCellRenderer cellRender = tabs.get(tab).getCellRenderer();
-            cellRender.getCells().get(col).add(row);
-            table.getColumnModel().getColumn(col).setCellRenderer(cellRender);
-        }
-    }
-
     /**
      * loadData
      */
@@ -1561,7 +1531,27 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         table.getModel().addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
             @Override
             public void tableChanged(TableModelEvent e) {
-                jTableChanged(e);
+                int row = e.getFirstRow();
+                int col = e.getColumn();
+                String tab = getSelectedTabName();
+                JTable table = tabs.get(tab).getTable();
+                ModifiedTableData data = tabs.get(tab).getTableData();
+                Object oldValue = data.getOldData()[row][col];
+                Object newValue = table.getModel().getValueAt(row, col);
+
+                // check that data is different
+                if(!newValue.equals(oldValue)){
+
+                    String tableName = table.getName();
+                    String columnName = table.getColumnName(col);
+                    int id = (Integer) table.getModel().getValueAt(row, 0);
+                    data.getNewData().add(new ModifiedData(tableName, columnName, newValue, id));
+
+                    // color the cell
+                    JTableCellRenderer cellRender = tabs.get(tab).getCellRenderer();
+                    cellRender.getCells().get(col).add(row);
+                    table.getColumnModel().getColumn(col).setCellRenderer(cellRender);
+                }
             }
         });
         
