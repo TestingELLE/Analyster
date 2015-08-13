@@ -6,7 +6,7 @@
     <!-- this is netbeans generated code -->
     <import file="nbproject/build-impl.xml"/>
     
-    <!-- set the version of ProjectManager here -->
+    <!-- set the version of Analyster here -->
     <property name="version" value="Analyster-0.8.3a"/>
     
     <!-- This creates the jar that we want with the included dependancies -->
