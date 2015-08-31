@@ -45,11 +45,11 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-08-12";  
-    private final String VERSION = "0.8.3a";   
+    private final String CREATION_DATE = "2015-08-18";  
+    private final String VERSION = "0.8.3d";   
     
     // attributes
-    private Map<String,Tab> tabs; // stores individual tabName information
+    private Map<String,Tab> tabs; // stores individual tab objects 
     private static Statement statement;
     private String database;
     
@@ -76,6 +76,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // the statement is used for sql statements with the database connection
         // the statement is created in LoginWindow and passed to Analyster.
         statement = DBConnection.getStatement();
+        database = DBConnection.getDatabase();
         instance = this;                         // this is used to call this instance of Analyster 
 
         // initialize tabs
@@ -1952,13 +1953,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     }
     
 
-      /**
-       * loadTable
-       * This method takes a table and loads it
-       * Does not need to pass the table back since it is passed by reference
-       * However, it can make the code clearer and it's good practice to return
-       * @param table 
-       */
+    /**
+    * loadTable
+    * This method takes a table and loads it
+    * Does not need to pass the table back since it is passed by reference
+    * However, it can make the code clearer and it's good practice to return
+    * @param table 
+    */
     public JTable loadTable(JTable table) {
         
         String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";

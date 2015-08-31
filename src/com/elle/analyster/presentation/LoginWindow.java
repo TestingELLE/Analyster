@@ -39,7 +39,7 @@ public class LoginWindow extends JFrame {
         logWindow = new LogWindow(); // this is for reporting connections to log
         
         // load selectedDB selections from the text file for the combobox
-        loadDBList(); 
+        // loadDBList();  // this loads from a file which is not really used (it's for use with edit database window)
  
         // show window
         this.setTitle("Log in");
@@ -110,7 +110,7 @@ public class LoginWindow extends JFrame {
 
         jLabel4.setText("Server");
 
-        comboBoxServer.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AWS", "Local" }));
+        comboBoxServer.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "pupone", "Local" }));
         comboBoxServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxServerActionPerformed(evt);
@@ -141,7 +141,7 @@ public class LoginWindow extends JFrame {
 
         jLabel5.setText("Database");
 
-        comboBoxDatabase.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "dummy", "Elle2015" }));
+        comboBoxDatabase.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "dummy", "Elle2015", "pupone_dummy", "pupone_Analyster" }));
         comboBoxDatabase.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxDatabaseActionPerformed(evt);
@@ -375,6 +375,23 @@ public class LoginWindow extends JFrame {
             DBConnection.connect(selectedServer, selectedDB, userName, userPassword);
             logWindow.addMessageWithDate("Connect successfully!");
             
+            // create an Analyster object
+            analyster = new AnalysterWindow();
+
+            // pass the log window to analyster
+            analyster.setLogWindow(logWindow);
+
+            // pass the selectedDB to Analyster
+            // it is used in sql statements
+            analyster.setDatabase(selectedDB);
+
+            // show Analyster
+            analyster.setLocationRelativeTo(this);
+            analyster.setVisible(true);
+
+            // terminate this object
+            this.dispose(); // returns used resources
+            
         } 
         catch (SQLException ex) {
 
@@ -386,24 +403,6 @@ public class LoginWindow extends JFrame {
             logWindow.addMessageWithDate(ex.getMessage());
             passwordFieldPW.setText("");
         }
-        
-        // create an Analyster object
-        analyster = new AnalysterWindow();
-
-        // pass the log window to analyster
-        analyster.setLogWindow(logWindow);
-
-        // pass the selectedDB to Analyster
-        // it is used in sql statements
-        analyster.setDatabase(selectedDB);
-
-        // show Analyster
-        analyster.setLocationRelativeTo(this);
-        analyster.setVisible(true);
-
-        // terminate this object
-        this.dispose(); // returns used resources
-
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
