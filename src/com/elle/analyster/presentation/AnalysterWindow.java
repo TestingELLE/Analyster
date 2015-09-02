@@ -62,8 +62,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private EditDatabaseWindow editDatabaseWindow;
     private ReportWindow reportWindow;
 
-    // booleans
-    boolean batchEditWindowActive;
 
     /**
      * CONSTRUCTOR
@@ -80,7 +78,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         statement = DBConnection.getStatement();
         database = DBConnection.getDatabase();
         instance = this;                         // this is used to call this instance of Analyster 
-        batchEditWindowActive = false;
 
         // initialize tabs
         tabs = new HashMap();
