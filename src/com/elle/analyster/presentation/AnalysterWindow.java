@@ -197,6 +197,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         // set title of window to Analyster
         this.setTitle("Analyster");
+        this.setSize(this.getWidth(), 560);
     }
 
     /**
@@ -271,6 +272,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         menuItemRepBugSugg = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(894, 560));
 
         labelTimeLastUpdate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelTimeLastUpdate.setText("Last updated: ");
@@ -878,7 +880,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 .addComponent(addPanel_control, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
 
         pack();
