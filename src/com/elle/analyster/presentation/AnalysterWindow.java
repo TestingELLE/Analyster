@@ -1110,7 +1110,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
         batchEditWindow = new BatchEditWindow();
         batchEditWindow.setVisible(true);
-        batchEditWindowActive = true;
         jPanelEdit.setVisible(false);
         panelBatchEditButtons.setVisible(true);
     }//GEN-LAST:event_btnBatchEditActionPerformed
@@ -2162,14 +2161,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             }
         }
         return sqlDelete;
-    }
-
-    public boolean isBatchEditWindowActive() {
-        return batchEditWindowActive;
-    }
-
-    public void setBatchEditWindowActive(boolean batchEditWindowActive) {
-        this.batchEditWindowActive = batchEditWindowActive;
     }
 
     public JPanel getAddPanel_control() {
