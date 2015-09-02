@@ -1705,7 +1705,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         table.getModel().addTableModelListener(table); 
         
         //String uploadQuery = uploadRecord(table, modifiedDataList);
-        String sqlChange = null;
+        String sqlChange = "";
 
         for (ModifiedData modifiedData : modifiedDataList) {
             
