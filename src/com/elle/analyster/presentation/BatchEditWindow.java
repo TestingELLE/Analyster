@@ -46,7 +46,7 @@ public class BatchEditWindow extends JFrame {
         
         // set the interface to the middle of the window
         this.setLocationRelativeTo(analysterWindow);
-        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // quit button should be used
         this.setTitle("Batch Editor");
     }
 
@@ -228,6 +228,8 @@ public class BatchEditWindow extends JFrame {
      * @param evt 
      */
     private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
+        analysterWindow.getPanelBatchEditButtons().setVisible(false);
+        analysterWindow.getjPanelEdit().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnQuitActionPerformed
 
