@@ -1495,7 +1495,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * @param table 
      */
     public void setTableListeners(final JTable table) { 
-        
+
         // this adds a mouselistener to the table header
         JTableHeader header = table.getTableHeader();
         if (header != null) {
@@ -1598,6 +1598,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         table.getModel().addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
             @Override
             public void tableChanged(TableModelEvent e) {
+                
                 int row = e.getFirstRow();
                 int col = e.getColumn();
                 String tab = getSelectedTabName();
@@ -1615,6 +1616,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                     String tableName = table.getName();
                     String columnName = table.getColumnName(col);
                     int id = (Integer) table.getModel().getValueAt(row, 0);
+                    
                     data.getNewData().add(new ModifiedData(tableName, columnName, newValue, id));
 
                     // color the cell
@@ -2010,7 +2012,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             Tab tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
             loadTable(table);
-            setTableListeners(table);
         }
 
         setLastUpdateTime();
