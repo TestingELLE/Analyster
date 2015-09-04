@@ -1703,7 +1703,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * @param width
      * @param table 
      */
-    public void setColumnFormat(float[] width, JTable table) {
+    public void setColumnFormat(float[] colWidths, JTable table) {
         
         // Center column content
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -1714,48 +1714,29 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
         
         //Center column header
-        int widthFixedColumns = 0;
         JTableHeader header = table.getTableHeader();
         if (!(header.getDefaultRenderer() instanceof AlignmentTableHeaderCellRenderer)) {
             header.setDefaultRenderer(new AlignmentTableHeaderCellRenderer(header.getDefaultRenderer()));
         }
 
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        switch (table.getName()) {
+        // this is needed for the horizontal scrollbar to appear
+        //table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        
+        for(int index = 0; index < table.getColumnCount(); index++){
+            int colWidth = (int)colWidths[index];
+            TableColumn column = table.getColumnModel().getColumn(index);
 
-            case REPORTS_TABLE_NAME: {
-                int i;
-                for (i = 0; i < width.length; i++) {
-                    int pWidth = Math.round(width[i]);
-                    table.getColumnModel().getColumn(i).setPreferredWidth(pWidth);
-                    if (i >= width.length - 3) {
-                        table.getColumnModel().getColumn(i).setCellRenderer(leftRenderer);
-                    } else {
-                        table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-                    }
-                    widthFixedColumns += pWidth;
-                }
-                Double tw = jPanel5.getSize().getWidth();
-                int twi = tw.intValue();
-                table.getColumnModel().getColumn(width.length).setPreferredWidth(twi - (widthFixedColumns + 25));
-                table.setMinimumSize(new Dimension(908, 300));
-                table.setPreferredScrollableViewportSize(new Dimension(908, 300));
-                break;
+            // notes should fill the remainder of allocated width available
+            String columnName = table.getColumnName(index);
+            if(columnName.equals("notes")){
+                column.setMinWidth((int)colWidth);
             }
-            default:
-                for (int i = 0; i < width.length; i++) {
-                    int pWidth = Math.round(width[i]);
-                    table.getColumnModel().getColumn(i).setPreferredWidth(pWidth);
-                    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-                    widthFixedColumns += pWidth;
-                }
-                Double tw = jPanel5.getSize().getWidth();
-                int twi = tw.intValue();
-                table.getColumnModel().getColumn(width.length).setPreferredWidth(twi - (widthFixedColumns + 25));
-                table.setMinimumSize(new Dimension(908, 300));
-                table.setPreferredScrollableViewportSize(new Dimension(908, 300));
-                break;
-
+            else{
+                column.setPreferredWidth(colWidth);
+                column.setMinWidth(colWidth);
+            }
+            
+            System.out.println(table.getWidth());
         }
     }
 
