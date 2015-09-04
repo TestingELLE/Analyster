@@ -1718,9 +1718,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         if (!(header.getDefaultRenderer() instanceof AlignmentTableHeaderCellRenderer)) {
             header.setDefaultRenderer(new AlignmentTableHeaderCellRenderer(header.getDefaultRenderer()));
         }
-
-        // this is needed for the horizontal scrollbar to appear
-        //table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
         for(int index = 0; index < table.getColumnCount(); index++){
             int colWidth = (int)colWidths[index];
