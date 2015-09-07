@@ -1281,22 +1281,22 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     private void menuItemArchiveRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemArchiveRecordActionPerformed
 
-        int rowSelected = assignmentTable.getSelectedRows().length;
-        int[] rowsSelected = assignmentTable.getSelectedRows();
+        int totalNumRows = assignmentTable.getSelectedRows().length;
+        int[] selectedRows = assignmentTable.getSelectedRows();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String today = dateFormat.format(date);
 
         // Delete Selected Records from Assignments
-        if (rowSelected != -1) {
-            for (int i = 0; i < rowSelected; i++) {
-                String analyst = (String) assignmentTable.getValueAt(rowsSelected[i], 2);
-                Integer selectedTask = (Integer) assignmentTable.getValueAt(rowsSelected[i], 0); // Add Note to selected taskID
+        if (totalNumRows != -1) {
+            for (int rowIndex = 0; rowIndex < totalNumRows; rowIndex++) {
+                String analyst = (String) assignmentTable.getValueAt(selectedRows[rowIndex], 2);
+                Integer id = (Integer) assignmentTable.getValueAt(selectedRows[rowIndex], 0); // Add Note to selected taskID
                 String sqlDelete = "UPDATE " + database + "." + assignmentTable.getName() + " SET analyst = \"\",\n"
                         + " priority=null,\n"
                         + " dateAssigned= '" + today + "',"
                         + " dateDone=null,\n"
-                        + " notes= \'Previous " + analyst + "' " + "where ID=" + selectedTask;
+                        + " notes= \'Previous " + analyst + "' " + "where ID=" + id;
                 try {
                     statement.executeUpdate(sqlDelete);
                 } catch (SQLException e) {
@@ -1306,12 +1306,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         } else {
             JOptionPane.showMessageDialog(null, "Please, select one task!");
         }
+        
         // Archive Selected Records in Assignments Archive
-        if (rowSelected != -1) {
+        if (totalNumRows != -1) {
 
-            for (int i = 0; i < rowSelected; i++) {
+            for (int i = 0; i < totalNumRows; i++) {
                 String sqlInsert = "INSERT INTO " + database + "." + archiveTable.getName() + " (symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES (";
-                int numRow = rowsSelected[i];
+                int numRow = selectedRows[i];
                 for (int j = 1; j < assignmentTable.getColumnCount() - 1; j++) {
                     if (assignmentTable.getValueAt(numRow, j) == null) {
                         sqlInsert += null + ",";
@@ -1333,8 +1334,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             }
             loadTable(assignmentTable);
             loadTable(archiveTable);
-            assignmentTable.setRowSelectionInterval(rowsSelected[0], rowsSelected[rowSelected - 1]);
-            JOptionPane.showMessageDialog(null, rowSelected + " Record(s) Archived!");
+            assignmentTable.setRowSelectionInterval(selectedRows[0], selectedRows[totalNumRows - 1]);
+            JOptionPane.showMessageDialog(null, totalNumRows + " Record(s) Archived!");
 
         } else {
             JOptionPane.showMessageDialog(null, "Please, select one task!");
