@@ -1732,8 +1732,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 column.setPreferredWidth(colWidth);
                 column.setMinWidth(colWidth);
             }
-            
-            System.out.println(table.getWidth());
         }
     }
 
