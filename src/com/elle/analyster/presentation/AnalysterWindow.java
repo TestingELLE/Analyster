@@ -1281,65 +1281,104 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     private void menuItemArchiveRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemArchiveRecordActionPerformed
 
-        int totalNumRows = assignmentTable.getSelectedRows().length;
-        int[] selectedRows = assignmentTable.getSelectedRows();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        String today = dateFormat.format(date);
-
-        // Delete Selected Records from Assignments
-        if (totalNumRows != -1) {
-            for (int rowIndex = 0; rowIndex < totalNumRows; rowIndex++) {
-                String analyst = (String) assignmentTable.getValueAt(selectedRows[rowIndex], 2);
-                Integer id = (Integer) assignmentTable.getValueAt(selectedRows[rowIndex], 0); // Add Note to selected taskID
-                String sqlDelete = "UPDATE " + database + "." + assignmentTable.getName() + " SET analyst = \"\",\n"
-                        + " priority=null,\n"
-                        + " dateAssigned= '" + today + "',"
-                        + " dateDone=null,\n"
-                        + " notes= \'Previous " + analyst + "' " + "where ID=" + id;
-                try {
-                    statement.executeUpdate(sqlDelete);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Please, select one task!");
-        }
+        // get selected rows from the assignments table
+        int[] selectedRows = assignmentTable.getSelectedRows(); // array of the rows selected
+        int rowCount = selectedRows.length;                     // the number of rows selected
+        Object cellValue = null;                                // store cell value
+        String insertInto = "";                                 // store insert sql statement
+        String values = "";                                     // store values sql statement
+        boolean errorOccurred = false;                          // boolean gate for dialog box 
         
-        // Archive Selected Records in Assignments Archive
-        if (totalNumRows != -1) {
+        // initialize the dateArchived with todays date that is used for every inserted record
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date todaysDate = new Date();
+        String dateArchived = dateFormat.format(todaysDate);  // dateArchived is todays date
+        
+        // no records are selected conditional
+        if (rowCount != -1) {
+            // create the insert statement for the assignments archived table
+            // insert statement for the assignments archived table
+            insertInto = "INSERT INTO " + archiveTable.getName() + " (";
 
-            for (int i = 0; i < totalNumRows; i++) {
-                String sqlInsert = "INSERT INTO " + database + "." + archiveTable.getName() + " (symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES (";
-                int numRow = selectedRows[i];
-                for (int j = 1; j < assignmentTable.getColumnCount() - 1; j++) {
-                    if (assignmentTable.getValueAt(numRow, j) == null) {
-                        sqlInsert += null + ",";
-                    } else {
-                        sqlInsert += "'" + assignmentTable.getValueAt(numRow, j) + "',";
+            // do not include the primary key
+            for (int col = 1; col < archiveTable.getColumnCount(); col++){
+                if(col != archiveTable.getColumnCount() -1)
+                    insertInto += archiveTable.getColumnName(col) + ", ";
+                else
+                    insertInto += archiveTable.getColumnName(col) + ") ";
+            }
+                
+            //get all field data from the assignments table
+            for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                int row = selectedRows[rowIndex];
+  
+                // create the values string to be inserted in the insert statement
+                values = "VALUES ('" + dateArchived + "', ";  // start the values statement
+                for(int col = 0; col < assignmentTable.getColumnCount(); col++){
+
+                    // get cell value
+                    cellValue = assignmentTable.getValueAt(row, col);
+
+                    // format the cell value for sql
+                    if(cellValue != null){
+
+                        // if cell is empty it must be null
+                        if(cellValue.toString().equals("")){
+                            cellValue = null;
+                        }
+
+                        // if the cell is not empty it must have single quotes
+                        else {
+                            cellValue = "'" + cellValue + "'";
+                        }
+                    }
+
+                    // add each value for each column to the values statement
+                    if(col != assignmentTable.getColumnCount() -1){
+                        values += cellValue + ", ";
+                    }
+                    else {
+                        values += cellValue + ");";
                     }
                 }
-                if (assignmentTable.getValueAt(numRow, assignmentTable.getColumnCount() - 1) == null) {
-                    sqlInsert += null + ")";
-                } else {
-                    sqlInsert += "'" + assignmentTable.getValueAt(numRow, assignmentTable.getColumnCount() - 1) + "')";
+
+                try{
+                    // execute the sql statement
+                    if(!values.equals("VALUES (")){      //skip if nothing was added
+                        statement.executeUpdate(insertInto + values);
+                    }
                 }
-                try {
-                    statement.executeUpdate(sqlInsert);
-//                    logwind.addMessageWithDate(sqlInsert);
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                catch(SQLException sqlException) {
+                    try {
+                        JOptionPane.showMessageDialog(this, "Upload failed!");
+                        errorOccurred = true; // if error occurred then break loop
+
+                        if (statement.getWarnings().getMessage() != null){
+                            logWindow.addMessageWithDate(statement.getWarnings().getMessage());
+                            System.out.println(statement.getWarnings().getMessage());
+                            statement.clearWarnings();
+                        }
+                        break; // break because error occurred
+                    } // end try-catch
+                    catch (SQLException ex) {
+                        // this should never be called
+                        ex.printStackTrace();
+                        break; // break because error occurred
+                    }
                 }
             }
-            loadTable(assignmentTable);
-            loadTable(archiveTable);
-            assignmentTable.setRowSelectionInterval(selectedRows[0], selectedRows[totalNumRows - 1]);
-            JOptionPane.showMessageDialog(null, totalNumRows + " Record(s) Archived!");
-
-        } else {
-            JOptionPane.showMessageDialog(null, "Please, select one task!");
+            
+            // if no error occured then display the amount of records archived dialog box
+            if(!errorOccurred){
+                JOptionPane.showMessageDialog(this, rowCount + " record(s) archived!");
+            }
+        
         }
+        else{
+            // no records are selected dialog message to user
+            JOptionPane.showMessageDialog(this, "No records are selected in assignments");
+        }
+        
     }//GEN-LAST:event_menuItemArchiveRecordActionPerformed
 
     /**
