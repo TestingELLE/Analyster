@@ -1371,6 +1371,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             // if no error occured then display the amount of records archived dialog box
             if(!errorOccurred){
                 JOptionPane.showMessageDialog(this, rowCount + " record(s) archived!");
+                
+                // load the assignments archived table to refresh with new data
+                loadTable(archiveTable);
             }
         
         }
