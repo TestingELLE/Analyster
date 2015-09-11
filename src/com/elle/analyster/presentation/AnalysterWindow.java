@@ -1814,6 +1814,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                             + " = '" + value + "' WHERE ID = " + id + ";";
                 }
                 System.out.println(sqlChange);
+                
+                DBConnection.open();
                 statement.executeUpdate(sqlChange);
 
             } 
