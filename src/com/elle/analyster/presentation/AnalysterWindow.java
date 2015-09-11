@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * AnalysterWindow
@@ -2048,8 +2050,20 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     */
     public JTable loadTable(JTable table) {
         
-        String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
-        loadTable(sql, table);
+        try {
+            // open connection because might time out
+            DBConnection.open();
+            String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
+            loadTable(sql, table);
+
+        } catch (SQLException ex) {
+            // for debugging
+            ex.printStackTrace();
+            logWindow.addMessageWithDate(ex.getMessage());
+            
+            // notify the user that there was an issue
+            JOptionPane.showMessageDialog(this, "connection failed");
+        }
         
         return table;
     }
