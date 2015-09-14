@@ -1378,6 +1378,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 
                 // load the assignments archived table to refresh with new data
                 loadTable(archiveTable);
+                
+                // update records shown for archive table tab
+                Tab archiveTab = tabs.get(ARCHIVE_TABLE_NAME);
+                archiveTab.addToTotalRowCount(rowCount);
+                
             }
         
         }
