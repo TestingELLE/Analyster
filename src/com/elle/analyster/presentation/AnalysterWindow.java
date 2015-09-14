@@ -1816,6 +1816,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 System.out.println(sqlChange);
                 
                 DBConnection.open();
+                statement = DBConnection.getStatement();
                 statement.executeUpdate(sqlChange);
 
             } 
@@ -2055,6 +2056,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         try {
             // open connection because might time out
             DBConnection.open();
+            statement = DBConnection.getStatement();
             String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
             loadTable(sql, table);
 
