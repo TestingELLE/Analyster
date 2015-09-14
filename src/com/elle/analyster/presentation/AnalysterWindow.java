@@ -1347,6 +1347,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 try{
                     // execute the sql statement
                     if(!values.equals("VALUES (")){      //skip if nothing was added
+                        DBConnection.open();
+                        statement = DBConnection.getStatement();
                         statement.executeUpdate(insertInto + values);
                     }
                 }
