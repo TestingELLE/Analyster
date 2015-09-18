@@ -7,7 +7,7 @@
     <import file="nbproject/build-impl.xml"/>
     
     <!-- set the version of Analyster here -->
-    <property name="version" value="Analyster-0.8.3d"/>
+    <property name="version" value="Analyster-0.8.5"/>
     
     <!-- This creates the jar that we want with the included dependancies -->
     <!-- There should be no need to edit this code -->

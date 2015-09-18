@@ -45,8 +45,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-08-18";  
-    private final String VERSION = "0.8.3d";   
+    private final String CREATION_DATE = "2015-09-18";  
+    private final String VERSION = "0.8.5";   
     
     // attributes
     private Map<String,Tab> tabs; // stores individual tab objects 
@@ -1281,64 +1281,114 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     private void menuItemArchiveRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemArchiveRecordActionPerformed
 
-        int rowSelected = assignmentTable.getSelectedRows().length;
-        int[] rowsSelected = assignmentTable.getSelectedRows();
+        // get selected rows from the assignments table
+        int[] selectedRows = assignmentTable.getSelectedRows(); // array of the rows selected
+        int rowCount = selectedRows.length;                     // the number of rows selected
+        Object cellValue = null;                                // store cell value
+        String insertInto = "";                                 // store insert sql statement
+        String values = "";                                     // store values sql statement
+        boolean errorOccurred = false;                          // boolean gate for dialog box 
+        
+        // initialize the dateArchived with todays date that is used for every inserted record
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        String today = dateFormat.format(date);
+        Date todaysDate = new Date();
+        String dateArchived = dateFormat.format(todaysDate);  // dateArchived is todays date
+        
+        // no records are selected conditional
+        if (rowCount != -1) {
+            // create the insert statement for the assignments archived table
+            // insert statement for the assignments archived table
+            insertInto = "INSERT INTO " + archiveTable.getName() + " (";
 
-        // Delete Selected Records from Assignments
-        if (rowSelected != -1) {
-            for (int i = 0; i < rowSelected; i++) {
-                String analyst = (String) assignmentTable.getValueAt(rowsSelected[i], 2);
-                Integer selectedTask = (Integer) assignmentTable.getValueAt(rowsSelected[i], 0); // Add Note to selected taskID
-                String sqlDelete = "UPDATE " + database + "." + assignmentTable.getName() + " SET analyst = \"\",\n"
-                        + " priority=null,\n"
-                        + " dateAssigned= '" + today + "',"
-                        + " dateDone=null,\n"
-                        + " notes= \'Previous " + analyst + "' " + "where ID=" + selectedTask;
-                try {
-                    statement.executeUpdate(sqlDelete);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+            // do not include the primary key
+            for (int col = 1; col < archiveTable.getColumnCount(); col++){
+                if(col != archiveTable.getColumnCount() -1)
+                    insertInto += archiveTable.getColumnName(col) + ", ";
+                else
+                    insertInto += archiveTable.getColumnName(col) + ") ";
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Please, select one task!");
-        }
-        // Archive Selected Records in Assignments Archive
-        if (rowSelected != -1) {
+                
+            //get all field data from the assignments table
+            for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                int row = selectedRows[rowIndex];
+  
+                // create the values string to be inserted in the insert statement
+                values = "VALUES ('" + dateArchived + "', ";  // start the values statement
+                for(int col = 0; col < assignmentTable.getColumnCount(); col++){
 
-            for (int i = 0; i < rowSelected; i++) {
-                String sqlInsert = "INSERT INTO " + database + "." + archiveTable.getName() + " (symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES (";
-                int numRow = rowsSelected[i];
-                for (int j = 1; j < assignmentTable.getColumnCount() - 1; j++) {
-                    if (assignmentTable.getValueAt(numRow, j) == null) {
-                        sqlInsert += null + ",";
-                    } else {
-                        sqlInsert += "'" + assignmentTable.getValueAt(numRow, j) + "',";
+                    // get cell value
+                    cellValue = assignmentTable.getValueAt(row, col);
+
+                    // format the cell value for sql
+                    if(cellValue != null){
+
+                        // if cell is empty it must be null
+                        if(cellValue.toString().equals("")){
+                            cellValue = null;
+                        }
+
+                        // if the cell is not empty it must have single quotes
+                        else {
+                            cellValue = "'" + cellValue + "'";
+                        }
+                    }
+
+                    // add each value for each column to the values statement
+                    if(col != assignmentTable.getColumnCount() -1){
+                        values += cellValue + ", ";
+                    }
+                    else {
+                        values += cellValue + ");";
                     }
                 }
-                if (assignmentTable.getValueAt(numRow, assignmentTable.getColumnCount() - 1) == null) {
-                    sqlInsert += null + ")";
-                } else {
-                    sqlInsert += "'" + assignmentTable.getValueAt(numRow, assignmentTable.getColumnCount() - 1) + "')";
+
+                try{
+                    // execute the sql statement
+                    if(!values.equals("VALUES (")){      //skip if nothing was added
+                        DBConnection.open();
+                        statement = DBConnection.getStatement();
+                        statement.executeUpdate(insertInto + values);
+                    }
                 }
-                try {
-                    statement.executeUpdate(sqlInsert);
-//                    logwind.addMessageWithDate(sqlInsert);
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                catch(SQLException sqlException) {
+                    try {
+                        JOptionPane.showMessageDialog(this, "Upload failed!");
+                        errorOccurred = true; // if error occurred then break loop
+
+                        if (statement.getWarnings().getMessage() != null){
+                            logWindow.addMessageWithDate(statement.getWarnings().getMessage());
+                            System.out.println(statement.getWarnings().getMessage());
+                            statement.clearWarnings();
+                        }
+                        break; // break because error occurred
+                    } // end try-catch
+                    catch (SQLException ex) {
+                        // this should never be called
+                        ex.printStackTrace();
+                        break; // break because error occurred
+                    }
                 }
             }
-            loadTable(assignmentTable);
-            loadTable(archiveTable);
-            assignmentTable.setRowSelectionInterval(rowsSelected[0], rowsSelected[rowSelected - 1]);
-            JOptionPane.showMessageDialog(null, rowSelected + " Record(s) Archived!");
-
-        } else {
-            JOptionPane.showMessageDialog(null, "Please, select one task!");
+            
+            // if no error occured then display the amount of records archived dialog box
+            if(!errorOccurred){
+                JOptionPane.showMessageDialog(this, rowCount + " record(s) archived!");
+                
+                // load the assignments archived table to refresh with new data
+                loadTable(archiveTable);
+                
+                // update records shown for archive table tab
+                Tab archiveTab = tabs.get(ARCHIVE_TABLE_NAME);
+                archiveTab.addToTotalRowCount(rowCount);
+                
+            }
+        
         }
+        else{
+            // no records are selected dialog message to user
+            JOptionPane.showMessageDialog(this, "No records are selected in assignments");
+        }
+        
     }//GEN-LAST:event_menuItemArchiveRecordActionPerformed
 
     /**
@@ -1703,7 +1753,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * @param width
      * @param table 
      */
-    public void setColumnFormat(float[] width, JTable table) {
+    public void setColumnFormat(float[] colWidths, JTable table) {
         
         // Center column content
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -1714,48 +1764,24 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
         
         //Center column header
-        int widthFixedColumns = 0;
         JTableHeader header = table.getTableHeader();
         if (!(header.getDefaultRenderer() instanceof AlignmentTableHeaderCellRenderer)) {
             header.setDefaultRenderer(new AlignmentTableHeaderCellRenderer(header.getDefaultRenderer()));
         }
+        
+        for(int index = 0; index < table.getColumnCount(); index++){
+            int colWidth = (int)colWidths[index];
+            TableColumn column = table.getColumnModel().getColumn(index);
 
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        switch (table.getName()) {
-
-            case REPORTS_TABLE_NAME: {
-                int i;
-                for (i = 0; i < width.length; i++) {
-                    int pWidth = Math.round(width[i]);
-                    table.getColumnModel().getColumn(i).setPreferredWidth(pWidth);
-                    if (i >= width.length - 3) {
-                        table.getColumnModel().getColumn(i).setCellRenderer(leftRenderer);
-                    } else {
-                        table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-                    }
-                    widthFixedColumns += pWidth;
-                }
-                Double tw = jPanel5.getSize().getWidth();
-                int twi = tw.intValue();
-                table.getColumnModel().getColumn(width.length).setPreferredWidth(twi - (widthFixedColumns + 25));
-                table.setMinimumSize(new Dimension(908, 300));
-                table.setPreferredScrollableViewportSize(new Dimension(908, 300));
-                break;
+            // notes should fill the remainder of allocated width available
+            String columnName = table.getColumnName(index);
+            if(columnName.equals("notes")){
+                column.setMinWidth((int)colWidth);
             }
-            default:
-                for (int i = 0; i < width.length; i++) {
-                    int pWidth = Math.round(width[i]);
-                    table.getColumnModel().getColumn(i).setPreferredWidth(pWidth);
-                    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-                    widthFixedColumns += pWidth;
-                }
-                Double tw = jPanel5.getSize().getWidth();
-                int twi = tw.intValue();
-                table.getColumnModel().getColumn(width.length).setPreferredWidth(twi - (widthFixedColumns + 25));
-                table.setMinimumSize(new Dimension(908, 300));
-                table.setPreferredScrollableViewportSize(new Dimension(908, 300));
-                break;
-
+            else{
+                column.setPreferredWidth(colWidth);
+                column.setMinWidth(colWidth);
+            }
         }
     }
 
@@ -1793,6 +1819,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                             + " = '" + value + "' WHERE ID = " + id + ";";
                 }
                 System.out.println(sqlChange);
+                
+                DBConnection.open();
+                statement = DBConnection.getStatement();
                 statement.executeUpdate(sqlChange);
 
             } 
@@ -2029,8 +2058,21 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     */
     public JTable loadTable(JTable table) {
         
-        String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
-        loadTable(sql, table);
+        try {
+            // open connection because might time out
+            DBConnection.open();
+            statement = DBConnection.getStatement();
+            String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
+            loadTable(sql, table);
+
+        } catch (SQLException ex) {
+            // for debugging
+            ex.printStackTrace();
+            logWindow.addMessageWithDate(ex.getMessage());
+            
+            // notify the user that there was an issue
+            JOptionPane.showMessageDialog(this, "connection failed");
+        }
         
         return table;
     }
