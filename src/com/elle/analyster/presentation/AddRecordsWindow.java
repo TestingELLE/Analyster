@@ -1,6 +1,7 @@
 
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
@@ -287,6 +288,9 @@ public class AddRecordsWindow extends JFrame {
                 try{
                     // execute the sql statement
                     if(!values.equals("VALUES (")){      //skip if nothing was added
+                        // open connection because might time out
+                        DBConnection.open();
+                        statement = DBConnection.getStatement();
                         statement.executeUpdate(insertInto + values);
                         numRowsAdded++;   // increment the number of rows added
                     }
