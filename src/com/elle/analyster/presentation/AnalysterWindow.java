@@ -45,8 +45,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-09-18";  
-    private final String VERSION = "0.8.5";   
+    private final String CREATION_DATE = "2015-09-21";  
+    private final String VERSION = "0.8.5a";   
     
     // attributes
     private Map<String,Tab> tabs; // stores individual tab objects 
@@ -2182,6 +2182,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             try {
 
                 // delete records from database
+                DBConnection.open();
+                statement = DBConnection.getStatement();
                 statement.executeUpdate(sqlDelete); 
 
                 // refresh table and retain filters
