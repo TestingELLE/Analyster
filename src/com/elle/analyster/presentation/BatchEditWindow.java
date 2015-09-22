@@ -1,8 +1,6 @@
 
 package com.elle.analyster.presentation;
 
-import com.elle.analyster.database.ModifiedData;
-import com.elle.analyster.database.ModifiedTableData;
 import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
 import java.util.ArrayList;
