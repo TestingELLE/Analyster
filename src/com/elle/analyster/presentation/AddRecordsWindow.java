@@ -2,6 +2,8 @@
 package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.DBConnection;
+import com.elle.analyster.database.ModifiedData;
+import com.elle.analyster.database.ModifiedTableData;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
@@ -319,6 +321,10 @@ public class AddRecordsWindow extends JFrame {
                 
                 JTable table = tab.getTable();                                // selected table
                 analyster.loadTable(table);                                   // load table data from database
+                
+                // reload new table data for modifiedTableData
+                ModifiedTableData data = tab.getTableData();
+                data.reloadData();
                 
                 TableFilter filter = tab.getFilter();                         // table filter
                 filter.applyFilter();                                         // apply filter
