@@ -221,8 +221,7 @@ public class BatchEditWindow extends JFrame {
      * @param evt 
      */
     private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
-        analysterWindow.getPanelBatchEditButtons().setVisible(false);
-        analysterWindow.getjPanelEdit().setVisible(true);
+
         this.dispose();
     }//GEN-LAST:event_btnQuitActionPerformed
 
