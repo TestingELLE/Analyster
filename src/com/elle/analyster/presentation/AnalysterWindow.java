@@ -1634,8 +1634,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 Object oldValue = data.getOldData()[row][col];
                 Object newValue = table.getModel().getValueAt(row, col);
                 
-                // disable the upload changes button
+                // disable the upload changes and cance buttons
                 btnUploadChanges.setEnabled(false);
+                btnCancelEditMode.setEnabled(false);
 
                 // check that data is different
                 if(!newValue.equals(oldValue)){
