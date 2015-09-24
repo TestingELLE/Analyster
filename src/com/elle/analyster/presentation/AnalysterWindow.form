@@ -201,9 +201,6 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[894, 560]"/>
-    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="menuBar"/>
@@ -683,7 +680,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnUploadChanges" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnRevertChangesBatchEdit" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnRevertChanges" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnAddRecords" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -704,7 +701,7 @@
                           <Component id="btnCancelEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBatchEdit" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnAddRecords" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnRevertChangesBatchEdit" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnRevertChanges" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                   </Group>
@@ -768,12 +765,12 @@
                 <Property name="text" type="java.lang.String" value="Edit Mode:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnRevertChangesBatchEdit">
+            <Component class="javax.swing.JButton" name="btnRevertChanges">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Revert Changes"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRevertChangesBatchEditActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRevertChangesActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
