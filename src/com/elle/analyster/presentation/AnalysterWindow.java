@@ -1067,16 +1067,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         Tab tab = tabs.get(tabName);
         boolean isActivateRecordMenuItemEnabled = tab.isActivateRecordMenuItemEnabled();
         boolean isArchiveRecordMenuItemEnabled = tab.isArchiveRecordMenuItemEnabled();
-        boolean isAddRecordsBtnVisible = tab.isAddRecordsBtnVisible();
-        boolean isBatchEditBtnVisible = tab.isBatchEditBtnVisible();
         
         // this enables or disables the menu components for this tabName
         menuItemActivateRecord.setEnabled(isActivateRecordMenuItemEnabled); 
         menuItemArchiveRecord.setEnabled(isArchiveRecordMenuItemEnabled); 
         
-        // show or hide the add records button and the batch edit button
-        btnAddRecords.setVisible(isAddRecordsBtnVisible);
-        btnBatchEdit.setVisible(isBatchEditBtnVisible);
+        // check whether editing and display accordingly
+        boolean editing = tab.isEditing(); 
+        // must be instance of EditableTableModel
+        JTable table = tab.getTable();
+        if(table.getModel() instanceof EditableTableModel){
+            makeTableEditable(editing);
+        }
         
         // set label record information
         String recordsLabel = tab.getRecordsLabel();
