@@ -57,6 +57,7 @@ public class Tab implements ITableConstants{
         archiveRecordMenuItemEnabled = false;
         addRecordsBtnVisible = false;
         batchEditBtnVisible = false;
+        batchEditBtnEnabled = true;
     }
     
     /**
