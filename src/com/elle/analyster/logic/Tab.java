@@ -36,7 +36,6 @@ public class Tab implements ITableConstants{
     private boolean archiveRecordMenuItemEnabled;  // enables archive record menu item
     private boolean addRecordsBtnVisible;          // sets the add records button visible
     private boolean batchEditBtnVisible;           // sets the batch edit button visible
-    private boolean switchBtnEnabled;              // sets the switch button enabled
     
     // each tab can either be editing or not
     private boolean Editing;           
@@ -221,16 +220,6 @@ public class Tab implements ITableConstants{
     public void setEditing(boolean Editing) {
         this.Editing = Editing;
     }
-
-    public boolean isSwitchBtnEnabled() {
-        return switchBtnEnabled;
-    }
-
-    public void setSwitchBtnEnabled(boolean switchBtnEnabled) {
-        this.switchBtnEnabled = switchBtnEnabled;
-    }
-    
-    
     
     /**************************************************************************
      *************************** Methods **************************************

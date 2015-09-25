@@ -996,12 +996,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
     private void btnSwitchEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchEditModeActionPerformed
 
-        // switch changes whether the table is editable
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        boolean editing = !tab.isEditing(); // return opposite 
-        tab.setEditing(editing);
-        makeTableEditable(editing);
+        setEditingStates(); // this sets the state of the switch button when editing
 
     }//GEN-LAST:event_btnSwitchEditModeActionPerformed
 
@@ -1049,13 +1044,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     private void btnCancelEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelEditModeActionPerformed
 
-        // cancel changes the table to not editable
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        boolean editing = !tab.isEditing(); // return opposite 
-        tab.setEditing(editing);
-        makeTableEditable(editing);
-
+        setEditingStates(); // this sets the state of the switch button when editing
+        
     }//GEN-LAST:event_btnCancelEditModeActionPerformed
 
     /**
@@ -2221,7 +2211,19 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         return searchPanel;
     }
     
-    
+    /**
+     * setEditingStates
+     * this sets the state of the switch button when editing
+     */
+    public void setEditingStates(){
+        
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        boolean editing = tab.isEditing(); 
+        tab.setEditing(!editing);
+        makeTableEditable(!editing);
+        btnSwitchEditMode.setEnabled(editing);
+    }
     
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
