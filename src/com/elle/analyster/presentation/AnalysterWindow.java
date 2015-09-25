@@ -1934,6 +1934,19 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                         
                         // if enter is pressed then enable upload changes button
                         btnUploadChanges.setEnabled(true);
+                        
+                        // the cancel button is enabled if
+                        // there is no modified data to upload or revert
+                        String tabName = getSelectedTabName();
+                        Tab tab = tabs.get(tabName);
+                        ModifiedTableData data = tab.getTableData();
+                        boolean noModifiedData = data.getNewData().isEmpty();
+                        if(noModifiedData){
+                            btnCancelEditMode.setEnabled(true);
+                        }
+                        else{
+                            btnCancelEditMode.setEnabled(false);
+                        }
                     }
             
                 }
