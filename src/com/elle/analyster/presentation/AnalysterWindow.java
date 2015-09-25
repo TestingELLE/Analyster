@@ -1064,7 +1064,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         // check whether editing and display accordingly
         boolean editing = tab.isEditing(); 
-        // must be instance of EditableTableModel
+        // must be instance of EditableTableModel 
+        // this method is called from init componenents before the table model is set
         JTable table = tab.getTable();
         if(table.getModel() instanceof EditableTableModel){
             makeTableEditable(editing);
@@ -1074,10 +1075,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         String recordsLabel = tab.getRecordsLabel();
         labelRecords.setText(recordsLabel);    
         
-        // hide buttons if in edit mode
+        // buttons if in edit mode
         if(jLabelEdit.getText().equals("ON ")){
             btnAddRecords.setVisible(false);
-            btnBatchEdit.setVisible(false);
+            btnBatchEdit.setVisible(true);
         }
     }
 
