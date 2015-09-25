@@ -1057,10 +1057,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         Tab tab = tabs.get(tabName);
         boolean isActivateRecordMenuItemEnabled = tab.isActivateRecordMenuItemEnabled();
         boolean isArchiveRecordMenuItemEnabled = tab.isArchiveRecordMenuItemEnabled();
+        boolean isBatchEditBtnEnabled = tab.isBatchEditBtnEnabled();
         
         // this enables or disables the menu components for this tabName
         menuItemActivateRecord.setEnabled(isActivateRecordMenuItemEnabled); 
         menuItemArchiveRecord.setEnabled(isArchiveRecordMenuItemEnabled); 
+        
+        // batch edit button enabled is only allowed for table that is editing
+        btnBatchEdit.setEnabled(isBatchEditBtnEnabled);
         
         // check whether editing and display accordingly
         boolean editing = tab.isEditing(); 
