@@ -2223,6 +2223,27 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         tab.setEditing(!editing);
         makeTableEditable(!editing);
         btnSwitchEditMode.setEnabled(editing);
+        setBatchEditButtonStates(tab);
+    }
+    
+    /**
+     * setBatchEditButtonStates
+     * Sets the batch edit button enabled if editing allowed for that tab
+     * and disabled if editing is not allowed for that tab
+     * @param selectedTab // this is the editing tab
+     */
+    private void setBatchEditButtonStates(Tab selectedTab) {
+        
+        for (Map.Entry<String, Tab> entry : tabs.entrySet())
+        {
+            Tab tab = tabs.get(entry.getKey());
+            if (tab == selectedTab){
+                tab.setBatchEditBtnEnabled(true);
+            }
+            else{
+                tab.setBatchEditBtnEnabled(false);
+            }
+        }
     }
     
     // @formatter:off
@@ -2289,7 +2310,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     // End of variables declaration//GEN-END:variables
     // @formatter:on
 
- 
     /**
      *  CLASS 
      */
