@@ -221,6 +221,15 @@ public class Tab implements ITableConstants{
     public void setEditing(boolean Editing) {
         this.Editing = Editing;
     }
+
+    public boolean isSwitchBtnEnabled() {
+        return switchBtnEnabled;
+    }
+
+    public void setSwitchBtnEnabled(boolean switchBtnEnabled) {
+        this.switchBtnEnabled = switchBtnEnabled;
+    }
+    
     
     
     /**************************************************************************
