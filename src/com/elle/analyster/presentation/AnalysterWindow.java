@@ -2242,11 +2242,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         for (Map.Entry<String, Tab> entry : tabs.entrySet())
         {
             Tab tab = tabs.get(entry.getKey());
-            if (tab == selectedTab){
-                tab.setBatchEditBtnEnabled(true);
+            
+            // if selectedTab is editing, that means the switch button was pressed
+            if(selectedTab.isEditing()){
+                if (tab == selectedTab){
+                    tab.setBatchEditBtnEnabled(true);
+                }
+                else{
+                    tab.setBatchEditBtnEnabled(false);
+                }
             }
             else{
-                tab.setBatchEditBtnEnabled(false);
+                tab.setBatchEditBtnEnabled(true);
             }
         }
     }
