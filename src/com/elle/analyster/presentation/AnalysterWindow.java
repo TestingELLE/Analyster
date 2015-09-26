@@ -1087,8 +1087,22 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
+        
+        // get selected tab
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        
+        // set the tab to editing
+        tab.setEditing(true);
+        makeTableEditable(true);
+        btnSwitchEditMode.setEnabled(false);
+        setBatchEditButtonStates(tab);
+        
+        // open a batch edit window and make visible only to this tab
         batchEditWindow = new BatchEditWindow();
         batchEditWindow.setVisible(true);
+        tab.setBatchEditWindowVisible(true);
+        
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
     private void menuItemManageDBsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemManageDBsActionPerformed
@@ -2245,7 +2259,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             // if selectedTab is editing, that means the switch button was pressed
             if(selectedTab.isEditing()){
                 if (tab == selectedTab){
-                    tab.setBatchEditBtnEnabled(true);
+                    if(selectedTab.isBatchEditWindowOpen()){
+                        btnBatchEdit.setEnabled(false);
+                    }
+                    else{
+                        tab.setBatchEditBtnEnabled(true);
+                    }
                 }
                 else{
                     tab.setBatchEditBtnEnabled(false);

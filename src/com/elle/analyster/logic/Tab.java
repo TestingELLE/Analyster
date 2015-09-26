@@ -39,7 +39,11 @@ public class Tab implements ITableConstants{
     private boolean batchEditBtnEnabled;           // sets the batch edit button enabled
     
     // each tab can either be editing or not
-    private boolean Editing;           
+    private boolean Editing;   
+    
+    // batch edit window states
+    private boolean batchEditWindowOpen;
+    private boolean batchEditWindowVisible;
     
 
     
@@ -58,6 +62,8 @@ public class Tab implements ITableConstants{
         addRecordsBtnVisible = false;
         batchEditBtnVisible = false;
         batchEditBtnEnabled = true;
+        batchEditWindowOpen = false;
+        batchEditWindowVisible = false;
     }
     
     /**
@@ -229,6 +235,22 @@ public class Tab implements ITableConstants{
 
     public void setBatchEditBtnEnabled(boolean batchEditBtnEnabled) {
         this.batchEditBtnEnabled = batchEditBtnEnabled;
+    }
+
+    public boolean isBatchEditWindowOpen() {
+        return batchEditWindowOpen;
+    }
+
+    public void setBatchEditWindowOpen(boolean batchEditWindowOpen) {
+        this.batchEditWindowOpen = batchEditWindowOpen;
+    }
+
+    public boolean isBatchEditWindowVisible() {
+        return batchEditWindowVisible;
+    }
+
+    public void setBatchEditWindowVisible(boolean batchEditWindowVisible) {
+        this.batchEditWindowVisible = batchEditWindowVisible;
     }
     
     
