@@ -1084,6 +1084,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             btnAddRecords.setVisible(false);
             btnBatchEdit.setVisible(true);
         }
+        
+        // batch edit window visible only on the editing tab
+        if(batchEditWindow != null){
+            boolean batchWindowVisible = tab.isBatchEditWindowVisible();
+            batchEditWindow.setVisible(batchWindowVisible);
+        }
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
