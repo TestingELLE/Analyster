@@ -996,7 +996,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
     private void btnSwitchEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchEditModeActionPerformed
 
-        setEditingStates(); // this sets the state of the switch button when editing
+        // get selected tab
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        
+        // set the states for this tab
+        tab.setEditing(true);
+        makeTableEditable(true);
+        setEnabledEditingButtons(true, true, true);
+        setBatchEditButtonStates(tab);
 
     }//GEN-LAST:event_btnSwitchEditModeActionPerformed
 
@@ -1044,8 +1052,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     private void btnCancelEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelEditModeActionPerformed
 
-        setEditingStates(); // this sets the state of the switch button when editing
+        // get selected tab
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
         
+        // set the states for this tab
+        tab.setEditing(false);
+        makeTableEditable(false);
+        setEnabledEditingButtons(true, true, true);
+        setBatchEditButtonStates(tab);
+
     }//GEN-LAST:event_btnCancelEditModeActionPerformed
 
     /**
@@ -1613,9 +1629,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                                 
                                 if(thisTabIsEditing || noTabIsEditing){
                                 
-                                    // make table editable
-                                    //makeTableEditable(true);
-                                    setEditingStates();
+                                    // set the states for this tab
+                                    tab.setEditing(true);
+                                    makeTableEditable(true);
+                                    setEnabledEditingButtons(true, true, true);
+                                    setBatchEditButtonStates(tab);
 
                                     // get selected cell for editing
                                     int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
@@ -1668,9 +1686,17 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 Object oldValue = data.getOldData()[row][col];
                 Object newValue = table.getModel().getValueAt(row, col);
                 
-                // disable the upload changes and cance buttons
-                btnUploadChanges.setEnabled(false);
-                btnCancelEditMode.setEnabled(false);
+                // if cell is being edited
+                if(table.isEditing()){
+                    setEnabledEditingButtons(false, false, true);
+                }
+                else{
+                    setEnabledEditingButtons(true, true, true);
+                }
+                
+                // disable the upload changes and cancel buttons
+//                btnUploadChanges.setEnabled(false);
+//                btnCancelEditMode.setEnabled(false);
 
                 // check that data is different
                 if(!newValue.equals(oldValue)){
@@ -2253,26 +2279,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
     public JPanel getSearchPanel() {
         return searchPanel;
-    }
-    
-    /**
-     * setEditingStates
-     * this sets the state of the switch button when editing
-     */
-    public void setEditingStates(){
-        
-        // get selected tab
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        
-        // is this tab editing
-        boolean editing = tab.isEditing(); 
-        
-        // set the states for this tab
-        tab.setEditing(!editing);
-        makeTableEditable(!editing);
-        btnSwitchEditMode.setEnabled(editing);
-        setBatchEditButtonStates(tab);
     }
     
     /**
