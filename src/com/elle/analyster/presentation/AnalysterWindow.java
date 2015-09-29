@@ -920,7 +920,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private void btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadChangesActionPerformed
 
         uploadChanges();
-        setEnabledEditingButtons(true, true, true);
     }//GEN-LAST:event_btnUploadChangesActionPerformed
 
     /**
@@ -952,6 +951,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         data.getNewData().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();          // update time
+        
+        // no changes to upload or revert
+        setEnabledEditingButtons(true, false, false);
     }
     
     private void menuItemRepBugSuggActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepBugSuggActionPerformed
@@ -1541,13 +1543,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
     private void btnRevertChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRevertChangesActionPerformed
         
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        JTable table = tab.getTable();
-        ModifiedTableData modifiedTableData = tab.getTableData();
-        modifiedTableData.getNewData().clear();  // clear any stored changes (new data)
-        loadTable(table); // reverts the model back
-        modifiedTableData.reloadData();  // reloads data of new table (old data) to compare with new changes (new data)
+        revertChanges();
     }//GEN-LAST:event_btnRevertChangesActionPerformed
 
     /**
@@ -1983,13 +1979,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                                 case 0:            
                                     // if Commit, upload changes and return to editing
                                     uploadChanges();  // upload changes to database
-                                    makeTableEditable(false); // exit edit mode;
                                     break;
                                 case 1:
                                     // if Revert, revert changes
-                                    loadTable(table); // reverts the model back
-                                    makeTableEditable(false); // exit edit mode;
-
+                                    revertChanges(); // reverts the model back
                                     break;
                                 default:
                                     // do nothing -> cancel
@@ -2357,6 +2350,24 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         btnRevertChanges.setEnabled(revertEnabled);
     }
     
+    /**
+     * revertChanges
+     * used to revert changes of modified data to original data
+     */
+    public void revertChanges(){
+        
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        JTable table = tab.getTable();
+        ModifiedTableData modifiedTableData = tab.getTableData();
+        modifiedTableData.getNewData().clear();  // clear any stored changes (new data)
+        loadTable(table); // reverts the model back
+        modifiedTableData.reloadData();  // reloads data of new table (old data) to compare with new changes (new data)
+        
+        // no changes to upload or revert
+        setEnabledEditingButtons(true, false, false);
+        
+    }
     
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
