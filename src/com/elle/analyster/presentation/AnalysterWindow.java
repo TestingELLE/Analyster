@@ -1596,9 +1596,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                             if (e.getClickCount() == 2 ) {
                                 filterByDoubleClick(table);
                             } else if (e.getClickCount() == 1) {
-                                if (jLabelEdit.getText().equals("ON ")) {
-                                    selectAllText(e);
-                                }
+                                // do nothing
+                                // used to select rows or cells
                             }
                         } // end if left mouse clicks
                         
