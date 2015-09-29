@@ -1053,11 +1053,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     private void changeTabbedPanelState() {
 
+        // get selected tab
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
+        
+        // get booleans for the states of the selected tab
         boolean isActivateRecordMenuItemEnabled = tab.isActivateRecordMenuItemEnabled();
         boolean isArchiveRecordMenuItemEnabled = tab.isArchiveRecordMenuItemEnabled();
         boolean isBatchEditBtnEnabled = tab.isBatchEditBtnEnabled();
+        boolean isBatchEditWindowOpen = tab.isBatchEditWindowOpen();
+        boolean isBatchEditWindowVisible = tab.isBatchEditWindowVisible();
         
         // this enables or disables the menu components for this tabName
         menuItemActivateRecord.setEnabled(isActivateRecordMenuItemEnabled); 
@@ -1065,6 +1070,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         // batch edit button enabled is only allowed for table that is editing
         btnBatchEdit.setEnabled(isBatchEditBtnEnabled);
+        if(isBatchEditWindowOpen){
+            batchEditWindow.setVisible(isBatchEditWindowVisible);
+        }
         
         // check whether editing and display accordingly
         boolean editing = tab.isEditing(); 
@@ -1102,12 +1110,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         tab.setEditing(true);
         makeTableEditable(true);
         btnSwitchEditMode.setEnabled(false);
-        setBatchEditButtonStates(tab);
         
         // open a batch edit window and make visible only to this tab
         batchEditWindow = new BatchEditWindow();
         batchEditWindow.setVisible(true);
         tab.setBatchEditWindowVisible(true);
+        tab.setBatchEditWindowOpen(true);
+        tab.setBatchEditBtnEnabled(false);
+        setBatchEditButtonStates(tab);
         
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
