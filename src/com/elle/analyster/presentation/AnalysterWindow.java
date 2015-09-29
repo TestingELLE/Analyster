@@ -920,6 +920,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private void btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadChangesActionPerformed
 
         uploadChanges();
+        setEnabledEditingButtons(true, true, true);
     }//GEN-LAST:event_btnUploadChangesActionPerformed
 
     /**
@@ -1717,8 +1718,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 
                 // there is no new modified data
                 else{
-                    // all options are available
-                    setEnabledEditingButtons(true, true, true);
+                    // no changes to upload or revert (these options disabled)
+                    setEnabledEditingButtons(true, false, false);
                 }
             }
         });
