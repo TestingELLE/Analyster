@@ -2291,6 +2291,21 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             }
         }
     }
+
+    /**
+     * getBtnBatchEdit
+     * @return 
+     */
+    public JButton getBtnBatchEdit() {
+        return btnBatchEdit;
+    }
+
+    public BatchEditWindow getBatchEditWindow() {
+        return batchEditWindow;
+    }
+    
+    
+    
     
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
