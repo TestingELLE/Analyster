@@ -1606,20 +1606,31 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                         else if(SwingUtilities.isRightMouseButton(e)){
                             if (e.getClickCount() == 2 ) {
                                 
-                                // make table editable
-                                makeTableEditable(true);
+                                Tab tab = tabs.get(table.getName());
                                 
-                                // get selected cell
-                                int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
-                                int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the rowIndex index
-                                if (rowIndex != -1 && columnIndex != -1) {
-                                    
-                                    // make it the active editing cell
-                                    table.changeSelection(rowIndex, columnIndex, false, false);
-                                    
-                                    selectAllText(e);
+                                // check if this tab is editing or if allowed editing
+                                boolean thisTabIsEditing = tab.isEditing();
+                                boolean noTabIsEditing = !isTabEditing();
+                                
+                                if(thisTabIsEditing || noTabIsEditing){
+                                
+                                    // make table editable
+                                    //makeTableEditable(true);
+                                    setEditingStates();
 
-                                } // end not null condition
+                                    // get selected cell for editing
+                                    int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
+                                    int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the rowIndex index
+                                    if (rowIndex != -1 && columnIndex != -1) {
+
+                                        // make it the active editing cell
+                                        table.changeSelection(rowIndex, columnIndex, false, false);
+
+                                        selectAllText(e);
+
+                                    } // end not null condition
+                                
+                                } // end of is tab editing conditions
                                 
                             } // end if 2 clicks 
                         } // end if right mouse clicks
@@ -2251,9 +2262,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      */
     public void setEditingStates(){
         
+        // get selected tab
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
+        
+        // is this tab editing
         boolean editing = tab.isEditing(); 
+        
+        // set the states for this tab
         tab.setEditing(!editing);
         makeTableEditable(!editing);
         btnSwitchEditMode.setEnabled(editing);
@@ -2304,7 +2320,28 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         return batchEditWindow;
     }
     
-    
+    /**
+     * isTabEditing
+     * This method returns true or false whether a tab is in editing mode or not
+     * @return boolean isEditing 
+     */
+    public boolean isTabEditing(){
+        
+        boolean isEditing = false;
+        
+        for (Map.Entry<String, Tab> entry : tabs.entrySet())
+        {
+            Tab tab = tabs.get(entry.getKey());
+            isEditing = tab.isEditing();
+            
+            // if editing break and return true
+            if(isEditing){
+                break;
+            }
+        }
+        
+        return isEditing;
+    }
     
     
     // @formatter:off
