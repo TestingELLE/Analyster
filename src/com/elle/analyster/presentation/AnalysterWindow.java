@@ -2342,6 +2342,21 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         return isEditing;
     }
     
+    /**
+     * setEnabledEditingButtons
+     * sets the editing buttons enabled 
+     * @param cancelEnabled
+     * @param uploadEnabled
+     * @param revertEnabled 
+     */
+    public void setEnabledEditingButtons(boolean cancelEnabled, boolean uploadEnabled, boolean revertEnabled){
+        
+        // the three editing buttons (cancel, upload, revert)
+        btnCancelEditMode.setEnabled(cancelEnabled);
+        btnUploadChanges.setEnabled(uploadEnabled);
+        btnRevertChanges.setEnabled(revertEnabled);
+    }
+    
     
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
