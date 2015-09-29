@@ -1644,6 +1644,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                                         table.changeSelection(rowIndex, columnIndex, false, false);
 
                                         selectAllText(e);
+                                        
+                                        // if cell is being edited
+                                        // cannot cancel or upload or revert
+                                        setEnabledEditingButtons(false, false, false);
+                
 
                                     } // end not null condition
                                 
@@ -1685,18 +1690,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 ModifiedTableData data = tabs.get(tab).getTableData();
                 Object oldValue = data.getOldData()[row][col];
                 Object newValue = table.getModel().getValueAt(row, col);
-                
-                // if cell is being edited
-                if(table.isEditing()){
-                    setEnabledEditingButtons(false, false, true);
-                }
-                else{
-                    setEnabledEditingButtons(true, true, true);
-                }
-                
-                // disable the upload changes and cancel buttons
-//                btnUploadChanges.setEnabled(false);
-//                btnCancelEditMode.setEnabled(false);
 
                 // check that data is different
                 if(!newValue.equals(oldValue)){
@@ -1711,6 +1704,21 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                     JTableCellRenderer cellRender = tabs.get(tab).getCellRenderer();
                     cellRender.getCells().get(col).add(row);
                     table.getColumnModel().getColumn(col).setCellRenderer(cellRender);
+                    
+                    // can upload or revert changes
+                    setEnabledEditingButtons(false, true, true);
+                }
+                
+                // if modified data then cancel button not enabled
+                else if(!data.getNewData().isEmpty()){
+                    // can upload or revert changes
+                    setEnabledEditingButtons(false, true, true);
+                }
+                
+                // there is no new modified data
+                else{
+                    // all options are available
+                    setEnabledEditingButtons(true, true, true);
                 }
             }
         });
