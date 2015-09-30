@@ -1981,38 +1981,41 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                                 && !table.isEditing() 
                                 && e.getID() == KeyEvent.KEY_PRESSED){
 
-                            // if finished display dialog box
-                            // Upload Changes? Yes or No?
-                            Object[] options = {"Commit", "Revert"};  // the titles of buttons
+                            // only show popup if there are changes to upload or revert
+                            if(btnUploadChanges.isEnabled() || btnRevertChanges.isEnabled()){
+                                // if finished display dialog box
+                                // Upload Changes? Yes or No?
+                                Object[] options = {"Commit", "Revert"};  // the titles of buttons
 
-                            // store selected rowIndex before the table is refreshed
-                            int rowIndex = table.getSelectedRow();
+                                // store selected rowIndex before the table is refreshed
+                                int rowIndex = table.getSelectedRow();
 
-                            int selectedOption = JOptionPane.showOptionDialog(AnalysterWindow.getInstance(), 
-                                    "Would you like to upload changes?", "Upload Changes",
-                                    JOptionPane.YES_NO_OPTION, 
-                                    JOptionPane.QUESTION_MESSAGE,
-                                    null, //do not use a custom Icon
-                                    options, //the titles of buttons
-                                    options[0]); //default button title
+                                int selectedOption = JOptionPane.showOptionDialog(AnalysterWindow.getInstance(), 
+                                        "Would you like to upload changes?", "Upload Changes",
+                                        JOptionPane.YES_NO_OPTION, 
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null, //do not use a custom Icon
+                                        options, //the titles of buttons
+                                        options[0]); //default button title
 
-                            switch (selectedOption) {
-                                case 0:            
-                                    // if Commit, upload changes and return to editing
-                                    uploadChanges();  // upload changes to database
-                                    break;
-                                case 1:
-                                    // if Revert, revert changes
-                                    revertChanges(); // reverts the model back
-                                    break;
-                                default:
-                                    // do nothing -> cancel
-                                    break;
-                            }   
+                                switch (selectedOption) {
+                                    case 0:            
+                                        // if Commit, upload changes and return to editing
+                                        uploadChanges();  // upload changes to database
+                                        break;
+                                    case 1:
+                                        // if Revert, revert changes
+                                        revertChanges(); // reverts the model back
+                                        break;
+                                    default:
+                                        // do nothing -> cancel
+                                        break;
+                                }   
 
-                            // highligh previously selected rowIndex
-                            if (rowIndex != -1) 
-                                table.setRowSelectionInterval(rowIndex, rowIndex);
+                                // highlight previously selected rowIndex
+                                if (rowIndex != -1) 
+                                    table.setRowSelectionInterval(rowIndex, rowIndex);
+                            }
                         }
                         
                     }
