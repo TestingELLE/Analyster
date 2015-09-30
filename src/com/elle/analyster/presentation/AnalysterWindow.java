@@ -955,19 +955,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // reload modified table data with current table model
         data.reloadData();
         
-        makeTableEditable(labelEditModeState.getText().equals("OFF")?true:false);
-        
         data.getNewData().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();          // update time
         
         // no changes to upload or revert
         setEnabledEditingButtons(true, false, false);
-        
-        // this reverts back to not editing mode
-        tab.setEditing(false);
-        
-        // set the color of the edit mode text
-        editModeTextColor(tab.isEditing());
     }
     
     private void menuItemRepBugSuggActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepBugSuggActionPerformed
