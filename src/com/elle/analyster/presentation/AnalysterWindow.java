@@ -1133,6 +1133,26 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             boolean batchWindowVisible = tab.isBatchEditWindowVisible();
             batchEditWindow.setVisible(batchWindowVisible);
         }
+        
+        // if this tab is editing
+        if(editing){
+            // do nothing
+            // the setting should already be set for this
+        }
+        
+        // else if no tab is editing
+        else if(!isTabEditing()){
+            btnSwitchEditMode.setEnabled(true);
+            btnAddRecords.setEnabled(true);
+            btnBatchEdit.setEnabled(true);
+        }
+        
+        // else if there is a tab editing but it is not this one
+        else if(isTabEditing()){
+            btnSwitchEditMode.setEnabled(false);
+            btnAddRecords.setEnabled(false);
+            btnBatchEdit.setEnabled(false);
+        }
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed

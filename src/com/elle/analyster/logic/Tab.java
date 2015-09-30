@@ -37,6 +37,7 @@ public class Tab implements ITableConstants{
     private boolean addRecordsBtnVisible;          // sets the add records button visible
     private boolean batchEditBtnVisible;           // sets the batch edit button visible
     private boolean batchEditBtnEnabled;           // sets the batch edit button enabled
+    private boolean AddRecordsBtnEnabled;          // sets the Add Records button enabled
     
     // each tab can either be editing or not
     private boolean Editing;   
@@ -251,6 +252,14 @@ public class Tab implements ITableConstants{
 
     public void setBatchEditWindowVisible(boolean batchEditWindowVisible) {
         this.batchEditWindowVisible = batchEditWindowVisible;
+    }
+
+    public boolean isAddRecordsBtnEnabled() {
+        return AddRecordsBtnEnabled;
+    }
+
+    public void setAddRecordsBtnEnabled(boolean AddRecordsBtnEnabled) {
+        this.AddRecordsBtnEnabled = AddRecordsBtnEnabled;
     }
     
     
