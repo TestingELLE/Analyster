@@ -163,7 +163,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         jPanelSQL.setVisible(false); 
         btnEnterSQL.setVisible(true);
         btnCancelSQL.setVisible(true);
-        btnCancelEditMode.setVisible(false);
         btnBatchEdit.setVisible(true);
         jTextAreaSQL.setVisible(true);
         jPanelEdit.setVisible(true);
@@ -242,7 +241,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         btnBatchEdit = new javax.swing.JButton();
         btnAddRecords = new javax.swing.JButton();
         btnUploadChanges = new javax.swing.JButton();
-        btnCancelEditMode = new javax.swing.JButton();
         btnSwitchEditMode = new javax.swing.JButton();
         labelEditModeState = new javax.swing.JLabel();
         labelEditMode = new javax.swing.JLabel();
@@ -535,13 +533,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             }
         });
 
-        btnCancelEditMode.setText("Cancel");
-        btnCancelEditMode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelEditModeActionPerformed(evt);
-            }
-        });
-
         btnSwitchEditMode.setText("Switch");
         btnSwitchEditMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -571,13 +562,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 .addComponent(labelEditModeState)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSwitchEditMode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCancelEditMode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(82, 82, 82)
                 .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRevertChanges)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
                 .addComponent(btnAddRecords)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnBatchEdit)
@@ -592,7 +581,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                     .addComponent(labelEditMode)
                     .addComponent(btnSwitchEditMode)
                     .addComponent(labelEditModeState)
-                    .addComponent(btnCancelEditMode)
                     .addComponent(btnBatchEdit)
                     .addComponent(btnAddRecords)
                     .addComponent(btnRevertChanges))
@@ -1009,15 +997,39 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
         
-        // set the states for this tab
-        tab.setEditing(true);
-        makeTableEditable(true);
-        setEnabledEditingButtons(true, false, false);
-        setBatchEditButtonStates(tab);
+        // get whether  this tab is currently editing
+        boolean editing = tab.isEditing();
+        
+        // if tab is editing then it is switching off
+        if(editing){
+            
+            // set the states for this tab
+            tab.setEditing(false);
+            makeTableEditable(false);
+            setEnabledEditingButtons(true, true, true);
+            btnAddRecords.setEnabled(true);
+            btnSwitchEditMode.setEnabled(true);
+            setBatchEditButtonStates(tab);
+
+            // set the color of the edit mode text
+            editModeTextColor(tab.isEditing());
+        
+        }
+        
+        // if tab is not editing then it is switching on
+        else{
+            
+            // set the states for this tab
+            tab.setEditing(true);
+            makeTableEditable(true);
+            setEnabledEditingButtons(true, false, false);
+            setBatchEditButtonStates(tab);
+
+        }
         
         // set the color of the edit mode text
-        editModeTextColor(tab.isEditing());
-
+        editModeTextColor(!editing);
+        
     }//GEN-LAST:event_btnSwitchEditModeActionPerformed
 
     /**
@@ -1034,9 +1046,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         if (makeTableEditable) {
             labelEditModeState.setText("ON ");
-            btnSwitchEditMode.setVisible(false);
+            btnSwitchEditMode.setVisible(true);
             btnUploadChanges.setVisible(true);
-            btnCancelEditMode.setVisible(true);
             btnAddRecords.setVisible(false);
             btnBatchEdit.setVisible(true);
             btnRevertChanges.setVisible(true);
@@ -1044,7 +1055,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             labelEditModeState.setText("OFF");
             btnSwitchEditMode.setVisible(true);
             btnUploadChanges.setVisible(false);
-            btnCancelEditMode.setVisible(false);
             btnAddRecords.setVisible(isAddRecordsBtnVisible);
             btnBatchEdit.setVisible(isBatchEditBtnVisible);
             btnRevertChanges.setVisible(false);
@@ -1057,29 +1067,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             model.setCellEditable(makeTableEditable);
         }
     }
-
-    /**
-     * btnCancelEditModeActionPerformed
-     * @param evt 
-     */
-    private void btnCancelEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelEditModeActionPerformed
-
-        // get selected tab
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        
-        // set the states for this tab
-        tab.setEditing(false);
-        makeTableEditable(false);
-        setEnabledEditingButtons(true, true, true);
-        btnAddRecords.setEnabled(true);
-        btnSwitchEditMode.setEnabled(true);
-        setBatchEditButtonStates(tab);
-        
-        // set the color of the edit mode text
-        editModeTextColor(tab.isEditing());
-
-    }//GEN-LAST:event_btnCancelEditModeActionPerformed
 
     /**
      * changeTabbedPanelState
@@ -1138,8 +1125,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         // if this tab is editing
         if(editing){
-            // do nothing
-            // the setting should already be set for this
+            
+            // if there is no modified data
+            if(tab.getTableData().getNewData().isEmpty()){
+                setEnabledEditingButtons(true, false, false);
+            }
+                
+            // there is modified data to upload or revert
+            else{
+                setEnabledEditingButtons(false, true, true);
+            }
         }
         
         // else if no tab is editing
@@ -2384,14 +2379,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     /**
      * setEnabledEditingButtons
      * sets the editing buttons enabled 
-     * @param cancelEnabled
+     * @param switchBtnEnabled
      * @param uploadEnabled
      * @param revertEnabled 
      */
-    public void setEnabledEditingButtons(boolean cancelEnabled, boolean uploadEnabled, boolean revertEnabled){
+    public void setEnabledEditingButtons(boolean switchBtnEnabled, boolean uploadEnabled, boolean revertEnabled){
         
         // the three editing buttons (cancel, upload, revert)
-        btnCancelEditMode.setEnabled(cancelEnabled);
+        btnSwitchEditMode.setEnabled(switchBtnEnabled);
         btnUploadChanges.setEnabled(uploadEnabled);
         btnRevertChanges.setEnabled(revertEnabled);
     }
@@ -2445,7 +2440,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private javax.swing.JTable assignmentTable;
     private javax.swing.JButton btnAddRecords;
     private javax.swing.JButton btnBatchEdit;
-    private javax.swing.JButton btnCancelEditMode;
     private javax.swing.JButton btnCancelSQL;
     private javax.swing.JButton btnClearAllFilter;
     private javax.swing.JButton btnCloseSQL;

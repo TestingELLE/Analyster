@@ -675,13 +675,11 @@
                       <Component id="labelEditModeState" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnSwitchEditMode" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnCancelEditMode" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
                       <Component id="btnUploadChanges" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnRevertChanges" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="134" max="32767" attributes="0"/>
                       <Component id="btnAddRecords" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnBatchEdit" min="-2" max="-2" attributes="0"/>
@@ -698,7 +696,6 @@
                           <Component id="labelEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnSwitchEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="labelEditModeState" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnCancelEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBatchEdit" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnAddRecords" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnRevertChanges" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -737,14 +734,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUploadChangesActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btnCancelEditMode">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Cancel"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelEditModeActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnSwitchEditMode">
