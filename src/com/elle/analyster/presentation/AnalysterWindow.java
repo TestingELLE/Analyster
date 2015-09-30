@@ -1964,6 +1964,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                                 selectCom.requestFocusInWindow();
                                 selectCom.selectAll();
                             }
+                            
+                            // if table cell is editing 
+                            // then the editing buttons should not be enabled
+                            if(table.isEditing()){
+                                setEnabledEditingButtons(false, false, false);
+                            }
                         }
                     }
                     
