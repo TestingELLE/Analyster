@@ -1012,7 +1012,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // set the states for this tab
         tab.setEditing(true);
         makeTableEditable(true);
-        setEnabledEditingButtons(true, true, true);
+        setEnabledEditingButtons(true, false, false);
         setBatchEditButtonStates(tab);
         
         // set the color of the edit mode text
