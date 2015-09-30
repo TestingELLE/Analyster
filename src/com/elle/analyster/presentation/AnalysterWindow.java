@@ -45,8 +45,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-09-23";  
-    private final String VERSION = "0.8.7a";   
+    private final String CREATION_DATE = "2015-09-30";  
+    private final String VERSION = "0.8.8";   
     
     // attributes
     private Map<String,Tab> tabs; // stores individual tab objects 
