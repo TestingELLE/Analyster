@@ -45,8 +45,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants{
     
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-09-23";  
-    private final String VERSION = "0.8.7a";   
+    private final String CREATION_DATE = "2015-09-30";  
+    private final String VERSION = "0.8.8";   
     
     // attributes
     private Map<String,Tab> tabs; // stores individual tab objects 
@@ -61,6 +61,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private BatchEditWindow batchEditWindow;
     private EditDatabaseWindow editDatabaseWindow;
     private ReportWindow reportWindow;
+    
+    // colors - Edit mode labels
+    private Color editModeDefaultTextColor;
+    private Color editModeActiveTextColor;
 
 
     /**
@@ -129,6 +133,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         initComponents(); // generated code
         
+        // initialize the colors for the edit mode text
+        editModeActiveTextColor = new Color(44,122,22); //dark green
+        editModeDefaultTextColor = labelEditMode.getForeground();
+        
         // set names to tables (this was in tabbedPanelChanged method)
         assignmentTable.setName(ASSIGNMENTS_TABLE_NAME);
         reportTable.setName(REPORTS_TABLE_NAME);
@@ -155,11 +163,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         jPanelSQL.setVisible(false); 
         btnEnterSQL.setVisible(true);
         btnCancelSQL.setVisible(true);
-        btnCancelEditMode.setVisible(false);
         btnBatchEdit.setVisible(true);
         jTextAreaSQL.setVisible(true);
         jPanelEdit.setVisible(true);
-        panelBatchEditButtons.setVisible(false);
+        btnRevertChanges.setVisible(false);
         
         // add filters for each table
         // must be before setting ColumnPopupMenu because this is its parameter
@@ -195,6 +202,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         tabs.get(REPORTS_TABLE_NAME).setTableData(new ModifiedTableData(reportTable));
         tabs.get(ARCHIVE_TABLE_NAME).setTableData(new ModifiedTableData(archiveTable));
         
+        // set all the tabs initially not in editing mode
+        tabs.get(ASSIGNMENTS_TABLE_NAME).setEditing(false);
+        tabs.get(REPORTS_TABLE_NAME).setEditing(false);
+        tabs.get(ARCHIVE_TABLE_NAME).setEditing(false);
+        
         // set title of window to Analyster
         this.setTitle("Analyster");
         this.setSize(this.getWidth(), 560);
@@ -229,19 +241,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         btnBatchEdit = new javax.swing.JButton();
         btnAddRecords = new javax.swing.JButton();
         btnUploadChanges = new javax.swing.JButton();
-        btnCancelEditMode = new javax.swing.JButton();
         btnSwitchEditMode = new javax.swing.JButton();
-        jLabelEdit = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        labelEditModeState = new javax.swing.JLabel();
+        labelEditMode = new javax.swing.JLabel();
+        btnRevertChanges = new javax.swing.JButton();
         jPanelSQL = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaSQL = new javax.swing.JTextArea();
         btnEnterSQL = new javax.swing.JButton();
         btnCancelSQL = new javax.swing.JButton();
         btnCloseSQL = new javax.swing.JButton();
-        panelBatchEditButtons = new javax.swing.JPanel();
-        btnUploadChangesBatchEdit = new javax.swing.JButton();
-        btnRevertChangesBatchEdit = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemVersion = new javax.swing.JMenuItem();
@@ -272,7 +281,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         menuItemRepBugSugg = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(894, 560));
 
         labelTimeLastUpdate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelTimeLastUpdate.setText("Last updated: ");
@@ -525,13 +533,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             }
         });
 
-        btnCancelEditMode.setText("Cancel");
-        btnCancelEditMode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelEditModeActionPerformed(evt);
-            }
-        });
-
         btnSwitchEditMode.setText("Switch");
         btnSwitchEditMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -539,9 +540,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             }
         });
 
-        jLabelEdit.setText("OFF");
+        labelEditModeState.setText("OFF");
 
-        jLabel2.setText("Edit Mode:");
+        labelEditMode.setText("Edit Mode:");
+
+        btnRevertChanges.setText("Revert Changes");
+        btnRevertChanges.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRevertChangesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelEditLayout = new javax.swing.GroupLayout(jPanelEdit);
         jPanelEdit.setLayout(jPanelEditLayout);
@@ -549,16 +557,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelEditLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addComponent(labelEditMode)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelEdit)
+                .addComponent(labelEditModeState)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSwitchEditMode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCancelEditMode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(82, 82, 82)
                 .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRevertChanges)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
                 .addComponent(btnAddRecords)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnBatchEdit)
@@ -570,12 +578,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 .addGap(4, 4, 4)
                 .addGroup(jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
+                    .addComponent(labelEditMode)
                     .addComponent(btnSwitchEditMode)
-                    .addComponent(jLabelEdit)
-                    .addComponent(btnCancelEditMode)
+                    .addComponent(labelEditModeState)
                     .addComponent(btnBatchEdit)
-                    .addComponent(btnAddRecords))
+                    .addComponent(btnAddRecords)
+                    .addComponent(btnRevertChanges))
                 .addGap(4, 4, 4))
         );
 
@@ -643,55 +651,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 .addContainerGap())
         );
 
-        panelBatchEditButtons.setPreferredSize(new java.awt.Dimension(636, 180));
-
-        btnUploadChangesBatchEdit.setText("Upload Changes");
-        btnUploadChangesBatchEdit.setMaximumSize(new java.awt.Dimension(95, 30));
-        btnUploadChangesBatchEdit.setMinimumSize(new java.awt.Dimension(95, 30));
-        btnUploadChangesBatchEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUploadChangesBatchEditActionPerformed(evt);
-            }
-        });
-
-        btnRevertChangesBatchEdit.setText("Revert Changes");
-        btnRevertChangesBatchEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRevertChangesBatchEditActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelBatchEditButtonsLayout = new javax.swing.GroupLayout(panelBatchEditButtons);
-        panelBatchEditButtons.setLayout(panelBatchEditButtonsLayout);
-        panelBatchEditButtonsLayout.setHorizontalGroup(
-            panelBatchEditButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBatchEditButtonsLayout.createSequentialGroup()
-                .addGap(312, 312, 312)
-                .addComponent(btnUploadChangesBatchEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnRevertChangesBatchEdit)
-                .addGap(313, 313, 313))
-        );
-        panelBatchEditButtonsLayout.setVerticalGroup(
-            panelBatchEditButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBatchEditButtonsLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
-                .addGroup(panelBatchEditButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnUploadChangesBatchEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRevertChangesBatchEdit))
-                .addGap(4, 4, 4))
-        );
-
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
             .addComponent(jPanelEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jPanelSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(4, 4, 4))
-            .addComponent(panelBatchEditButtons, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -699,8 +667,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 .addComponent(tabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelBatchEditButtons, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addComponent(jPanelSQL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -977,10 +943,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // reload modified table data with current table model
         data.reloadData();
         
-        makeTableEditable(jLabelEdit.getText().equals("OFF")?true:false);
-        
         data.getNewData().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();          // update time
+        
+        // no changes to upload or revert
+        setEnabledEditingButtons(true, false, false);
     }
     
     private void menuItemRepBugSuggActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepBugSuggActionPerformed
@@ -1026,10 +993,43 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
     private void btnSwitchEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchEditModeActionPerformed
 
-        // this was the way it is being checked - with the label text
-        // this checks the text and passes the opposite - ON = false to turn off
-        makeTableEditable(jLabelEdit.getText().equals("ON ")?false:true);
+        // get selected tab
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        
+        // get whether  this tab is currently editing
+        boolean editing = tab.isEditing();
+        
+        // if tab is editing then it is switching off
+        if(editing){
+            
+            // set the states for this tab
+            tab.setEditing(false);
+            makeTableEditable(false);
+            setEnabledEditingButtons(true, true, true);
+            btnAddRecords.setEnabled(true);
+            btnSwitchEditMode.setEnabled(true);
+            setBatchEditButtonStates(tab);
 
+            // set the color of the edit mode text
+            editModeTextColor(tab.isEditing());
+        
+        }
+        
+        // if tab is not editing then it is switching on
+        else{
+            
+            // set the states for this tab
+            tab.setEditing(true);
+            makeTableEditable(true);
+            setEnabledEditingButtons(true, false, false);
+            setBatchEditButtonStates(tab);
+
+        }
+        
+        // set the color of the edit mode text
+        editModeTextColor(!editing);
+        
     }//GEN-LAST:event_btnSwitchEditModeActionPerformed
 
     /**
@@ -1045,19 +1045,19 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         boolean isBatchEditBtnVisible = tab.isBatchEditBtnVisible();
         
         if (makeTableEditable) {
-            jLabelEdit.setText("ON ");
-            btnSwitchEditMode.setVisible(false);
+            labelEditModeState.setText("ON ");
+            btnSwitchEditMode.setVisible(true);
             btnUploadChanges.setVisible(true);
-            btnCancelEditMode.setVisible(true);
             btnAddRecords.setVisible(false);
-            btnBatchEdit.setVisible(false);
+            btnBatchEdit.setVisible(true);
+            btnRevertChanges.setVisible(true);
         } else {
-            jLabelEdit.setText("OFF");
+            labelEditModeState.setText("OFF");
             btnSwitchEditMode.setVisible(true);
             btnUploadChanges.setVisible(false);
-            btnCancelEditMode.setVisible(false);
             btnAddRecords.setVisible(isAddRecordsBtnVisible);
             btnBatchEdit.setVisible(isBatchEditBtnVisible);
+            btnRevertChanges.setVisible(false);
         }
         
         for (Map.Entry<String, Tab> entry : tabs.entrySet()){
@@ -1069,51 +1069,110 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     }
 
     /**
-     * btnCancelEditModeActionPerformed
-     * @param evt 
-     */
-    private void btnCancelEditModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelEditModeActionPerformed
-
-        makeTableEditable(false); // exit edit mode;
-
-    }//GEN-LAST:event_btnCancelEditModeActionPerformed
-
-    /**
      * changeTabbedPanelState
      */
     private void changeTabbedPanelState() {
 
+        // get selected tab
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
+        
+        // get booleans for the states of the selected tab
         boolean isActivateRecordMenuItemEnabled = tab.isActivateRecordMenuItemEnabled();
         boolean isArchiveRecordMenuItemEnabled = tab.isArchiveRecordMenuItemEnabled();
-        boolean isAddRecordsBtnVisible = tab.isAddRecordsBtnVisible();
-        boolean isBatchEditBtnVisible = tab.isBatchEditBtnVisible();
+        boolean isBatchEditBtnEnabled = tab.isBatchEditBtnEnabled();
+        boolean isBatchEditWindowOpen = tab.isBatchEditWindowOpen();
+        boolean isBatchEditWindowVisible = tab.isBatchEditWindowVisible();
         
         // this enables or disables the menu components for this tabName
         menuItemActivateRecord.setEnabled(isActivateRecordMenuItemEnabled); 
         menuItemArchiveRecord.setEnabled(isArchiveRecordMenuItemEnabled); 
         
-        // show or hide the add records button and the batch edit button
-        btnAddRecords.setVisible(isAddRecordsBtnVisible);
-        btnBatchEdit.setVisible(isBatchEditBtnVisible);
+        // batch edit button enabled is only allowed for table that is editing
+        btnBatchEdit.setEnabled(isBatchEditBtnEnabled);
+        if(isBatchEditWindowOpen){
+            batchEditWindow.setVisible(isBatchEditWindowVisible);
+        }
+        
+        // check whether editing and display accordingly
+        boolean editing = tab.isEditing(); 
+        
+        // must be instance of EditableTableModel 
+        // this method is called from init componenents before the table model is set
+        JTable table = tab.getTable();
+        if(table.getModel() instanceof EditableTableModel){
+            makeTableEditable(editing);
+        }
+        
+        // set the color of the edit mode text
+        editModeTextColor(tab.isEditing());
         
         // set label record information
         String recordsLabel = tab.getRecordsLabel();
         labelRecords.setText(recordsLabel);    
         
-        // hide buttons if in edit mode
-        if(jLabelEdit.getText().equals("ON ")){
+        // buttons if in edit mode
+        if(labelEditModeState.getText().equals("ON ")){
             btnAddRecords.setVisible(false);
-            btnBatchEdit.setVisible(false);
+            btnBatchEdit.setVisible(true);
+        }
+        
+        // batch edit window visible only on the editing tab
+        if(batchEditWindow != null){
+            boolean batchWindowVisible = tab.isBatchEditWindowVisible();
+            batchEditWindow.setVisible(batchWindowVisible);
+        }
+        
+        // if this tab is editing
+        if(editing){
+            
+            // if there is no modified data
+            if(tab.getTableData().getNewData().isEmpty()){
+                setEnabledEditingButtons(true, false, false);
+            }
+                
+            // there is modified data to upload or revert
+            else{
+                setEnabledEditingButtons(false, true, true);
+            }
+        }
+        
+        // else if no tab is editing
+        else if(!isTabEditing()){
+            btnSwitchEditMode.setEnabled(true);
+            btnAddRecords.setEnabled(true);
+            btnBatchEdit.setEnabled(true);
+        }
+        
+        // else if there is a tab editing but it is not this one
+        else if(isTabEditing()){
+            btnSwitchEditMode.setEnabled(false);
+            btnAddRecords.setEnabled(false);
+            btnBatchEdit.setEnabled(false);
         }
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
+        
+        // get selected tab
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        
+        // set the tab to editing
+        tab.setEditing(true);
+        makeTableEditable(true);
+        
+        // set the color of the edit mode text
+        editModeTextColor(tab.isEditing());
+        
+        // open a batch edit window and make visible only to this tab
         batchEditWindow = new BatchEditWindow();
         batchEditWindow.setVisible(true);
-        jPanelEdit.setVisible(false);
-        panelBatchEditButtons.setVisible(true);
+        tab.setBatchEditWindowVisible(true);
+        tab.setBatchEditWindowOpen(true);
+        tab.setBatchEditBtnEnabled(false);
+        setBatchEditButtonStates(tab);
+        
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
     private void menuItemManageDBsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemManageDBsActionPerformed
@@ -1517,20 +1576,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         }
     }//GEN-LAST:event_menuItemSQLCmdChkBxActionPerformed
 
-    private void btnUploadChangesBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadChangesBatchEditActionPerformed
-        uploadChanges();  // upload changes to database
-    }//GEN-LAST:event_btnUploadChangesBatchEditActionPerformed
-
-    private void btnRevertChangesBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRevertChangesBatchEditActionPerformed
+    private void btnRevertChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRevertChangesActionPerformed
         
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        JTable table = tab.getTable();
-        ModifiedTableData modifiedTableData = tab.getTableData();
-        modifiedTableData.getNewData().clear();  // clear any stored changes (new data)
-        loadTable(table); // reverts the model back
-        modifiedTableData.reloadData();  // reloads data of new table (old data) to compare with new changes (new data)
-    }//GEN-LAST:event_btnRevertChangesBatchEditActionPerformed
+        revertChanges();
+    }//GEN-LAST:event_btnRevertChangesActionPerformed
 
     /**
      * loadData
@@ -1595,9 +1644,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                             if (e.getClickCount() == 2 ) {
                                 filterByDoubleClick(table);
                             } else if (e.getClickCount() == 1) {
-                                if (jLabelEdit.getText().equals("ON ")) {
-                                    selectAllText(e);
-                                }
+                                // do nothing
+                                // used to select rows or cells
                             }
                         } // end if left mouse clicks
                         
@@ -1605,20 +1653,41 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                         else if(SwingUtilities.isRightMouseButton(e)){
                             if (e.getClickCount() == 2 ) {
                                 
-                                // make table editable
-                                makeTableEditable(true);
+                                Tab tab = tabs.get(table.getName());
                                 
-                                // get selected cell
-                                int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
-                                int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the rowIndex index
-                                if (rowIndex != -1 && columnIndex != -1) {
+                                // check if this tab is editing or if allowed editing
+                                boolean thisTabIsEditing = tab.isEditing();
+                                boolean noTabIsEditing = !isTabEditing();
+                                
+                                if(thisTabIsEditing || noTabIsEditing){
+                                
+                                    // set the states for this tab
+                                    tab.setEditing(true);
+                                    makeTableEditable(true);
+                                    setEnabledEditingButtons(true, true, true);
+                                    setBatchEditButtonStates(tab);
                                     
-                                    // make it the active editing cell
-                                    table.changeSelection(rowIndex, columnIndex, false, false);
-                                    
-                                    selectAllText(e);
+                                    // set the color of the edit mode text
+                                    editModeTextColor(tab.isEditing());
 
-                                } // end not null condition
+                                    // get selected cell for editing
+                                    int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
+                                    int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the rowIndex index
+                                    if (rowIndex != -1 && columnIndex != -1) {
+
+                                        // make it the active editing cell
+                                        table.changeSelection(rowIndex, columnIndex, false, false);
+
+                                        selectAllText(e);
+                                        
+                                        // if cell is being edited
+                                        // cannot cancel or upload or revert
+                                        setEnabledEditingButtons(false, false, false);
+                
+
+                                    } // end not null condition
+                                
+                                } // end of is tab editing conditions
                                 
                             } // end if 2 clicks 
                         } // end if right mouse clicks
@@ -1656,9 +1725,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 ModifiedTableData data = tabs.get(tab).getTableData();
                 Object oldValue = data.getOldData()[row][col];
                 Object newValue = table.getModel().getValueAt(row, col);
-                
-                // disable the upload changes button
-                btnUploadChanges.setEnabled(false);
 
                 // check that data is different
                 if(!newValue.equals(oldValue)){
@@ -1673,6 +1739,21 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                     JTableCellRenderer cellRender = tabs.get(tab).getCellRenderer();
                     cellRender.getCells().get(col).add(row);
                     table.getColumnModel().getColumn(col).setCellRenderer(cellRender);
+                    
+                    // can upload or revert changes
+                    setEnabledEditingButtons(false, true, true);
+                }
+                
+                // if modified data then cancel button not enabled
+                else if(!data.getNewData().isEmpty()){
+                    // can upload or revert changes
+                    setEnabledEditingButtons(false, true, true);
+                }
+                
+                // there is no new modified data
+                else{
+                    // no changes to upload or revert (these options disabled)
+                    setEnabledEditingButtons(true, false, false);
                 }
             }
         });
@@ -1685,7 +1766,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                     
                     // I believe this is meant to toggle edit mode
                     // so I passed the conditional
-                    makeTableEditable(jLabelEdit.getText().equals("ON ")?false:true);
+                    makeTableEditable(labelEditModeState.getText().equals("ON ")?false:true);
                 } 
             }
         });
@@ -1869,7 +1950,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (jLabelEdit.getText().equals("ON ")) {
+                    if (labelEditModeState.getText().equals("ON ")) {
                         if (e.getComponent() instanceof JTable) {
                             JTable table = (JTable) e.getComponent();
                             int row = table.getSelectedRow();
@@ -1883,13 +1964,19 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                                 selectCom.requestFocusInWindow();
                                 selectCom.selectAll();
                             }
+                            
+                            // if table cell is editing 
+                            // then the editing buttons should not be enabled
+                            if(table.isEditing()){
+                                setEnabledEditingButtons(false, false, false);
+                            }
                         }
                     }
                     
                 } 
                 
                 else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
-                    if (jLabelEdit.getText().equals("ON ")) {                       // Default Date input with today's date
+                    if (labelEditModeState.getText().equals("ON ")) {                       // Default Date input with today's date
                         JTable table = (JTable) e.getComponent().getParent();
                         int column = table.getSelectedColumn();
                         if (table.getColumnName(column).toLowerCase().contains("date")) {
@@ -1913,49 +2000,47 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                         JTable table = (JTable)e.getComponent();
 
                         // make sure in editing mode
-                        if(jLabelEdit.getText().equals("ON ") 
+                        if(labelEditModeState.getText().equals("ON ") 
                                 && !table.isEditing() 
                                 && e.getID() == KeyEvent.KEY_PRESSED){
 
-                            // if finished display dialog box
-                            // Upload Changes? Yes or No?
-                            Object[] options = {"Commit", "Revert"};  // the titles of buttons
+                            // only show popup if there are changes to upload or revert
+                            if(btnUploadChanges.isEnabled() || btnRevertChanges.isEnabled()){
+                                // if finished display dialog box
+                                // Upload Changes? Yes or No?
+                                Object[] options = {"Commit", "Revert"};  // the titles of buttons
 
-                            // store selected rowIndex before the table is refreshed
-                            int rowIndex = table.getSelectedRow();
+                                // store selected rowIndex before the table is refreshed
+                                int rowIndex = table.getSelectedRow();
 
-                            int selectedOption = JOptionPane.showOptionDialog(AnalysterWindow.getInstance(), 
-                                    "Would you like to upload changes?", "Upload Changes",
-                                    JOptionPane.YES_NO_OPTION, 
-                                    JOptionPane.QUESTION_MESSAGE,
-                                    null, //do not use a custom Icon
-                                    options, //the titles of buttons
-                                    options[0]); //default button title
+                                int selectedOption = JOptionPane.showOptionDialog(AnalysterWindow.getInstance(), 
+                                        "Would you like to upload changes?", "Upload Changes",
+                                        JOptionPane.YES_NO_OPTION, 
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null, //do not use a custom Icon
+                                        options, //the titles of buttons
+                                        options[0]); //default button title
 
-                            switch (selectedOption) {
-                                case 0:            
-                                    // if Commit, upload changes and return to editing
-                                    uploadChanges();  // upload changes to database
-                                    makeTableEditable(false); // exit edit mode;
-                                    break;
-                                case 1:
-                                    // if Revert, revert changes
-                                    loadTable(table); // reverts the model back
-                                    makeTableEditable(false); // exit edit mode;
+                                switch (selectedOption) {
+                                    case 0:            
+                                        // if Commit, upload changes and return to editing
+                                        uploadChanges();  // upload changes to database
+                                        break;
+                                    case 1:
+                                        // if Revert, revert changes
+                                        revertChanges(); // reverts the model back
+                                        break;
+                                    default:
+                                        // do nothing -> cancel
+                                        break;
+                                }   
 
-                                    break;
-                                default:
-                                    // do nothing -> cancel
-                                    break;
-                            }   
-
-                            // highligh previously selected rowIndex
-                            if (rowIndex != -1) 
-                                table.setRowSelectionInterval(rowIndex, rowIndex);
+                                // highlight previously selected rowIndex
+                                if (rowIndex != -1) 
+                                    table.setRowSelectionInterval(rowIndex, rowIndex);
+                            }
                         }
                         
-                        // if enter is pressed then enable upload changes button
-                        btnUploadChanges.setEnabled(true);
                     }
             
                 }
@@ -2226,15 +2311,133 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         return jPanelSQL;
     }
 
-    public JPanel getPanelBatchEditButtons() {
-        return panelBatchEditButtons;
-    }
-
     public JPanel getSearchPanel() {
         return searchPanel;
     }
     
+    /**
+     * setBatchEditButtonStates
+     * Sets the batch edit button enabled if editing allowed for that tab
+     * and disabled if editing is not allowed for that tab
+     * @param selectedTab // this is the editing tab
+     */
+    private void setBatchEditButtonStates(Tab selectedTab) {
+        
+        for (Map.Entry<String, Tab> entry : tabs.entrySet())
+        {
+            Tab tab = tabs.get(entry.getKey());
+            
+            // if selectedTab is editing, that means the switch button was pressed
+            if(selectedTab.isEditing()){
+                if (tab == selectedTab){
+                    if(selectedTab.isBatchEditWindowOpen()){
+                        btnBatchEdit.setEnabled(false);
+                    }
+                    else{
+                        tab.setBatchEditBtnEnabled(true);
+                    }
+                }
+                else{
+                    tab.setBatchEditBtnEnabled(false);
+                }
+            }
+            else{
+                tab.setBatchEditBtnEnabled(true);
+            }
+        }
+    }
+
+    /**
+     * getBtnBatchEdit
+     * @return 
+     */
+    public JButton getBtnBatchEdit() {
+        return btnBatchEdit;
+    }
+
+    public BatchEditWindow getBatchEditWindow() {
+        return batchEditWindow;
+    }
     
+    /**
+     * isTabEditing
+     * This method returns true or false whether a tab is in editing mode or not
+     * @return boolean isEditing 
+     */
+    public boolean isTabEditing(){
+        
+        boolean isEditing = false;
+        
+        for (Map.Entry<String, Tab> entry : tabs.entrySet())
+        {
+            Tab tab = tabs.get(entry.getKey());
+            isEditing = tab.isEditing();
+            
+            // if editing break and return true
+            if(isEditing){
+                break;
+            }
+        }
+        
+        return isEditing;
+    }
+    
+    /**
+     * setEnabledEditingButtons
+     * sets the editing buttons enabled 
+     * @param switchBtnEnabled
+     * @param uploadEnabled
+     * @param revertEnabled 
+     */
+    public void setEnabledEditingButtons(boolean switchBtnEnabled, boolean uploadEnabled, boolean revertEnabled){
+        
+        // the three editing buttons (cancel, upload, revert)
+        btnSwitchEditMode.setEnabled(switchBtnEnabled);
+        btnUploadChanges.setEnabled(uploadEnabled);
+        btnRevertChanges.setEnabled(revertEnabled);
+    }
+    
+    /**
+     * revertChanges
+     * used to revert changes of modified data to original data
+     */
+    public void revertChanges(){
+        
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+        JTable table = tab.getTable();
+        ModifiedTableData modifiedTableData = tab.getTableData();
+        modifiedTableData.getNewData().clear();  // clear any stored changes (new data)
+        loadTable(table); // reverts the model back
+        modifiedTableData.reloadData();  // reloads data of new table (old data) to compare with new changes (new data)
+        
+        // no changes to upload or revert
+        setEnabledEditingButtons(true, false, false);
+        
+        // set the color of the edit mode text
+        editModeTextColor(tab.isEditing());
+    }
+    
+    /**
+     * editModeTextColor
+     * This method changes the color of the edit mode text
+     * If edit mode is active then the text is green 
+     * and if it is not active then the text is the default color (black)
+     */
+    public void editModeTextColor(boolean editing){
+        
+        // if editing
+        if(editing){
+            labelEditMode.setForeground(editModeActiveTextColor);
+            labelEditModeState.setForeground(editModeActiveTextColor);
+        }
+        
+        // else not editing
+        else {
+            labelEditMode.setForeground(editModeDefaultTextColor);
+            labelEditModeState.setForeground(editModeDefaultTextColor);
+        }
+    }
     
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -2243,19 +2446,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private javax.swing.JTable assignmentTable;
     private javax.swing.JButton btnAddRecords;
     private javax.swing.JButton btnBatchEdit;
-    private javax.swing.JButton btnCancelEditMode;
     private javax.swing.JButton btnCancelSQL;
     private javax.swing.JButton btnClearAllFilter;
     private javax.swing.JButton btnCloseSQL;
     private javax.swing.JButton btnEnterSQL;
-    private javax.swing.JButton btnRevertChangesBatchEdit;
+    private javax.swing.JButton btnRevertChanges;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSwitchEditMode;
     private javax.swing.JButton btnUploadChanges;
-    private javax.swing.JButton btnUploadChangesBatchEdit;
     private javax.swing.JComboBox comboBoxSearch;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabelEdit;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEdit;
     private javax.swing.JPanel jPanelSQL;
@@ -2264,6 +2463,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextAreaSQL;
+    private javax.swing.JLabel labelEditMode;
+    private javax.swing.JLabel labelEditModeState;
     private javax.swing.JLabel labelRecords;
     private javax.swing.JLabel labelTimeLastUpdate;
     private javax.swing.JMenuBar menuBar;
@@ -2294,7 +2495,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private javax.swing.JMenu menuSelectConn;
     private javax.swing.JMenu menuTools;
     private javax.swing.JMenu menuView;
-    private javax.swing.JPanel panelBatchEditButtons;
     private javax.swing.JTable reportTable;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabbedPanel;
@@ -2302,7 +2502,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     // End of variables declaration//GEN-END:variables
     // @formatter:on
 
- 
     /**
      *  CLASS 
      */
