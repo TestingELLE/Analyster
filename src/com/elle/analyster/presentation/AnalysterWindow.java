@@ -962,6 +962,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         // no changes to upload or revert
         setEnabledEditingButtons(true, false, false);
+        
+        // this reverts back to not editing mode
+        tab.setEditing(false);
+        
+        // set the color of the edit mode text
+        editModeTextColor(tab.isEditing());
     }
     
     private void menuItemRepBugSuggActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepBugSuggActionPerformed
@@ -1016,6 +1022,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         makeTableEditable(true);
         setEnabledEditingButtons(true, true, true);
         setBatchEditButtonStates(tab);
+        
+        // set the color of the edit mode text
+        editModeTextColor(tab.isEditing());
 
     }//GEN-LAST:event_btnSwitchEditModeActionPerformed
 
@@ -1072,6 +1081,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         makeTableEditable(false);
         setEnabledEditingButtons(true, true, true);
         setBatchEditButtonStates(tab);
+        
+        // set the color of the edit mode text
+        editModeTextColor(tab.isEditing());
 
     }//GEN-LAST:event_btnCancelEditModeActionPerformed
 
@@ -1103,12 +1115,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
         // check whether editing and display accordingly
         boolean editing = tab.isEditing(); 
+        
         // must be instance of EditableTableModel 
         // this method is called from init componenents before the table model is set
         JTable table = tab.getTable();
         if(table.getModel() instanceof EditableTableModel){
             makeTableEditable(editing);
         }
+        
+        // set the color of the edit mode text
+        editModeTextColor(tab.isEditing());
         
         // set label record information
         String recordsLabel = tab.getRecordsLabel();
@@ -1137,6 +1153,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         tab.setEditing(true);
         makeTableEditable(true);
         btnSwitchEditMode.setEnabled(false);
+        
+        // set the color of the edit mode text
+        editModeTextColor(tab.isEditing());
         
         // open a batch edit window and make visible only to this tab
         batchEditWindow = new BatchEditWindow();
@@ -2375,6 +2394,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // no changes to upload or revert
         setEnabledEditingButtons(true, false, false);
         
+        // set the color of the edit mode text
+        editModeTextColor(tab.isEditing());
     }
     
     /**
