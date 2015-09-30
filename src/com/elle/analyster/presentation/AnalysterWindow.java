@@ -1152,7 +1152,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // set the tab to editing
         tab.setEditing(true);
         makeTableEditable(true);
-        btnSwitchEditMode.setEnabled(false);
         
         // set the color of the edit mode text
         editModeTextColor(tab.isEditing());
