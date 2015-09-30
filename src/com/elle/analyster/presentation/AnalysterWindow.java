@@ -1658,6 +1658,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                                     makeTableEditable(true);
                                     setEnabledEditingButtons(true, true, true);
                                     setBatchEditButtonStates(tab);
+                                    
+                                    // set the color of the edit mode text
+                                    editModeTextColor(tab.isEditing());
 
                                     // get selected cell for editing
                                     int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
