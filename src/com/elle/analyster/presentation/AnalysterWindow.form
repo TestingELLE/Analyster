@@ -670,9 +670,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <Component id="labelEditMode" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabelEdit" min="-2" max="-2" attributes="0"/>
+                      <Component id="labelEditModeState" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnSwitchEditMode" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -695,9 +695,9 @@
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnUploadChanges" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="labelEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnSwitchEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabelEdit" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="labelEditModeState" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnCancelEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBatchEdit" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnAddRecords" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -755,12 +755,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSwitchEditModeActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabelEdit">
+            <Component class="javax.swing.JLabel" name="labelEditModeState">
               <Properties>
                 <Property name="text" type="java.lang.String" value="OFF"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel2">
+            <Component class="javax.swing.JLabel" name="labelEditMode">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Edit Mode:"/>
               </Properties>

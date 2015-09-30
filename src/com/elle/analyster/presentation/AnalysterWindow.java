@@ -61,6 +61,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private BatchEditWindow batchEditWindow;
     private EditDatabaseWindow editDatabaseWindow;
     private ReportWindow reportWindow;
+    
+    // colors - Edit mode labels
+    private Color editModeDefaultTextColor;
+    private Color editModeActiveTextColor;
 
 
     /**
@@ -128,6 +132,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         tabs.get(ARCHIVE_TABLE_NAME).setBatchEditBtnVisible(false);
         
         initComponents(); // generated code
+        
+        // initialize the colors for the edit mode text
+        editModeActiveTextColor = new Color(44,122,22); //dark green
+        editModeDefaultTextColor = labelEditMode.getForeground();
         
         // set names to tables (this was in tabbedPanelChanged method)
         assignmentTable.setName(ASSIGNMENTS_TABLE_NAME);
@@ -236,8 +244,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         btnUploadChanges = new javax.swing.JButton();
         btnCancelEditMode = new javax.swing.JButton();
         btnSwitchEditMode = new javax.swing.JButton();
-        jLabelEdit = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        labelEditModeState = new javax.swing.JLabel();
+        labelEditMode = new javax.swing.JLabel();
         btnRevertChanges = new javax.swing.JButton();
         jPanelSQL = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -541,9 +549,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             }
         });
 
-        jLabelEdit.setText("OFF");
+        labelEditModeState.setText("OFF");
 
-        jLabel2.setText("Edit Mode:");
+        labelEditMode.setText("Edit Mode:");
 
         btnRevertChanges.setText("Revert Changes");
         btnRevertChanges.addActionListener(new java.awt.event.ActionListener() {
@@ -558,9 +566,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelEditLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addComponent(labelEditMode)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelEdit)
+                .addComponent(labelEditModeState)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSwitchEditMode)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -581,9 +589,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 .addGap(4, 4, 4)
                 .addGroup(jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
+                    .addComponent(labelEditMode)
                     .addComponent(btnSwitchEditMode)
-                    .addComponent(jLabelEdit)
+                    .addComponent(labelEditModeState)
                     .addComponent(btnCancelEditMode)
                     .addComponent(btnBatchEdit)
                     .addComponent(btnAddRecords)
@@ -947,7 +955,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         // reload modified table data with current table model
         data.reloadData();
         
-        makeTableEditable(jLabelEdit.getText().equals("OFF")?true:false);
+        makeTableEditable(labelEditModeState.getText().equals("OFF")?true:false);
         
         data.getNewData().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();          // update time
@@ -1024,7 +1032,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         boolean isBatchEditBtnVisible = tab.isBatchEditBtnVisible();
         
         if (makeTableEditable) {
-            jLabelEdit.setText("ON ");
+            labelEditModeState.setText("ON ");
             btnSwitchEditMode.setVisible(false);
             btnUploadChanges.setVisible(true);
             btnCancelEditMode.setVisible(true);
@@ -1032,7 +1040,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             btnBatchEdit.setVisible(true);
             btnRevertChanges.setVisible(true);
         } else {
-            jLabelEdit.setText("OFF");
+            labelEditModeState.setText("OFF");
             btnSwitchEditMode.setVisible(true);
             btnUploadChanges.setVisible(false);
             btnCancelEditMode.setVisible(false);
@@ -1107,7 +1115,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         labelRecords.setText(recordsLabel);    
         
         // buttons if in edit mode
-        if(jLabelEdit.getText().equals("ON ")){
+        if(labelEditModeState.getText().equals("ON ")){
             btnAddRecords.setVisible(false);
             btnBatchEdit.setVisible(true);
         }
@@ -1728,7 +1736,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                     
                     // I believe this is meant to toggle edit mode
                     // so I passed the conditional
-                    makeTableEditable(jLabelEdit.getText().equals("ON ")?false:true);
+                    makeTableEditable(labelEditModeState.getText().equals("ON ")?false:true);
                 } 
             }
         });
@@ -1912,7 +1920,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (jLabelEdit.getText().equals("ON ")) {
+                    if (labelEditModeState.getText().equals("ON ")) {
                         if (e.getComponent() instanceof JTable) {
                             JTable table = (JTable) e.getComponent();
                             int row = table.getSelectedRow();
@@ -1932,7 +1940,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                 } 
                 
                 else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
-                    if (jLabelEdit.getText().equals("ON ")) {                       // Default Date input with today's date
+                    if (labelEditModeState.getText().equals("ON ")) {                       // Default Date input with today's date
                         JTable table = (JTable) e.getComponent().getParent();
                         int column = table.getSelectedColumn();
                         if (table.getColumnName(column).toLowerCase().contains("date")) {
@@ -1956,7 +1964,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
                         JTable table = (JTable)e.getComponent();
 
                         // make sure in editing mode
-                        if(jLabelEdit.getText().equals("ON ") 
+                        if(labelEditModeState.getText().equals("ON ") 
                                 && !table.isEditing() 
                                 && e.getID() == KeyEvent.KEY_PRESSED){
 
@@ -2369,6 +2377,27 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         
     }
     
+    /**
+     * editModeTextColor
+     * This method changes the color of the edit mode text
+     * If edit mode is active then the text is green 
+     * and if it is not active then the text is the default color (black)
+     */
+    public void editModeTextColor(boolean editing){
+        
+        // if editing
+        if(editing){
+            labelEditMode.setForeground(editModeActiveTextColor);
+            labelEditModeState.setForeground(editModeActiveTextColor);
+        }
+        
+        // else not editing
+        else {
+            labelEditMode.setForeground(editModeDefaultTextColor);
+            labelEditModeState.setForeground(editModeDefaultTextColor);
+        }
+    }
+    
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel addPanel_control;
@@ -2386,8 +2415,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private javax.swing.JButton btnSwitchEditMode;
     private javax.swing.JButton btnUploadChanges;
     private javax.swing.JComboBox comboBoxSearch;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabelEdit;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEdit;
     private javax.swing.JPanel jPanelSQL;
@@ -2396,6 +2423,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextAreaSQL;
+    private javax.swing.JLabel labelEditMode;
+    private javax.swing.JLabel labelEditModeState;
     private javax.swing.JLabel labelRecords;
     private javax.swing.JLabel labelTimeLastUpdate;
     private javax.swing.JMenuBar menuBar;
