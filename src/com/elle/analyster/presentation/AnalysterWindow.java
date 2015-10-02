@@ -168,6 +168,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         jPanelEdit.setVisible(true);
         btnRevertChanges.setVisible(false);
         
+        // set upload/revert buttons initially disabled
+        btnUploadChanges.setEnabled(false);
+        btnRevertChanges.setEnabled(false);
+        
         // add filters for each table
         // must be before setting ColumnPopupMenu because this is its parameter
         tabs.get(ASSIGNMENTS_TABLE_NAME).setFilter(new TableFilter(assignmentTable));
@@ -1006,7 +1010,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             // set the states for this tab
             tab.setEditing(false);
             makeTableEditable(false);
-            setEnabledEditingButtons(true, true, true);
+            setEnabledEditingButtons(true, false, false);
             btnAddRecords.setEnabled(true);
             btnSwitchEditMode.setEnabled(true);
             setBatchEditButtonStates(tab);
