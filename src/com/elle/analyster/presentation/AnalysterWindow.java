@@ -1211,14 +1211,24 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
      * @param evt 
      */
     private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
-        addRecordsWindow = new AddRecordsWindow();
-        addRecordsWindow.setVisible(true);
         
+        // if no add records window is open
+        if(addRecordsWindow == null || !addRecordsWindow.isDisplayable()){
+            addRecordsWindow = new AddRecordsWindow();
+            addRecordsWindow.setVisible(true);
+        }
+        
+        // if window is already open then set the focus
+        else {
+            addRecordsWindow.toFront();
+        }
+
         // update records
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
         String recordsLabel = tab.getRecordsLabel();
         labelRecords.setText(recordsLabel);
+        
     }//GEN-LAST:event_btnAddRecordsActionPerformed
 
     /**
@@ -2478,6 +2488,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
 
     public String getEditingTabName() {
         return editingTabName;
+    }
+
+    public AddRecordsWindow getAddRecordsWindow() {
+        return addRecordsWindow;
     }
     
     
