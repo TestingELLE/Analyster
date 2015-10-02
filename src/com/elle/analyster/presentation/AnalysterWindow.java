@@ -1177,6 +1177,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
         tab.setBatchEditBtnEnabled(false);
         setBatchEditButtonStates(tab);
         
+        // show the batch edit window in front of the Main Window
+        showWindowInFront(batchEditWindow);
+        
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
     private void menuItemManageDBsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemManageDBsActionPerformed
@@ -2441,6 +2444,17 @@ public class AnalysterWindow extends JFrame implements ITableConstants{
             labelEditMode.setForeground(editModeDefaultTextColor);
             labelEditModeState.setForeground(editModeDefaultTextColor);
         }
+    }
+    
+    /**
+     * showWindowInFront
+     * This shows the component in front of the Main Window
+     * @param c Any component that needs to show on top of the Main window
+     */
+    public void showWindowInFront(Component c){
+
+        ((Window)(c)).setAlwaysOnTop(true);
+        
     }
     
     // @formatter:off
