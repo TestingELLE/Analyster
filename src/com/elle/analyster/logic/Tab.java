@@ -46,7 +46,7 @@ public class Tab implements ITableConstants{
     private boolean batchEditWindowOpen;
     private boolean batchEditWindowVisible;
     
-
+    
     
     /**
      * CONSTRUCTOR
