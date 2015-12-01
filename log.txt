@@ -1398,3 +1398,7 @@ The last packet successfully received from the server was 109,561 milliseconds a
 2015-10-02 01:30:40 PM: Connect successfully!
 
 -------------------------2015-10-02 01:55:08 PM-------------------------
+
+-------------------------2015-10-28 08:54:00 AM-------------------------
+2015-10-28 08:54:18 AM: Start to connect local database...
+2015-10-28 08:54:20 AM: Start to connect local database...
