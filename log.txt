@@ -1453,3 +1453,42 @@ The last packet successfully received from the server was 109,561 milliseconds a
 2015-11-24 10:06:58 AM: Access denied for user 'pupone_Xiao'@'ool-457fa8c1.dyn.optonline.net' (using password: YES)
 2015-11-24 10:07:02 AM: Start to connect local database...
 2015-11-24 10:07:03 AM: Connect successfully!
+
+-------------------------2015-12-01 12:06:08 PM-------------------------
+2015-12-01 12:06:18 PM: Start to connect local database...
+2015-12-01 12:06:20 PM: Access denied for user 'pupone_Xiao'@'ool-457fa8c1.dyn.optonline.net' (using password: YES)
+2015-12-01 12:06:24 PM: Start to connect local database...
+2015-12-01 12:06:25 PM: Connect successfully!
+
+-------------------------2015-12-09 11:44:04 AM-------------------------
+2015-12-09 11:44:21 AM: Start to connect local database...
+2015-12-09 11:44:23 AM: Connect successfully!
+
+-------------------------2015-12-09 11:50:03 AM-------------------------
+2015-12-09 11:50:45 AM: Start to connect local database...
+2015-12-09 11:50:46 AM: Connect successfully!
+
+-------------------------2015-12-10 10:03:18 AM-------------------------
+2015-12-10 10:03:46 AM: Start to connect local database...
+2015-12-10 10:03:47 AM: Connect successfully!
+
+-------------------------2015-12-10 10:35:32 AM-------------------------
+2015-12-10 10:35:53 AM: Start to connect local database...
+2015-12-10 10:35:55 AM: Access denied for user 'pupone_Xiao'@'%' to database 'pupone_Analyster'
+
+-------------------------2015-12-10 10:38:13 AM-------------------------
+2015-12-10 10:38:23 AM: Start to connect local database...
+2015-12-10 10:38:24 AM: Connect successfully!
+
+-------------------------2015-12-10 10:43:57 AM-------------------------
+2015-12-10 10:44:10 AM: Start to connect local database...
+2015-12-10 10:44:11 AM: Connect successfully!
+2015-12-10 10:47:00 AM: Data truncation: Incorrect date value: 'new File("/Users/fuxiaoqian/Desktop"                     + "/ProjectManagerFromMaster/src/com/elle/ProjectManager/image.png")' for column 'dateDone' at row 1
+2015-12-10 10:47:00 AM: 22001
+
+
+-------------------------2015-12-10 10:47:36 AM-------------------------
+2015-12-10 10:47:45 AM: Start to connect local database...
+2015-12-10 10:47:47 AM: Access denied for user 'pupone_Xiao'@'ool-457ef385.dyn.optonline.net' (using password: YES)
+2015-12-10 10:47:50 AM: Start to connect local database...
+2015-12-10 10:47:51 AM: Connect successfully!

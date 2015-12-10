@@ -416,7 +416,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "symbol", "analyst", "priority", "dateAssigned", "dateDone", "notes"
+                "ID", "symbol", "analyst", "priority", "dateAssigned", "dateDone", "decision"
             }
         ) {
             Class[] types = new Class [] {
@@ -463,7 +463,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "symbol", "author", "analysisDate", "path", "document", "notes", "notesL"
+                "ID", "symbol", "author", "analysisDate", "path", "document", "decision", "notes"
             }
         ) {
             Class[] types = new Class [] {
@@ -499,7 +499,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "symbol", "analyst", "priority", "dateAssigned", "dateDone", "notes"
+                "ID", "symbol", "analyst", "priority", "dateAssigned", "dateDone", "decision"
             }
         ) {
             Class[] types = new Class [] {
@@ -916,7 +916,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 boolean isValueInTable = false;
                 isValueInTable = checkValueInTableCell(col, searchBoxValue, table);
 
-                System.out.println(isValueInTable);
                 if (isValueInTable) {
 
                     filter.addFilterItem(col, searchBoxValue);
@@ -944,8 +943,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 cellValue = table.getValueAt(row, col).toString();
             }
 
-            if (cellValue.equals(target)) {
-                System.out.println("so it is equal to: " + table.getValueAt(row, col));
+            if (cellValue.equalsIgnoreCase(target)) {
                 count++;
             }
         }
