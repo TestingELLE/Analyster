@@ -1,5 +1,6 @@
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.database.Backup;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.CreateDocumentFilter;
@@ -285,6 +286,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuItemReloadData = new javax.swing.JMenuItem();
         menuItemLogChkBx = new javax.swing.JCheckBoxMenuItem();
         menuItemSQLCmdChkBx = new javax.swing.JCheckBoxMenuItem();
+        menuItemBackup = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
         menuItemRepBugSugg = new javax.swing.JMenuItem();
 
@@ -831,6 +833,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
         menuTools.add(menuItemSQLCmdChkBx);
+
+        menuItemBackup.setText("Backup");
+        menuItemBackup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemBackupActionPerformed(evt);
+            }
+        });
+        menuTools.add(menuItemBackup);
 
         menuBar.add(menuTools);
 
@@ -1652,6 +1662,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         revertChanges();
     }//GEN-LAST:event_btnRevertChangesActionPerformed
+
+    private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
+        
+        // call the backup method
+        Backup.Backupdbtosql();
+        
+        
+    }//GEN-LAST:event_menuItemBackupActionPerformed
 
     //set the timer for information Label show
     public void startCountDownFromNow(int waitSeconds) {
@@ -2562,6 +2580,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JMenuItem menuItemAWSAssign;
     private javax.swing.JMenuItem menuItemActivateRecord;
     private javax.swing.JMenuItem menuItemArchiveRecord;
+    private javax.swing.JMenuItem menuItemBackup;
     private javax.swing.JMenuItem menuItemDeleteRecord;
     private javax.swing.JCheckBoxMenuItem menuItemLogChkBx;
     private javax.swing.JMenuItem menuItemLogOff;
