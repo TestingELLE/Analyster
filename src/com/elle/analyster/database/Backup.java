@@ -15,7 +15,10 @@ import javax.swing.JOptionPane;
  *
  * @author cigreja
  * 
- * This class is to backup the database tables.
+ * This class is to backup the database.
+ * This uses the user and password of the user that is logged in.
+ * This also uses the database that is logged in.
+ * Stores the file in the same directory as the jar file for the application.
  */
 public class Backup {
     
