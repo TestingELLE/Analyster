@@ -88,6 +88,45 @@ public class BackupDBTables {
     }
     
     /**
+     * CONSTRUCTOR
+     * BackupDBTables
+     * creates a database connection
+     * @param host        the website host or localhost ( ex. website.com or localhost)
+     * @param database    database to connect to
+     * @param username    user name to connect to the database
+     * @param password    user password to connect to the database
+     */
+    public BackupDBTables(String host, String database, String username, String password){
+        this.tableName = null;
+        this.backupTableName = null;
+        this.parentComponent = null;
+        Connection connection = createConnection(host, database, username, password);
+        if(connection != null){
+            this.statement = createStatement(connection);
+        }
+    }
+    
+    /**
+     * CONSTRUCTOR
+     * BackupDBTables
+     * creates a database connection
+     * @param host        the website host or localhost ( ex. website.com or localhost)
+     * @param database    database to connect to
+     * @param username    user name to connect to the database
+     * @param password    user password to connect to the database
+     * @param parentComponent displays other components relative to this component
+     */
+    public BackupDBTables(String host, String database, String username, String password, Component parentComponent){
+        this.tableName = null;
+        this.backupTableName = null;
+        this.parentComponent = parentComponent;
+        Connection connection = createConnection(host, database, username, password);
+        if(connection != null){
+            this.statement = createStatement(connection);
+        }
+    }
+    
+    /**
      * createConnection
      * creates a database connection
      * @param host        the website host or localhost ( ex. website.com or localhost)
@@ -96,7 +135,7 @@ public class BackupDBTables {
      * @param password    user password to connect to the database
      * @return Connection connection to the database
      */
-    public Connection createConnection(String host, String database, String username, String password){
+    private Connection createConnection(String host, String database, String username, String password){
         
         try {
             //Accessing driver from the JAR file
@@ -119,6 +158,25 @@ public class BackupDBTables {
         }
         
         return connection;
+    }
+    
+    /**
+     * createStatement
+     * creates a Statement object from a Connection object
+     * @param connection  connection object to create a statement object
+     * @return statement  statement object created from connection object
+     */
+    private Statement createStatement(Connection connection){
+        
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+        } catch (SQLException ex) {
+            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            handleSQLexWithMessageBox(ex);
+        }
+        return statement;
     }
     
     /**
