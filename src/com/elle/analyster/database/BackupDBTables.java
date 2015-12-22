@@ -3,6 +3,7 @@ package com.elle.analyster.database;
 
 import java.awt.Component;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
@@ -84,6 +85,40 @@ public class BackupDBTables {
         this.backupTableName = null;
         this.parentComponent = parentComponent;
         this.statement = statement;
+    }
+    
+    /**
+     * createConnection
+     * creates a database connection
+     * @param host        the website host or localhost ( ex. website.com or localhost)
+     * @param database    database to connect to
+     * @param username    user name to connect to the database
+     * @param password    user password to connect to the database
+     * @return Connection connection to the database
+     */
+    public Connection createConnection(String host, String database, String username, String password){
+        
+        try {
+            //Accessing driver from the JAR file
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+        }
+        
+        String server = "jdbc:mysql://" + host +":3306/" + database;
+        Connection connection = null;
+        
+        try {
+            // get connection
+            connection = DriverManager.getConnection(server, username, password);
+        } catch (SQLException ex) {
+            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            handleSQLexWithMessageBox(ex);
+        }
+        
+        return connection;
     }
     
     /**
