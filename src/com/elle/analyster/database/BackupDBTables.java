@@ -22,6 +22,7 @@ public class BackupDBTables {
     
     private String tableName;
     private String backupTableName;
+    private Connection connection;
     private Statement statement;
     private Component parentComponent; // used to display message relative to parent component
 
@@ -34,6 +35,7 @@ public class BackupDBTables {
         this.tableName = null;
         this.backupTableName = null;
         this.parentComponent = null;
+        this.connection = connection;
         try {
             this.statement = connection.createStatement();
         } catch (SQLException ex) {
@@ -53,6 +55,7 @@ public class BackupDBTables {
         this.tableName = null;
         this.backupTableName = null;
         this.parentComponent = parentComponent;
+        this.connection = connection;
         try {
             this.statement = connection.createStatement();
         } catch (SQLException ex) {
@@ -71,6 +74,13 @@ public class BackupDBTables {
         this.tableName = null;
         this.backupTableName = null;
         this.parentComponent = null;
+        try {
+            this.connection = statement.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            handleSQLexWithMessageBox(ex);
+        }
         this.statement = statement;
     }
     
@@ -84,6 +94,13 @@ public class BackupDBTables {
         this.tableName = null;
         this.backupTableName = null;
         this.parentComponent = parentComponent;
+        try {
+            this.connection = statement.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            handleSQLexWithMessageBox(ex);
+        }
         this.statement = statement;
     }
     
@@ -386,4 +403,12 @@ public class BackupDBTables {
         JOptionPane.showMessageDialog(parentComponent, message);
     }
     
+    /**
+     * getConnection
+     * This can be used to check that the connection is open and not null
+     * @return Connection database connection
+     */
+    public Connection getConnection() {
+        return connection;
+    }
 }
