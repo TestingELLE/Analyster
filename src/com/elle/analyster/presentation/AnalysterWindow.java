@@ -1,6 +1,6 @@
 package com.elle.analyster.presentation;
 
-import com.elle.analyster.database.Backup;
+import com.elle.analyster.database.BackupDBTables;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.CreateDocumentFilter;
@@ -49,8 +49,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-11-25";
-    private final String VERSION = "0.8.10";
+    private final String CREATION_DATE = "2015-12-21";
+    private final String VERSION = "0.9.0";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -1663,11 +1663,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         revertChanges();
     }//GEN-LAST:event_btnRevertChangesActionPerformed
 
+    /**
+     * menuItemBackupActionPerformed
+     * @param evt 
+     * This is the menu item backup that is used to back up the database table.
+     */
     private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
         
-        // call the backup method
-        Backup.Backupdbtosql();
-        
+        String tableName = "Assignments"; // table name to backup
+        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getStatement(), this);
+        backupDBTables.backupDBTableWithDate(tableName);
         
     }//GEN-LAST:event_menuItemBackupActionPerformed
 
