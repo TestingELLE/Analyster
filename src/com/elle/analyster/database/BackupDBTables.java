@@ -15,8 +15,8 @@ import javax.swing.JOptionPane;
  * BackupDBTables
  * This class creates backup tables of the tables in the database.
  * 
- * @Author     Carlos Igreja
- * @CreatedOn  December 21, 2015
+ * @author     Carlos Igreja
+ * @since      December 21, 2015
  */
 public class BackupDBTables {
     
@@ -27,9 +27,8 @@ public class BackupDBTables {
     private Component parentComponent; // used to display message relative to parent component
 
     /**
-     * CONSTRUCTOR
-     * BackupDBTables
-     * @param connection 
+     * Creates a BackupDBTables object instance 
+     * @param connection connection to the database
      */
     public BackupDBTables(Connection connection){
         this.tableName = null;
@@ -46,10 +45,9 @@ public class BackupDBTables {
     }
     
     /**
-     * CONSTRUCTOR
-     * BackupDBTables
-     * @param connection
-     * @param parentComponent 
+     * Creates a BackupDBTables object instance 
+     * @param connection connection to the database
+     * @param parentComponent component other components will appear relative to
      */
     public BackupDBTables(Connection connection, Component parentComponent){
         this.tableName = null;
@@ -66,9 +64,8 @@ public class BackupDBTables {
     }
     
     /**
-     * CONSTRUCTOR
-     * BackupDBTables
-     * @param statement 
+     * Creates a BackupDBTables instance 
+     * @param statement statement object created from the connection to the database
      */
     public BackupDBTables(Statement statement){
         this.tableName = null;
@@ -85,10 +82,9 @@ public class BackupDBTables {
     }
     
     /**
-     * CONSTRUCTOR
-     * BackupDBTables
-     * @param statement
-     * @param parentComponent 
+     * Creates a BackupDBTables instance 
+     * @param statement statement object created from the connection to the database
+     * @param parentComponent component other components will appear relative to
      */
     public BackupDBTables(Statement statement, Component parentComponent){
         this.tableName = null;
@@ -105,9 +101,7 @@ public class BackupDBTables {
     }
     
     /**
-     * CONSTRUCTOR
-     * BackupDBTables
-     * creates a database connection
+     * Creates a BackupDBTables instance and creates a database connection
      * @param host        the website host or localhost ( ex. website.com or localhost)
      * @param database    database to connect to
      * @param username    user name to connect to the database
@@ -117,16 +111,14 @@ public class BackupDBTables {
         this.tableName = null;
         this.backupTableName = null;
         this.parentComponent = null;
-        Connection connection = createConnection(host, database, username, password);
+        this.connection = createConnection(host, database, username, password);
         if(connection != null){
             this.statement = createStatement(connection);
         }
     }
     
     /**
-     * CONSTRUCTOR
-     * BackupDBTables
-     * creates a database connection
+     * Creates a BackupDBTables instance and creates a database connection
      * @param host        the website host or localhost ( ex. website.com or localhost)
      * @param database    database to connect to
      * @param username    user name to connect to the database
@@ -137,14 +129,13 @@ public class BackupDBTables {
         this.tableName = null;
         this.backupTableName = null;
         this.parentComponent = parentComponent;
-        Connection connection = createConnection(host, database, username, password);
+        this.connection = createConnection(host, database, username, password);
         if(connection != null){
             this.statement = createStatement(connection);
         }
     }
     
     /**
-     * createConnection
      * creates a database connection
      * @param host        the website host or localhost ( ex. website.com or localhost)
      * @param database    database to connect to
@@ -178,7 +169,6 @@ public class BackupDBTables {
     }
     
     /**
-     * createStatement
      * creates a Statement object from a Connection object
      * @param connection  connection object to create a statement object
      * @return statement  statement object created from connection object
@@ -197,10 +187,9 @@ public class BackupDBTables {
     }
     
     /**
-     * backupDBTableWithDate
-     * @param tableName table name in the database to backup
-     * This method creates a backup table with the same table name and today's 
+     * Creates a backup table with the same table name and today's 
      * date appended to the end. 
+     * @param tableName table name in the database to backup
      */
     public void backupDBTableWithDate(String tableName) {
         
@@ -225,7 +214,7 @@ public class BackupDBTables {
     }
     
     /**
-     * backupTable
+     * Backs up a table in the database
      * @param tableName         the table in the database to backup up (original)
      * @param backupTableName   the name of the new table (the backup table)
      * @return                  boolean returns true if the backup was a success 
@@ -250,7 +239,7 @@ public class BackupDBTables {
     }
     
     /**
-     * createTable
+     * Creates a table in the database
      * @param tableName           the original table name
      * @param backupTableName     the name of the backup table
      * @throws SQLException       can use handleSQLexWithMessageBox method in catch
@@ -266,7 +255,7 @@ public class BackupDBTables {
     }
     
     /**
-     * backupTableData
+     * Backs up table data in the database
      * @param tableName           the original table name
      * @param backupTableName     the name of the backup table
      * @throws SQLException       can use handleSQLexWithMessageBox method in catch
@@ -282,7 +271,7 @@ public class BackupDBTables {
     }
     
     /**
-     * dropTable
+     * Drops a table in the database
      * @param tableName drop this table name from database
      * @return boolean dropped from database? true or false
      * @throws SQLException can use handleSQLexWithMessageBox method in catch
@@ -297,7 +286,7 @@ public class BackupDBTables {
     }
 
     /**
-     * getTodaysDate
+     * Gets todays date
      * @return today's date (ex. _2015_12_21)
      * Returns today's date in a format to append to a table name for backup.
      */
@@ -313,7 +302,7 @@ public class BackupDBTables {
     }
     
     /**
-     * handleSQLexWithMessageBox
+     * Handles sql exceptions with a message box to notify the user
      * @param ex the sql exception that was thrown
      */
     private void handleSQLexWithMessageBox(SQLException ex){
@@ -363,7 +352,7 @@ public class BackupDBTables {
     }
     
     /**
-     * overwriteBackupDB
+     * Drops a table and creates a new one if it already exists
      * Drops the backup table and creates a new backup with the table name
      * and today's date.
      */
@@ -382,10 +371,8 @@ public class BackupDBTables {
     }
     
     /**
-     * getInputTableNameFromUser
+     * Gets input for the table name from the user using an input message box
      * @return the input the user entered into the input text box
-     * This uses an input dialog box to get the name that will be used for the 
-     * table from the user with an input text box.
      */
     private String getInputTableNameFromUser(){
         // input dialog box 
@@ -394,19 +381,17 @@ public class BackupDBTables {
     }
     
     /**
-     * displayBackupCompleteMessage
-     * This is a message box that displays when 
+     * A message box that displays when 
      * the backup was completed successfully.
      */
     private void displayBackupCompleteMessage(){
         String message = tableName + " was backed up as " + backupTableName;
         JOptionPane.showMessageDialog(parentComponent, message);
     }
-    
+
     /**
-     * getConnection
      * This can be used to check that the connection is open and not null
-     * @return Connection database connection
+     * @return database connection
      */
     public Connection getConnection() {
         return connection;
