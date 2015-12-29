@@ -1555,3 +1555,52 @@ The last packet successfully received from the server was 109,561 milliseconds a
 -------------------------2015-12-29 12:00:37 PM-------------------------
 2015-12-29 12:00:49 PM: Start to connect local database...
 2015-12-29 12:00:50 PM: Connect successfully!
+
+-------------------------2015-12-29 05:04:38 PM-------------------------
+2015-12-29 05:05:40 PM: Start to connect local database...
+2015-12-29 05:05:41 PM: Connect successfully!
+2015-12-29 05:06:30 PM: 2 Record(s) Deleted!
+2015-12-29 05:06:30 PM: DELETE FROM pupone_dummy.Assignments WHERE ID IN (477, 483);
+2015-12-29 05:06:44 PM: Data reloaded!
+2015-12-29 05:07:19 PM: Change(s) is/are uploaded!
+2015-12-29 05:08:13 PM: Change(s) is/are uploaded!
+
+-------------------------2015-12-29 05:12:13 PM-------------------------
+2015-12-29 05:12:15 PM: Start to connect local database...
+2015-12-29 05:12:16 PM: Connect successfully!
+2015-12-29 05:12:35 PM: Reverted! Nothing has been changed!
+
+-------------------------2015-12-29 05:13:37 PM-------------------------
+2015-12-29 05:13:51 PM: Start to connect local database...
+2015-12-29 05:13:52 PM: Connect successfully!
+2015-12-29 05:14:06 PM: Reverted! Nothing has been changed!
+
+-------------------------2015-12-29 05:21:51 PM-------------------------
+2015-12-29 05:21:54 PM: Start to connect local database...
+2015-12-29 05:21:55 PM: Connect successfully!
+2015-12-29 05:23:34 PM: Reverted! Nothing has been changed!
+
+-------------------------2015-12-29 05:25:22 PM-------------------------
+2015-12-29 05:25:44 PM: Start to connect local database...
+2015-12-29 05:25:45 PM: Connect successfully!
+2015-12-29 05:26:11 PM: Data reloaded!
+
+-------------------------2015-12-29 05:26:42 PM-------------------------
+2015-12-29 05:26:44 PM: Start to connect local database...
+2015-12-29 05:26:45 PM: Connect successfully!
+2015-12-29 05:27:04 PM: Data reloaded!
+2015-12-29 05:29:16 PM: Reverted! Nothing has been changed!
+
+-------------------------2015-12-29 05:29:29 PM-------------------------
+2015-12-29 05:29:30 PM: Start to connect local database...
+2015-12-29 05:29:31 PM: Connect successfully!
+2015-12-29 05:29:56 PM: Edit mode turned off!
+2015-12-29 05:30:18 PM: Edits uploaded successfully!
+
+-------------------------2015-12-29 05:32:38 PM-------------------------
+2015-12-29 05:32:40 PM: Start to connect local database...
+2015-12-29 05:32:41 PM: Connect successfully!
+2015-12-29 05:32:58 PM: Edits uploaded successfully!
+2015-12-29 05:33:08 PM: Reverted! Nothing has been changed!
+2015-12-29 05:33:35 PM: Reverted! Nothing has been changed!
+2015-12-29 06:08:48 PM: Edit mode turned off!
