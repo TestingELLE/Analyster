@@ -1577,3 +1577,12 @@ The last packet successfully received from the server was 109,561 milliseconds a
 2015-12-28 11:53:55 PM: Start to connect local database...
 2015-12-28 11:53:56 PM: Connect successfully!
 2015-12-28 11:55:28 PM: DELETE FROM pupone_dummy.Assignments WHERE ID IN (479, 478);
+
+-------------------------2015-12-29 11:51:35 AM-------------------------
+2015-12-29 11:51:45 AM: Start to connect local database...
+2015-12-29 11:51:47 AM: Connect successfully!
+2015-12-29 11:53:24 AM: DELETE FROM pupone_dummy.Assignments WHERE ID IN (482);
+
+-------------------------2015-12-29 04:50:55 PM-------------------------
+2015-12-29 04:50:57 PM: Start to connect local database...
+2015-12-29 04:50:59 PM: Connect successfully!
