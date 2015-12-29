@@ -353,6 +353,9 @@
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboBoxSearchActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnClearAllFilter">
               <Properties>
@@ -392,8 +395,8 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="tabbedPanel" min="-2" pref="361" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jPanelEdit" min="-2" pref="37" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  <Component id="jPanelEdit" min="-2" pref="60" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanelSQL" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -443,7 +446,7 @@
                         <Column editable="true" title="priority" type="java.lang.Object"/>
                         <Column editable="true" title="dateAssigned" type="java.lang.Object"/>
                         <Column editable="true" title="dateDone" type="java.lang.Object"/>
-                        <Column editable="true" title="decision" type="java.lang.Object"/>
+                        <Column editable="true" title="notes" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="autoResizeMode" type="int" value="4"/>
@@ -697,14 +700,22 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnSwitchEditMode" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
-                      <Component id="btnUploadChanges" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnRevertChanges" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="66" max="32767" attributes="0"/>
-                      <Component id="btnAddRecords" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnBatchEdit" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="informationLabel" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="btnUploadChanges" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnRevertChanges" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="66" max="32767" attributes="0"/>
+                              <Component id="btnAddRecords" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnBatchEdit" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -721,7 +732,9 @@
                           <Component id="btnAddRecords" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnRevertChanges" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="informationLabel" min="-2" pref="24" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -782,6 +795,11 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRevertChangesActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="informationLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jLabel2"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

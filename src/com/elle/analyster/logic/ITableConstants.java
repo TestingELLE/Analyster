@@ -32,7 +32,7 @@ public interface ITableConstants {
     public static final String[] ARCHIVE_SEARCH_FIELDS = {"Symbol","Analyst"};
     
     // batch edit combobox selections for each table
-    public static final String[] ASSIGNMENTS_BATCHEDIT_CB_FIELDS = {"analyst", "priority", "dateAssigned", "notes", "symbol"};
+    public static final String[] ASSIGNMENTS_BATCHEDIT_CB_FIELDS = {"analyst", "priority", "dateAssigned", "dateDone", "notes"};
     public static final String[] REPORTS_BATCHEDIT_CB_FIELDS = {"author", "analysisDate", "notes", "symbol"};
     public static final String[] ARCHIVE_BATCHEDIT_CB_FIELDS = {"analyst", "priority", "dateAssigned", "notes", "symbol"};
 }

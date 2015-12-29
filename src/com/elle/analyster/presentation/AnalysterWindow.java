@@ -71,6 +71,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     private String editingTabName; // stores the name of the tab that is editing
 
+    private boolean isBatchEditWindowShow;
     /**
      * CONSTRUCTOR
      */
@@ -213,6 +214,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         tabs.get(ASSIGNMENTS_TABLE_NAME).setEditing(false);
         tabs.get(REPORTS_TABLE_NAME).setEditing(false);
         tabs.get(ARCHIVE_TABLE_NAME).setEditing(false);
+        
+        informationLabel.setText("");
+        
+        isBatchEditWindowShow = false;
 
         // set title of window to Analyster
         this.setTitle("Analyster");
@@ -253,6 +258,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         labelEditModeState = new javax.swing.JLabel();
         labelEditMode = new javax.swing.JLabel();
         btnRevertChanges = new javax.swing.JButton();
+        informationLabel = new javax.swing.JLabel();
         jPanelSQL = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaSQL = new javax.swing.JTextArea();
@@ -314,6 +320,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
 
         comboBoxSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "symbol", "analyst" }));
+        comboBoxSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxSearchActionPerformed(evt);
+            }
+        });
 
         btnClearAllFilter.setText("Clear All Filters");
         btnClearAllFilter.addActionListener(new java.awt.event.ActionListener() {
@@ -416,7 +427,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "symbol", "analyst", "priority", "dateAssigned", "dateDone", "decision"
+                "ID", "symbol", "analyst", "priority", "dateAssigned", "dateDone", "notes"
             }
         ) {
             Class[] types = new Class [] {
@@ -566,6 +577,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
 
+        informationLabel.setText("jLabel2");
+
         javax.swing.GroupLayout jPanelEditLayout = new javax.swing.GroupLayout(jPanelEdit);
         jPanelEdit.setLayout(jPanelEditLayout);
         jPanelEditLayout.setHorizontalGroup(
@@ -578,14 +591,19 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSwitchEditMode)
                 .addGap(82, 82, 82)
-                .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRevertChanges)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
-                .addComponent(btnAddRecords)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnBatchEdit)
-                .addGap(26, 26, 26))
+                .addGroup(jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelEditLayout.createSequentialGroup()
+                        .addComponent(informationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jPanelEditLayout.createSequentialGroup()
+                        .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRevertChanges)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                        .addComponent(btnAddRecords)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBatchEdit)
+                        .addGap(26, 26, 26))))
         );
         jPanelEditLayout.setVerticalGroup(
             jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -599,7 +617,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     .addComponent(btnBatchEdit)
                     .addComponent(btnAddRecords)
                     .addComponent(btnRevertChanges))
-                .addGap(4, 4, 4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(informationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jScrollPane2.setBorder(null);
@@ -681,8 +701,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(tabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addComponent(jPanelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelSQL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -912,7 +932,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 TableFilter filter = tab.getFilter();
                 filter.clearAllFilters();
                 filter.applyFilter();
-                
+
                 boolean isValueInTable = false;
                 isValueInTable = checkValueInTableCell(col, searchBoxValue, table);
 
@@ -1226,6 +1246,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // open a batch edit window and make visible only to this tab
         batchEditWindow = new BatchEditWindow();
         batchEditWindow.setVisible(true);
+        batchEditWindow.toFront();
+        batchEditWindow.requestFocus();
+        this.isBatchEditWindowShow = true;
         tab.setBatchEditWindowVisible(true);
         tab.setBatchEditWindowOpen(true);
         tab.setBatchEditBtnEnabled(false);
@@ -1482,7 +1505,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     }
                 } catch (SQLException sqlException) {
                     try {
-                        JOptionPane.showMessageDialog(this, "Upload failed!");
+                        informationLabel.setText(("Upload failed! "));
+                        this.startCountDownFromNow(10);
                         errorOccurred = true; // if error occurred then break loop
 
                         if (statement.getWarnings().getMessage() != null) {
@@ -1502,7 +1526,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             // if no error occured then display the amount of records archived dialog box
             if (!errorOccurred) {
-                JOptionPane.showMessageDialog(this, rowCount + " record(s) archived!");
+                String text = rowCount + " record(s) archived!";
+                this.setInformationLabel(text, 10);
 
                 // load the assignments archived table to refresh with new data
                 loadTable(archiveTable);
@@ -1515,7 +1540,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         } else {
             // no records are selected dialog message to user
-            JOptionPane.showMessageDialog(this, "No records are selected in assignments");
+            String text = "No records are selected in assignments";
+                this.setInformationLabel(text, 10);
         }
 
     }//GEN-LAST:event_menuItemArchiveRecordActionPerformed
@@ -1560,7 +1586,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             loadTable(archiveTable);
             loadTable(assignmentTable);
 
-            JOptionPane.showMessageDialog(null, rowSelected + " Record(s) Activated!");
+            String text = rowSelected + " Record(s) Activated!";
+            this.setInformationLabel(text, 10);
 
         } else {
             JOptionPane.showMessageDialog(null, "Please, select one task!");
@@ -1653,13 +1680,17 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         revertChanges();
     }//GEN-LAST:event_btnRevertChangesActionPerformed
 
+    private void comboBoxSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxSearchActionPerformed
+
     //set the timer for information Label show
     public void startCountDownFromNow(int waitSeconds) {
         Timer timer = new Timer(waitSeconds * 1000, new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-//                informationLabel.setText("");
+                informationLabel.setText("");
                 searchInformationLabel.setText("");
             }
         });
@@ -1956,7 +1987,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param modifiedDataList
      */
     public void updateTable(JTable table, List<ModifiedData> modifiedDataList) {
-
+        boolean updateSuccessful = true;    
         // should probably not be here
         // this method is to update the database, that is all it should do.
         table.getModel().addTableModelListener(table);
@@ -1988,13 +2019,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 statement.executeUpdate(sqlChange);
 
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this, "Upload failed!");
+                informationLabel.setText(("Upload failed! " + e.getMessage()));
+                this.startCountDownFromNow(10);
                 logWindow.addMessageWithDate(e.getMessage());
                 logWindow.addMessageWithDate(e.getSQLState() + "\n");
+                updateSuccessful = false;
             }
         }
 
-        JOptionPane.showMessageDialog(this, "Edits uploaded!");
+        if (updateSuccessful) {
+            informationLabel.setText(("Edits uploaded successfully!"));
+            startCountDownFromNow(5);
+        }
 
     }
 
@@ -2017,6 +2053,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = dateFormat.format(new Date());
         labelTimeLastUpdate.setText("Last updated: " + time);
+    }
+    
+    public void setIsBatchEditWindowShow(boolean a) {
+        this.isBatchEditWindowShow = a;
+    }
+
+    public boolean getIsBatchEditWindowShow() {
+        return this.isBatchEditWindowShow;
     }
 
     /**
@@ -2051,73 +2095,75 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         }
                     }
 
-                } else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
-                    if (labelEditModeState.getText().equals("ON ")) {                       // Default Date input with today's date
-                        JTable table = (JTable) e.getComponent().getParent();
-                        int column = table.getSelectedColumn();
-                        if (table.getColumnName(column).toLowerCase().contains("date")) {
-                            if (e.getID() != 401) { // 401 = key down, 402 = key released
-                                return false;
-                            } else {
-                                JTextField selectCom = (JTextField) e.getComponent();
-                                selectCom.requestFocusInWindow();
-                                selectCom.selectAll();
-                                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                Date date = new Date();
-                                String today = dateFormat.format(date);
-                                selectCom.setText(today);
+                } else if (!isBatchEditWindowShow) {
+                    if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
+                        if (labelEditModeState.getText().equals("ON ")) {                       // Default Date input with today's date
+                            JTable table = (JTable) e.getComponent().getParent();
+                            int column = table.getSelectedColumn();
+                            if (table.getColumnName(column).toLowerCase().contains("date")) {
+                                if (e.getID() != 401) { // 401 = key down, 402 = key released
+                                    return false;
+                                } else {
+                                    JTextField selectCom = (JTextField) e.getComponent();
+                                    selectCom.requestFocusInWindow();
+                                    selectCom.selectAll();
+                                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    Date date = new Date();
+                                    String today = dateFormat.format(date);
+                                    selectCom.setText(today);
+                                }
                             }
                         }
-                    }
-                } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if (e.getComponent() instanceof JTable) {
-                        JTable table = (JTable) e.getComponent();
+                    } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        if (e.getComponent() instanceof JTable) {
+                            JTable table = (JTable) e.getComponent();
 
-                        // make sure in editing mode
-                        if (labelEditModeState.getText().equals("ON ")
-                                && !table.isEditing()
-                                && e.getID() == KeyEvent.KEY_PRESSED) {
+                            // make sure in editing mode
+                            if (labelEditModeState.getText().equals("ON ")
+                                    && !table.isEditing()
+                                    && e.getID() == KeyEvent.KEY_PRESSED) {
 
-                            // only show popup if there are changes to upload or revert
-                            if (btnUploadChanges.isEnabled() || btnRevertChanges.isEnabled()) {
+                                // only show popup if there are changes to upload or revert
+                                if (btnUploadChanges.isEnabled() || btnRevertChanges.isEnabled()) {
                                 // if finished display dialog box
-                                // Upload Changes? Yes or No?
-                                Object[] options = {"Commit", "Revert"};  // the titles of buttons
+                                    // Upload Changes? Yes or No?
+                                    Object[] options = {"Commit", "Revert"};  // the titles of buttons
 
-                                // store selected rowIndex before the table is refreshed
-                                int rowIndex = table.getSelectedRow();
+                                    // store selected rowIndex before the table is refreshed
+                                    int rowIndex = table.getSelectedRow();
 
-                                int selectedOption = JOptionPane.showOptionDialog(AnalysterWindow.getInstance(),
-                                        "Would you like to upload changes?", "Upload Changes",
-                                        JOptionPane.YES_NO_OPTION,
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        null, //do not use a custom Icon
-                                        options, //the titles of buttons
-                                        options[0]); //default button title
+                                    int selectedOption = JOptionPane.showOptionDialog(AnalysterWindow.getInstance(),
+                                            "Would you like to upload changes?", "Upload Changes",
+                                            JOptionPane.YES_NO_OPTION,
+                                            JOptionPane.QUESTION_MESSAGE,
+                                            null, //do not use a custom Icon
+                                            options, //the titles of buttons
+                                            options[0]); //default button title
 
-                                switch (selectedOption) {
-                                    case 0:
-                                        // if Commit, upload changes and return to editing
-                                        uploadChanges();  // upload changes to database
-                                        break;
-                                    case 1:
-                                        // if Revert, revert changes
-                                        revertChanges(); // reverts the model back
-                                        break;
-                                    default:
-                                        // do nothing -> cancel
-                                        break;
-                                }
+                                    switch (selectedOption) {
+                                        case 0:
+                                            // if Commit, upload changes and return to editing
+                                            uploadChanges();  // upload changes to database
+                                            break;
+                                        case 1:
+                                            // if Revert, revert changes
+                                            revertChanges(); // reverts the model back
+                                            break;
+                                        default:
+                                            // do nothing -> cancel
+                                            break;
+                                    }
 
-                                // highlight previously selected rowIndex
-                                if (rowIndex != -1) {
-                                    table.setRowSelectionInterval(rowIndex, rowIndex);
+                                    // highlight previously selected rowIndex
+                                    if (rowIndex != -1) {
+                                        table.setRowSelectionInterval(rowIndex, rowIndex);
+                                    }
                                 }
                             }
+
                         }
 
                     }
-
                 }
 
                 return false;
@@ -2155,6 +2201,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     public Statement getStatement() {
         return statement;
+    }
+    
+    public JLabel getInformationLabel() {
+        return this.informationLabel;
+    }
+    
+    public void setInformationLabel(String inf, int second) {
+        this.informationLabel.setText(inf);
+        startCountDownFromNow(second);
     }
 
     /**
@@ -2198,6 +2253,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             Tab tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
             loadTable(table);
+            informationLabel.setText("Table loaded succesfully");
+            startCountDownFromNow(10);
         }
 
         setLastUpdateTime();
@@ -2227,7 +2284,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             logWindow.addMessageWithDate(ex.getMessage());
 
             // notify the user that there was an issue
-            JOptionPane.showMessageDialog(this, "connection failed");
+            informationLabel.setText("connection failed!");
+            startCountDownFromNow(10);
         }
 
         return table;
@@ -2348,8 +2406,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 // refresh table and retain filters
                 loadTable(table);
 
-                // output pop up dialog that a record was deleted 
-                JOptionPane.showMessageDialog(this, rowCount + " Record(s) Deleted");
+                // show information that a record was deleted 
+                informationLabel.setText(rowCount + " Record(s) Deleted");
+                startCountDownFromNow(10);
 
                 // set label record information
                 String tabName = getSelectedTabName();
@@ -2480,6 +2539,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         ModifiedTableData modifiedTableData = tab.getTableData();
         modifiedTableData.getNewData().clear();  // clear any stored changes (new data)
         loadTable(table); // reverts the model back
+        
+        informationLabel.setText("Changes Revert!"); //show information 
+        startCountDownFromNow(5);
+        
         modifiedTableData.reloadData();  // reloads data of new table (old data) to compare with new changes (new data)
 
         // no changes to upload or revert
@@ -2542,6 +2605,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JButton btnSwitchEditMode;
     private javax.swing.JButton btnUploadChanges;
     private javax.swing.JComboBox comboBoxSearch;
+    private javax.swing.JLabel informationLabel;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEdit;
     private javax.swing.JPanel jPanelSQL;
