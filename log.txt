@@ -1493,96 +1493,65 @@ The last packet successfully received from the server was 109,561 milliseconds a
 2015-12-10 10:47:50 AM: Start to connect local database...
 2015-12-10 10:47:51 AM: Connect successfully!
 
--------------------------2015-12-24 08:54:40 AM-------------------------
-2015-12-24 08:54:58 AM: Start to connect local database...
-2015-12-24 08:54:59 AM: Connect successfully!
+-------------------------2015-12-29 10:33:53 AM-------------------------
+2015-12-29 10:34:08 AM: Start to connect local database...
 
--------------------------2015-12-24 09:03:23 AM-------------------------
-2015-12-24 09:06:43 AM: Start to connect local database...
-2015-12-24 09:06:45 AM: Connect successfully!
+-------------------------2015-12-29 10:38:05 AM-------------------------
+2015-12-29 10:38:22 AM: Start to connect local database...
+2015-12-29 10:38:23 AM: Connect successfully!
 
--------------------------2015-12-24 09:17:11 AM-------------------------
-2015-12-24 09:17:36 AM: Start to connect local database...
-2015-12-24 09:17:37 AM: Connect successfully!
+-------------------------2015-12-29 10:57:18 AM-------------------------
+2015-12-29 10:57:32 AM: Start to connect local database...
+2015-12-29 10:57:33 AM: Connect successfully!
 
--------------------------2015-12-24 09:21:31 AM-------------------------
+-------------------------2015-12-29 11:03:36 AM-------------------------
+2015-12-29 11:03:52 AM: Start to connect local database...
+2015-12-29 11:03:53 AM: Connect successfully!
 
--------------------------2015-12-24 09:22:58 AM-------------------------
-2015-12-24 09:23:12 AM: Start to connect local database...
-2015-12-24 09:23:13 AM: Connect successfully!
+-------------------------2015-12-29 11:05:01 AM-------------------------
+2015-12-29 11:05:13 AM: Start to connect local database...
+2015-12-29 11:05:14 AM: Connect successfully!
 
--------------------------2015-12-24 10:43:07 AM-------------------------
-2015-12-24 10:43:18 AM: Start to connect local database...
-2015-12-24 10:43:19 AM: Connect successfully!
+-------------------------2015-12-29 11:06:28 AM-------------------------
+2015-12-29 11:06:43 AM: Start to connect local database...
+2015-12-29 11:06:44 AM: Connect successfully!
 
--------------------------2015-12-28 10:36:44 PM-------------------------
+-------------------------2015-12-29 11:11:33 AM-------------------------
+2015-12-29 11:11:47 AM: Start to connect local database...
+2015-12-29 11:11:49 AM: Access denied for user 'pupone_Azoacha'@'CPE00fc8db16483-CM00fc8db16480.cpe.net.cable.rogers.com' (using password: YES)
+2015-12-29 11:11:54 AM: Start to connect local database...
+2015-12-29 11:11:56 AM: Access denied for user 'pupone_Azoacha'@'CPE00fc8db16483-CM00fc8db16480.cpe.net.cable.rogers.com' (using password: YES)
+2015-12-29 11:12:04 AM: Start to connect local database...
+2015-12-29 11:12:05 AM: Connect successfully!
 
--------------------------2015-12-28 10:42:57 PM-------------------------
-2015-12-28 10:43:24 PM: Start to connect local database...
-2015-12-28 10:43:25 PM: Connect successfully!
-2015-12-28 10:45:09 PM: Unknown column 'decision' in 'field list'
-2015-12-28 10:45:11 PM: Unknown column 'decision' in 'field list'
-2015-12-28 10:45:14 PM: Unknown column 'decision' in 'field list'
-2015-12-28 10:45:17 PM: Unknown column 'decision' in 'field list'
-2015-12-28 10:45:27 PM: Unknown column 'decision' in 'field list'
-2015-12-28 10:45:59 PM: Unknown column 'decision' in 'field list'
+-------------------------2015-12-29 11:12:36 AM-------------------------
+2015-12-29 11:12:49 AM: Start to connect local database...
+2015-12-29 11:12:50 AM: Connect successfully!
 
--------------------------2015-12-28 10:47:40 PM-------------------------
-2015-12-28 10:47:50 PM: Start to connect local database...
-2015-12-28 10:47:52 PM: Access denied for user 'pupone_Xiao'@'ool-457fa8c1.dyn.optonline.net' (using password: YES)
-2015-12-28 10:47:56 PM: Start to connect local database...
-2015-12-28 10:47:56 PM: Connect successfully!
+-------------------------2015-12-29 11:20:20 AM-------------------------
+2015-12-29 11:20:35 AM: Start to connect local database...
+2015-12-29 11:20:36 AM: Connect successfully!
 
--------------------------2015-12-28 10:52:33 PM-------------------------
-2015-12-28 10:53:13 PM: Start to connect local database...
-2015-12-28 10:53:14 PM: Connect successfully!
+-------------------------2015-12-29 11:21:56 AM-------------------------
+2015-12-29 11:22:07 AM: Start to connect local database...
+2015-12-29 11:22:08 AM: Connect successfully!
 
--------------------------2015-12-28 10:53:34 PM-------------------------
-2015-12-28 10:53:56 PM: Start to connect local database...
-2015-12-28 10:53:58 PM: Access denied for user 'pupone_Xiao'@'ool-457fa8c1.dyn.optonline.net' (using password: YES)
-2015-12-28 10:54:02 PM: Start to connect local database...
-2015-12-28 10:54:03 PM: Access denied for user 'pupone_Xiao'@'ool-457fa8c1.dyn.optonline.net' (using password: YES)
-2015-12-28 10:54:07 PM: Start to connect local database...
-2015-12-28 10:54:08 PM: Connect successfully!
+-------------------------2015-12-29 11:22:53 AM-------------------------
+2015-12-29 11:23:05 AM: Start to connect local database...
+2015-12-29 11:23:06 AM: Connect successfully!
 
--------------------------2015-12-28 11:05:53 PM-------------------------
-2015-12-28 11:05:56 PM: Start to connect local database...
-2015-12-28 11:05:57 PM: Connect successfully!
+-------------------------2015-12-29 11:51:19 AM-------------------------
+2015-12-29 11:51:29 AM: Start to connect local database...
+2015-12-29 11:51:30 AM: Connect successfully!
 
--------------------------2015-12-28 11:11:22 PM-------------------------
-2015-12-28 11:11:24 PM: Start to connect local database...
-2015-12-28 11:11:26 PM: Connect successfully!
+-------------------------2015-12-29 11:51:47 AM-------------------------
+2015-12-29 11:51:55 AM: Start to connect local database...
+2015-12-29 11:51:56 AM: Connect successfully!
 
--------------------------2015-12-28 11:20:02 PM-------------------------
-2015-12-28 11:20:04 PM: Start to connect local database...
-2015-12-28 11:20:05 PM: Connect successfully!
+-------------------------2015-12-29 11:52:45 AM-------------------------
+2015-12-29 11:52:57 AM: Start to connect local database...
+2015-12-29 11:52:58 AM: Connect successfully!
 
--------------------------2015-12-28 11:22:11 PM-------------------------
-2015-12-28 11:22:13 PM: Start to connect local database...
-2015-12-28 11:22:14 PM: Connect successfully!
-
--------------------------2015-12-28 11:25:59 PM-------------------------
-2015-12-28 11:26:09 PM: Start to connect local database...
-2015-12-28 11:26:10 PM: Connect successfully!
-
--------------------------2015-12-28 11:27:43 PM-------------------------
-2015-12-28 11:28:01 PM: Start to connect local database...
-2015-12-28 11:28:02 PM: Connect successfully!
-
--------------------------2015-12-28 11:45:01 PM-------------------------
-2015-12-28 11:45:37 PM: Start to connect local database...
-2015-12-28 11:45:39 PM: Connect successfully!
-
--------------------------2015-12-28 11:53:45 PM-------------------------
-2015-12-28 11:53:55 PM: Start to connect local database...
-2015-12-28 11:53:56 PM: Connect successfully!
-2015-12-28 11:55:28 PM: DELETE FROM pupone_dummy.Assignments WHERE ID IN (479, 478);
-
--------------------------2015-12-29 11:51:35 AM-------------------------
-2015-12-29 11:51:45 AM: Start to connect local database...
-2015-12-29 11:51:47 AM: Connect successfully!
-2015-12-29 11:53:24 AM: DELETE FROM pupone_dummy.Assignments WHERE ID IN (482);
-
--------------------------2015-12-29 04:50:55 PM-------------------------
-2015-12-29 04:50:57 PM: Start to connect local database...
-2015-12-29 04:50:59 PM: Connect successfully!
+-------------------------2015-12-29 12:00:37 PM-------------------------
+2015-12-29 12:00:49 PM: Start to connect local database...
+2015-12-29 12:00:50 PM: Connect successfully!

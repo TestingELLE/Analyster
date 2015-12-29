@@ -1624,6 +1624,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             logWindow.setLocationRelativeTo(this);
             logWindow.setVisible(true); // show log window
+            
+            // sets the location of the Log Window to the top right corner
+            Rectangle rect = this.getBounds();
+            int x = (int) rect.getMaxX() - this.logWindow.getWidth();
+            int y = (int) rect.getMaxY() - this.logWindow.getHeight();
+            this.logWindow.setLocation(x,y);
 
             // remove check if window is closed from the window
             logWindow.addWindowListener(new WindowAdapter() {
@@ -1875,6 +1881,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // add keyListener to the table
         table.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent ke) {
+                // selects all the row of a table if Ctrl-A (Cmd-A in Mac)
+                //   is pressed
+                if ((ke.getKeyCode() == KeyEvent.VK_A) && 
+                    ((ke.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0)) {
+                    table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                    table.setRowSelectionAllowed(true);
+                    table.setRowSelectionInterval(0, table.getRowCount() - 1);
+                }
+            }
+            
             @Override
             public void keyReleased(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_F2) {
