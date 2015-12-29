@@ -42,8 +42,7 @@ public class LogWindow extends JFrame{
         ImageIcon imag = new ImageIcon(
                         "Images/elle gui image.jpg");
         this.setIconImage(imag.getImage());
-
-        logText = new JTextArea(5, 30);
+        logText = new JTextArea(5, 24);
         logText.setEditable(false);
         logText.setLineWrap(true);
 
