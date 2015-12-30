@@ -1,5 +1,6 @@
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.database.BackupDBTables;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.CreateDocumentFilter;
@@ -48,8 +49,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-11-25";
-    private final String VERSION = "0.8.10";
+    private final String CREATION_DATE = "2015-12-21";
+    private final String VERSION = "0.9.0";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -291,6 +292,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuItemTurnEditModeOff = new javax.swing.JMenuItem();
         menuItemLogChkBx = new javax.swing.JCheckBoxMenuItem();
         menuItemSQLCmdChkBx = new javax.swing.JCheckBoxMenuItem();
+        menuItemBackup = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
         menuItemRepBugSugg = new javax.swing.JMenuItem();
 
@@ -849,6 +851,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
         menuTools.add(menuItemSQLCmdChkBx);
+
+        menuItemBackup.setText("Backup");
+        menuItemBackup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemBackupActionPerformed(evt);
+            }
+        });
+        menuTools.add(menuItemBackup);
 
         menuBar.add(menuTools);
 
@@ -1666,6 +1676,19 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         revertChanges();
     }//GEN-LAST:event_btnRevertChangesActionPerformed
+
+    /**
+     * menuItemBackupActionPerformed
+     * @param evt 
+     * This is the menu item backup that is used to back up the database table.
+     */
+    private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
+        
+        String tableName = "Assignments"; // table name to backup
+        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getStatement(), this);
+        backupDBTables.backupDBTableWithDate(tableName);
+        
+    }//GEN-LAST:event_menuItemBackupActionPerformed
 
     private void comboBoxSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSearchActionPerformed
         // TODO add your handling code here:
@@ -2638,6 +2661,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JMenuItem menuItemAWSAssign;
     private javax.swing.JMenuItem menuItemActivateRecord;
     private javax.swing.JMenuItem menuItemArchiveRecord;
+    private javax.swing.JMenuItem menuItemBackup;
     private javax.swing.JMenuItem menuItemDeleteRecord;
     private javax.swing.JCheckBoxMenuItem menuItemLogChkBx;
     private javax.swing.JMenuItem menuItemLogOff;

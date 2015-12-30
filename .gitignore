@@ -3,3 +3,7 @@
 /dist/
 /src/com/elle/analyster/database/servers.xml
 /target/
+/.data/
+/classes/com/elle/analyster/database/servers.xml
+/log.txt
+/database.txt
