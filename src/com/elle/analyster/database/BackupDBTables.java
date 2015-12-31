@@ -66,7 +66,7 @@ public class BackupDBTables{
     private PopupWindow popupWindow;
     private ArrayList<CheckBoxItem> checkBoxItems;
 
-    public BackupDBTables(Connection connection, String tablename) {
+    public BackupDBTables(Connection connection, String tableName) {
         this.tableName = tableName;
         this.backupTableName = null;
         this.parentComponent = null;
@@ -81,7 +81,7 @@ public class BackupDBTables{
         initComponents();
     }
 
-    public BackupDBTables(Connection connection, String tablename, Component parentComponent) {
+    public BackupDBTables(Connection connection, String tableName, Component parentComponent) {
         this.tableName = tableName;
         this.backupTableName = null;
         this.parentComponent = parentComponent;
@@ -96,7 +96,7 @@ public class BackupDBTables{
         initComponents();
     }
 
-    public BackupDBTables(Statement statement, String tablename) {
+    public BackupDBTables(Statement statement, String tableName) {
         this.tableName = tableName;
         this.backupTableName = null;
         this.parentComponent = null;
@@ -111,7 +111,7 @@ public class BackupDBTables{
         initComponents();
     }
 
-    public BackupDBTables(Statement statement, String tablename, Component parentComponent) {
+    public BackupDBTables(Statement statement, String tableName, Component parentComponent) {
         this.tableName = tableName;
         this.backupTableName = null;
         this.parentComponent = parentComponent;
@@ -126,8 +126,8 @@ public class BackupDBTables{
         initComponents();
     }
 
-    public BackupDBTables(String host, String database, String username, String password, String tablename) {
-        this.tableName = null;
+    public BackupDBTables(String host, String database, String username, String password, String tableName) {
+        this.tableName = tableName;
         this.backupTableName = null;
         this.parentComponent = null;
         this.connection = createConnection(host, database, username, password);
@@ -137,8 +137,8 @@ public class BackupDBTables{
         initComponents();
     }
 
-    public BackupDBTables(String host, String database, String username, String password, String tablename, Component parentComponent) {
-        this.tableName = null;
+    public BackupDBTables(String host, String database, String username, String password, String tableName, Component parentComponent) {
+        this.tableName = tableName;
         this.backupTableName = null;
         this.parentComponent = parentComponent;
         this.connection = createConnection(host, database, username, password);
@@ -206,7 +206,7 @@ public class BackupDBTables{
     
     private void initComponents(){
         
-        String title = "Backup Tables";
+        String title = ""; // small window so empty
         String message = "Backup Database tables";
         
         setCheckBoxListListener();
@@ -229,6 +229,7 @@ public class BackupDBTables{
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteSelectedItems();
+                reloadCheckList();
             }
         });
         
@@ -237,27 +238,28 @@ public class BackupDBTables{
         btnBackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // defaults to backup with the date appended
-                backupDBTableWithDate(tableName);
+                backupDBTableWithDate(getTableName());
+                reloadCheckList();
             }
         });
         
-        // create Cancel button
-        JButton btnCancel = new JButton("Cancel");
-        btnCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //TODO
-            }
-        });
+//        // create Cancel button
+//        JButton btnCancel = new JButton("Cancel");
+//        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                //TODO
+//            }
+//        });
         
         // add buttons to the buttons array
-        JButton[] buttons = new JButton[]{btnDelete, btnBackup, btnCancel};
+        JButton[] buttons = new JButton[]{btnDelete, btnBackup};
         
         // dimension
-        Dimension dimension = new Dimension(500,500);
+        Dimension dimension = new Dimension(0,200);
         
         // Create a popup window 
         PopupWindow popup = new PopupWindow(title, message, scroll, buttons, dimension);
-        popup.setLocationRelativeTo(null);
+        popup.setLocationRelativeTo(parentComponent);
         popup.setVisible(true);
 
     }
@@ -285,7 +287,7 @@ public class BackupDBTables{
         String sql = 
                 "SELECT " + BACKUP_DB_TABLE_COLUMN_PK + "," + BACKUP_DB_TABLE_COLUMN_2 +
                " FROM " + BACKUP_DB_TABLE_NAME +
-               " WHERE " + BACKUP_DB_TABLE_COLUMN_1 + " = '" + getTableName() + "';";
+               " WHERE " + BACKUP_DB_TABLE_COLUMN_1 + " = '" + getTableName() + "' ;";
         
         try {
             //Here we create our query
@@ -327,9 +329,6 @@ public class BackupDBTables{
                 deleteItem(item.getCapped());
             }
         }
-        
-        reloadCheckList();
-            
     }
     
     /**
@@ -338,6 +337,9 @@ public class BackupDBTables{
      * @return boolean true if successful and false if sql error occurred 
      */
     public boolean deleteItem(int id) {
+        
+        if(id == -1)
+            return false;
         
         String sql = 
                 "DELETE FROM " + BACKUP_DB_TABLE_NAME +
@@ -360,6 +362,10 @@ public class BackupDBTables{
      * @return boolean true if successful and false if sql error occurred 
      */
     public boolean deleteItem(String tableName) {
+        
+        if(tableName == CHECK_ALL_ITEM_TEXT)
+            return false;
+        
         try {
             dropTable(tableName);
             return true;
@@ -372,7 +378,10 @@ public class BackupDBTables{
     }
 
     public void reloadCheckList() {
+        checkBoxItems.clear();
+        checkBoxItems.add(new CheckBoxItem(CHECK_ALL_ITEM_TEXT));
         checkBoxItems.addAll(getCheckBoxItemsFromDB());
+        checkBoxList.setListData(checkBoxItems.toArray());
     }
     
     /**
@@ -444,14 +453,13 @@ public class BackupDBTables{
             
             createTableLike(tableName, backupTableName);
             backupTableData(tableName, backupTableName);
-            displayBackupCompleteMessage();
             addBackupRecord(tableName, backupTableName);
+            displayBackupCompleteMessage();
             return true;
 
         } catch (SQLException ex) {
             Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
-            
             handleSQLexWithMessageBox(ex);
             return false;
         }
@@ -575,10 +583,12 @@ public class BackupDBTables{
             switch(optionSelected){
                 case 0:
                     overwriteBackupDB();
+                    reloadCheckList();
                     break;
                 case 1:
                     backupTableName = getInputTableNameFromUser();
                     backupTable(tableName, backupTableName);
+                    reloadCheckList();
                     break;
                 default:
                     break;
@@ -604,6 +614,7 @@ public class BackupDBTables{
         
         try {
             dropTable(backupTableName);
+            dropBackupRecord(tableName, backupTableName);
             createTableLike(tableName, backupTableName);
             backupTableData(tableName, backupTableName);
             addBackupRecord(tableName, backupTableName);
@@ -682,7 +693,23 @@ public class BackupDBTables{
         String sql = 
                 "INSERT INTO " + BACKUP_DB_TABLE_NAME + 
                " ( " + BACKUP_DB_TABLE_COLUMN_1 + ", " + BACKUP_DB_TABLE_COLUMN_2 + ")" 
-                + " VALUES (" + tableName + ", " +  backupTableName + ");";
+                + " VALUES ('" + tableName + "', '" +  backupTableName + "');";
+        try {
+            getStatement().executeUpdate(sql);
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            handleSQLexWithMessageBox(ex);
+            return false;
+        }
+    }
+
+    public boolean dropBackupRecord(String tableName, String backupTableName) {
+        String sql = 
+                "DELETE FROM " + BACKUP_DB_TABLE_NAME + 
+               " WHERE " + BACKUP_DB_TABLE_COLUMN_1 + " = '" + tableName +
+               "' AND " + BACKUP_DB_TABLE_COLUMN_2 + " = '" + backupTableName + "' ;";
         try {
             getStatement().executeUpdate(sql);
             return true;

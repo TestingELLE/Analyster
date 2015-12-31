@@ -1681,7 +1681,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             DBConnection.open();
         
         String tableName = "Assignments"; // table name to backup
-        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getStatement(),tableName, this);
+        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getConnection(),tableName, this);
         
         
     }//GEN-LAST:event_menuItemBackupActionPerformed
