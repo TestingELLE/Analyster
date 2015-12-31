@@ -10,6 +10,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -46,29 +49,35 @@ public class DBConnection {
      * @param userPassword
      * @throws SQLException 
      */
-    public static void connect(String selectedServer, String selectedDB, String userName, String userPassword) throws SQLException{
+    public static void connect(String selectedServer, String selectedDB, String userName, String userPassword){
         
-        DBConnection.server = selectedServer;
-        DBConnection.database = selectedDB;
-        DBConnection.userName = userName;
-        DBConnection.userPassword = userPassword;
-        
-        
-        String url = "";
-        ArrayList<Server> servers = readServers();
-        
-        // load url for server
-        for(Server server: servers){
-            if(server.getName().equals(selectedServer))
-                url += server.getUrl();
+        try {
+            DBConnection.server = selectedServer;
+            DBConnection.database = selectedDB;
+            DBConnection.userName = userName;
+            DBConnection.userPassword = userPassword;
+            
+            
+            String url = "";
+            ArrayList<Server> servers = readServers();
+            
+            // load url for server
+            for(Server server: servers){
+                if(server.getName().equals(selectedServer))
+                    url += server.getUrl();
+            }
+            
+            url += selectedDB;
+            
+            // connect to server
+            connection = DriverManager.getConnection(url, userName, userPassword);
+            statement = connection.createStatement();
+            System.out.println("Connection successfully");
+        } catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            handleSQLexWithMessageBox(ex);
         }
-        
-        url += selectedDB;
-
-        // connect to server
-        connection = DriverManager.getConnection(url, userName, userPassword);
-        statement = connection.createStatement();
-        System.out.println("Connection successfully");
              
     }
     
@@ -276,5 +285,15 @@ public class DBConnection {
         }catch(IOException | XMLStreamException e){
             System.out.println(e);
         }
+    }
+
+    private static void handleSQLexWithMessageBox(SQLException ex) {
+        
+        String message = ex.getMessage();
+        
+        // message dialog box 
+        String title = "Error";
+        int messageType = JOptionPane.ERROR_MESSAGE;
+        JOptionPane.showMessageDialog( null, message, title, messageType);
     }
 }
