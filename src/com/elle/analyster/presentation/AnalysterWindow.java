@@ -1675,10 +1675,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * This is the menu item backup that is used to back up the database table.
      */
     private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
+
+        // check connection
+        if(DBConnection.getConnection() == null)
+            DBConnection.open();
         
         String tableName = "Assignments"; // table name to backup
-        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getStatement(), this);
-        backupDBTables.backupDBTableWithDate(tableName);
+        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getStatement(),tableName, this);
+        
         
     }//GEN-LAST:event_menuItemBackupActionPerformed
 
@@ -2255,21 +2259,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     public JTable loadTable(JTable table) {
 
-        try {
-            // open connection because might time out
-            DBConnection.open();
-            statement = DBConnection.getStatement();
-            String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
-            loadTable(sql, table);
-
-        } catch (SQLException ex) {
-            // for debugging
-            ex.printStackTrace();
-            logWindow.addMessageWithDate(ex.getMessage());
-
-            // notify the user that there was an issue
-            JOptionPane.showMessageDialog(this, "connection failed");
-        }
+        // open connection because might time out
+        DBConnection.open();
+        statement = DBConnection.getStatement();
+        String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
+        loadTable(sql, table);
 
         return table;
     }
