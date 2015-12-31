@@ -88,7 +88,7 @@ public class DBConnection {
      * from servers.
      * @throws SQLException 
      */
-    public static void open() throws SQLException{
+    public static void open(){
         connect(server, database, userName, userPassword);
     }
     
@@ -99,9 +99,15 @@ public class DBConnection {
      * is finished.
      * @throws SQLException 
      */
-    public static void close() throws SQLException{
-        statement.close();
-        connection.close();
+    public static void close(){
+        try {
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            handleSQLexWithMessageBox(ex);
+        }
     }
 
     /**
