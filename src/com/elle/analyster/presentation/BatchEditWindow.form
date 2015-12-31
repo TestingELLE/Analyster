@@ -87,15 +87,12 @@
         <Component class="javax.swing.JComboBox" name="comboBoxFieldSelect">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="8">
+              <StringArray count="5">
                 <StringItem index="0" value="analyst"/>
                 <StringItem index="1" value="priority"/>
                 <StringItem index="2" value="dateAssigned"/>
-                <StringItem index="3" value="notes"/>
-                <StringItem index="4" value="symbol"/>
-                <StringItem index="5" value=" "/>
-                <StringItem index="6" value=" "/>
-                <StringItem index="7" value=" "/>
+                <StringItem index="3" value="dateDone"/>
+                <StringItem index="4" value="notes"/>
               </StringArray>
             </Property>
           </Properties>
@@ -110,6 +107,7 @@
           <Events>
             <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="textFieldNewValueFocusGained"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldNewValueActionPerformed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textFieldNewValueKeyPressed"/>
           </Events>
         </Component>
       </SubComponents>
@@ -132,7 +130,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnQuit">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Quit"/>
+        <Property name="text" type="java.lang.String" value="Close"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnQuitActionPerformed"/>

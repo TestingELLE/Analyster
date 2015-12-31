@@ -79,7 +79,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemDeleteRecord">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Delete Record"/>
+                <Property name="text" type="java.lang.String" value="Delete Records"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemDeleteRecordActionPerformed"/>
@@ -87,7 +87,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemArchiveRecord">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Archive Record"/>
+                <Property name="text" type="java.lang.String" value="Copy to Archive"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemArchiveRecordActionPerformed"/>
@@ -169,6 +169,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemLogChkBxActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemTurnEditModeOff">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Turn Edit Mode OFF"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemTurnEditModeOffActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JCheckBoxMenuItem" name="menuItemSQLCmdChkBx">
@@ -399,9 +407,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="tabbedPanel" min="-2" pref="361" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jPanelEdit" min="-2" pref="37" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="jPanelEdit" min="-2" pref="63" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="jPanelSQL" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -451,7 +459,7 @@
                         <Column editable="true" title="priority" type="java.lang.Object"/>
                         <Column editable="true" title="dateAssigned" type="java.lang.Object"/>
                         <Column editable="true" title="dateDone" type="java.lang.Object"/>
-                        <Column editable="true" title="decision" type="java.lang.Object"/>
+                        <Column editable="true" title="notes" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="autoResizeMode" type="int" value="4"/>
@@ -702,17 +710,24 @@
                       <Component id="labelEditMode" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="labelEditModeState" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="btnSwitchEditMode" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
-                      <Component id="btnUploadChanges" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnRevertChanges" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="66" max="32767" attributes="0"/>
-                      <Component id="btnAddRecords" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnBatchEdit" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="179" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="btnUploadChanges" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnRevertChanges" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="66" max="32767" attributes="0"/>
+                              <Component id="btnAddRecords" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnBatchEdit" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                              <Component id="informationLabel" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -723,13 +738,13 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnUploadChanges" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="labelEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnSwitchEditMode" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="labelEditModeState" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBatchEdit" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnAddRecords" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnRevertChanges" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Component id="informationLabel" min="-2" pref="24" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -765,14 +780,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUploadChangesActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnSwitchEditMode">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Switch"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSwitchEditModeActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JLabel" name="labelEditModeState">
               <Properties>
                 <Property name="text" type="java.lang.String" value="OFF"/>
@@ -790,6 +797,11 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRevertChangesActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="informationLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jLabel2"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
