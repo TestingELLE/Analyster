@@ -1,5 +1,6 @@
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.database.BackupDBTables;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.CreateDocumentFilter;
@@ -48,8 +49,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-11-25";
-    private final String VERSION = "0.8.10";
+    private final String CREATION_DATE = "2015-12-21";
+    private final String VERSION = "0.9.0";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -228,6 +229,23 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuBar2 = new javax.swing.JMenuBar();
+        jMenu4 = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
+        jMenuBar3 = new javax.swing.JMenuBar();
+        jMenu6 = new javax.swing.JMenu();
+        jMenu7 = new javax.swing.JMenu();
+        jPanelEdit = new javax.swing.JPanel();
+        btnBatchEdit = new javax.swing.JButton();
+        btnAddRecords = new javax.swing.JButton();
+        btnUploadChanges = new javax.swing.JButton();
+        btnSwitchEditMode = new javax.swing.JButton();
+        labelEditModeState = new javax.swing.JLabel();
+        labelEditMode = new javax.swing.JLabel();
+        btnRevertChanges = new javax.swing.JButton();
         addPanel_control = new javax.swing.JPanel();
         labelTimeLastUpdate = new javax.swing.JLabel();
         searchPanel = new javax.swing.JPanel();
@@ -245,14 +263,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         reportTable = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         archiveTable = new javax.swing.JTable();
-        jPanelEdit = new javax.swing.JPanel();
-        btnBatchEdit = new javax.swing.JButton();
-        btnAddRecords = new javax.swing.JButton();
-        btnUploadChanges = new javax.swing.JButton();
-        btnSwitchEditMode = new javax.swing.JButton();
-        labelEditModeState = new javax.swing.JLabel();
-        labelEditMode = new javax.swing.JLabel();
-        btnRevertChanges = new javax.swing.JButton();
         jPanelSQL = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaSQL = new javax.swing.JTextArea();
@@ -285,8 +295,108 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuItemReloadData = new javax.swing.JMenuItem();
         menuItemLogChkBx = new javax.swing.JCheckBoxMenuItem();
         menuItemSQLCmdChkBx = new javax.swing.JCheckBoxMenuItem();
+        menuItemBackup = new javax.swing.JMenuItem();
+        jMenu8 = new javax.swing.JMenu();
+        jMenu1 = new javax.swing.JMenu();
         menuHelp = new javax.swing.JMenu();
         menuItemRepBugSugg = new javax.swing.JMenuItem();
+
+        jMenu2.setText("File");
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Edit");
+        jMenuBar1.add(jMenu3);
+
+        jMenu4.setText("File");
+        jMenuBar2.add(jMenu4);
+
+        jMenu5.setText("Edit");
+        jMenuBar2.add(jMenu5);
+
+        jMenu6.setText("File");
+        jMenuBar3.add(jMenu6);
+
+        jMenu7.setText("Edit");
+        jMenuBar3.add(jMenu7);
+
+        jPanelEdit.setPreferredSize(new java.awt.Dimension(636, 180));
+
+        btnBatchEdit.setText("Batch Edit");
+        btnBatchEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBatchEditActionPerformed(evt);
+            }
+        });
+
+        btnAddRecords.setText("Add Record(s)");
+        btnAddRecords.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddRecordsActionPerformed(evt);
+            }
+        });
+
+        btnUploadChanges.setText("Upload Changes");
+        btnUploadChanges.setMaximumSize(new java.awt.Dimension(95, 30));
+        btnUploadChanges.setMinimumSize(new java.awt.Dimension(95, 30));
+        btnUploadChanges.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadChangesActionPerformed(evt);
+            }
+        });
+
+        btnSwitchEditMode.setText("Switch");
+        btnSwitchEditMode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSwitchEditModeActionPerformed(evt);
+            }
+        });
+
+        labelEditModeState.setText("OFF");
+
+        labelEditMode.setText("Edit Mode:");
+
+        btnRevertChanges.setText("Revert Changes");
+        btnRevertChanges.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRevertChangesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelEditLayout = new javax.swing.GroupLayout(jPanelEdit);
+        jPanelEdit.setLayout(jPanelEditLayout);
+        jPanelEditLayout.setHorizontalGroup(
+            jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelEditLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelEditMode)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelEditModeState)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSwitchEditMode)
+                .addGap(82, 82, 82)
+                .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRevertChanges)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addComponent(btnAddRecords)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnBatchEdit)
+                .addGap(26, 26, 26))
+        );
+        jPanelEditLayout.setVerticalGroup(
+            jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelEditLayout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addGroup(jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelEditMode)
+                    .addComponent(btnSwitchEditMode)
+                    .addComponent(labelEditModeState)
+                    .addComponent(btnBatchEdit)
+                    .addComponent(btnAddRecords)
+                    .addComponent(btnRevertChanges))
+                .addGap(4, 4, 4))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -307,6 +417,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 textFieldForSearchMouseClicked(evt);
             }
         });
+        textFieldForSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldForSearchActionPerformed(evt);
+            }
+        });
         textFieldForSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 textFieldForSearchKeyPressed(evt);
@@ -314,6 +429,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
 
         comboBoxSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "symbol", "analyst" }));
+        comboBoxSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxSearchActionPerformed(evt);
+            }
+        });
 
         btnClearAllFilter.setText("Clear All Filters");
         btnClearAllFilter.addActionListener(new java.awt.event.ActionListener() {
@@ -372,7 +492,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addPanel_controlLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(labelTimeLastUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         addPanel_controlLayout.setVerticalGroup(
             addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -523,85 +643,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         tabbedPanel.addTab("Assignments_Archived", jScrollPane3);
 
-        jPanelEdit.setPreferredSize(new java.awt.Dimension(636, 180));
-
-        btnBatchEdit.setText("Batch Edit");
-        btnBatchEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBatchEditActionPerformed(evt);
-            }
-        });
-
-        btnAddRecords.setText("Add Record(s)");
-        btnAddRecords.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddRecordsActionPerformed(evt);
-            }
-        });
-
-        btnUploadChanges.setText("Upload Changes");
-        btnUploadChanges.setMaximumSize(new java.awt.Dimension(95, 30));
-        btnUploadChanges.setMinimumSize(new java.awt.Dimension(95, 30));
-        btnUploadChanges.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUploadChangesActionPerformed(evt);
-            }
-        });
-
-        btnSwitchEditMode.setText("Switch");
-        btnSwitchEditMode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSwitchEditModeActionPerformed(evt);
-            }
-        });
-
-        labelEditModeState.setText("OFF");
-
-        labelEditMode.setText("Edit Mode:");
-
-        btnRevertChanges.setText("Revert Changes");
-        btnRevertChanges.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRevertChangesActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanelEditLayout = new javax.swing.GroupLayout(jPanelEdit);
-        jPanelEdit.setLayout(jPanelEditLayout);
-        jPanelEditLayout.setHorizontalGroup(
-            jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelEditLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelEditMode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelEditModeState)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSwitchEditMode)
-                .addGap(82, 82, 82)
-                .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRevertChanges)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
-                .addComponent(btnAddRecords)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnBatchEdit)
-                .addGap(26, 26, 26))
-        );
-        jPanelEditLayout.setVerticalGroup(
-            jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelEditLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
-                .addGroup(jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelEditMode)
-                    .addComponent(btnSwitchEditMode)
-                    .addComponent(labelEditModeState)
-                    .addComponent(btnBatchEdit)
-                    .addComponent(btnAddRecords)
-                    .addComponent(btnRevertChanges))
-                .addGap(4, 4, 4))
-        );
-
         jScrollPane2.setBorder(null);
 
         jTextAreaSQL.setBackground(new java.awt.Color(0, 153, 102));
@@ -671,7 +712,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanelEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jPanelSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(4, 4, 4))
@@ -680,9 +720,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(tabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addGap(55, 55, 55)
                 .addComponent(jPanelSQL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -832,6 +870,25 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
         menuTools.add(menuItemSQLCmdChkBx);
 
+        menuItemBackup.setText("Backup");
+        menuItemBackup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemBackupActionPerformed(evt);
+            }
+        });
+        menuTools.add(menuItemBackup);
+
+        jMenu8.setText("Add / to paths");
+        jMenu8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu8ActionPerformed(evt);
+            }
+        });
+        menuTools.add(jMenu8);
+
+        jMenu1.setText("Strip / from path");
+        menuTools.add(jMenu1);
+
         menuBar.add(menuTools);
 
         menuHelp.setText("Help");
@@ -853,7 +910,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(addPanel_control, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(79, 79, 79))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1658,6 +1718,40 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         revertChanges();
     }//GEN-LAST:event_btnRevertChangesActionPerformed
+
+    /**
+     * menuItemBackupActionPerformed
+     * @param evt 
+     * This is the menu item backup that is used to back up the database table.
+     */
+    private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
+        
+        String tableName = "Assignments"; // table name to backup
+        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getStatement(), this);
+        backupDBTables.backupDBTableWithDate(tableName);
+        
+    }//GEN-LAST:event_menuItemBackupActionPerformed
+
+    private void textFieldForSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldForSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldForSearchActionPerformed
+
+    private void comboBoxSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSearchActionPerformed
+        // TODO add your handling code here:
+        String searchColName = comboBoxSearch.getSelectedItem().toString();
+
+        if(searchColName.equals("Symbol")){
+            textFieldForSearch.setText("Enter Symbol name");
+            
+        }else if(searchColName.equals("Analyst")){
+            textFieldForSearch.setText("Enter Analyst name");
+            
+        }
+    }//GEN-LAST:event_comboBoxSearchActionPerformed
+
+    private void jMenu8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenu8ActionPerformed
 
     //set the timer for information Label show
     public void startCountDownFromNow(int waitSeconds) {
@@ -2560,6 +2654,17 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JButton btnSwitchEditMode;
     private javax.swing.JButton btnUploadChanges;
     private javax.swing.JComboBox comboBoxSearch;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JMenuBar jMenuBar3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEdit;
     private javax.swing.JPanel jPanelSQL;
@@ -2580,6 +2685,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JMenuItem menuItemAWSAssign;
     private javax.swing.JMenuItem menuItemActivateRecord;
     private javax.swing.JMenuItem menuItemArchiveRecord;
+    private javax.swing.JMenuItem menuItemBackup;
     private javax.swing.JMenuItem menuItemDeleteRecord;
     private javax.swing.JCheckBoxMenuItem menuItemLogChkBx;
     private javax.swing.JMenuItem menuItemLogOff;
