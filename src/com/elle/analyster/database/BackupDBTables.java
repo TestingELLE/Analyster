@@ -143,7 +143,7 @@ public class BackupDBTables {
      * @param password    user password to connect to the database
      * @return Connection connection to the database
      */
-    private Connection createConnection(String host, String database, String username, String password){
+    public Connection createConnection(String host, String database, String username, String password){
         
         try {
             //Accessing driver from the JAR file
@@ -173,7 +173,7 @@ public class BackupDBTables {
      * @param connection  connection object to create a statement object
      * @return statement  statement object created from connection object
      */
-    private Statement createStatement(Connection connection){
+    public Statement createStatement(Connection connection){
         
         Statement statement = null;
         try {
@@ -190,8 +190,9 @@ public class BackupDBTables {
      * Creates a backup table with the same table name and today's 
      * date appended to the end. 
      * @param tableName table name in the database to backup
+     * @return boolean true if backup successful and false if error exception
      */
-    public void backupDBTableWithDate(String tableName) {
+    public boolean backupDBTableWithDate(String tableName) {
         
         this.tableName = tableName; // needs to be set for backup complete message
         
@@ -201,15 +202,17 @@ public class BackupDBTables {
         // execute sql statements
         try {
             
-            createTable(tableName, backupTableName);
+            createTableLike(tableName, backupTableName);
             backupTableData(tableName, backupTableName);
             displayBackupCompleteMessage();
+            return true;
 
         } catch (SQLException ex) {
             Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             
             handleSQLexWithMessageBox(ex);
+            return false;
         }
     }
     
@@ -226,7 +229,7 @@ public class BackupDBTables {
         this.backupTableName = backupTableName;
         
         try {
-            createTable(tableName, backupTableName);
+            createTableLike(tableName, backupTableName);
             backupTableData(tableName, backupTableName);
             displayBackupCompleteMessage();
             return true;
@@ -244,7 +247,7 @@ public class BackupDBTables {
      * @param backupTableName     the name of the backup table
      * @throws SQLException       can use handleSQLexWithMessageBox method in catch
      */
-    private void createTable(String tableName, String backupTableName) throws SQLException{
+    public void createTableLike(String tableName, String backupTableName) throws SQLException{
         
         // sql query to create the table 
         String sqlCreateTable = "CREATE TABLE " + backupTableName
@@ -260,7 +263,7 @@ public class BackupDBTables {
      * @param backupTableName     the name of the backup table
      * @throws SQLException       can use handleSQLexWithMessageBox method in catch
      */
-    private void backupTableData(String tableName, String backupTableName) throws SQLException{
+    public void backupTableData(String tableName, String backupTableName) throws SQLException{
         
         // sql query to backup the table data
         String sqlBackupData =  "INSERT INTO " + backupTableName 
@@ -276,7 +279,7 @@ public class BackupDBTables {
      * @return boolean dropped from database? true or false
      * @throws SQLException can use handleSQLexWithMessageBox method in catch
      */
-    private void dropTable(String tableName) throws SQLException{
+    public void dropTable(String tableName) throws SQLException{
         
         // sql query to drop the table 
         String sqlCreateTable = "DROP TABLE " + tableName + " ; ";
@@ -290,7 +293,7 @@ public class BackupDBTables {
      * @return today's date (ex. _2015_12_21)
      * Returns today's date in a format to append to a table name for backup.
      */
-    private String getTodaysDate(){
+    public String getTodaysDate(){
         
         // get today's date
         Calendar calendar = Calendar.getInstance();
@@ -305,7 +308,7 @@ public class BackupDBTables {
      * Handles sql exceptions with a message box to notify the user
      * @param ex the sql exception that was thrown
      */
-    private void handleSQLexWithMessageBox(SQLException ex){
+    public void handleSQLexWithMessageBox(SQLException ex){
         System.out.println(ex.getMessage());
         
         String message = ex.getMessage();
@@ -356,11 +359,11 @@ public class BackupDBTables {
      * Drops the backup table and creates a new backup with the table name
      * and today's date.
      */
-    private void overwriteBackupDB(){
+    public void overwriteBackupDB(){
         
         try {
             dropTable(backupTableName);
-            createTable(tableName, backupTableName);
+            createTableLike(tableName, backupTableName);
             backupTableData(tableName, backupTableName);
             displayBackupCompleteMessage();
         } catch (SQLException ex) {
@@ -374,7 +377,7 @@ public class BackupDBTables {
      * Gets input for the table name from the user using an input message box
      * @return the input the user entered into the input text box
      */
-    private String getInputTableNameFromUser(){
+    public String getInputTableNameFromUser(){
         // input dialog box 
         String message = "Enter the name for the backup";
         return JOptionPane.showInputDialog(parentComponent, message);
@@ -384,7 +387,7 @@ public class BackupDBTables {
      * A message box that displays when 
      * the backup was completed successfully.
      */
-    private void displayBackupCompleteMessage(){
+    public void displayBackupCompleteMessage(){
         String message = tableName + " was backed up as " + backupTableName;
         JOptionPane.showMessageDialog(parentComponent, message);
     }
@@ -396,4 +399,38 @@ public class BackupDBTables {
     public Connection getConnection() {
         return connection;
     }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getBackupTableName() {
+        return backupTableName;
+    }
+
+    public void setBackupTableName(String backupTableName) {
+        this.backupTableName = backupTableName;
+    }
+
+    public Statement getStatement() {
+        return statement;
+    }
+
+    public void setStatement(Statement statement) {
+        this.statement = statement;
+    }
+
+    public Component getParentComponent() {
+        return parentComponent;
+    }
+
+    public void setParentComponent(Component parentComponent) {
+        this.parentComponent = parentComponent;
+    }
+    
+    
 }
