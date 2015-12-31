@@ -299,7 +299,7 @@ public class AddRecordsWindow extends JFrame {
                 }
                 catch(SQLException sqlException) {
                     try {
-                        JOptionPane.showMessageDialog(null, "Upload failed!");
+                        analyster.setInformationLabel("Upload failed!", 10);
 
                         if (statement.getWarnings().getMessage() != null){
                             logWindow.addMessageWithDate(statement.getWarnings().getMessage());
@@ -340,12 +340,13 @@ public class AddRecordsWindow extends JFrame {
                 
                 analyster.setLastUpdateTime();                                // set the last update time from database
                 
-                JOptionPane.showMessageDialog(this, 
-                        numRowsAdded + " Add successfully!");                 // show dialog box that upload was successful
+                String text = numRowsAdded + " Add successfully!";                  
+                analyster.setInformationLabel(text, 10);                // show information label in project manager that upload was successful
                 createEmptyTable();                                           // create a new empty table with default 10 rows
             }
         }
     }
+    
     
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
 
@@ -353,6 +354,7 @@ public class AddRecordsWindow extends JFrame {
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         this.dispose();
+        this.transferFocus();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnAddRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRowActionPerformed
