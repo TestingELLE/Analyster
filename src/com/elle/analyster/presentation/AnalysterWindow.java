@@ -73,6 +73,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private String editingTabName; // stores the name of the tab that is editing
 
     private boolean isBatchEditWindowShow;
+
     /**
      * CONSTRUCTOR
      */
@@ -161,7 +162,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         tabs.get(ARCHIVE_TABLE_NAME).setTableColNames(archiveTable);
 
         // this sets the KeyboardFocusManger
-        setKeyboardFocusManager();
+        setKeyboardFocusManager(this);
 
         // show and hide components
         btnUploadChanges.setVisible(false);
@@ -215,9 +216,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         tabs.get(ASSIGNMENTS_TABLE_NAME).setEditing(false);
         tabs.get(REPORTS_TABLE_NAME).setEditing(false);
         tabs.get(ARCHIVE_TABLE_NAME).setEditing(false);
-        
+
         informationLabel.setText("");
-        
+
         isBatchEditWindowShow = false;
 
         // set title of window to Analyster
@@ -1022,16 +1023,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         data.getNewData().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();          // update time
-        
+
         makeTableEditable(false);
-        
+
         // no changes to upload or revert
         setEnabledEditingButtons(false, false);
         String text = "Edits uploaded successfully!";
         setInformationLabel(text, 5);
         logWindow.addMessageWithDate(text);
         System.out.println(text);
-        
+
     }
 
     private void menuItemRepBugSuggActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemRepBugSuggActionPerformed
@@ -1397,7 +1398,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_menuItemReloadDataActionPerformed
 
     // reload the data
-    private void reloadDataAction(){
+    private void reloadDataAction() {
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
         JTableCellRenderer cellRenderer = tab.getCellRenderer();
@@ -1416,8 +1417,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // set label record information
         String recordsLabel = tab.getRecordsLabel();
         labelRecords.setText(recordsLabel);
-        
+
     }
+
     /**
      * jArchiveRecordActionPerformed
      *
@@ -1615,12 +1617,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             logWindow.setLocationRelativeTo(this);
             logWindow.setVisible(true); // show log window
-            
+
             // sets the location of the Log Window to the top right corner
             Rectangle rect = this.getBounds();
             int x = (int) rect.getMaxX() - this.logWindow.getWidth();
             int y = (int) rect.getMaxY() - this.logWindow.getHeight();
-            this.logWindow.setLocation(x,y);
+            this.logWindow.setLocation(x, y);
 
             // remove check if window is closed from the window
             logWindow.addWindowListener(new WindowAdapter() {
@@ -1679,15 +1681,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     /**
      * menuItemBackupActionPerformed
-     * @param evt 
-     * This is the menu item backup that is used to back up the database table.
+     *
+     * @param evt This is the menu item backup that is used to back up the
+     * database table.
      */
     private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
-        
+
         String tableName = "Assignments"; // table name to backup
         BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getStatement(), this);
         backupDBTables.backupDBTableWithDate(tableName);
-        
+
     }//GEN-LAST:event_menuItemBackupActionPerformed
 
     private void comboBoxSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSearchActionPerformed
@@ -1898,14 +1901,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             public void keyPressed(KeyEvent ke) {
                 // selects all the row of a table if Ctrl-A (Cmd-A in Mac)
                 //   is pressed
-                if ((ke.getKeyCode() == KeyEvent.VK_A) && 
-                    ((ke.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0)) {
+                if ((ke.getKeyCode() == KeyEvent.VK_A)
+                        && ((ke.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0)) {
                     table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                     table.setRowSelectionAllowed(true);
                     table.setRowSelectionInterval(0, table.getRowCount() - 1);
                 }
             }
-            
+
             @Override
             public void keyReleased(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_F2) {
@@ -2018,7 +2021,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param modifiedDataList
      */
     public void updateTable(JTable table, List<ModifiedData> modifiedDataList) {
-        boolean updateSuccessful = true;    
+        boolean updateSuccessful = true;
         // should probably not be here
         // this method is to update the database, that is all it should do.
         table.getModel().addTableModelListener(table);
@@ -2085,7 +2088,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         String time = dateFormat.format(new Date());
         labelTimeLastUpdate.setText("Last updated: " + time);
     }
-    
+
     public void setIsBatchEditWindowShow(boolean a) {
         this.isBatchEditWindowShow = a;
     }
@@ -2097,25 +2100,27 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     /**
      * setKeyboardFocusManager sets the keyboard focus manager
      */
-    private void setKeyboardFocusManager() {
+    private void setKeyboardFocusManager(JFrame frame) {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
 
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (labelEditModeState.getText().equals("ON ")) {
+                if (labelEditModeState.getText().equals("ON ")) {
+
+                    JTable table = getSelectedTable();
+                    int row = table.getSelectedRow();
+                    int column = table.getSelectedColumn();
+                    int columnCount = table.getColumnCount();
+                    int rowCount = table.getRowCount();
+                    if (e.getKeyCode() == KeyEvent.VK_TAB) {
                         if (e.getComponent() instanceof JTable) {
-                            JTable table = (JTable) e.getComponent();
-                            int row = table.getSelectedRow();
-                            int column = table.getSelectedColumn();
+//                            JTable table = (JTable) e.getComponent();
+//                            int row = table.getSelectedRow();
+//                            int column = table.getSelectedColumn();
                             if (column == table.getRowCount() || column == 0) {
                                 return false;
                             } else {
-                                table.getComponentAt(row, column).requestFocus();
-                                table.editCellAt(row, column);
-                                JTextField selectCom = (JTextField) table.getEditorComponent();
-                                selectCom.requestFocusInWindow();
-                                selectCom.selectAll();
+                                tableCellSelection(e, table, row, column);
                             }
 
                             // if table cell is editing 
@@ -2123,10 +2128,119 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             if (table.isEditing()) {
                                 setEnabledEditingButtons(false, false);
                             }
-                        }
-                    }
 
-                } else if (!isBatchEditWindowShow) {
+                        }
+                    } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                        if (e.getID() == KeyEvent.KEY_RELEASED) {
+                            if (e.getComponent() instanceof JTable) {
+                                if (column == table.getRowCount() || column == 0) {
+                                    return false;
+                                } else {
+
+                                    tableCellSelection(e, table, row, column);
+                                }
+
+                            } else {
+                                if (column == 0) {
+                                    if (row == 0) {
+                                        return false;
+                                    } else {
+                                        row = row - 1;
+                                        column = columnCount - 1;
+                                    }
+                                } else {
+                                    column = column - 1;
+                                }
+                                table.changeSelection(row, column, false, false);
+                                tableCellSelection(e, table, row, column);
+                            }
+                            // if table cell is editing 
+                            // then the editing buttons should not be enabled
+                            if (table.isEditing()) {
+                                setEnabledEditingButtons(false, false);
+                            }
+                        }
+                    } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                        if (e.getID() == KeyEvent.KEY_RELEASED) {
+                            if (e.getComponent() instanceof JTable) {
+                                
+                                System.out.println("enter we are at: " + row +" "+ column);
+                                if (column == table.getRowCount() || column == columnCount -1) {
+                                    return false;
+                                } else {
+                                    tableCellSelection(e, table, row, column);
+                                }
+                            } else {
+                                System.out.println("we are at: " + row +" "+ column);
+                                if (column == columnCount - 1) {
+                                    if (row == rowCount - 1) {
+                                        return false;
+                                    } else {
+                                        row = row + 1;
+                                        column = 0;
+                                    }
+                                } else {
+                                    column = column + 1;
+                                }
+                                System.out.println("we are now at: " + row +" " + column);
+                                table.changeSelection(row, column, false, false);
+                                tableCellSelection(e, table, row, column);
+                                // if table cell is editing 
+                                // then the editing buttons should not be enabled
+                                if (table.isEditing()) {
+                                    setEnabledEditingButtons(false, false);
+                                }
+                            }
+                        }
+                    }else if (e.getKeyCode() == KeyEvent.VK_UP) {
+                        if (e.getID() == KeyEvent.KEY_RELEASED) {
+                            if (e.getComponent() instanceof JTable) {
+                                if (column == table.getRowCount() || column == 0) {
+                                    return false;
+                                } else {
+                                    tableCellSelection(e, table, row, column);
+                                }
+                            } else {
+                                if (row == 0) {
+                                    return false;
+                                } else {
+                                    row = row - 1;
+                                }
+                                table.changeSelection(row, column, false, false);
+                                tableCellSelection(e, table, row, column);
+                                // if table cell is editing 
+                                // then the editing buttons should not be enabled
+                                if (table.isEditing()) {
+                                    setEnabledEditingButtons(false, false);
+                                }
+                            }
+                        }
+                    } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                        if (e.getID() == KeyEvent.KEY_RELEASED) {
+                            if (e.getComponent() instanceof JTable) {
+                                if (column == table.getRowCount() || column == 0) {
+                                    return false;
+                                } else {
+                                    tableCellSelection(e, table, row, column);
+                                }
+                            } else {
+                                if (row == rowCount - 1) {
+                                    return false;
+                                } else {
+                                    row = row + 1;
+                                }
+                                table.changeSelection(row, column, false, false);
+                                tableCellSelection(e, table, row, column);
+                                // if table cell is editing 
+                                // then the editing buttons should not be enabled
+                                if (table.isEditing()) {
+                                    setEnabledEditingButtons(false, false);
+                                }
+                            }
+                        }
+                    } 
+                }
+                if (!isBatchEditWindowShow) {
                     if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
                         if (labelEditModeState.getText().equals("ON ")) {                       // Default Date input with today's date
                             JTable table = (JTable) e.getComponent().getParent();
@@ -2156,7 +2270,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                                 // only show popup if there are changes to upload or revert
                                 if (btnUploadChanges.isEnabled() || btnRevertChanges.isEnabled()) {
-                                // if finished display dialog box
+                                    // if finished display dialog box
                                     // Upload Changes? Yes or No?
                                     Object[] options = {"Commit", "Revert"};  // the titles of buttons
 
@@ -2199,6 +2313,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                 return false;
             }
+
+            private void tableCellSelection(KeyEvent e, JTable table, int row, int column) {
+
+                table.getComponentAt(row, column).requestFocus();
+                table.editCellAt(row, column);
+                JTextField selectCom = (JTextField) table.getEditorComponent();
+                selectCom.requestFocusInWindow();
+                selectCom.selectAll();
+
+            }
         });
     }
 
@@ -2233,11 +2357,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     public Statement getStatement() {
         return statement;
     }
-    
+
     public JLabel getInformationLabel() {
         return this.informationLabel;
     }
-    
+
     public void setInformationLabel(String inf, int second) {
         this.informationLabel.setText(inf);
         startCountDownFromNow(second);
@@ -2572,9 +2696,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         ModifiedTableData modifiedTableData = tab.getTableData();
         modifiedTableData.getNewData().clear();  // clear any stored changes (new data)
         loadTable(table); // reverts the model back
-        
+
         makeTableEditable(labelEditModeState.getText().equals("OFF") ? true : false);
-        
+
         modifiedTableData.reloadData();  // reloads data of new table (old data) to compare with new changes (new data)
 
         // no changes to upload or revert
