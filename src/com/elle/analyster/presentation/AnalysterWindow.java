@@ -49,8 +49,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2015-12-21";
-    private final String VERSION = "0.9.0";
+    private final String CREATION_DATE = "2016-1-1";
+    private final String VERSION = "0.9.1";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -1631,10 +1631,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
 
+        // check connection
+        if(DBConnection.getConnection() == null)
+            DBConnection.open();
+        
         String tableName = "Assignments"; // table name to backup
-        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getStatement(), this);
-        backupDBTables.backupDBTableWithDate(tableName);
-
+        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getConnection(),tableName, this);
+        
+        
     }//GEN-LAST:event_menuItemBackupActionPerformed
 
     private void menuItemTurnEditModeOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTurnEditModeOffActionPerformed
@@ -2431,22 +2435,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     public JTable loadTable(JTable table) {
 
-        try {
-            // open connection because might time out
-            DBConnection.open();
-            statement = DBConnection.getStatement();
-            String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
-            loadTable(sql, table);
-
-        } catch (SQLException ex) {
-            // for debugging
-            ex.printStackTrace();
-            logWindow.addMessageWithDate(ex.getMessage());
-
-            // notify the user that there was an issue
-            informationLabel.setText("connection failed!");
-            startCountDownFromNow(10);
-        }
+        // open connection because might time out
+        DBConnection.open();
+        statement = DBConnection.getStatement();
+        String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
+        loadTable(sql, table);
 
         return table;
     }
