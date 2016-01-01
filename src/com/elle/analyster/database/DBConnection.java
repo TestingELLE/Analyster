@@ -47,9 +47,9 @@ public class DBConnection {
      * @param selectedDB
      * @param userName
      * @param userPassword
-     * @throws SQLException 
+     * @return boolean true if successful and false if an error occurred
      */
-    public static void connect(String selectedServer, String selectedDB, String userName, String userPassword){
+    public static boolean connect(String selectedServer, String selectedDB, String userName, String userPassword){
         
         try {
             DBConnection.server = selectedServer;
@@ -73,10 +73,12 @@ public class DBConnection {
             connection = DriverManager.getConnection(url, userName, userPassword);
             statement = connection.createStatement();
             System.out.println("Connection successfully");
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
+            return false;
         }
              
     }
@@ -86,10 +88,10 @@ public class DBConnection {
      * opens the connection to the server and database.
      * This is used to reopen connections and prevent timeouts
      * from servers.
-     * @throws SQLException 
+     * @return boolean true if successful and false if an error occurred
      */
-    public static void open(){
-        connect(server, database, userName, userPassword);
+    public static boolean open(){
+        return connect(server, database, userName, userPassword);
     }
     
     /**
@@ -97,16 +99,18 @@ public class DBConnection {
      * closes the connection to the server and database.
      * This is used to close the connection when the transaction
      * is finished.
-     * @throws SQLException 
+     * @return boolean true if successful and false if an error occurred
      */
-    public static void close(){
+    public static boolean close(){
         try {
             statement.close();
             connection.close();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
+            return false;
         }
     }
 
