@@ -1631,10 +1631,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
 
+        // check connection
+        if(DBConnection.getConnection() == null)
+            DBConnection.open();
+        
         String tableName = "Assignments"; // table name to backup
-        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getStatement(), this);
-        backupDBTables.backupDBTableWithDate(tableName);
-
+        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getConnection(),tableName, this);
+        
+        
     }//GEN-LAST:event_menuItemBackupActionPerformed
 
     private void menuItemTurnEditModeOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTurnEditModeOffActionPerformed
@@ -2431,22 +2435,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     public JTable loadTable(JTable table) {
 
-        try {
-            // open connection because might time out
-            DBConnection.open();
-            statement = DBConnection.getStatement();
-            String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
-            loadTable(sql, table);
-
-        } catch (SQLException ex) {
-            // for debugging
-            ex.printStackTrace();
-            logWindow.addMessageWithDate(ex.getMessage());
-
-            // notify the user that there was an issue
-            informationLabel.setText("connection failed!");
-            startCountDownFromNow(10);
-        }
+        // open connection because might time out
+        DBConnection.open();
+        statement = DBConnection.getStatement();
+        String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
+        loadTable(sql, table);
 
         return table;
     }
