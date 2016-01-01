@@ -370,11 +370,10 @@ public class LoginWindow extends JFrame {
         userPassword = String.valueOf(pw);
 
         // connect to database
-        try {
-            logWindow.addMessageWithDate("Start to connect local database...");
-            DBConnection.connect(selectedServer, selectedDB, userName, userPassword);
+        logWindow.addMessageWithDate("Start to connect local database...");
+        if(DBConnection.connect(selectedServer, selectedDB, userName, userPassword)){
             logWindow.addMessageWithDate("Connect successfully!");
-            
+
             // create an Analyster object
             analyster = new AnalysterWindow();
 
@@ -391,16 +390,14 @@ public class LoginWindow extends JFrame {
 
             // terminate this object
             this.dispose(); // returns used resources
+        }
+        else{
             
-        } 
-        catch (SQLException ex) {
-
             JOptionPane.showMessageDialog(null,
-                    "Invalid password. Try again.",
+                    "There was an error.\n Please try again or contact support if you need further assistance.",
                     "Error Message",
                     JOptionPane.ERROR_MESSAGE);
 
-            logWindow.addMessageWithDate(ex.getMessage());
             passwordFieldPW.setText("");
         }
     }
