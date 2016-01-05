@@ -393,7 +393,7 @@ public class LoginWindow extends JFrame {
         }
         else{
             
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(this,
                     "There was an error.\n Please try again or contact support if you need further assistance.",
                     "Error Message",
                     JOptionPane.ERROR_MESSAGE);
