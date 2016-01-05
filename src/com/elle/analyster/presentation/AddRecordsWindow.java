@@ -1,4 +1,3 @@
-
 package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.DBConnection;
@@ -24,71 +23,74 @@ import javax.swing.event.TableModelListener;
 
 /**
  * AddRecordsWindow
+ *
  * @author Louis W.
  * @author Carlos Igreja
+ * @author Xiaoqian Fu
  * @since June 10, 2015
- * @version 0.6.3
+ * @version 1.0.0
  */
 public class AddRecordsWindow extends JFrame {
 
     // attributes
     private String[] columnNames;
     private int numRowsAdded;           // number of rows added counter
-    private Map<String,Tab> tabs;       // used to update the records label
+    private Map<String, Tab> tabs;       // used to update the records label
     private Statement statement;
-    
+
     // components
     private AnalysterWindow analyster;
     private LogWindow logWindow;
     private DefaultTableModel model;
-    
+
     private Color defaultSelectedBG;
 
     private ArrayList<Integer> rowsNotEmpty; // only includes rows that have data
-    
+
     // used to notify if the table is editing
     // the table.isEditing method has issues from the tableModelListener
-    private boolean isEditing;  
-    
+    private boolean isEditing;
+
     /**
      * Creates new form AddRecordsWindow
      */
     public AddRecordsWindow() {
-        
+
         rowsNotEmpty = new ArrayList<>();
         isEditing = false;
-        
+
         // initialize components
         initComponents();
         analyster = AnalysterWindow.getInstance();
         logWindow = analyster.getLogWindow();
         tabs = analyster.getTabs();
         statement = analyster.getStatement();
-        
+
         // set the selected table name
         table.setName(analyster.getSelectedTabName());
-        
+
         // get default selected bg color
         defaultSelectedBG = table.getSelectionBackground();
-        
+
         // create a new empty table
         createEmptyTable();
-        
+
         // sets the keyboard focus manager
-        setKeyboardFocusManager();   
-        
+        setKeyboardFocusManager();
+
         // add listeners
         addTableListeners();
-        
+
         // submit button does not start enabled because the table is empty
         btnSubmit.setEnabled(false);
-        
+
         // set the label header
         this.setTitle("Add Records to " + table.getName());
-        
+
         // set this window to appear in the middle of Analyster
         this.setLocationRelativeTo(analyster);
-        
+        this.pack();
+
     }
 
     /**
@@ -108,10 +110,10 @@ public class AddRecordsWindow extends JFrame {
         btnAddRow = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(550, 200));
-        setPreferredSize(new java.awt.Dimension(894, 250));
-        setSize(new java.awt.Dimension(894, 560));
+        setMinimumSize(new java.awt.Dimension(550, 50));
+        setSize(new java.awt.Dimension(0, 0));
 
+        scrollpane.setBorder(null);
         scrollpane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollpane.setMaximumSize(new java.awt.Dimension(260, 100));
         scrollpane.setMinimumSize(new java.awt.Dimension(130, 50));
@@ -186,8 +188,8 @@ public class AddRecordsWindow extends JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(scrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
-                .addGap(12, 12, 12)
+                .addComponent(scrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSubmit)
                     .addComponent(btnCancel)
@@ -210,10 +212,10 @@ public class AddRecordsWindow extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * jSubmitActionPerformed
-     * This is performed when the submit button is executed.
-     * Refactored by Carlos Igreja 7-28-2015
-     * @param evt 
+     * jSubmitActionPerformed This is performed when the submit button is
+     * executed. Refactored by Carlos Igreja 7-28-2015
+     *
+     * @param evt
      */
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
 
@@ -221,52 +223,50 @@ public class AddRecordsWindow extends JFrame {
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     /**
-     * submit
-     * This is used when the submit button is pressed or if the enter key 
-     * is pressed when the table is finished editing to submit the data
-     * to the database.
+     * submit This is used when the submit button is pressed or if the enter key
+     * is pressed when the table is finished editing to submit the data to the
+     * database.
      */
-    private void submit(){
-        
+    private void submit() {
+
         Object cellValue = null;                 // store cell value
         int col = 0;                             // column index
         int row = 0;                             // row index
-        
+
         // check if data is valid
-        if(validateData()){
-            
+        if (validateData()) {
+
             // once data checked, execute sql statement
             // first get the insert statement for the table
             String insertInto = "INSERT INTO " + table.getName() + " (";
 
             // this table should already not include the primary key
-            for (col = 0; col < table.getColumnCount(); col++){
-                if(col != table.getColumnCount() -1)
+            for (col = 0; col < table.getColumnCount(); col++) {
+                if (col != table.getColumnCount() - 1) {
                     insertInto += table.getColumnName(col) + ", ";
-                else
+                } else {
                     insertInto += table.getColumnName(col) + ") ";
+                }
             }
 
             numRowsAdded = 0; // reset numRowsAdded counter
 
             // Now get the values to add to the database
-            String values = "";  
-            for(row = 0; row < table.getRowCount(); row++){
+            String values = "";
+            for (row = 0; row < table.getRowCount(); row++) {
                 values = "VALUES (";  // start the values statement
-                for(col = 0; col < table.getColumnCount(); col++){
+                for (col = 0; col < table.getColumnCount(); col++) {
 
                     // get cell value
                     cellValue = table.getValueAt(row, col);
 
                     // format the cell value for sql
-                    if(cellValue != null){
+                    if (cellValue != null) {
 
                         // if cell is empty it must be null
-                        if(cellValue.toString().equals("")){
+                        if (cellValue.toString().equals("")) {
                             cellValue = null;
-                        }
-
-                        // if the cell is not empty it must have single quotes
+                        } // if the cell is not empty it must have single quotes
                         else {
                             cellValue = "'" + cellValue + "'";
                         }
@@ -274,34 +274,32 @@ public class AddRecordsWindow extends JFrame {
 
                     // skip empty rows
                     // this must be after the format cell value so the "" => null
-                    if(col == 0 && cellValue == null){
-                        break;                      
+                    if (col == 0 && cellValue == null) {
+                        break;
                     }
 
                     // add each value for each column to the values statement
-                    if(col != table.getColumnCount() -1){
+                    if (col != table.getColumnCount() - 1) {
                         values += cellValue + ", ";
-                    }
-                    else {
+                    } else {
                         values += cellValue + ");";
                     }
                 }
 
-                try{
+                try {
                     // execute the sql statement
-                    if(!values.equals("VALUES (")){      //skip if nothing was added
+                    if (!values.equals("VALUES (")) {      //skip if nothing was added
                         // open connection because might time out
                         DBConnection.open();
                         statement = DBConnection.getStatement();
                         statement.executeUpdate(insertInto + values);
                         numRowsAdded++;   // increment the number of rows added
                     }
-                }
-                catch(SQLException sqlException) {
+                } catch (SQLException sqlException) {
                     try {
                         analyster.setInformationLabel("Upload failed!", 10);
 
-                        if (statement.getWarnings().getMessage() != null){
+                        if (statement.getWarnings().getMessage() != null) {
                             logWindow.addMessageWithDate(statement.getWarnings().getMessage());
                             System.out.println(statement.getWarnings().getMessage());
                             statement.clearWarnings();
@@ -314,40 +312,40 @@ public class AddRecordsWindow extends JFrame {
                 }
             }
 
-            if(numRowsAdded > 0){
+            if (numRowsAdded > 0) {
                 // update table and records label
                 String tabName = analyster.getSelectedTabName();              // tab name
                 Tab tab = tabs.get(tabName);                                  // selected tab
-                
+
                 JTable table = tab.getTable();                                // selected table
                 analyster.loadTable(table);                                   // load table data from database
-                
+
                 // reload new table data for modifiedTableData
                 ModifiedTableData data = tab.getTableData();
                 data.reloadData();
-                
+
                 TableFilter filter = tab.getFilter();                         // table filter
                 filter.applyFilter();                                         // apply filter
                 filter.applyColorHeaders();                                   // apply color headers
-                
+
                 ColumnPopupMenu ColumnPopupMenu = tab.getColumnPopupMenu();   // column popup menu 
                 ColumnPopupMenu.loadAllCheckBoxItems();                       // refresh the data for the column pop up
-                
+
                 tab.addToTotalRowCount(numRowsAdded);                         // add the number of records added to the total records count
                 JLabel recordsLabel = analyster.getRecordsLabel();
                 String recordsLabelText = tab.getRecordsLabel();              // store the records label string
                 recordsLabel.setText(recordsLabelText);                       // update the records label text
-                
+
                 analyster.setLastUpdateTime();                                // set the last update time from database
-                
-                String text = numRowsAdded + " Add successfully!";                  
+
+                String text = numRowsAdded + " Add successfully!";
                 analyster.setInformationLabel(text, 10);                // show information label in project manager that upload was successful
                 createEmptyTable();                                           // create a new empty table with default 10 rows
             }
         }
     }
-    
-    
+
+
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
 
     }//GEN-LAST:event_tableMouseClicked
@@ -367,13 +365,12 @@ public class AddRecordsWindow extends JFrame {
     private void tableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableKeyPressed
 
     }//GEN-LAST:event_tableKeyPressed
-   
+
     /**
-     * setKeyboardFocusManager
-     * Sets the Keyboard Focus Manager
+     * setKeyboardFocusManager Sets the Keyboard Focus Manager
      */
     private void setKeyboardFocusManager() {
-        
+
         /*
          No Tab key-pressed or key-released events are received by the key event listener. This is because the focus subsystem 
          consumes focus traversal keys, such as Tab and Shift Tab. To solve this, apply the following to the component that is 
@@ -384,61 +381,55 @@ public class AddRecordsWindow extends JFrame {
 
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
-                
-                if(e.getComponent() instanceof JTable){
+
+                if (e.getComponent() instanceof JTable) {
 
                     // this is called to either clear data or submit data
                     if (e.getKeyCode() == KeyEvent.VK_ENTER && !table.isEditing()) {
 
                         // clear the row(s)
-                        if(e.getID() == KeyEvent.KEY_PRESSED){
-                            if(table.getSelectionBackground() == Color.RED){
+                        if (e.getID() == KeyEvent.KEY_PRESSED) {
+                            if (table.getSelectionBackground() == Color.RED) {
                                 int[] rows = table.getSelectedRows();
 
-                                if(rows != null){
-                                    for(int row : rows){
-                                        for(int col = 0; col < table.getColumnCount(); col++){
+                                if (rows != null) {
+                                    for (int row : rows) {
+                                        for (int col = 0; col < table.getColumnCount(); col++) {
                                             table.getModel().setValueAt("", row, col);
                                         }
                                     }
                                 }
                                 table.setSelectionBackground(defaultSelectedBG);
-                                
+
                                 // check for empty rows/table
                                 checkForEmptyRows();
-                                if(rowsNotEmpty.isEmpty()){
+                                if (rowsNotEmpty.isEmpty()) {
                                     btnSubmit.setEnabled(false);
-                                }
-                                else{
+                                } else {
                                     btnSubmit.setEnabled(true);
                                 }
-                            }
-                            
-                            // submit the data
-                            else if(table.getSelectionBackground() != Color.RED){
+                            } // submit the data
+                            else if (table.getSelectionBackground() != Color.RED) {
                                 submit();
                             }
                         }
-                    }
-
-                    // this toggles the red bg for clearing row data
+                    } // this toggles the red bg for clearing row data
                     else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 
-                        if(e.getID() == KeyEvent.KEY_RELEASED){
-                            if(table.isEditing())
+                        if (e.getID() == KeyEvent.KEY_RELEASED) {
+                            if (table.isEditing()) {
                                 table.getCellEditor().stopCellEditing();
-
-                            if(table.getSelectionBackground() == defaultSelectedBG){
-                                table.setSelectionBackground(Color.RED);
                             }
-                            else{
+
+                            if (table.getSelectionBackground() == defaultSelectedBG) {
+                                table.setSelectionBackground(Color.RED);
+                            } else {
                                 table.setSelectionBackground(defaultSelectedBG);
                             }
                         }
                     }
 
                 } // end table component condition
-                
                 // ctrl + D fills in the current date
                 else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
                     JTable table = (JTable) e.getComponent().getParent();
@@ -458,44 +449,41 @@ public class AddRecordsWindow extends JFrame {
                     }
                 }
 
-                return false; 
+                return false;
             }
         });
     }
-    
+
     /**
-     * createEmptyTable
-     * creates an empty table with default 10 rows
+     * createEmptyTable creates an empty table with default 10 rows
      */
     private void createEmptyTable() {
         // get column names for selected Analyster table
         columnNames = analyster.getTabs().get(table.getName()).getTableColNames();
-        
+
         // we don't want the ID column 
-        columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length); 
-        
+        columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length);
+
         // set the table model - add 10 empty rows
-        model = new DefaultTableModel(columnNames, 10);
-        
+        model = new DefaultTableModel(columnNames, 1);
+
         // add the table model to the table
         table.setModel(model);
-        
-        
+
         // get table column width format
         float[] widths = tabs.get(table.getName()).getColWidthPercent();
         widths = Arrays.copyOfRange(widths, 1, widths.length);
-        
+
         analyster.setColumnFormat(widths, table);
     }
-    
+
     /**
-     * addTableListeners
-     * This is called to add the listeners to the table 
-     * The listeners added are the TableModel listener
-     * the MouseListener and the KeyListener
+     * addTableListeners This is called to add the listeners to the table The
+     * listeners added are the TableModel listener the MouseListener and the
+     * KeyListener
      */
-    public void addTableListeners(){
-        
+    public void addTableListeners() {
+
         // add tableModelListener
         table.getModel().addTableModelListener(new TableModelListener() {
 
@@ -503,57 +491,61 @@ public class AddRecordsWindow extends JFrame {
             public void tableChanged(TableModelEvent e) {
 
                 // isEditing is a class boolean triggered true on double click
-                if(!isEditing){
-                    // if clearing row then do not validate
-                    if(table.getSelectionBackground() != Color.RED){
-                        // check the cell for valid entry
-                        int row = e.getFirstRow();            // row index
-                        int col = e.getColumn();             // column index
-                        validateCell(row, col);
-                    }
-
-                    // get value of cell
-                    int row = e.getFirstRow();
-                    int col = e.getColumn();
-                    Object value = table.getValueAt(row, col);
-
-                    // if cell value is empty
-                    if(value == null || value.equals("")){
-                        // check to see if it was a deletion
-                        if(!rowsNotEmpty.isEmpty() && rowsNotEmpty.contains(row)){
-                            checkForEmptyRows();
+                if (!isEditing) {
+                    int row = e.getFirstRow();            // row index
+                    int col = e.getColumn();             // column index
+                    System.out.println("we are now at: " + row + " " + col);
+                    if (col >= 0) {
+                        // if clearing row then do not validate
+                        if (table.getSelectionBackground() != Color.RED) {
+                            // check the cell for valid entry
+                            validateCell(row, col);
                         }
-                    }
-                    // else add the row to the list as not empty
-                    else{
-                        rowsNotEmpty.add(row);
+
+//                    // get value of cell
+//                    int row = e.getFirstRow();
+//                    int col = e.getColumn();
+                        Object value = table.getValueAt(row, col);
+                        System.out.println("Its value is: " + value);
+
+                        // if cell value is empty
+                        if (value == null || value.equals("")) {
+                            // check to see if it was a deletion
+                            if (!rowsNotEmpty.isEmpty() && rowsNotEmpty.contains(row)) {
+                                checkForEmptyRows();
+                            }
+                        } // else add the row to the list as not empty
+                        else {
+                            rowsNotEmpty.add(row);
+                        }
                     }
 
                     // if list is empty then the table is empty
-                    if(!rowsNotEmpty.isEmpty() && !isEditing){
+                    if (!rowsNotEmpty.isEmpty() && !isEditing) {
                         btnSubmit.setEnabled(true);
                     }
                 }
-                
+
                 // reset isEditing boolean
                 isEditing = false;
+//                }
+                System.out.println(isEditing);
             }
-            
+
         });
-        
+
         // add mouseListener
         table.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(MouseEvent e){
-                
-                if(e.getClickCount() == 1){
+            public void mousePressed(MouseEvent e) {
+
+                if (e.getClickCount() == 1) {
                     // if we click away the red delete should go away
-                    if(table.getSelectionBackground() == Color.RED && !e.isControlDown()){
+                    if (table.getSelectionBackground() == Color.RED && !e.isControlDown()) {
                         table.setSelectionBackground(defaultSelectedBG);
                     }
-                }
-                // this enters edit mode
-                else if(e.getClickCount() == 2){
+                } // this enters edit mode
+                else if (e.getClickCount() == 2) {
                     btnSubmit.setEnabled(false);
                     isEditing = true;
                     selectAllText(e);
@@ -561,11 +553,11 @@ public class AddRecordsWindow extends JFrame {
             }
         });
     }
-    
+
     /**
-     * selectAllText
-     * Select all text inside jTextField or a cell
-     * @param e 
+     * selectAllText Select all text inside jTextField or a cell
+     *
+     * @param e
      */
     private void selectAllText(MouseEvent e) {
 
@@ -582,148 +574,156 @@ public class AddRecordsWindow extends JFrame {
             }
         }
     }
-    
+
     /**
      * validateCell
+     *
      * @param row
      * @param col
-     * @return  returns true if valid or false if error
+     * @return returns true if valid or false if error
      */
-    public boolean validateCell(int row, int col){
-        
+    public boolean validateCell(int row, int col) {
+
         String colName = table.getColumnName(col);           // column name
         Object cellValue = table.getValueAt(row, col);       // store cell value
-        String errorMsg = "Error with " + colName 
+        String errorMsg = "Error with " + colName
                 + " in row " + (row + 1) + ".\n";            // error message
         boolean error = false;                               // error occurred
 
-            switch(colName){
-                case "symbol":
-                    if(cellValue == null || cellValue.toString().equals("")){
-                        errorMsg += "Symbol cannot be null";
+        switch (colName) {
+            case "symbol":
+                if (cellValue == null || cellValue.toString().equals("")) {
+                    errorMsg += "Symbol cannot be null";
+                    error = true;
+                }
+                break;
+            case "analyst":
+                break;
+            case "priority":
+                if (cellValue != null && !cellValue.toString().equals("")) {
+                    if (!cellValue.toString().matches("[1-5]{1}")) {
+                        errorMsg += "Priority must be an Integer (1-5)";
                         error = true;
                     }
-                    break;
-                case "analyst":
-                    break;
-                case "priority":
-                    if(cellValue != null && !cellValue.toString().equals(""))
-                        if(!cellValue.toString().matches("[1-5]{1}")){
-                            errorMsg += "Priority must be an Integer (1-5)";
-                            error = true;
-                        }
-                    break;
-                case "dateAssigned":
-                    if(cellValue != null && !cellValue.toString().equals("")){
-                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                            errorMsg += "Date format not correct: YYYY-MM-DD";
-                            error = true;
-                        }
+                }
+                break;
+            case "dateAssigned":
+                if (cellValue != null && !cellValue.toString().equals("")) {
+                    if (!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())) {
+                        errorMsg += "Date format not correct: YYYY-MM-DD";
+                        error = true;
                     }
-                    break;
-                case "dateDone":
-                    if(cellValue != null && !cellValue.toString().equals("")){
-                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                            errorMsg += "Date format not correct: YYYY-MM-DD";
-                            error = true;
-                        }
+                }
+                break;
+            case "dateDone":
+                if (cellValue != null && !cellValue.toString().equals("")) {
+                    if (!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())) {
+                        errorMsg += "Date format not correct: YYYY-MM-DD";
+                        error = true;
                     }
-                    break;
-                case "notes":
-                    break;
-                case "author":
-                    break;
-                case "analysisDate":
-                    if(cellValue != null && !cellValue.toString().equals("")){
-                        if(!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())){
-                            errorMsg += "Date format not correct: YYYY-MM-DD";
-                            error = true;
-                        }
+                }
+                break;
+            case "notes":
+                break;
+            case "author":
+                break;
+            case "analysisDate":
+                if (cellValue != null && !cellValue.toString().equals("")) {
+                    if (!Validator.isValidDate("yyyy-MM-dd", cellValue.toString())) {
+                        errorMsg += "Date format not correct: YYYY-MM-DD";
+                        error = true;
                     }
-                    break;
-                case "path":
-                    break;
-                case "document":
-                    break;
-                case "notesL":
-                    break;
-                default:
-                    break;
+                }
+                break;
+            case "path":
+                break;
+            case "document":
+                break;
+            case "notesL":
+                break;
+            default:
+                break;
 
-            }// end switch
-            
-        if(error){
+        }// end switch
+
+        if (error) {
             JOptionPane.showMessageDialog(table, errorMsg);
             //btnSubmit.setEnabled(true); 
         }
-        
+
         return !error;  // if there was an error, return false for failed
     }
-    
+
     /**
-     * validateData
-     * Validates all the data in the table to make sure it is correct.
-     * This is used to validate the data before it is executed to the
+     * validateData Validates all the data in the table to make sure it is
+     * correct. This is used to validate the data before it is executed to the
      * server and the database so that there will not be any errors.
-     * 
-     * @return returns true if the data is all valid and false if the is a single error
+     *
+     * @return returns true if the data is all valid and false if the is a
+     * single error
      */
-    public boolean validateData(){
+    public boolean validateData() {
 
         int col = 0;                    // column index
         boolean isCellValid = true;    // if cell is valid entry 
-        
+
         // if table is empty
-        if(!rowsNotEmpty.isEmpty()){
-            
+        if (!rowsNotEmpty.isEmpty()) {
+
             // check data
-            for(int row: rowsNotEmpty){
+            for (int row : rowsNotEmpty) {
 
                 // if there was an error stop
-                if(!isCellValid)break;
+                if (!isCellValid) {
+                    break;
+                }
 
-                for(col = 0; col < table.getColumnCount(); col++){
+                for (col = 0; col < table.getColumnCount(); col++) {
 
                     // if there was an error stop
-                    if(!isCellValid)break;
+                    if (!isCellValid) {
+                        break;
+                    }
 
                     // begin error message
                     isCellValid = validateCell(row, col);
-                    
+
                 }// end col for loop
             }// end row for loop
 
             return isCellValid;
         }
-        
+
         return false; // table is empty
     }
-    
+
     /**
-     * checkForEmptyRows
-     * This should be used when data is removed or deleted
+     * checkForEmptyRows This should be used when data is removed or deleted
      */
-    public void checkForEmptyRows(){
-        
+    public void checkForEmptyRows() {
+
         ArrayList<Integer> arrayCopy = new ArrayList(rowsNotEmpty);
         rowsNotEmpty.clear();
-        
+
         // check List for empty rows
-        for(int row: arrayCopy){
+        for (int row : arrayCopy) {
             boolean isNotEmpty = false;
-            for(int col = 0; col < table.getColumnCount(); col++){
+            for (int col = 0; col < table.getColumnCount(); col++) {
                 Object value = table.getValueAt(row, col);
-                if(value != null && !value.equals("")){
+                if (value != null && !value.equals("")) {
                     isNotEmpty = true;
                     break;
                 }
             }
-            if(isNotEmpty){
+            if (isNotEmpty) {
                 rowsNotEmpty.add(row);
             }
         }
+        for (int row : rowsNotEmpty) {
+            System.out.println(row + " not empty");
+        }
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddRow;
     private javax.swing.JButton btnCancel;
