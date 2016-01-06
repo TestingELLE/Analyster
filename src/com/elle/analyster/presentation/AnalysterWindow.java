@@ -293,6 +293,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuItemTurnEditModeOff = new javax.swing.JMenuItem();
         menuItemSQLCmdChkBx = new javax.swing.JCheckBoxMenuItem();
         menuItemBackup = new javax.swing.JMenuItem();
+        menuItemAddslash = new javax.swing.JMenuItem();
+        menuItemStripslash = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
         menuItemRepBugSugg = new javax.swing.JMenuItem();
 
@@ -322,6 +324,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
 
         comboBoxSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "symbol", "analyst" }));
+        comboBoxSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxSearchActionPerformed(evt);
+            }
+        });
 
         btnClearAllFilter.setText("Clear All Filters");
         btnClearAllFilter.addActionListener(new java.awt.event.ActionListener() {
@@ -855,6 +862,22 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
         menuTools.add(menuItemBackup);
 
+        menuItemAddslash.setText("Add / to path");
+        menuItemAddslash.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAddslashActionPerformed(evt);
+            }
+        });
+        menuTools.add(menuItemAddslash);
+
+        menuItemStripslash.setText("Strip / from path");
+        menuItemStripslash.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemStripslashActionPerformed(evt);
+            }
+        });
+        menuTools.add(menuItemStripslash);
+
         menuBar.add(menuTools);
 
         menuHelp.setText("Help");
@@ -1117,6 +1140,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // get selected tab
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
+
+        this.menuItemStripslash.setEnabled(false);
+        this.menuItemAddslash.setEnabled(false);
+
+        if (tabName.equals("Reports")) {
+            this.menuItemStripslash.setEnabled(true);
+            this.menuItemAddslash.setEnabled(true);
+        }
 
         // get booleans for the states of the selected tab
         boolean isActivateRecordMenuItemEnabled = tab.isActivateRecordMenuItemEnabled();
@@ -1632,13 +1663,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
 
         // check connection
-        if(DBConnection.getConnection() == null)
+        if (DBConnection.getConnection() == null) {
             DBConnection.open();
-        
+        }
+
         String tableName = "Assignments"; // table name to backup
-        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getConnection(),tableName, this);
-        
-        
+        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getConnection(), tableName, this);
+
+
     }//GEN-LAST:event_menuItemBackupActionPerformed
 
     private void menuItemTurnEditModeOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTurnEditModeOffActionPerformed
@@ -1697,6 +1729,79 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             this.setInformationLabel(text, 5);
         }
     }//GEN-LAST:event_menuItemActivateRecordActionPerformed
+
+    private void comboBoxSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSearchActionPerformed
+        // TODO add your handling code here:
+        String searchColName = comboBoxSearch.getSelectedItem().toString();
+
+        if (searchColName.equals("Symbol")) {
+            textFieldForSearch.setText("Enter Symbol name");
+
+        } else if (searchColName.equals("Analyst")) {
+            textFieldForSearch.setText("Enter Analyst name");
+
+        }
+    }//GEN-LAST:event_comboBoxSearchActionPerformed
+
+    private void menuItemStripslashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemStripslashActionPerformed
+        // TODO add your handling code here:
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+
+        JTable table = tab.getTable();
+        for (int j = 0; j < table.getColumnCount(); j++) {
+
+            String columnName = table.getColumnName(j);
+            if (columnName.equalsIgnoreCase("path")) {
+                for (int i = 0; i < table.getRowCount(); i++) {
+                    if (table.getValueAt(i, 4) != null) {
+                        String str = table.getValueAt(i, 4).toString();
+
+                        while(str.startsWith("/") && str.endsWith("/")) {
+                            str = str.substring(1, str.length()-1);
+                        
+                        
+                        }
+                        table.setValueAt(str, i, 4);
+                    }
+                }
+                this.makeTableEditable(true);
+            }
+        }
+
+
+    }//GEN-LAST:event_menuItemStripslashActionPerformed
+
+    private void menuItemAddslashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddslashActionPerformed
+        // TODO add your handling code here:
+        String tabName = getSelectedTabName();
+        Tab tab = tabs.get(tabName);
+
+        JTable table = tab.getTable();
+
+        //   System.out.println(table.getRowCount());
+        for (int j = 0; j < table.getColumnCount(); j++) {
+
+            String columnName = table.getColumnName(j);
+            if (columnName.equalsIgnoreCase("path")) {
+                for (int i = 0; i < table.getRowCount(); i++) {
+
+                    if (table.getValueAt(i, j) != null) {
+
+                        String str = table.getValueAt(i, j).toString();
+                        if (!str.startsWith("/") && !str.endsWith("/")) {
+
+                            String newstr = "/" + str + "/";
+                            table.setValueAt(newstr, i, j);
+                        }
+                    }
+                }
+                this.makeTableEditable(true);
+            }
+        }
+
+
+    }//GEN-LAST:event_menuItemAddslashActionPerformed
 
     //set the timer for information Label show
     public void startCountDownFromNow(int waitSeconds) {
@@ -2781,6 +2886,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JMenu menuHelp;
     private javax.swing.JMenuItem menuItemAWSAssign;
     private javax.swing.JMenuItem menuItemActivateRecord;
+    private javax.swing.JMenuItem menuItemAddslash;
     private javax.swing.JMenuItem menuItemArchiveRecord;
     private javax.swing.JMenuItem menuItemBackup;
     private javax.swing.JMenuItem menuItemDeleteRecord;
@@ -2793,6 +2899,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JMenuItem menuItemRepBugSugg;
     private javax.swing.JCheckBoxMenuItem menuItemSQLCmdChkBx;
     private javax.swing.JMenuItem menuItemSaveFile;
+    private javax.swing.JMenuItem menuItemStripslash;
     private javax.swing.JMenuItem menuItemTurnEditModeOff;
     private javax.swing.JMenuItem menuItemVersion;
     private javax.swing.JMenuItem menuItemViewActiveAssign;
