@@ -1757,11 +1757,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     if (table.getValueAt(i, 4) != null) {
                         String str = table.getValueAt(i, 4).toString();
 
-                        if (str.startsWith("/") && str.endsWith("/")) {
-                            str = str.replaceAll("/", "");
+                        while(str.startsWith("/") && str.endsWith("/")) {
+                            str = str.substring(1, str.length()-1);
                         
-                        table.setValueAt(str, i, 4);
+                        
                         }
+                        table.setValueAt(str, i, 4);
                     }
                 }
                 this.makeTableEditable(true);
