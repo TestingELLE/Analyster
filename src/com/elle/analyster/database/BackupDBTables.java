@@ -65,6 +65,8 @@ public class BackupDBTables{
     private CheckBoxList checkBoxList;
     private PopupWindow popupWindow;
     private ArrayList<CheckBoxItem> checkBoxItems;
+    private JButton btnBackup;
+    private JButton btnDelete;
 
     public BackupDBTables(Connection connection, String tableName) {
         this.tableName = tableName;
@@ -181,6 +183,15 @@ public class BackupDBTables{
                       checkbox.setSelected(!checkbox.isSelected());
                   }
                   checkBoxList.repaint(); // redraw graphics
+                  // enable buttons
+                  if(isACheckBoxChecked()){
+                      btnDelete.setEnabled(true);
+                      btnBackup.setEnabled(false);
+                  }
+                  else{
+                      btnDelete.setEnabled(false);
+                      btnBackup.setEnabled(true);
+                  }
                }
             }
         });
@@ -207,7 +218,7 @@ public class BackupDBTables{
     private void initComponents(){
         
         String title = ""; // small window so empty
-        String message = "Backup Database tables";
+        String message = "Existing Backup Database tables";
         
         setCheckBoxListListener();
         
@@ -215,6 +226,10 @@ public class BackupDBTables{
         checkBoxItems = new ArrayList<>();
         checkBoxItems.add(new CheckBoxItem(CHECK_ALL_ITEM_TEXT));
         checkBoxItems.addAll(getCheckBoxItemsFromDB());
+        
+        // if checkBoxItems only contains one item (check all) then remove it
+        if(checkBoxItems.size() == 1)
+            checkBoxItems.clear();
         
         // add CheckBoxItems to CheckBoxList
         checkBoxList.setListData(checkBoxItems.toArray());
@@ -225,16 +240,24 @@ public class BackupDBTables{
         
         // buttons
         // create Delete button
-        JButton btnDelete = new JButton("Delete");
+        btnDelete = new JButton("Delete");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteSelectedItems();
                 reloadCheckList();
+                // if no checkbox items are left
+                if(checkBoxItems.isEmpty()){
+                    btnDelete.setEnabled(false);
+                    btnBackup.setEnabled(true);
+                }
             }
         });
         
+        // start the delete button as not enabled
+        btnDelete.setEnabled(false);
+        
         // create Backup button
-        JButton btnBackup = new JButton("Backup");
+        btnBackup = new JButton("Backup");
         btnBackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // defaults to backup with the date appended
@@ -242,14 +265,6 @@ public class BackupDBTables{
                 reloadCheckList();
             }
         });
-        
-//        // create Cancel button
-//        JButton btnCancel = new JButton("Cancel");
-//        btnCancel.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                //TODO
-//            }
-//        });
         
         // add buttons to the buttons array
         JButton[] buttons = new JButton[]{btnDelete, btnBackup};
@@ -381,6 +396,12 @@ public class BackupDBTables{
         checkBoxItems.clear();
         checkBoxItems.add(new CheckBoxItem(CHECK_ALL_ITEM_TEXT));
         checkBoxItems.addAll(getCheckBoxItemsFromDB());
+        
+        // if checkBoxItems only contains one item (check all) then remove it
+        if(checkBoxItems.size() == 1)
+            checkBoxItems.clear();
+        
+        // add CheckBoxItems to CheckBoxList
         checkBoxList.setListData(checkBoxItems.toArray());
     }
     
@@ -721,4 +742,21 @@ public class BackupDBTables{
         }
     }
     
+    /**
+     * checks if a checkbox is checked
+     * @return boolean if a checkbox is checked (true) or not (false)
+     */
+    public boolean isACheckBoxChecked(){
+        
+        // check if a checkbox is checked
+        for(CheckBoxItem item: checkBoxItems){
+            if(item.isSelected())
+                return true;
+        }
+        return false;
+    }
+    
+    public void addCheckBoxAllCheckBoxItem(){
+        checkBoxItems.add(new CheckBoxItem(CHECK_ALL_ITEM_TEXT));
+    }
 }
