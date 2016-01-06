@@ -113,6 +113,23 @@ public class DBConnection {
             return false;
         }
     }
+    
+    public static boolean isClosed(){
+        try {
+            open();
+            if(connection.isClosed()){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            handleSQLexWithMessageBox(ex);
+            open();
+            return true;
+        }
+    }
 
     /**
      * getServer

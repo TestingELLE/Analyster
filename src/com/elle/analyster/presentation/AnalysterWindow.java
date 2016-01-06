@@ -1663,8 +1663,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
 
         // check connection
-        if (DBConnection.getConnection() == null) {
+        if (DBConnection.isClosed()) {
             DBConnection.open();
+            System.out.println("\ndatabase connection was opened!");
         }
 
         String tableName = "Assignments"; // table name to backup
