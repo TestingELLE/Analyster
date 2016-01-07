@@ -1748,16 +1748,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // TODO add your handling code here:
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
-
+        // Get tab table;
         JTable table = tab.getTable();
         for (int j = 0; j < table.getColumnCount(); j++) {
-
+        // Find "path"
             String columnName = table.getColumnName(j);
             if (columnName.equalsIgnoreCase("path")) {
                 for (int i = 0; i < table.getRowCount(); i++) {
                     if (table.getValueAt(i, 4) != null) {
                         String str = table.getValueAt(i, 4).toString();
-
+                        //Identify the column startwith and endwith "/" and strip it to correct format;
                         while(str.startsWith("/") && str.endsWith("/")) {
                             str = str.substring(1, str.length()-1);
                         
@@ -1766,6 +1766,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         table.setValueAt(str, i, 4);
                     }
                 }
+                // Make btn grey when table is not "Report";
                 this.makeTableEditable(true);
             }
         }
@@ -1777,18 +1778,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // TODO add your handling code here:
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
-
+        // Get tab table;
         JTable table = tab.getTable();
 
-        //   System.out.println(table.getRowCount());
+        
         for (int j = 0; j < table.getColumnCount(); j++) {
-
+         // Find "path";
             String columnName = table.getColumnName(j);
             if (columnName.equalsIgnoreCase("path")) {
                 for (int i = 0; i < table.getRowCount(); i++) {
 
                     if (table.getValueAt(i, j) != null) {
-
+                    // Identify which startwith and endwith "/", if not, add it on;
                         String str = table.getValueAt(i, j).toString();
                         if (!str.startsWith("/") && !str.endsWith("/")) {
 
@@ -1797,6 +1798,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         }
                     }
                 }
+                // Make btn grey except "Report" table;
                 this.makeTableEditable(true);
             }
         }
