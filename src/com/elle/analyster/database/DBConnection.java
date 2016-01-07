@@ -1,6 +1,7 @@
 
 package com.elle.analyster.database;
 
+import java.awt.Component;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +39,7 @@ public class DBConnection {
     private static Connection connection;
     private static Statement statement;
     private static final String SERVERS_FILENAME = "servers.xml";
+    private static Component parentComponent;
     
     /**
      * connect
@@ -116,7 +118,7 @@ public class DBConnection {
     
     public static boolean isClosed(){
         try {
-            open();
+            
             if(connection.isClosed()){
                 return true;
             }
@@ -126,7 +128,6 @@ public class DBConnection {
         } catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
             handleSQLexWithMessageBox(ex);
-            open();
             return true;
         }
     }
@@ -323,4 +324,14 @@ public class DBConnection {
         int messageType = JOptionPane.ERROR_MESSAGE;
         JOptionPane.showMessageDialog( null, message, title, messageType);
     }
+
+    /**
+     * Set the parent component to show message boxes relative to.
+     * @param parentComponent 
+     */
+    public static void setParentComponent(Component parentComponent) {
+        DBConnection.parentComponent = parentComponent;
+    }
+    
+    
 }

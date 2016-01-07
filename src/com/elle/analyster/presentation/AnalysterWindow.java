@@ -49,8 +49,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-1-6";
-    private final String VERSION = "0.9.1a";
+    private final String CREATION_DATE = "2016-1-7";
+    private final String VERSION = "0.9.1b";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -87,6 +87,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // the statement is created in LoginWindow and passed to Analyster.
         statement = DBConnection.getStatement();
         database = DBConnection.getDatabase();
+        DBConnection.setParentComponent(this);   // show message boxes relative to this component
         instance = this;                         // this is used to call this instance of Analyster 
 
         // initialize tabs
@@ -1662,11 +1663,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
 
-        // check connection
-        if (DBConnection.isClosed()) {
-            DBConnection.open();
-            System.out.println("\ndatabase connection was opened!");
-        }
+        // open new connection
+        DBConnection.close(); // connection might be timed out on server
+        DBConnection.open();  // open a new connection
 
         String tableName = "Assignments"; // table name to backup
         BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getConnection(), tableName, this);
