@@ -1,4 +1,3 @@
-
 /**
  * @author Louis W.
  * @author Carlos Igreja
@@ -18,7 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class LoginWindow extends JFrame {
 
     // class attributes 
@@ -26,21 +24,20 @@ public class LoginWindow extends JFrame {
     private String selectedDB;                  // selected database
     private String userName;                    // user name to login 
     private String userPassword;                // user password to login
-    
+
     // class component instances
     private AnalysterWindow analyster;
     private EditDatabaseWindow editDatabaseList;
     private LogWindow logWindow;
-    
+
     public LoginWindow() {
-        
+
         // initialize
         initComponents();
-        logWindow = new LogWindow(); // this is for reporting connections to log
-        
+     //   logWindow = new LogWindow(this.getUserName()); // this is for reporting connections to log
+
         // load selectedDB selections from the text file for the combobox
         // loadDBList();  // this loads from a file which is not really used (it's for use with edit database window)
- 
         // show window
         this.setTitle("Log in");
     }
@@ -263,13 +260,13 @@ public class LoginWindow extends JFrame {
 
     private void btnCancelActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         this.close();
-        
+
     }//GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * Close down application properly
      */
-    public void close(){
+    public void close() {
 
         // terminate window and return resources
         this.dispose();
@@ -295,7 +292,7 @@ public class LoginWindow extends JFrame {
     }//GEN-LAST:event_comboBoxServerActionPerformed
 
     private void btnEditDBActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnEditDBActionPerformed
-        
+
         // create a new edit selectedDB window
         editDatabaseList = new EditDatabaseWindow(this); // maybe we can make it not dependant on this
         editDatabaseList.setLocationRelativeTo(this);
@@ -309,11 +306,15 @@ public class LoginWindow extends JFrame {
     private void passwordFieldPWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldPWActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordFieldPWActionPerformed
+    public String getUserName() {
+        String userNameToAL = userName.substring(7);
+        return userNameToAL;
+    }
 
     /**
-     *  Loads the names of the databases from a text file
-     * this is if the actual selectedDB list is edited in EditDatabaseWindow
-     * then it updates the combobox with the new values in LoginWindow.
+     * Loads the names of the databases from a text file this is if the actual
+     * selectedDB list is edited in EditDatabaseWindow then it updates the
+     * combobox with the new values in LoginWindow.
      */
     public void loadDBList() {
         String temp = null;
@@ -361,17 +362,17 @@ public class LoginWindow extends JFrame {
      * login
      */
     public void login() {
-        
+
         // get user data
         selectedServer = comboBoxServer.getSelectedItem().toString();
         selectedDB = comboBoxDatabase.getSelectedItem().toString();
         userName = textFieldUsername.getText();
         char[] pw = passwordFieldPW.getPassword();
         userPassword = String.valueOf(pw);
-
+        logWindow = new LogWindow(this.getUserName()); 
         // connect to database
         logWindow.addMessageWithDate("Start to connect local database...");
-        if(DBConnection.connect(selectedServer, selectedDB, userName, userPassword)){
+        if (DBConnection.connect(selectedServer, selectedDB, userName, userPassword)) {
             logWindow.addMessageWithDate("Connect successfully!");
 
             // create an Analyster object
@@ -390,9 +391,8 @@ public class LoginWindow extends JFrame {
 
             // terminate this object
             this.dispose(); // returns used resources
-        }
-        else{
-            
+        } else {
+
             JOptionPane.showMessageDialog(this,
                     "There was an error.\n Please try again or contact support if you need further assistance.",
                     "Error Message",
@@ -401,7 +401,7 @@ public class LoginWindow extends JFrame {
             passwordFieldPW.setText("");
         }
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnEditDB;

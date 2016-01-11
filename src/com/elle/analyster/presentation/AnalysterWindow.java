@@ -69,7 +69,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     // colors - Edit mode labels
     private Color editModeDefaultTextColor;
     private Color editModeActiveTextColor;
-
+    
     private String editingTabName; // stores the name of the tab that is editing
 
     private boolean isBatchEditWindowShow;
@@ -137,7 +137,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         tabs.get(ASSIGNMENTS_TABLE_NAME).setBatchEditBtnVisible(true);
         tabs.get(REPORTS_TABLE_NAME).setBatchEditBtnVisible(true);
         tabs.get(ARCHIVE_TABLE_NAME).setBatchEditBtnVisible(false);
-
+        
         initComponents(); // generated code
 
         // initialize the colors for the edit mode text
@@ -203,7 +203,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // total counts are removed or added in the Tab class
         initTotalRowCounts(tabs);
 
-        // set the cell renderers for each tabName
+        // set the cell renderers for each tabName 
         tabs.get(ASSIGNMENTS_TABLE_NAME).setCellRenderer(new JTableCellRenderer(assignmentTable));
         tabs.get(REPORTS_TABLE_NAME).setCellRenderer(new JTableCellRenderer(reportTable));
         tabs.get(ARCHIVE_TABLE_NAME).setCellRenderer(new JTableCellRenderer(archiveTable));
@@ -217,7 +217,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         tabs.get(ASSIGNMENTS_TABLE_NAME).setEditing(false);
         tabs.get(REPORTS_TABLE_NAME).setEditing(false);
         tabs.get(ARCHIVE_TABLE_NAME).setEditing(false);
-
+        
         informationLabel.setText("");
         isBatchEditWindowShow = false;
 
@@ -915,14 +915,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuItemVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemVersionActionPerformed
-
+        
         JOptionPane.showMessageDialog(this, "Creation Date: "
                 + CREATION_DATE + "\n"
                 + "Version: " + VERSION);
     }//GEN-LAST:event_menuItemVersionActionPerformed
 
     private void textFieldForSearchMouseClicked(MouseEvent evt) {//GEN-FIRST:event_textFieldForSearchMouseClicked
-
+        
         textFieldForSearch.setText(""); // clears text
     }//GEN-LAST:event_textFieldForSearchMouseClicked
 
@@ -942,7 +942,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * textForSearchKeyPressed method
      */
     public void filterBySearch() {
-
+        
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
         JTable table = tab.getTable();
@@ -952,22 +952,22 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         for (int col = 0; col < table.getColumnCount(); col++) {
             String tableColName = table.getColumnName(col);
             if (tableColName.equalsIgnoreCase(searchColName)) {
-
+                
                 String searchBoxValue = textFieldForSearch.getText();  // store string from text box
 
                 // add item to filter
                 TableFilter filter = tab.getFilter();
                 filter.clearAllFilters();
                 filter.applyFilter();
-
+                
                 boolean isValueInTable = false;
                 isValueInTable = checkValueInTableCell(col, searchBoxValue, table);
-
+                
                 if (isValueInTable) {
-
+                    
                     filter.addFilterItem(col, searchBoxValue);
                     filter.applyFilter();
-
+                    
                 } else {
                     searchInformationLabel.setText("There is no " + searchBoxValue
                             + " under " + searchColName + " in table " + table.getName());
@@ -980,7 +980,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         }
     }
-
+    
     private boolean checkValueInTableCell(int col, String target, JTable table) {
         System.out.println("target is : " + target + " at column " + col);
         int count = 0;
@@ -989,7 +989,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             if (table.getValueAt(row, col) != null) {
                 cellValue = table.getValueAt(row, col).toString();
             }
-
+            
             if (cellValue.equalsIgnoreCase(target)) {
                 count++;
             }
@@ -1003,15 +1003,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // not sure what this is
     private void menuItemAWSAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAWSAssignActionPerformed
-
+        
         loadTable(assignmentTable);
         loadTable(reportTable);
-
+        
 
     }//GEN-LAST:event_menuItemAWSAssignActionPerformed
 
     private void btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadChangesActionPerformed
-
+        
         uploadChanges();
     }//GEN-LAST:event_btnUploadChangesActionPerformed
 
@@ -1022,15 +1022,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * a keylistener when editing mode is on and enter is pressed
      */
     public void uploadChanges() {
-
+        
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
         JTable table = tab.getTable();
         JTableCellRenderer cellRenderer = tab.getCellRenderer();
         ModifiedTableData data = tab.getTableData();
-
+        
         updateTable(table, data.getNewData());
-
+        
         loadTable(table); // refresh table
 
         // clear cellrenderer
@@ -1038,7 +1038,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // reload modified table data with current table model
         data.reloadData();
-
+        
         data.getNewData().clear();    // reset the arraylist to record future changes
         setLastUpdateTime();          // update time
         makeTableEditable(false);
@@ -1061,7 +1061,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_menuItemRepBugSuggActionPerformed
 
     private void btnEnterSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterSQLActionPerformed
-
+        
         int commandStart = jTextAreaSQL.getText().lastIndexOf(">>") + 2;
         String command = jTextAreaSQL.getText().substring(commandStart);
         if (command.toLowerCase().contains("select")) {
@@ -1091,7 +1091,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_btnCancelSQLActionPerformed
 
     private void btnCloseSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseSQLActionPerformed
-
+        
         jPanelSQL.setVisible(false);
         menuItemSQLCmdChkBx.setSelected(false);
     }//GEN-LAST:event_btnCloseSQLActionPerformed
@@ -1102,12 +1102,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param makeTableEditable // takes boolean true or false to make editable
      */
     public void makeTableEditable(boolean makeTableEditable) {
-
+        
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
         boolean isAddRecordsBtnVisible = tab.isAddRecordsBtnVisible();
         boolean isBatchEditBtnVisible = tab.isBatchEditBtnVisible();
-
+        
         if (makeTableEditable) {
             tab.setEditing(true);
             labelEditModeState.setText("ON ");
@@ -1124,7 +1124,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             btnRevertChanges.setVisible(false);
         }
         editModeTextColor(tab.isEditing());
-
+        
         for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
             tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
@@ -1141,10 +1141,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // get selected tab
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
-
+        
         this.menuItemStripslash.setEnabled(false);
         this.menuItemAddslash.setEnabled(false);
-
+        
         if (tabName.equals("Reports")) {
             this.menuItemStripslash.setEnabled(true);
             this.menuItemAddslash.setEnabled(true);
@@ -1219,7 +1219,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             // set edit mode label
             labelEditMode.setText("Edit Mode: ");
             labelEditModeState.setVisible(true);
-
+            
             editModeTextColor(false);
         } // else if there is a tab editing but it is not this one
         else if (isTabEditing()) {
@@ -1331,7 +1331,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                 // dispose of this Object and return resources
                 this.dispose();
-
+                
                 break;
             }
             case 1:
@@ -1346,7 +1346,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param evt
      */
     private void menuItemDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
-
+        
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
         JTable table = tab.getTable();
@@ -1370,10 +1370,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param evt
      */
     private void menuItemViewActiveAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemViewActiveAssignActionPerformed
-
+        
         String sqlC = "select A.* from Assignments A left join t_analysts T\n" + "on A.analyst = T.analyst\n" + "where T.active = 1\n" + "order by A.symbol";
         loadTable(sqlC, assignmentTable);
-
+        
         String tabName = ASSIGNMENTS_TABLE_NAME;
         Tab tab = tabs.get(tabName);
         float[] colWidthPercent = tab.getColWidthPercent();
@@ -1412,7 +1412,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param evt
      */
     private void menuItemReloadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemReloadDataActionPerformed
-
+        
         reloadDataAction();
         String text = "Data reloaded!";
         setInformationLabel(text, 5);
@@ -1440,7 +1440,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // set label record information
         String recordsLabel = tab.getRecordsLabel();
         labelRecords.setText(recordsLabel);
-
+        
     }
 
     /**
@@ -1508,7 +1508,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         values += cellValue + ");";
                     }
                 }
-
+                
                 try {
                     // execute the sql statement
                     if (!values.equals("VALUES (")) {      //skip if nothing was added
@@ -1550,9 +1550,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 // update records shown for archive table tab
                 Tab archiveTab = tabs.get(ARCHIVE_TABLE_NAME);
                 archiveTab.addToTotalRowCount(rowCount);
-
+                
             }
-
+            
         } else {
             // no records are selected information to user
             String text = "No records are selected in assignments";
@@ -1569,7 +1569,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param evt
      */
     private void tabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelStateChanged
-
+        
         changeTabbedPanelState();
 
         // this changes the search fields for the comboBox for each tabName
@@ -1588,9 +1588,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param evt
      */
     private void menuItemLogChkBxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLogChkBxActionPerformed
-
+        
         if (menuItemLogChkBx.isSelected()) {
-
+            
             logWindow.setLocationRelativeTo(this);
             logWindow.setVisible(true); // show log window
 
@@ -1641,7 +1641,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             // show sql panel
             jPanelSQL.setVisible(true);
             this.setSize(this.getWidth(), 560 + 112);
-
+            
         } else {
 
             // hide sql panel
@@ -1651,7 +1651,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_menuItemSQLCmdChkBxActionPerformed
 
     private void btnRevertChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRevertChangesActionPerformed
-
+        
         revertChanges();
     }//GEN-LAST:event_btnRevertChangesActionPerformed
 
@@ -1669,7 +1669,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         String tableName = "Assignments"; // table name to backup
         BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getConnection(), tableName, this);
-
+        
 
     }//GEN-LAST:event_menuItemBackupActionPerformed
 
@@ -1688,12 +1688,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param evt
      */
     private void menuItemActivateRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemActivateRecordActionPerformed
-
+        
         int rowSelected = archiveTable.getSelectedRows().length;
         int[] rowsSelected = archiveTable.getSelectedRows();
         // Archive Selected Records in Assignments Archive
         if (rowSelected != -1) {
-
+            
             for (int i = 0; i < rowSelected; i++) {
                 String sqlInsert = "INSERT INTO " + database + "." + assignmentTable.getName() + "(symbol, analyst, priority, dateAssigned,dateDone,notes) VALUES ( ";
                 int numRow = rowsSelected[i];
@@ -1717,11 +1717,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     System.out.println(e.toString());
                 }
             }
-
+            
             archiveTable.setRowSelectionInterval(rowsSelected[0], rowsSelected[0]);
             loadTable(archiveTable);
             loadTable(assignmentTable);
-
+            
             String text = rowSelected + " Record(s) Activated!";
             this.setInformationLabel(text, 5);
         } else {
@@ -1733,35 +1733,37 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void comboBoxSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSearchActionPerformed
         // TODO add your handling code here:
         String searchColName = comboBoxSearch.getSelectedItem().toString();
-
+        
         if (searchColName.equals("Symbol")) {
             textFieldForSearch.setText("Enter Symbol name");
-
+            
         } else if (searchColName.equals("Analyst")) {
             textFieldForSearch.setText("Enter Analyst name");
-
+            
         }
     }//GEN-LAST:event_comboBoxSearchActionPerformed
 
     private void menuItemStripslashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemStripslashActionPerformed
-        // TODO add your handling code here:
+        // Pick out the selected tab
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
-        // Get tab table;
+        // Pick out the table of selected tab
         JTable table = tab.getTable();
         for (int j = 0; j < table.getColumnCount(); j++) {
-        // Find "path"
+            // Locate columns under "path"
             String columnName = table.getColumnName(j);
             if (columnName.equalsIgnoreCase("path")) {
                 for (int i = 0; i < table.getRowCount(); i++) {
                     if (table.getValueAt(i, 4) != null) {
                         String str = table.getValueAt(i, 4).toString();
-                        //Identify the column startwith and endwith "/" and strip it to correct format;
-                        while(str.startsWith("/") && str.endsWith("/")) {
-                            str = str.substring(1, str.length()-1);
-                        
-                        
+                        //Identify the column startwith and endwith "/" 
+                        while (str.startsWith("/") && str.endsWith("/")) {
+                        //Continue strip "/" until the correct format
+                            
+                            str = str.substring(1, str.length() - 1);
+                            
                         }
+                        // Set new value back to table
                         table.setValueAt(str, i, 4);
                     }
                 }
@@ -1769,30 +1771,31 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 this.makeTableEditable(true);
             }
         }
-
+        
 
     }//GEN-LAST:event_menuItemStripslashActionPerformed
 
     private void menuItemAddslashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddslashActionPerformed
-        // TODO add your handling code here:
+
+        // Pick out the selected tab
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
-        // Get tab table;
+        // Pick out the table of selected tab
         JTable table = tab.getTable();
-
         
         for (int j = 0; j < table.getColumnCount(); j++) {
-         // Find "path";
+            // Locate columns under "path"
             String columnName = table.getColumnName(j);
             if (columnName.equalsIgnoreCase("path")) {
                 for (int i = 0; i < table.getRowCount(); i++) {
-
+                    
                     if (table.getValueAt(i, j) != null) {
-                    // Identify which startwith and endwith "/", if not, add it on;
+                        // Identify which startwith and endwith "/", if not, add it on;
                         String str = table.getValueAt(i, j).toString();
                         if (!str.startsWith("/") && !str.endsWith("/")) {
-
+                            
                             String newstr = "/" + str + "/";
+                            // Set new value back to table
                             table.setValueAt(newstr, i, j);
                         }
                     }
@@ -1801,14 +1804,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 this.makeTableEditable(true);
             }
         }
-
+        
 
     }//GEN-LAST:event_menuItemAddslashActionPerformed
 
     //set the timer for information Label show
     public void startCountDownFromNow(int waitSeconds) {
         Timer timer = new Timer(waitSeconds * 1000, new ActionListener() {
-
+            
             @Override
             public void actionPerformed(ActionEvent e) {
                 informationLabel.setText("");
@@ -1839,7 +1842,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             header.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-
+                    
                     if (e.getClickCount() == 2) {
                         clearFilterDoubleClick(e, table);
                     }
@@ -1861,7 +1864,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                 .getColumnPopupMenu().showPopupMenu(e);
                     }
                 }
-
+                
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     if (e.isPopupTrigger()) {
@@ -1890,7 +1893,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                     // check if this tab is editing or if allowed editing
                                     boolean thisTabIsEditing = tab.isEditing();
                                     boolean noTabIsEditing = !isTabEditing();
-
+                                    
                                     if (thisTabIsEditing || noTabIsEditing) {
 
                                         // set the states for this tab
@@ -1909,13 +1912,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                                             // make it the active editing cell
                                             table.changeSelection(rowIndex, columnIndex, false, false);
-
+                                            
                                             selectAllText(e);
 
                                             // if cell is being edited
                                             // cannot cancel or upload or revert
                                             setEnabledEditingButtons(false, false);
-
+                                            
                                         } // end not null condition
 
                                     } // end of is tab editing conditions
@@ -1928,7 +1931,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         // if right mouse clicks
                         else if (SwingUtilities.isRightMouseButton(e)) {
                             if (e.getClickCount() == 2) {
-
+                                
                             } // end if 2 clicks 
                         } // end if right mouse clicks
 
@@ -1948,7 +1951,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                 selectCom.selectAll();
                             }
                         }
-
+                        
                     }
                 }
         );
@@ -1957,7 +1960,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         table.getModel().addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
             @Override
             public void tableChanged(TableModelEvent e) {
-
+                
                 int row = e.getFirstRow();
                 int col = e.getColumn();
                 String tab = getSelectedTabName();
@@ -1968,11 +1971,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                 // check that data is different
                 if (!newValue.equals(oldValue)) {
-
+                    
                     String tableName = table.getName();
                     String columnName = table.getColumnName(col);
                     int id = (Integer) table.getModel().getValueAt(row, 0);
-
+                    
                     data.getNewData().add(new ModifiedData(tableName, columnName, newValue, id));
 
                     // color the cell
@@ -2007,7 +2010,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     table.setRowSelectionInterval(0, table.getRowCount() - 1);
                 }
             }
-
+            
             @Override
             public void keyReleased(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_F2) {
@@ -2028,7 +2031,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @return
      */
     public Map<String, Tab> setTableListeners(Map<String, Tab> tabs) {
-
+        
         for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
             setTableListeners(tabs.get(entry.getKey()).getTable());
         }
@@ -2042,7 +2045,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param table
      */
     public void filterByDoubleClick(JTable table) {
-
+        
         int columnIndex = table.getSelectedColumn(); // this returns the column index
         int rowIndex = table.getSelectedRow(); // this returns the rowIndex index
         if (rowIndex != -1) {
@@ -2062,7 +2065,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * clicking on that column header.
      */
     private void clearFilterDoubleClick(MouseEvent e, JTable table) {
-
+        
         int columnIndex = table.getColumnModel().getColumnIndexAtX(e.getX());
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
@@ -2096,7 +2099,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         if (!(header.getDefaultRenderer() instanceof AlignmentTableHeaderCellRenderer)) {
             header.setDefaultRenderer(new AlignmentTableHeaderCellRenderer(header.getDefaultRenderer()));
         }
-
+        
         for (int index = 0; index < table.getColumnCount(); index++) {
             int colWidth = (int) colWidths[index];
             TableColumn column = table.getColumnModel().getColumn(index);
@@ -2105,9 +2108,29 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             String columnName = table.getColumnName(index);
             if (columnName.equals("notes")) {
                 column.setMinWidth((int) colWidth);
+            } else if (columnName.equals("priority")) {
+                column.setPreferredWidth(49);
             } else {
                 column.setPreferredWidth(colWidth);
                 column.setMinWidth(colWidth);
+            }
+        }
+        for (int j = 0; j < assignmentTable.getColumnCount(); j++) {
+            
+            String columnName = assignmentTable.getColumnName(j);
+            // Locate columns under "priority"
+            if (columnName.equalsIgnoreCase("priority")) {
+                // center alignment
+                assignmentTable.getColumnModel().getColumn(j).setCellRenderer(centerRenderer);
+            }
+        }
+        for (int j = 0; j < archiveTable.getColumnCount(); j++) {
+            
+            String columnName = archiveTable.getColumnName(j);
+            //Locate columns under "priority"
+            if (columnName.equalsIgnoreCase("priority")) {
+                //center alignment
+                archiveTable.getColumnModel().getColumn(j).setCellRenderer(centerRenderer);
             }
         }
     }
@@ -2128,16 +2151,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         //String uploadQuery = uploadRecord(table, modifiedDataList);
         String sqlChange = "";
-
+        
         for (ModifiedData modifiedData : modifiedDataList) {
-
+            
             String tableName = modifiedData.getTableName();
             String columnName = modifiedData.getColumnName();
             Object value = modifiedData.getValue();
             int id = modifiedData.getId();
-
+            
             try {
-
+                
                 if ("".equals(value)) {
                     value = null;
                     sqlChange = "UPDATE " + tableName + " SET " + columnName
@@ -2147,11 +2170,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             + " = '" + value + "' WHERE ID = " + id + ";";
                 }
                 System.out.println(sqlChange);
-
+                
                 DBConnection.open();
                 statement = DBConnection.getStatement();
                 statement.executeUpdate(sqlChange);
-
+                
             } catch (SQLException e) {
                 informationLabel.setText(("Upload failed! " + e.getMessage()));
                 this.startCountDownFromNow(10);
@@ -2160,12 +2183,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 updateSuccessful = false;
             }
         }
-
+        
         if (updateSuccessful) {
             informationLabel.setText(("Edits uploaded successfully!"));
             startCountDownFromNow(5);
         }
-
+        
     }
 
     /**
@@ -2188,11 +2211,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         String time = dateFormat.format(new Date());
         labelTimeLastUpdate.setText("Last updated: " + time);
     }
-
+    
     public void setIsBatchEditWindowShow(boolean a) {
         this.isBatchEditWindowShow = a;
     }
-
+    
     public boolean getIsBatchEditWindowShow() {
         return this.isBatchEditWindowShow;
     }
@@ -2202,11 +2225,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     private void setKeyboardFocusManager() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-
+            
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
                 if (labelEditModeState.getText().equals("ON ")) {
-
+                    
                     JTable table = getSelectedTable();
                     int row = table.getSelectedRow();
                     int column = table.getSelectedColumn();
@@ -2228,7 +2251,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             if (table.isEditing()) {
                                 setEnabledEditingButtons(false, false);
                             }
-
+                            
                         }
                     } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                         if (e.getID() == KeyEvent.KEY_RELEASED) {
@@ -2236,10 +2259,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                 if (column == table.getRowCount() || column == 0) {
                                     return false;
                                 } else {
-
+                                    
                                     tableCellSelection(e, table, row, column);
                                 }
-
+                                
                             } else {
                                 if (column == 0) {
                                     if (row == 0) {
@@ -2263,7 +2286,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                         if (e.getID() == KeyEvent.KEY_RELEASED) {
                             if (e.getComponent() instanceof JTable) {
-
+                                
                                 System.out.println("enter we are at: " + row + " " + column);
                                 if (column == table.getRowCount() || column == columnCount - 1) {
                                     return false;
@@ -2394,7 +2417,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                                     // store selected rowIndex before the table is refreshed
                                     int rowIndex = table.getSelectedRow();
-
+                                    
                                     int selectedOption = JOptionPane.showOptionDialog(AnalysterWindow.getInstance(),
                                             "Would you like to upload changes?", "Upload Changes",
                                             JOptionPane.YES_NO_OPTION,
@@ -2423,63 +2446,63 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                     }
                                 }
                             }
-
+                            
                         }
-
+                        
                     }
                 }
-
+                
                 return false;
             }
-
+            
             private void tableCellSelection(KeyEvent e, JTable table, int row, int column) {
-
+                
                 table.getComponentAt(row, column).requestFocus();
                 table.editCellAt(row, column);
                 JTextField selectCom = (JTextField) table.getEditorComponent();
                 selectCom.requestFocusInWindow();
                 selectCom.selectAll();
-
+                
             }
         });
     }
-
+    
     public static AnalysterWindow getInstance() {
         return instance;
     }
-
+    
     public JLabel getRecordsLabel() {
         return labelRecords;
     }
-
+    
     public LogWindow getLogWindow() {
         return logWindow;
     }
-
+    
     public Map<String, Tab> getTabs() {
         return tabs;
     }
-
+    
     public String getSelectedTabName() {
         return tabbedPanel.getTitleAt(tabbedPanel.getSelectedIndex());
     }
-
+    
     public void setDatabase(String database) {
         this.database = database;
     }
-
+    
     public void setLogWindow(LogWindow logWindow) {
         this.logWindow = logWindow;
     }
-
+    
     public Statement getStatement() {
         return statement;
     }
-
+    
     public JLabel getInformationLabel() {
         return this.informationLabel;
     }
-
+    
     public void setInformationLabel(String inf, int second) {
         this.informationLabel.setText(inf);
         startCountDownFromNow(second);
@@ -2493,24 +2516,24 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @return
      */
     public Map<String, Tab> initTotalRowCounts(Map<String, Tab> tabs) {
-
+        
         int totalRecords;
-
+        
         boolean isFirstTabRecordLabelSet = false;
-
+        
         for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
             Tab tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
             totalRecords = table.getRowCount();
             tab.setTotalRecords(totalRecords);
-
+            
             if (isFirstTabRecordLabelSet == false) {
                 String recordsLabel = tab.getRecordsLabel();
                 labelRecords.setText(recordsLabel);
                 isFirstTabRecordLabelSet = true; // now its set
             }
         }
-
+        
         return tabs;
     }
 
@@ -2521,15 +2544,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @return
      */
     public Map<String, Tab> loadTables(Map<String, Tab> tabs) {
-
+        
         for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
             Tab tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
             loadTable(table);
         }
-
+        
         setLastUpdateTime();
-
+        
         return tabs;
     }
 
@@ -2547,16 +2570,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         statement = DBConnection.getStatement();
         String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
         loadTable(sql, table);
-
+        
         return table;
     }
-
+    
     public JTable loadTable(String sql, JTable table) {
-
+        
         Vector data = new Vector();
         Vector columnNames = new Vector();
         int columns;
-
+        
         ResultSet rs = null;
         ResultSetMetaData metaData = null;
         try {
@@ -2579,12 +2602,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 data.addElement(row);
             }
             rs.close();
-
+            
         } catch (SQLException ex) {
             System.out.println("SQL Error:");
             ex.printStackTrace();
         }
-
+        
         EditableTableModel model = new EditableTableModel(data, columnNames);
 
         // this has to be set here or else I get errors
@@ -2617,10 +2640,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // update last time the table was updated
         setLastUpdateTime();
-
+        
         informationLabel.setText("Table loaded succesfully");
         startCountDownFromNow(10);
-
+        
         return table;
     }
 
@@ -2632,7 +2655,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @throws HeadlessException
      */
     public String deleteRecordsSelected(JTable table) throws HeadlessException {
-
+        
         String sqlDelete = ""; // String for the SQL Statement
         String tableName = table.getName(); // name of the table
 
@@ -2651,12 +2674,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 {
                     sqlDelete += ", " + selectedID;
                 }
-
+                
             }
 
             // close the sql statement
             sqlDelete += ");";
-
+            
             try {
 
                 // delete records from database
@@ -2691,23 +2714,23 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         }
         return sqlDelete;
     }
-
+    
     public JPanel getAddPanel_control() {
         return addPanel_control;
     }
-
+    
     public JPanel getjPanel5() {
         return jPanel5;
     }
-
+    
     public JPanel getjPanelEdit() {
         return jPanelEdit;
     }
-
+    
     public JPanel getjPanelSQL() {
         return jPanelSQL;
     }
-
+    
     public JPanel getSearchPanel() {
         return searchPanel;
     }
@@ -2719,7 +2742,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param selectedTab // this is the editing tab
      */
     private void setBatchEditButtonStates(Tab selectedTab) {
-
+        
         for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
             Tab tab = tabs.get(entry.getKey());
 
@@ -2748,7 +2771,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     public JButton getBtnBatchEdit() {
         return btnBatchEdit;
     }
-
+    
     public BatchEditWindow getBatchEditWindow() {
         return batchEditWindow;
     }
@@ -2760,9 +2783,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @return boolean isEditing
      */
     public boolean isTabEditing() {
-
+        
         boolean isEditing = false;
-
+        
         for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
             Tab tab = tabs.get(entry.getKey());
             isEditing = tab.isEditing();
@@ -2773,7 +2796,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 break;
             }
         }
-
+        
         return isEditing;
     }
 
@@ -2795,7 +2818,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * revertChanges used to revert changes of modified data to original data
      */
     public void revertChanges() {
-
+        
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
         JTable table = tab.getTable();
@@ -2809,7 +2832,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // set the color of the edit mode text
         editModeTextColor(tab.isEditing());
-
+        
         String text = "Reverted! Nothing has been changed!";
         setInformationLabel(text, 5);
         logWindow.addMessageWithDate(text);
@@ -2840,15 +2863,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param c Any component that needs to show on top of the Main window
      */
     public void showWindowInFront(Component c) {
-
+        
         ((Window) (c)).setAlwaysOnTop(true);
-
+        
     }
-
+    
     public String getEditingTabName() {
         return editingTabName;
     }
-
+    
     public AddRecordsWindow getAddRecordsWindow() {
         return addRecordsWindow;
     }
@@ -2925,10 +2948,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * CLASS
      */
     class AlignmentTableHeaderCellRenderer implements TableCellRenderer {
-
+        
         private final TableCellRenderer wrappedRenderer;
         private final JLabel label;
-
+        
         public AlignmentTableHeaderCellRenderer(TableCellRenderer wrappedRenderer) {
             if (!(wrappedRenderer instanceof JLabel)) {
                 throw new IllegalArgumentException("The supplied renderer must inherit from JLabel");
@@ -2936,14 +2959,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             this.wrappedRenderer = wrappedRenderer;
             this.label = (JLabel) wrappedRenderer;
         }
-
+        
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
             wrappedRenderer.getTableCellRendererComponent(table, value,
                     isSelected, hasFocus, row, column);
             if (table.getName().equals(REPORTS_TABLE_NAME)) {
-
+                
                 if (column < table.getColumnCount() - 4) {
                     label.setHorizontalAlignment(JLabel.CENTER);
                     return label;
@@ -2952,11 +2975,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     return label;
                 }
             }
-
+            
             label.setHorizontalAlignment(column == table.getColumnCount() - 1 ? JLabel.LEFT : JLabel.CENTER);
             return label;
-
+            
         }
-
+        
     }
 }
