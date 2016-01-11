@@ -52,7 +52,8 @@ public class BatchEditWindow extends JFrame {
         
         // set the interface to the middle of the window
         this.setLocationRelativeTo(analysterWindow);
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // quit button should be used
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE); // quit button should be used
+        
         this.setTitle("Batch Editor");
     }
 
@@ -70,9 +71,14 @@ public class BatchEditWindow extends JFrame {
         textFieldNewValue = new javax.swing.JTextField();
         btnCancel = new javax.swing.JButton();
         btnConfirm = new javax.swing.JButton();
-        btnQuit = new javax.swing.JButton();
+        btnClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         comboBoxFieldSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "analyst", "priority", "dateAssigned", "dateDone", "notes" }));
         comboBoxFieldSelect.addActionListener(new java.awt.event.ActionListener() {
@@ -133,10 +139,10 @@ public class BatchEditWindow extends JFrame {
             }
         });
 
-        btnQuit.setText("Close");
-        btnQuit.addActionListener(new java.awt.event.ActionListener() {
+        btnClose.setText("Close");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnQuitActionPerformed(evt);
+                btnCloseActionPerformed(evt);
             }
         });
 
@@ -154,7 +160,7 @@ public class BatchEditWindow extends JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(54, 54, 54))
         );
         layout.setVerticalGroup(
@@ -166,7 +172,7 @@ public class BatchEditWindow extends JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancel)
                     .addComponent(btnConfirm)
-                    .addComponent(btnQuit))
+                    .addComponent(btnClose))
                 .addContainerGap())
         );
 
@@ -233,7 +239,7 @@ public class BatchEditWindow extends JFrame {
      * This terminates the window and returns resources
      * @param evt 
      */
-    private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
 
         // set the states for the editing tab
         tab.setBatchEditWindowOpen(false);
@@ -246,7 +252,7 @@ public class BatchEditWindow extends JFrame {
         
         // this instance should dispose
         analysterWindow.getBatchEditWindow().dispose();
-    }//GEN-LAST:event_btnQuitActionPerformed
+    }//GEN-LAST:event_btnCloseActionPerformed
 
     private void textFieldNewValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldNewValueActionPerformed
 //        jString.setText("");
@@ -320,10 +326,16 @@ public class BatchEditWindow extends JFrame {
         }
     }//GEN-LAST:event_textFieldNewValueKeyPressed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.dispose();
+        analysterWindow.makeTableEditable(false);
+        analysterWindow.getBtnBatchEdit().setEnabled(true);
+    }//GEN-LAST:event_formWindowClosing
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnClose;
     private javax.swing.JButton btnConfirm;
-    private javax.swing.JButton btnQuit;
     private javax.swing.JComboBox comboBoxFieldSelect;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField textFieldNewValue;
