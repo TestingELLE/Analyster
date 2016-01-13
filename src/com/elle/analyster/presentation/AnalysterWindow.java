@@ -2108,8 +2108,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             String columnName = table.getColumnName(index);
             if (columnName.equals("notes")) {
                 column.setMinWidth((int) colWidth);
-            } else if (columnName.equals("priority")) {
-                column.setPreferredWidth(49);
             } else {
                 column.setPreferredWidth(colWidth);
                 column.setMinWidth(colWidth);

@@ -253,6 +253,7 @@ public class ColumnPopupMenu extends JPopupMenu{
             // load capped items and add checkbox items to the list
             loadCappedItems(col, cap);
             
+            
             // now go through every row and add each disctinct item and count
             for(row = 0; row < table.getModel().getRowCount(); row++){
                 
@@ -322,6 +323,7 @@ public class ColumnPopupMenu extends JPopupMenu{
 
         // create an array list for the capped values
         ArrayList<String> cappedItems = new ArrayList<>();
+       
 
         // get all the capped items
         for(Object fItem: filterItems){
@@ -341,6 +343,8 @@ public class ColumnPopupMenu extends JPopupMenu{
             else if(!cappedItems.contains(value)){
                 cappedItems.add(value);
             }
+            java.util.Collections.sort(cappedItems);
+            
         }
 
         // new checkbox item ArrayList
