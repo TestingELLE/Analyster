@@ -2644,7 +2644,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         
         return table;
     }
-
+    
     /**
      * deleteRecordsSelected deletes the selected records
      *
