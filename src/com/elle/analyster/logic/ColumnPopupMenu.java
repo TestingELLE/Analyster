@@ -314,7 +314,7 @@ public class ColumnPopupMenu extends JPopupMenu {
 
         // get all the capped items
         for (Object fItem : filterItems) {
-            
+
             // cap the String length of list options
             if (fItem.toString().length() > cap) {
                 value = fItem.toString().substring(0, cap);
@@ -328,31 +328,30 @@ public class ColumnPopupMenu extends JPopupMenu {
             } else if (!cappedItems.contains(value)) {
                 cappedItems.add(value);
             }
-           
+
         //    Collections.sort(cappedItems);
-           
         // sort the filter as alphabetical order;
-        // put null value column at last;
-            
-           Collections.sort(cappedItems, new Comparator<String>() {
-        @Override
-        public int compare(String o1, String o2) {
-            if (o1 == "" && o2 == "") {
-                return 0;
-            }
-            if (o1 == "") {
-                return 1;
-            }
-            if (o2 == "") {
-                return -1;
-            }
+            // put null value column at last;
+            Collections.sort(cappedItems, new Comparator<String>() {
+
+                public int compare(String o1, String o2) {
+                    if (o1 == "" && o2 == "") {
+                        return 0;
+                    }
+                    if (o1 == "") {
+                        return 1;
+                    }
+                    if (o2 == "") {
+                        return -1;
+                    }
             //Ignore upper and lower case;
+
+                    return o1.toLowerCase().compareTo(o2.toLowerCase());
+                }
+            });
             
-            return o1.toLowerCase().compareTo(o2.toLowerCase()); 
-        }});
-       
         }
-    
+
         // new checkbox item ArrayList
         checkBoxItems.put(col, new ArrayList<>());
 
