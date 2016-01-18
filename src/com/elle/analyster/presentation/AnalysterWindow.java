@@ -592,7 +592,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnRevertChanges)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                         .addComponent(btnAddRecords)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBatchEdit)
@@ -685,11 +685,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanelEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jPanelSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(4, 4, 4))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2001,7 +2003,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 // selects all the row of a table if Ctrl-A (Cmd-A in Mac)
                 //   is pressed
                 if ((ke.getKeyCode() == KeyEvent.VK_A)
-                        && ((ke.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0)) {
+                        && (((ke.getModifiers() & KeyEvent.CTRL_MASK) != 0)
+                            || ((ke.getModifiers() & KeyEvent.VK_META) != 0))){
                     table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                     table.setRowSelectionAllowed(true);
                     table.setRowSelectionInterval(0, table.getRowCount() - 1);

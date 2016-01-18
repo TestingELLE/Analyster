@@ -1,3 +1,15 @@
 Manifest-Version: 1.0
-X-COMMENT: Main-Class will be added automatically by build
+Ant-Version: Apache Ant 1.9.4
+Created-By: 1.8.0-b132 (Oracle Corporation)
+Codebase: *
+Permission: all-permissions
+Application-Library-Allowable-Codebase: javaquery.com
+Caller-Allowable-Codebase: www.javaquery.com javaquery.com
+Application-Name: javaQuery
+Bundle-Name: Analyster
+Bundle-Version: 1.4.1
+Bundle-Date: 2016-01-17 10:39:12 EST
+Implementation-Title: Analyster
+Implementation-Version: 1.4.1
+Implementation-URL: http://www.javaquery.com
 

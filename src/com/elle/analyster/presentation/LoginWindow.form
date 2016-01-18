@@ -90,6 +90,9 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jInputPanel">
+      <Properties>
+        <Property name="opaque" type="boolean" value="false"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -224,6 +227,9 @@
           </Events>
         </Component>
         <Container class="javax.swing.JPanel" name="jButtonPanel">
+          <Properties>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
 
           <Layout>
             <DimensionLayout dim="0">

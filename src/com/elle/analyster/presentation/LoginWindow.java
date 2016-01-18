@@ -8,15 +8,19 @@
 package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.DBConnection;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 
 public class LoginWindow extends JFrame {
@@ -34,6 +38,31 @@ public class LoginWindow extends JFrame {
     
     public LoginWindow() {
         
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(this.getClass().getResource("/com/elle/analyster/image.png"));
+        } catch (IOException e) {
+            System.out.println("SplashScreen image does not exist!");
+        }
+        
+        int width = img.getWidth();
+        int height = img.getHeight();
+        // create another object that is a translucent version of the
+        //  splashscreen
+       BufferedImage imgTmp = new BufferedImage(width, height,BufferedImage.TYPE_INT_ARGB);
+        try {
+            Graphics2D g2d = (Graphics2D) imgTmp.getGraphics();
+            g2d.setComposite(AlphaComposite.SrcOver.derive(0.5f)); 
+            // set the transparency level in range 0.0f - 1.0f 
+            g2d.drawImage(img, 0, 0, null);
+            img = imgTmp;
+            //imgTranslucent = GraphicsEnvironment.getLocalGraphicsEnvironment().
+              //  getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(width, height, Transparency.OPAQUE);
+        } catch (RuntimeException e) {
+        }
+        
+        this.setContentPane(new JLabel(new ImageIcon(img)));
+       
         // initialize
         initComponents();
         logWindow = new LogWindow(); // this is for reporting connections to log
@@ -108,6 +137,8 @@ public class LoginWindow extends JFrame {
                 .addContainerGap())
         );
 
+        jInputPanel.setOpaque(false);
+
         jLabel4.setText("Server");
 
         comboBoxServer.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "pupone", "Local" }));
@@ -147,6 +178,8 @@ public class LoginWindow extends JFrame {
                 comboBoxDatabaseActionPerformed(evt);
             }
         });
+
+        jButtonPanel.setOpaque(false);
 
         btnCancel.setText("Cancel/ Log off");
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
