@@ -37,7 +37,14 @@ public class LogWindow extends JFrame{
 
     // constructor
     public LogWindow(String userName) {
-        FILENAME = "Analyster_" + userName + "_log.txt";
+//        String PortfolioManager = "/Users/"+ System.getProperty("user.name") + "/Library/Application Support/PortfolioManager/";
+//        File dir = new File(PortfolioManager); 
+//        dir.mkdir();
+        String PortfolioManager = "PortfolioManager/";
+        File dir = new File(PortfolioManager); 
+        dir.mkdir();
+        FILENAME = PortfolioManager + "Analyster_" + userName + "_log.txt";
+        
         this.setTitle("Log Window");
         ImageIcon imag = new ImageIcon(
                         "Images/elle gui image.jpg");
@@ -341,7 +348,7 @@ public class LogWindow extends JFrame{
      * This is to be able to easily retrieve specific data according to specific times or dates.
      */
     private void storeLogMessages(){
-
+        
         File file = new File(FILENAME);
         logMessages.clear(); // clear array of any elements
         Date date = new Date();
