@@ -28,6 +28,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -1830,17 +1831,38 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             int row = table.getSelectedRow();
             // a row must be selected
             if(row != -1){
-                String elle_folder = "ELLE ANALYSES";
-                Object pathToDoc = table.getValueAt(row, 4); // path column
-                Object document = table.getValueAt(row, 5); // document column
-                if(document == null){
-                    JOptionPane.showMessageDialog(this, "No document in selected row");
+                boolean elleFolderFound = false;
+//                File forTesters = new File("../../ELLE ANALYSES");//for testers
+//                File forDevs = new File("../ELLE ANALYSES"); //for developers
+                
+                String forTesters = "../../ELLE ANALYSES";//for testers
+                String forDevs = "../ELLE ANALYSES"; //for developers
+                new File(forDevs).exists();
+                
+                String elle_folder = "";
+                if(new File(forTesters).exists()){
+                    elle_folder = forTesters;
+                    elleFolderFound = true;
                 }
-                else{
-                    OpenDocumentTool docTool =  new OpenDocumentTool(elle_folder, pathToDoc.toString(), document.toString());
-                    docTool.setParent(this);
-                    if(!docTool.open())
-                        JOptionPane.showMessageDialog(this, "Could not open file!");
+                if(new File(forDevs).exists()){
+                    elle_folder = forDevs;
+                    elleFolderFound = true;
+                }
+                if(elleFolderFound == false){
+                    JOptionPane.showMessageDialog(this, "ELLE ANALYSES folder not found.");
+                }
+                if(elleFolderFound){
+                    Object pathToDoc = table.getValueAt(row, 4); // path column
+                    Object document = table.getValueAt(row, 5); // document column
+                    if(document == null){
+                        JOptionPane.showMessageDialog(this, "No document in selected row");
+                    }
+                    else{
+                        OpenDocumentTool docTool =  new OpenDocumentTool(elle_folder, pathToDoc.toString(), document.toString());
+                        docTool.setParent(this);
+                        if(!docTool.open())
+                            JOptionPane.showMessageDialog(this, "Could not open file!");
+                    }
                 }
             }
             else{
