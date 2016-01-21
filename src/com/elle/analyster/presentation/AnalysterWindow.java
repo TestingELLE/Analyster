@@ -12,6 +12,7 @@ import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
 import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_TABLE_NAME;
 import com.elle.analyster.logic.JTableCellRenderer;
+import com.elle.analyster.logic.OpenDocumentTool;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -296,6 +297,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuItemBackup = new javax.swing.JMenuItem();
         menuItemAddslash = new javax.swing.JMenuItem();
         menuItemStripslash = new javax.swing.JMenuItem();
+        menuItemOpenDocument = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
         menuItemRepBugSugg = new javax.swing.JMenuItem();
 
@@ -479,7 +481,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "symbol", "author", "analysisDate", "path", "document", "notes", "notesL"
+                "ID", "symbol", "author", "analysisDate", "path", "document", "decision", "notes"
             }
         ) {
             Class[] types = new Class [] {
@@ -878,6 +880,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
         menuTools.add(menuItemStripslash);
+
+        menuItemOpenDocument.setText("Open Document");
+        menuItemOpenDocument.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemOpenDocumentActionPerformed(evt);
+            }
+        });
+        menuTools.add(menuItemOpenDocument);
 
         menuBar.add(menuTools);
 
@@ -1807,6 +1817,38 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
 
     }//GEN-LAST:event_menuItemAddslashActionPerformed
+
+    private void menuItemOpenDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenDocumentActionPerformed
+        
+        // must be on reports tab
+        if(getSelectedTable() == reportTable){
+            JTable table = getSelectedTable();
+            int row = table.getSelectedRow();
+            // a row must be selected
+            if(row != -1){
+                String elle_folder = "ELLE ANALYSES";
+                Object pathToDoc = table.getValueAt(row, 4); // path column
+                Object document = table.getValueAt(row, 5); // document column
+                if(document == null){
+                    JOptionPane.showMessageDialog(this, "No document in selected row");
+                }
+                else{
+                    OpenDocumentTool docTool =  new OpenDocumentTool(elle_folder, pathToDoc.toString(), document.toString());
+                    docTool.setParent(this);
+                    if(!docTool.open())
+                        JOptionPane.showMessageDialog(this, "Could not open file!");
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "No row was selected.");
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Must be on Reports tab.");
+        }
+        
+        
+    }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
 
     //set the timer for information Label show
     public void startCountDownFromNow(int waitSeconds) {
@@ -2910,6 +2952,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JCheckBoxMenuItem menuItemLogChkBx;
     private javax.swing.JMenuItem menuItemLogOff;
     private javax.swing.JMenuItem menuItemManageDBs;
+    private javax.swing.JMenuItem menuItemOpenDocument;
     private javax.swing.JMenuItem menuItemPrintDisplay;
     private javax.swing.JMenuItem menuItemPrintGUI;
     private javax.swing.JMenuItem menuItemReloadData;
