@@ -18,6 +18,11 @@ public class FilePathFormat {
      */
     public static String convert(String path, Boolean toWindows){
         
+        // null exception handling
+        if(path == null){
+            return "";
+        }
+        
         final String F_SLASH = "/";   // forward slash for non- windows path
         final String B_SLASH = "\\";  // backslash for windows path
 
@@ -25,8 +30,10 @@ public class FilePathFormat {
         String[] dirs; 
         if(path.contains(F_SLASH))
             dirs = path.split(F_SLASH);
-        else
+        else if(path.contains(B_SLASH))
             dirs = path.split(B_SLASH + B_SLASH); // regex = \\\\ -> \\
+        else
+            dirs = new String[]{path};
         
         // get path slash
         String slash = (toWindows)? B_SLASH : F_SLASH;
