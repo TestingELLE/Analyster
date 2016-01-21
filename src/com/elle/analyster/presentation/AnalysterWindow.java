@@ -1158,6 +1158,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         if (tabName.equals("Reports")) {
             this.menuItemStripslash.setEnabled(true);
             this.menuItemAddslash.setEnabled(true);
+            menuItemOpenDocument.setEnabled(true);
+        }
+        else{
+            menuItemOpenDocument.setEnabled(false);
         }
 
         // get booleans for the states of the selected tab
