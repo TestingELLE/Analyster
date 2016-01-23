@@ -482,7 +482,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "symbol", "author", "analysisDate", "path", "document", "decision", "notes"
+                "ID", "symbol", "author", "analysisDate", "path", "document", "notes", "notesL"
             }
         ) {
             Class[] types = new Class [] {

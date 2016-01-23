@@ -587,8 +587,8 @@
                         <Column editable="true" title="analysisDate" type="java.lang.Object"/>
                         <Column editable="true" title="path" type="java.lang.Object"/>
                         <Column editable="true" title="document" type="java.lang.Object"/>
-                        <Column editable="true" title="decision" type="java.lang.Object"/>
                         <Column editable="true" title="notes" type="java.lang.Object"/>
+                        <Column editable="true" title="notesL" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="autoResizeMode" type="int" value="4"/>
