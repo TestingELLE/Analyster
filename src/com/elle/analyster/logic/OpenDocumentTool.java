@@ -18,8 +18,7 @@ public class OpenDocumentTool {
     private String elle_folder;
     private String doc_path;
     private String doc_file;
-    private final String OS_WINDOWS = "Windows";
-    private final String OS_OTHER = "Other";
+    private final String OS_WINDOWS = "windows";
     private Component parent = null;
     
     public OpenDocumentTool(String elle_folder, String doc_path, String doc_file){
@@ -33,7 +32,7 @@ public class OpenDocumentTool {
         
         // is windows
         boolean isWindows = false;
-        if(System.getProperty("sun.desktop") == "windows")
+        if(System.getProperty("sun.desktop").equals(OS_WINDOWS));
             isWindows = true;
         
         String path = getPath(isWindows);
