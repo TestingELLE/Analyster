@@ -32,7 +32,7 @@ public class OpenDocumentTool {
         
         // is windows
         boolean isWindows = false;
-        if(System.getProperty("sun.desktop").equals(OS_WINDOWS));
+        if(System.getProperty("sun.desktop").equals(OS_WINDOWS))
             isWindows = true;
         
         String path = getPath(isWindows);
