@@ -1,18 +1,7 @@
 package com.elle.analyster.presentation;
 
-import com.elle.analyster.database.BackupDBTables;
-import com.elle.analyster.database.DBConnection;
-import com.elle.analyster.logic.ColumnPopupMenu;
-import com.elle.analyster.logic.CreateDocumentFilter;
-import com.elle.analyster.logic.EditableTableModel;
-import com.elle.analyster.logic.ITableConstants;
-import com.elle.analyster.database.ModifiedData;
-import com.elle.analyster.database.ModifiedTableData;
-import com.elle.analyster.logic.Tab;
-import com.elle.analyster.logic.TableFilter;
-import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_TABLE_NAME;
-import com.elle.analyster.logic.JTableCellRenderer;
-import com.elle.analyster.logic.OpenDocumentTool;
+import com.elle.analyster.database.*;
+import com.elle.analyster.logic.*;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -67,6 +56,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private BatchEditWindow batchEditWindow;
     private EditDatabaseWindow editDatabaseWindow;
     private ReportWindow reportWindow;
+    private ShortCutSetting ShortCut;
 
     // colors - Edit mode labels
     private Color editModeDefaultTextColor;
@@ -219,6 +209,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         tabs.get(ASSIGNMENTS_TABLE_NAME).setEditing(false);
         tabs.get(REPORTS_TABLE_NAME).setEditing(false);
         tabs.get(ARCHIVE_TABLE_NAME).setEditing(false);
+
+        // add copy+paste short cut into table and text Area
+        InputMap ip = (InputMap) UIManager.get("TextField.focusInputMap");
+        InputMap ip2 = this.jTextAreaSQL.getInputMap();
+        ShortCut.copyAndPasteShortCut(ip);
+        ShortCut.copyAndPasteShortCut(ip2);
 
         informationLabel.setText("");
         isBatchEditWindowShow = false;
@@ -1160,8 +1156,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             this.menuItemStripslash.setEnabled(true);
             this.menuItemAddslash.setEnabled(true);
             menuItemOpenDocument.setEnabled(true);
-        }
-        else{
+        } else {
             menuItemOpenDocument.setEnabled(false);
         }
 
@@ -1773,7 +1768,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         String str = table.getValueAt(i, 4).toString();
                         //Identify the column startwith and endwith "/" 
                         while (str.startsWith("/") && str.endsWith("/")) {
-                        //Continue strip "/" until the correct format
+                            //Continue strip "/" until the correct format
 
                             str = str.substring(1, str.length() - 1);
 
@@ -1824,56 +1819,54 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_menuItemAddslashActionPerformed
 
     private void menuItemOpenDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenDocumentActionPerformed
-        
+
         // must be on reports tab
-        if(getSelectedTable() == reportTable){
+        if (getSelectedTable() == reportTable) {
             JTable table = getSelectedTable();
             int row = table.getSelectedRow();
             // a row must be selected
-            if(row != -1){
+            if (row != -1) {
                 boolean elleFolderFound = false;
 //                File forTesters = new File("../../ELLE ANALYSES");//for testers
 //                File forDevs = new File("../ELLE ANALYSES"); //for developers
-                
+
                 String forTesters = "../../ELLE ANALYSES";//for testers
                 String forDevs = "../ELLE ANALYSES"; //for developers
                 new File(forDevs).exists();
-                
+
                 String elle_folder = "";
-                if(new File(forTesters).exists()){
+                if (new File(forTesters).exists()) {
                     elle_folder = forTesters;
                     elleFolderFound = true;
                 }
-                if(new File(forDevs).exists()){
+                if (new File(forDevs).exists()) {
                     elle_folder = forDevs;
                     elleFolderFound = true;
                 }
-                if(elleFolderFound == false){
+                if (elleFolderFound == false) {
                     JOptionPane.showMessageDialog(this, "ELLE ANALYSES folder not found.");
                 }
-                if(elleFolderFound){
+                if (elleFolderFound) {
                     Object pathToDoc = table.getValueAt(row, 4); // path column
                     Object document = table.getValueAt(row, 5); // document column
-                    if(document == null){
+                    if (document == null) {
                         JOptionPane.showMessageDialog(this, "No document in selected row");
-                    }
-                    else{
-                        OpenDocumentTool docTool =  new OpenDocumentTool(elle_folder, pathToDoc.toString(), document.toString());
+                    } else {
+                        OpenDocumentTool docTool = new OpenDocumentTool(elle_folder, pathToDoc.toString(), document.toString());
                         docTool.setParent(this);
-                        if(!docTool.open())
+                        if (!docTool.open()) {
                             JOptionPane.showMessageDialog(this, "Could not open file!");
+                        }
                     }
                 }
-            }
-            else{
+            } else {
                 JOptionPane.showMessageDialog(this, "No row was selected.");
             }
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(this, "Must be on Reports tab.");
         }
-        
-        
+
+
     }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
 
     //set the timer for information Label show
