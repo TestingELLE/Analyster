@@ -1527,6 +1527,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 try {
                     // execute the sql statement
                     if (!values.equals("VALUES (")) {      //skip if nothing was added
+                        DBConnection.close();
                         DBConnection.open();
                         statement = DBConnection.getStatement();
                         statement.executeUpdate(insertInto + values);
@@ -2241,6 +2242,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 }
                 System.out.println(sqlChange);
 
+                DBConnection.close();
                 DBConnection.open();
                 statement = DBConnection.getStatement();
                 statement.executeUpdate(sqlChange);
@@ -2626,6 +2628,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     public JTable loadTable(JTable table) {
 
         // open connection because might time out
+        DBConnection.close();
         DBConnection.open();
         statement = DBConnection.getStatement();
         String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
@@ -2743,6 +2746,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             try {
 
                 // delete records from database
+                DBConnection.close();
                 DBConnection.open();
                 statement = DBConnection.getStatement();
                 statement.executeUpdate(sqlDelete);
