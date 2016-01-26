@@ -51,8 +51,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-1-21";
-    private final String VERSION = "1.0";
+    private final String CREATION_DATE = "2016-1-24";
+    private final String VERSION = "1.0a";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -482,7 +482,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "symbol", "author", "analysisDate", "path", "document", "decision", "notes"
+                "ID", "symbol", "author", "analysisDate", "path", "document", "notes", "notesL"
             }
         ) {
             Class[] types = new Class [] {

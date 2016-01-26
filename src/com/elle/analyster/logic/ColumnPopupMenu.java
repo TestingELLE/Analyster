@@ -308,10 +308,10 @@ public class ColumnPopupMenu extends JPopupMenu {
 
         // get disctinct items
         ArrayList<Object> filterItems = new ArrayList<>(getDistinctItems(col));
-
+        
         // create an array list for the capped values
         ArrayList<String> cappedItems = new ArrayList<>();
-
+        
         // get all the capped items
         for (Object fItem : filterItems) {
 
