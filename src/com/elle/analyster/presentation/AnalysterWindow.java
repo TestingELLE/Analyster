@@ -2626,6 +2626,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     public JTable loadTable(JTable table) {
 
         // open connection because might time out
+        DBConnection.close();
         DBConnection.open();
         statement = DBConnection.getStatement();
         String sql = "SELECT * FROM " + table.getName() + " ORDER BY symbol ASC";
