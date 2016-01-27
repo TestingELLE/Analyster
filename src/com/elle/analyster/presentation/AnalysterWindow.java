@@ -35,6 +35,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -482,7 +484,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "symbol", "author", "analysisDate", "path", "document", "notes", "notesL"
+                "ID", "symbol", "analyster", "analysisDate", "path", "document", "notes", "notesL"
             }
         ) {
             Class[] types = new Class [] {
@@ -1915,8 +1917,34 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     if (e.getClickCount() == 2) {
                         clearFilterDoubleClick(e, table);
                     }
+                
+//                else if(e.getClickCount() == 1) {
+//                        for (int j = 0; j < table.getColumnCount(); j++) {
+//                            // Locate columns under "ID"
+//                            String columnName = table.getColumnName(j);
+//                            if (columnName.equalsIgnoreCase("priority")) {
+//                                ArrayList<String> priority = new ArrayList<>();
+//
+//                                for (int row = 0; row < table.getModel().getRowCount(); row++) {
+//
+//                                    String Value = table.getModel().getValueAt(row, 0).toString();
+//
+//                                    ID.add(Value);
+//                                }
+//                                TableRowSorter<DefaultTableModel> RowSorter = (TableRowSorter<DefaultTableModel>) table.getRowSorter();
+//                                RowSorter.setComparator(0, new Comparator<String>() {
+//
+//                                    @Override
+//                                    public int compare(String o1, String o2) {
+//                                        return Integer.parseInt(o1) - Integer.parseInt(o2);
+//                                    }
+//
+//                                });
+//
+//                            }
+//                        }
+//                    }
                 }
-
                 /**
                  * Popup menus are triggered differently on different platforms
                  * Therefore, isPopupTrigger should be checked in both
