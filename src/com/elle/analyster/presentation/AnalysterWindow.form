@@ -583,7 +583,7 @@
                           <Data value="null"/>
                           <Data value="null"/>
                         </Column>
-                        <Column editable="true" title="author" type="java.lang.String"/>
+                        <Column editable="true" title="analyst" type="java.lang.String"/>
                         <Column editable="true" title="analysisDate" type="java.lang.Object"/>
                         <Column editable="true" title="path" type="java.lang.Object"/>
                         <Column editable="true" title="document" type="java.lang.Object"/>
