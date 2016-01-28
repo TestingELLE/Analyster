@@ -15,11 +15,13 @@ import java.awt.Component;
 public class Authorization {
     
     // constants
-    private static final String DB_TABLE_NAME = "adf";
-    private static final String DB_COLUMN_1 = "adf";
-    private static final String DB_COLUMN_2 = "adf";
-    private static final String LEVEL_1 = "Administrator";
-    private static final String LEVEL_2 = "Developer";
+    private static final String DB_TABLE_NAME = "A_accessLevel_tbl";
+    private static final String DB_COLUMN_1 = "user";
+    private static final String DB_COLUMN_2 = "accessLevel";
+    private static final String LEVEL_1 = "administrator";
+    private static final String LEVEL_2 = "developer";
+    private static final String LEVEL_3 = "user";
+    private static final String LEVEL_4 = "viewer";
     
     // class variables
     private static String userLogin;
