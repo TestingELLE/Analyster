@@ -78,13 +78,14 @@ public class Authorization {
                 case LEVEL_1:
                     break;
                 case LEVEL_2:
-                    developerPermissions(c);
+                    //TODO
+                    //developerPermissions(c);
                     break;
                 case LEVEL_3:
-                    developerPermissions(c);
+                    //TODO
                     break;
                 case LEVEL_4:
-                    developerPermissions(c);
+                    //TODO
                     break;
                 default:
                     break;
