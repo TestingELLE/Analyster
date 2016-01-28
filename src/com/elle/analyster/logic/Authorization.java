@@ -58,7 +58,7 @@ public class Authorization {
         SQL_Commands sql_commands 
                 = new SQL_Commands(DBConnection.getConnection());
         String query = "SELECT * FROM " + DB_TABLE_NAME +
-                      " WHERE user = '" + userLogin +"';";
+                      " WHERE " + DB_COLUMN_1 + " = '" + userLogin +"';";
         HashMap<String,ArrayList<Object>> map;
         map = sql_commands.getTableData(sql_commands.executeQuery(query));
         accessLevel = map.get(DB_COLUMN_2).get(0).toString();
@@ -78,6 +78,12 @@ public class Authorization {
                 case LEVEL_1:
                     break;
                 case LEVEL_2:
+                    developerPermissions(c);
+                    break;
+                case LEVEL_3:
+                    developerPermissions(c);
+                    break;
+                case LEVEL_4:
                     developerPermissions(c);
                     break;
                 default:
