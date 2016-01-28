@@ -307,8 +307,14 @@ public class LoginWindow extends JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordFieldPWActionPerformed
     public String getUserName() {
-        String userNameToAL = userName.substring(7);
-        return userNameToAL;
+        // local host testing or if does not contain pupone
+        if(userName.startsWith("pupone")){
+            String userNameToAL = userName.substring(7);
+            return userNameToAL;
+        }
+        else{
+            return userName;
+        }
     }
 
     /**

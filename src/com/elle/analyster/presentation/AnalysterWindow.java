@@ -8,6 +8,7 @@ import com.elle.analyster.logic.EditableTableModel;
 import com.elle.analyster.logic.ITableConstants;
 import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.database.ModifiedTableData;
+import com.elle.analyster.logic.Authorization;
 import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
 import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_TABLE_NAME;
@@ -229,6 +230,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // set title of window to Analyster
         this.setTitle("Analyster");
         this.setSize(this.getWidth(), 560);
+        
+        // authorize user
+        Authorization.getInfoFromDB();
+        Authorization.authorize(this);
     }
 
     /**
@@ -1248,6 +1253,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             labelEditModeState.setVisible(false);
             editModeTextColor(true);
         }
+        
+        // authorize user
+        Authorization.authorize(this);
     }
 
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed

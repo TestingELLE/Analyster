@@ -67,12 +67,14 @@ public class BackupDBTables{
     private ArrayList<CheckBoxItem> checkBoxItems;
     private JButton btnBackup;
     private JButton btnDelete;
+    private SQL_Commands sql_commands;
 
     public BackupDBTables(Connection connection, String tableName) {
         this.tableName = tableName;
         this.backupTableName = null;
         this.parentComponent = null;
         this.connection = connection;
+        this.sql_commands = new SQL_Commands(connection);
         try {
             this.statement = connection.createStatement();
         } catch (SQLException ex) {
@@ -88,6 +90,7 @@ public class BackupDBTables{
         this.backupTableName = null;
         this.parentComponent = parentComponent;
         this.connection = connection;
+        this.sql_commands = new SQL_Commands(connection);
         try {
             this.statement = connection.createStatement();
         } catch (SQLException ex) {
@@ -110,6 +113,7 @@ public class BackupDBTables{
             handleSQLexWithMessageBox(ex);
         }
         this.statement = statement;
+        this.sql_commands = new SQL_Commands(connection);
         initComponents();
     }
 
@@ -125,6 +129,7 @@ public class BackupDBTables{
             handleSQLexWithMessageBox(ex);
         }
         this.statement = statement;
+        this.sql_commands = new SQL_Commands(connection);
         initComponents();
     }
 
@@ -136,6 +141,7 @@ public class BackupDBTables{
         if(connection != null){
             this.statement = createStatement(connection);
         }
+        this.sql_commands = new SQL_Commands(connection);
         initComponents();
     }
 
@@ -147,6 +153,7 @@ public class BackupDBTables{
         if(connection != null){
             this.statement = createStatement(connection);
         }
+        this.sql_commands = new SQL_Commands(connection);
         initComponents();
     }
     
@@ -291,6 +298,8 @@ public class BackupDBTables{
                 ");";
         
         // TODO - execute sql query
+        if(!sql_commands.updateQuery(createTableQuery))
+            JOptionPane.showMessageDialog(parentComponent, "unable to create table " + BACKUP_DB_TABLE_NAME );
     }
 
     public ArrayList<CheckBoxItem> getCheckBoxItemsFromDB() {
@@ -304,33 +313,51 @@ public class BackupDBTables{
                " FROM " + BACKUP_DB_TABLE_NAME +
                " WHERE " + BACKUP_DB_TABLE_COLUMN_1 + " = '" + getTableName() + "' ;";
         
+        ResultSet result = null;
+        
         try {
             //Here we create our query
             PreparedStatement statement = getConnection().prepareStatement(sql);
 
             //Creating a variable to execute query
-            ResultSet result = statement.executeQuery();
+            result = statement.executeQuery();
 
-            // create checkbox items from result set and load up array list
-            while(result.next())
-            {
-                // get column data
-                int id = Integer.parseInt(result.getString(1));
-                String backupName = result.getString(2);
-                       
-                // create checkBoxItem
-                CheckBoxItem item = new CheckBoxItem(backupName);
-                
-                // set checkbox item id (same id as primary key on db table)
-                item.setId(id);
-                
-                // add checkbox item to the array list
-                items.add(item);
-            }
         } catch (SQLException ex) {
             Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            // if table doesn't exist and needs to be created
+            if(ex.getMessage().endsWith("exist")){
+                System.out.println("ENTERED !!!!!!!!!!!!!!!!!!!!!");
+                createDBTableToStoreBackupsInfo();
+                result = sql_commands.executeQuery(sql);
+            }else{
+                handleSQLexWithMessageBox(ex); // all other error messages
+            } 
+        } finally{
+            // create checkbox items from result set and load up array list
+            if(result != null){
+                try {
+                    while(result.next())
+                    {
+                        // get column data
+                        int id = Integer.parseInt(result.getString(1));
+                        String backupName = result.getString(2);
+                        
+                        // create checkBoxItem
+                        CheckBoxItem item = new CheckBoxItem(backupName);
+                        
+                        // set checkbox item id (same id as primary key on db table)
+                        item.setId(id);
+                        
+                        // add checkbox item to the array list
+                        items.add(item);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
+                    handleSQLexWithMessageBox(ex); // any errors 
+                }
+            }
         }
         
         return items;
