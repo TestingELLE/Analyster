@@ -1,8 +1,11 @@
 package com.elle.analyster.logic;
 
 import com.elle.analyster.database.DBConnection;
+import com.elle.analyster.database.SQL_Commands;
 import com.elle.analyster.presentation.AnalysterWindow;
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class will simply override any original behavior depending on the 
@@ -52,8 +55,13 @@ public class Authorization {
     public static void getInfoFromDB(){
         userLogin = DBConnection.getUserName();
         // use sql query to get the accesslevel from DB
-        accessLevel = "Developer"; // DB needs to be implemented
-        System.out.println("info ran");
+        SQL_Commands sql_commands 
+                = new SQL_Commands(DBConnection.getConnection());
+        String query = "SELECT * FROM " + DB_TABLE_NAME +
+                      " WHERE user = '" + userLogin +"';";
+        HashMap<String,ArrayList<Object>> map;
+        map = sql_commands.getTableData(sql_commands.executeQuery(query));
+        accessLevel = map.get(DB_COLUMN_2).get(0).toString();
     }
     
     /**
