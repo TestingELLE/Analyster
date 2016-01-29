@@ -23,7 +23,7 @@ public interface ITableConstants {
     
     // column width percent constants
     public static final float[] COL_WIDTH_PER_ASSIGNMENTS = {35, 65, 80, 55, 99, 99, 447};
-    public static final float[] COL_WIDTH_PER_REPORTS = {35, 65, 80, 100, 160, 120, 212, 123};
+    public static final float[] COL_WIDTH_PER_REPORTS = {35, 65, 80, 100, 160, 120, 80, 200};
     public static final float[] COL_WIDTH_PER_ARCHIVE = {35, 99, 35, 65, 80, 55, 99, 99, 447};
     
     // search fields for the comboBox for each table
@@ -33,6 +33,6 @@ public interface ITableConstants {
     
     // batch edit combobox selections for each table
     public static final String[] ASSIGNMENTS_BATCHEDIT_CB_FIELDS = {"analyst", "priority", "dateAssigned", "dateDone", "notes"};
-    public static final String[] REPORTS_BATCHEDIT_CB_FIELDS = {"author", "analysisDate", "notes", "symbol"};
+    public static final String[] REPORTS_BATCHEDIT_CB_FIELDS = {"analyst", "analysisDate", "notes", "symbol"};
     public static final String[] ARCHIVE_BATCHEDIT_CB_FIELDS = {"analyst", "priority", "dateAssigned", "notes", "symbol"};
 }

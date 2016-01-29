@@ -230,7 +230,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // set title of window to Analyster
         this.setTitle("Analyster");
         this.setSize(this.getWidth(), 560);
-        
+
         // authorize user
         Authorization.getInfoFromDB();
         Authorization.authorize(this);
@@ -1253,7 +1253,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             labelEditModeState.setVisible(false);
             editModeTextColor(true);
         }
-        
+
         // authorize user
         Authorization.authorize(this);
     }
@@ -1836,6 +1836,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     private void menuItemOpenDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenDocumentActionPerformed
 
+    openDocument();        
+
+    }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
+
+    public void openDocument(){
         // must be on reports tab
         if (getSelectedTable() == reportTable) {
             JTable table = getSelectedTable();
@@ -1882,9 +1887,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             JOptionPane.showMessageDialog(this, "Must be on Reports tab.");
         }
 
-
-    }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
-
+    }
     //set the timer for information Label show
     public void startCountDownFromNow(int waitSeconds) {
         Timer timer = new Timer(waitSeconds * 1000, new ActionListener() {
@@ -1922,10 +1925,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                     if (e.getClickCount() == 2) {
                         clearFilterDoubleClick(e, table);
-                        
-                    }
 
- 
+                    }
 
                 }
 
@@ -2010,6 +2011,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                 //if edit mode on, it select all the text in it
                                 if (labelEditModeState.getText().equals("ON ")) {
                                     selectAllText(e);
+                                }
+                                if (e.isControlDown()) {
+
+                                    
+                                        openDocument();
+                                    
                                 }
                             }
                         } // end if left mouse clicks
