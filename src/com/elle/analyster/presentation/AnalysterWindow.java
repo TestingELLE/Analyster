@@ -37,9 +37,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -56,8 +53,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-1-28";
-    private final String VERSION = "1.0.2";
+    private final String CREATION_DATE = "2016-2-2";
+    private final String VERSION = "1.0.3";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
