@@ -50,6 +50,34 @@ public class OpenDocumentTool {
         this(null, doc_path, doc_file, null, FilePathFormat.isWindows());
     }
     
+    public OpenDocumentTool(Component parent, boolean isWindows){
+        this(null, null, null, parent, isWindows);
+    }
+    
+    public OpenDocumentTool(Component parent){
+        this(null, null, null, parent, FilePathFormat.isWindows());
+    }
+    
+    public OpenDocumentTool(boolean isWindows){
+        this(null, null, null, null, isWindows);
+    }
+    
+    public OpenDocumentTool(){
+        this(null, null, null, null, FilePathFormat.isWindows());
+    }
+    
+    public boolean open(String elle_folder, String doc_path, String doc_file){
+        
+        this.elle_folder = elle_folder;
+        this.doc_path = doc_path;
+        this.doc_file = doc_file;
+        return open();
+    }
+    
+    public boolean open(String doc_path, String doc_file){
+        return open(null, doc_path, doc_file);
+    }
+    
     public boolean open(){
         
         String path = getPath(isWindows);
