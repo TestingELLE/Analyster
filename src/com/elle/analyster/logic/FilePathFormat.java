@@ -10,6 +10,8 @@ package com.elle.analyster.logic;
  */
 public class FilePathFormat {
     
+    private static final String OS_WINDOWS = "windows";
+    
     /**
      * Converts a file path format to either windows or non-windows format.
      * @param path path string to convert
@@ -45,5 +47,13 @@ public class FilePathFormat {
         }
         
         return path;
+    }
+    
+    /**
+     * This method will return if the platform is windows or not.
+     * @return boolean true if windows and false if not
+     */
+    public static boolean isWindows(){
+        return System.getProperty("sun.desktop").equals(OS_WINDOWS);
     }
 }
