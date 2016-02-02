@@ -9,6 +9,7 @@ import com.elle.analyster.logic.ITableConstants;
 import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.database.ModifiedTableData;
 import com.elle.analyster.logic.Authorization;
+import com.elle.analyster.logic.FilePathFormat;
 import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
 import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_TABLE_NAME;
@@ -1835,7 +1836,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_menuItemAddslashActionPerformed
 
     private void menuItemOpenDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenDocumentActionPerformed
+        openDocumentTool();
+    }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
 
+    // menu item open document tool 
+    public void openDocumentTool(){
         // must be on reports tab
         if (getSelectedTable() == reportTable) {
             JTable table = getSelectedTable();
@@ -1843,22 +1848,22 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             // a row must be selected
             if (row != -1) {
                 boolean elleFolderFound = false;
-//                File forTesters = new File("../../ELLE ANALYSES");//for testers
-//                File forDevs = new File("../ELLE ANALYSES"); //for developers
-
-                String forTesters = "../../ELLE ANALYSES";//for testers
-                String forDevs = "../ELLE ANALYSES"; //for developers
-                new File(forDevs).exists();
+                boolean isWindows = FilePathFormat.isWindows();
+                // commented out devs because they are both the same
+                // however if they change the code is still here
+                String forTesters = FilePathFormat.convert("../ELLE ANALYSES", isWindows);// for testers - jar in same folder
+                //String forDevs = FilePathFormat.convert("../ELLE ANALYSES", isWindows); // for developers
 
                 String elle_folder = "";
                 if (new File(forTesters).exists()) {
                     elle_folder = forTesters;
+                    String msg = "path found = " + (new File(forTesters).getAbsolutePath());
                     elleFolderFound = true;
                 }
-                if (new File(forDevs).exists()) {
-                    elle_folder = forDevs;
-                    elleFolderFound = true;
-                }
+//                else if (new File(forDevs).exists()) {
+//                    elle_folder = forDevs;
+//                    elleFolderFound = true;
+//                }
                 if (elleFolderFound == false) {
                     JOptionPane.showMessageDialog(this, "ELLE ANALYSES folder not found.");
                 }
@@ -1881,10 +1886,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         } else {
             JOptionPane.showMessageDialog(this, "Must be on Reports tab.");
         }
-
-
-    }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
-
+    }
+    
     //set the timer for information Label show
     public void startCountDownFromNow(int waitSeconds) {
         Timer timer = new Timer(waitSeconds * 1000, new ActionListener() {
