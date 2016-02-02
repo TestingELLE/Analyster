@@ -27,9 +27,9 @@ public interface ITableConstants {
     public static final float[] COL_WIDTH_PER_ARCHIVE = {35, 99, 35, 65, 80, 55, 99, 99, 447};
     
     // search fields for the comboBox for each table
-    public static final String[] ASSIGNMENTS_SEARCH_FIELDS = {"Symbol","Analyst"};
-    public static final String[] REPORTS_SEARCH_FIELDS = {"Symbol","Author"};
-    public static final String[] ARCHIVE_SEARCH_FIELDS = {"Symbol","Analyst"};
+    public static final String[] ASSIGNMENTS_SEARCH_FIELDS = {"Symbol","Analyst","Priority","Notes"};
+    public static final String[] REPORTS_SEARCH_FIELDS = {"Symbol","Analyst","Path","Document","Notes"};
+    public static final String[] ARCHIVE_SEARCH_FIELDS = {"Symbol","Analyst","Priority","Notes"};
     
     // batch edit combobox selections for each table
     public static final String[] ASSIGNMENTS_BATCHEDIT_CB_FIELDS = {"analyst", "priority", "dateAssigned", "dateDone", "notes"};
