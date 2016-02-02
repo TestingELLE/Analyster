@@ -18,19 +18,39 @@ public class OpenDocumentTool {
     private String elle_folder;
     private String doc_path;
     private String doc_file;
-    private Component parent = null;
+    private Component parent;
+    private boolean isWindows;
     
-    public OpenDocumentTool(String elle_folder, String doc_path, String doc_file){
+    public OpenDocumentTool(String elle_folder, String doc_path, String doc_file, Component parent, boolean isWindows){
         
         this.elle_folder = elle_folder;
         this.doc_path = doc_path;
         this.doc_file = doc_file;
+        this.parent = parent;
+        this.isWindows = isWindows;
+    }
+    
+    public OpenDocumentTool(String elle_folder, String doc_path, String doc_file, Component parent){
+        this(elle_folder, doc_path, doc_file, parent, FilePathFormat.isWindows());
+    }
+    
+    public OpenDocumentTool(String elle_folder, String doc_path, String doc_file){
+        this(elle_folder, doc_path, doc_file, null, FilePathFormat.isWindows());
+    }
+    
+    public OpenDocumentTool(String doc_path, String doc_file, Component parent, boolean isWindows){
+        this(null, doc_path, doc_file, parent, isWindows);
+    }
+    
+    public OpenDocumentTool(String doc_path, String doc_file, Component parent){
+        this(null, doc_path, doc_file, parent, FilePathFormat.isWindows());
+    }
+    
+    public OpenDocumentTool(String doc_path, String doc_file){
+        this(null, doc_path, doc_file, null, FilePathFormat.isWindows());
     }
     
     public boolean open(){
-        
-        // is windows
-        boolean isWindows = FilePathFormat.isWindows();
         
         String path = getPath(isWindows);
         
