@@ -48,7 +48,7 @@ public class LogWindow extends JFrame {
             
         } else {
 //            String Analyster = "Analyster_logs/";
-            String Analyster =  "\\Users\\" + System.getProperty("user.name") + "\\Documents\\Analyster\\";
+            String Analyster =  "C:\\Users\\" + System.getProperty("user.name") + "\\Documents\\Analyster\\";
             File dir = new File(Analyster);
             dir.mkdir();
             FILENAME = Analyster + "Analyster_" + userName + "_log.txt";
