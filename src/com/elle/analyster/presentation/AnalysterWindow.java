@@ -67,8 +67,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-2-02";
-    private final String VERSION = "1.0.3b";
+    private final String CREATION_DATE = "2016-2-05";
+    private final String VERSION = "1.0.3d";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -369,9 +369,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(ComboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
+                        .addComponent(ComboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSearch)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(searchInformationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1899,9 +1898,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             } else {
                 JOptionPane.showMessageDialog(this, "No row was selected.");
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Must be on Reports tab.");
-        }
+        } 
+//        else {
+//            JOptionPane.showMessageDialog(this, "Must be on Reports tab.");
+//        }
     }
 
     //set the timer for information Label show
@@ -2029,7 +2029,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                     selectAllText(e);
                                 }
                                 if (e.isControlDown()) {
+                                
                                     openDocumentTool();
+                                    
                                 }
                             }
                         } // end if left mouse clicks
@@ -2113,6 +2115,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                     table.setRowSelectionAllowed(true);
                     table.setRowSelectionInterval(0, table.getRowCount() - 1);
+                    System.out.println("here");
                 }
             }
 
@@ -2753,7 +2756,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         Map<Integer, ArrayList<Object>> valueListMap = new HashMap();
         for (int col = 0; col < table.getColumnCount(); col++) {
             String colName = colNames[col];
-            System.out.println(colName);
+            
 
             ArrayList valueList = new ArrayList<Object>();
 
