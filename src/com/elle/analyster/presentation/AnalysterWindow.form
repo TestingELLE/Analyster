@@ -338,8 +338,8 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="textFieldForSearch" min="-2" pref="141" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="ComboBoxForSearch" min="-2" pref="153" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnSearch" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -354,10 +354,10 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="textFieldForSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="comboBoxSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnClearAllFilter" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ComboBoxForSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="searchInformationLabel" pref="17" max="32767" attributes="0"/>
@@ -373,15 +373,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSearchActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JTextField" name="textFieldForSearch">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Enter Symbol name"/>
-              </Properties>
-              <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="textFieldForSearchMouseClicked"/>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textFieldForSearchKeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="comboBoxSearch">
@@ -406,6 +397,18 @@
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="searchInformationLabel">
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ComboBoxForSearch">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="4">
+                    <StringItem index="0" value="Item 1"/>
+                    <StringItem index="1" value="Item 2"/>
+                    <StringItem index="2" value="Item 3"/>
+                    <StringItem index="3" value="Item 4"/>
+                  </StringArray>
+                </Property>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
@@ -584,8 +587,8 @@
                         <Column editable="true" title="analysisDate" type="java.lang.Object"/>
                         <Column editable="true" title="path" type="java.lang.Object"/>
                         <Column editable="true" title="document" type="java.lang.Object"/>
+                        <Column editable="true" title="decision" type="java.lang.Object"/>
                         <Column editable="true" title="notes" type="java.lang.Object"/>
-                        <Column editable="true" title="notesL" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="autoResizeMode" type="int" value="4"/>
@@ -657,20 +660,32 @@
                 <Component class="javax.swing.JTable" name="archiveTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="7" rowCount="15">
+                      <Table columnCount="9" rowCount="15">
                         <Column editable="false" title="ID" type="java.lang.Integer"/>
+                        <Column editable="true" title="dateArchived" type="java.lang.Object"/>
+                        <Column editable="true" title="aID" type="java.lang.Object"/>
                         <Column editable="true" title="symbol" type="java.lang.Object"/>
                         <Column editable="true" title="analyst" type="java.lang.Object"/>
                         <Column editable="true" title="priority" type="java.lang.Object"/>
                         <Column editable="true" title="dateAssigned" type="java.lang.Object"/>
                         <Column editable="true" title="dateDone" type="java.lang.Object"/>
-                        <Column editable="true" title="decision" type="java.lang.Object"/>
+                        <Column editable="true" title="notes" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="autoResizeMode" type="int" value="4"/>
                     <Property name="autoscrolls" type="boolean" value="false"/>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>

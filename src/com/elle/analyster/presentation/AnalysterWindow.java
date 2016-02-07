@@ -6,13 +6,24 @@ import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.CreateDocumentFilter;
 import com.elle.analyster.logic.EditableTableModel;
 import com.elle.analyster.logic.ITableConstants;
+import com.elle.analyster.logic.FilePathFormat;
 import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.database.ModifiedTableData;
 import com.elle.analyster.logic.Authorization;
-import com.elle.analyster.logic.FilePathFormat;
+import static com.elle.analyster.logic.ITableConstants.ARCHIVE_BATCHEDIT_CB_FIELDS;
+import static com.elle.analyster.logic.ITableConstants.ARCHIVE_SEARCH_FIELDS;
+import static com.elle.analyster.logic.ITableConstants.ARCHIVE_TABLE_NAME;
+import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_BATCHEDIT_CB_FIELDS;
+import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_SEARCH_FIELDS;
+import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_TABLE_NAME;
+import static com.elle.analyster.logic.ITableConstants.COL_WIDTH_PER_ARCHIVE;
+import static com.elle.analyster.logic.ITableConstants.COL_WIDTH_PER_ASSIGNMENTS;
+import static com.elle.analyster.logic.ITableConstants.COL_WIDTH_PER_REPORTS;
+import static com.elle.analyster.logic.ITableConstants.REPORTS_BATCHEDIT_CB_FIELDS;
+import static com.elle.analyster.logic.ITableConstants.REPORTS_SEARCH_FIELDS;
+import static com.elle.analyster.logic.ITableConstants.REPORTS_TABLE_NAME;
 import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
-import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_TABLE_NAME;
 import com.elle.analyster.logic.JTableCellRenderer;
 import com.elle.analyster.logic.OpenDocumentTool;
 
@@ -37,6 +48,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +72,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
+    private Map<String, Map<Integer, ArrayList<Object>>> comboBoxForSearchDropDown;
     private static Statement statement;
     private String database;
 
@@ -96,6 +111,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // initialize tabs
         tabs = new HashMap();
+        comboBoxForSearchDropDown = new HashMap();
 
         // create tabName objects -> this has to be before initcomponents();
         tabs.put(ASSIGNMENTS_TABLE_NAME, new Tab());
@@ -224,6 +240,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         informationLabel.setText("");
         isBatchEditWindowShow = false;
+        String tabName = getSelectedTabName();
+
+        String searchContent = comboBoxSearch.getSelectedItem().toString();
+        this.updateComboList(searchContent, tabName);
 
         // set title of window to Analyster
         this.setTitle("Analyster");
@@ -246,10 +266,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         labelTimeLastUpdate = new javax.swing.JLabel();
         searchPanel = new javax.swing.JPanel();
         btnSearch = new javax.swing.JButton();
-        textFieldForSearch = new javax.swing.JTextField();
         comboBoxSearch = new javax.swing.JComboBox();
         btnClearAllFilter = new javax.swing.JButton();
         searchInformationLabel = new javax.swing.JLabel();
+        ComboBoxForSearch = new javax.swing.JComboBox();
         labelRecords = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         tabbedPanel = new javax.swing.JTabbedPane();
@@ -320,18 +340,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
 
-        textFieldForSearch.setText("Enter Symbol name");
-        textFieldForSearch.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                textFieldForSearchMouseClicked(evt);
-            }
-        });
-        textFieldForSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                textFieldForSearchKeyPressed(evt);
-            }
-        });
-
         comboBoxSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "symbol", "analyst" }));
         comboBoxSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -346,6 +354,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
 
+        ComboBoxForSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
         searchPanel.setLayout(searchPanelLayout);
         searchPanelLayout.setHorizontalGroup(
@@ -358,8 +368,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addComponent(textFieldForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(ComboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSearch)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(searchInformationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -370,10 +380,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             .addGroup(searchPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textFieldForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSearch)
                     .addComponent(comboBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnClearAllFilter))
+                    .addComponent(btnClearAllFilter)
+                    .addComponent(ComboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(searchInformationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE)
                 .addContainerGap())
@@ -466,8 +476,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         tabbedPanel.addTab("Assignments", jScrollPane1);
 
-        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
         reportTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, "", null, null, null, null, null, null},
@@ -487,7 +495,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "symbol", "analyst", "analysisDate", "path", "document", "notes", "notesL"
+                "ID", "symbol", "analyst", "analysisDate", "path", "document", "decision", "notes"
             }
         ) {
             Class[] types = new Class [] {
@@ -506,31 +514,31 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         archiveTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "symbol", "analyst", "priority", "dateAssigned", "dateDone", "decision"
+                "ID", "dateArchived", "aID", "symbol", "analyst", "priority", "dateAssigned", "dateDone", "notes"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true
+                false, true, true, true, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -541,6 +549,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 return canEdit [columnIndex];
             }
         });
+        archiveTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         archiveTable.setAutoscrolls(false);
         archiveTable.setMinimumSize(new java.awt.Dimension(10, 240));
         jScrollPane3.setViewportView(archiveTable);
@@ -937,11 +946,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 + "Version: " + VERSION);
     }//GEN-LAST:event_menuItemVersionActionPerformed
 
-    private void textFieldForSearchMouseClicked(MouseEvent evt) {//GEN-FIRST:event_textFieldForSearchMouseClicked
-
-        textFieldForSearch.setText(""); // clears text
-    }//GEN-LAST:event_textFieldForSearchMouseClicked
-
     /**
      * This method is called when the search button is pressed
      *
@@ -959,41 +963,48 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     public void filterBySearch() {
 
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        JTable table = tab.getTable();
-        String searchColName = comboBoxSearch.getSelectedItem().toString();
+        String text = "";
 
-        // this matches the combobox newValue with the column name newValue to get the column index
-        for (int col = 0; col < table.getColumnCount(); col++) {
-            String tableColName = table.getColumnName(col);
-            if (tableColName.equalsIgnoreCase(searchColName)) {
+        int count = 0;
+        for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
+            Tab tab = tabs.get(entry.getKey());
+            JTable table = tab.getTable();
 
-                String searchBoxValue = textFieldForSearch.getText();  // store string from text box
+            String searchColName = comboBoxSearch.getSelectedItem().toString();
+            String searchBoxValue = ComboBoxForSearch.getSelectedItem().toString();  // store string from combobox
 
-                // add item to filter
-                TableFilter filter = tab.getFilter();
-                filter.clearAllFilters();
-                filter.applyFilter();
+            // this matches the combobox newValue with the column name newValue to get the column index
+            for (int col = 0; col < table.getColumnCount(); col++) {
+                String tableColName = table.getColumnName(col);
+                if (tableColName.equalsIgnoreCase(searchColName)) {
 
-                boolean isValueInTable = false;
-                isValueInTable = checkValueInTableCell(col, searchBoxValue, table);
+                    // add item to filter
+                    TableFilter filter = tab.getFilter();
+                    filter.clearAllFilters();
+                    filter.applyFilter();
 
-                if (isValueInTable) {
+                    boolean isValueInTable = false;
+                    isValueInTable = checkValueInTableCell(col, searchBoxValue, table);
 
                     filter.addFilterItem(col, searchBoxValue);
                     filter.applyFilter();
+                    if (!isValueInTable) {
+                        count++;
+                    }
 
-                } else {
-                    searchInformationLabel.setText("There is no " + searchBoxValue
-                            + " under " + searchColName + " in table " + table.getName());
-                    startCountDownFromNow(10);
+                    // set label record information
+                    String recordsLabel = tab.getRecordsLabel();
+                    labelRecords.setText(recordsLabel);
                 }
-
-                // set label record information
-                String recordsLabel = tab.getRecordsLabel();
-                labelRecords.setText(recordsLabel);
             }
+            if (count == 2) {
+                text = "There is no " + searchBoxValue
+                        + " under " + searchColName + " in all tables";
+            }
+        }
+        if (!text.equals("")) {
+            searchInformationLabel.setText(text);
+            startCountDownFromNow(10);
         }
     }
 
@@ -1321,14 +1332,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      *
      * @param evt
      */
-    private void textFieldForSearchKeyPressed(KeyEvent evt) {//GEN-FIRST:event_textFieldForSearchKeyPressed
-
-        // if the enter key is pressed call the filterBySearch method.
-        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            filterBySearch();
-        }
-    }//GEN-LAST:event_textFieldForSearchKeyPressed
-
     /**
      * jMenuItemLogOffActionPerformed Log Off menu item action performed
      *
@@ -1756,16 +1759,31 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void comboBoxSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSearchActionPerformed
         // TODO add your handling code here:
         String searchColName = comboBoxSearch.getSelectedItem().toString();
-
-        if (searchColName.equals("Symbol")) {
-            textFieldForSearch.setText("Enter Symbol name");
-
-        } else if (searchColName.equals("Analyst")) {
-            textFieldForSearch.setText("Enter Analyst name");
-
-        }
+        String tabName = getSelectedTabName();
+        updateComboList(searchColName, tabName);
+//
+//        if (searchColName.equals("Symbol")) {
+//            ComboBoxForSearch.setText("Enter Symbol name");
+//
+//        } else if (searchColName.equals("Analyst")) {
+//            ComboBoxForSearch.setText("Enter Analyst name");
+//
+//        } else if (searchColName.equals("Notes")) {
+//            ComboBoxForSearch.setText("Enter notes");
+//
+//        } else if (searchColName.equals("Priority")) {
+//            ComboBoxForSearch.setText("Enter priority");
+//
+//        }
     }//GEN-LAST:event_comboBoxSearchActionPerformed
 
+    public void comboBoxForSearchMouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2) {
+            ComboBoxForSearch.getEditor().selectAll();
+        } else if (e.isControlDown()) {
+            ComboBoxForSearch.showPopup();
+        }
+    }
     private void menuItemStripslashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemStripslashActionPerformed
         // Pick out the selected tab
         String tabName = getSelectedTabName();
@@ -1836,7 +1854,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
 
     // menu item open document tool 
-    public void openDocumentTool(){
+    public void openDocumentTool() {
         // must be on reports tab
         if (getSelectedTable() == reportTable) {
             JTable table = getSelectedTable();
@@ -1879,11 +1897,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             } else {
                 JOptionPane.showMessageDialog(this, "No row was selected.");
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Must be on Reports tab.");
-        }
+        } 
+//        else {
+//            JOptionPane.showMessageDialog(this, "Must be on Reports tab.");
+//        }
     }
-    
+
     //set the timer for information Label show
     public void startCountDownFromNow(int waitSeconds) {
         Timer timer = new Timer(waitSeconds * 1000, new ActionListener() {
@@ -2009,7 +2028,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                     selectAllText(e);
                                 }
                                 if (e.isControlDown()) {
-                                        openDocumentTool();
+                                
+                                    openDocumentTool();
+                                    
                                 }
                             }
                         } // end if left mouse clicks
@@ -2093,6 +2114,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                     table.setRowSelectionAllowed(true);
                     table.setRowSelectionInterval(0, table.getRowCount() - 1);
+                    System.out.println("here");
                 }
             }
 
@@ -2618,13 +2640,19 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @return
      */
     public Map<String, Tab> loadTables(Map<String, Tab> tabs) {
-
         for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
             Tab tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
             loadTable(table);
-        }
+            informationLabel.setText("Table loaded succesfully");
+            startCountDownFromNow(10);
+            setTableListeners(table);
 
+            String[] colNames = tab.getTableColNames();
+            Map tableComboBoxForSearchDropDownList = this.loadingDropdownListToTable(table, colNames);
+            this.comboBoxForSearchDropDown.put(entry.getKey(), tableComboBoxForSearchDropDownList);
+
+        }
         setLastUpdateTime();
 
         return tabs;
@@ -2722,6 +2750,79 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         return table;
     }
 
+   private Map loadingDropdownListToTable(JTable table, String[] colNames) {
+        //create empty value List to store drop down list value
+        Map<Integer, ArrayList<Object>> valueListMap = new HashMap();
+        for (int col = 0; col < table.getColumnCount(); col++) {
+            String colName = colNames[col];
+            
+
+            ArrayList valueList = new ArrayList<Object>();
+
+            if (colName.equalsIgnoreCase("symbol") || colName.equalsIgnoreCase("notes") || colName.equalsIgnoreCase("document")) {
+                valueList.add("");
+            } else {
+                valueList.add("Enter " + colName + " here");
+                Object cellValue = table.getValueAt(0, col);
+                Object newValue;
+                if (cellValue != null) {
+                    valueList.add(cellValue);
+                }
+                for (int row = 0; row < table.getRowCount(); row++) {
+                    newValue = table.getValueAt(row, col);
+
+                    //get distinct value 
+                    if (newValue != null) {
+                        if (cellValue == null) {
+                            valueList.add(" ");
+                            cellValue = newValue;
+                        } else {
+                            if (!cellValue.equals(newValue) && !valueList.contains(newValue)) {
+                                cellValue = newValue;
+                                valueList.add(cellValue);
+                            }
+                        }
+                    }
+                }
+
+            }
+            valueListMap.put(col, valueList);
+        }
+//        DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
+//        comboBoxForSearch.setModel(comboBoxSearchModel);
+//        for (Object item : valueList) {
+//            comboBoxSearchModel.addElement(item);
+//        }
+        return valueListMap;
+
+    }
+
+    private void updateComboList(String colName, String tableName) {
+        DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
+        ComboBoxForSearch.setModel(comboBoxSearchModel);
+
+        Map comboBoxForSearchValue = this.comboBoxForSearchDropDown.get(tableName);
+
+        JTable table = tabs.get(tableName).getTable();
+        for (int col = 0; col < table.getColumnCount(); col++) {
+            if (table.getColumnName(col).equalsIgnoreCase(colName)) {
+                ArrayList<Object> dropDownList = (ArrayList<Object>) comboBoxForSearchValue.get(col);
+                for (Object item : dropDownList) {
+                    List<Object> sortlist = dropDownList.subList(1, dropDownList.size());
+
+                    Collections.sort(sortlist, new Comparator<Object>() {
+                        public int compare(Object o1, Object o2) {
+                            return o1.toString().compareTo(o2.toString());
+                        }
+
+                    });
+
+                    comboBoxSearchModel.addElement(item);
+                }
+            }
+        }
+    }
+
     /**
      * deleteRecordsSelected deletes the selected records
      *
@@ -2811,6 +2912,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         return searchPanel;
     }
 
+    public Map<String, Map<Integer, ArrayList<Object>>> getComboBoxForSearchDropDown() {
+        return comboBoxForSearchDropDown;
+    }
+
     /**
      * setBatchEditButtonStates Sets the batch edit button enabled if editing
      * allowed for that tab and disabled if editing is not allowed for that tab
@@ -2850,6 +2955,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     public BatchEditWindow getBatchEditWindow() {
         return batchEditWindow;
+    }
+
+    public JComboBox getComboBoxForSearch() {
+        return ComboBoxForSearch;
     }
 
     /**
@@ -2954,6 +3063,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox ComboBoxForSearch;
     private javax.swing.JPanel addPanel_control;
     private javax.swing.JTable archiveTable;
     private javax.swing.JTable assignmentTable;
@@ -3017,7 +3127,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JLabel searchInformationLabel;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabbedPanel;
-    private javax.swing.JTextField textFieldForSearch;
     // End of variables declaration//GEN-END:variables
     // @formatter:on
 
