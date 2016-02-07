@@ -228,9 +228,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // set title of window to Analyster
         this.setTitle("Analyster");
         this.setSize(this.getWidth(), 560);
-
-        // authorize user
-        Authorization.getInfoFromDB();
+        
+        // authorize user for this component
         Authorization.authorize(this);
     }
 
