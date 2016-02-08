@@ -3,10 +3,7 @@ package com.elle.analyster.presentation;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.database.ModifiedTableData;
-import com.elle.analyster.logic.ColumnPopupMenu;
-import com.elle.analyster.logic.Tab;
-import com.elle.analyster.logic.TableFilter;
-import com.elle.analyster.logic.Validator;
+import com.elle.analyster.logic.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -42,6 +39,7 @@ public class AddRecordsWindow extends JFrame {
     private AnalysterWindow analyster;
     private LogWindow logWindow;
     private DefaultTableModel model;
+    private ShortCutSetting ShortCut;
 
     private Color defaultSelectedBG;
 
@@ -83,6 +81,10 @@ public class AddRecordsWindow extends JFrame {
 
         // submit button does not start enabled because the table is empty
         btnSubmit.setEnabled(false);
+        
+        // add copy+paste short cut into table
+        InputMap ip = (InputMap) UIManager.get("TextField.focusInputMap");
+        ShortCut.copyAndPasteShortCut(ip);
 
         // set the label header
         this.setTitle("Add Records to " + table.getName());
@@ -300,6 +302,7 @@ public class AddRecordsWindow extends JFrame {
                 try {
                     // execute the sql statement
                     if (!values.equals("VALUES (")) {      //skip if nothing was added
+                        System.out.println(insertInto + values);
                         // open connection because might time out
                         DBConnection.close();
                         DBConnection.open();
