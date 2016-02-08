@@ -37,19 +37,18 @@ public class LogWindow extends JFrame {
 
     // constructor
     public LogWindow(String userName) {
-//        String PortfolioManager = "/Users/"+ System.getProperty("user.name") + "/Library/Application Support/ProjectManager/";
-//        File dir = new File(ProjectManager); 
-//        dir.mkdir();
+
         String OS = System.getProperty("os.name").toLowerCase();
-        System.out.println(OS);
+        
         if (OS.startsWith("mac")) {
             String Analyster = "/Users/" + System.getProperty("user.name") + "/Library/Application Support/Analyster/";
             File dir = new File(Analyster);
             dir.mkdir();
             FILENAME = Analyster + "Analyster_" + userName + "_log.txt";
-            System.out.println(1);
+            
         } else {
-            String Analyster = "Analyster_logs/";
+//            String Analyster = "Analyster_logs/";
+            String Analyster =  "\\Users\\" + System.getProperty("user.name") + "\\Documents\\Analyster\\";
             File dir = new File(Analyster);
             dir.mkdir();
             FILENAME = Analyster + "Analyster_" + userName + "_log.txt";

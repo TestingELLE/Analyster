@@ -304,6 +304,7 @@ public class AddRecordsWindow extends JFrame {
                     if (!values.equals("VALUES (")) {      //skip if nothing was added
                         System.out.println(insertInto + values);
                         // open connection because might time out
+                        DBConnection.close();
                         DBConnection.open();
                         statement = DBConnection.getStatement();
                         statement.executeUpdate(insertInto + values);
