@@ -26,6 +26,7 @@ import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
 import com.elle.analyster.logic.JTableCellRenderer;
 import com.elle.analyster.logic.OpenDocumentTool;
+import com.elle.analyster.logic.ShortCutSetting;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -67,8 +68,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-2-7";
-    private final String VERSION = "1.0.4";
+    private final String CREATION_DATE = "2016-2-8";
+    private final String VERSION = "1.0.5";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
