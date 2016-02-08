@@ -7,13 +7,13 @@
 package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.DBConnection;
+import com.elle.analyster.logic.Authorization;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -381,22 +381,31 @@ public class LoginWindow extends JFrame {
         if (DBConnection.connect(selectedServer, selectedDB, userName, userPassword)) {
             logWindow.addMessageWithDate("Connect successfully!");
 
-            // create an Analyster object
-            analyster = new AnalysterWindow();
+            // authorize user
+            if(Authorization.getInfoFromDB()){
+                // create an Analyster object
+                analyster = new AnalysterWindow();
 
-            // pass the log window to analyster
-            analyster.setLogWindow(logWindow);
+                // pass the log window to analyster
+                analyster.setLogWindow(logWindow);
 
-            // pass the selectedDB to Analyster
-            // it is used in sql statements
-            analyster.setDatabase(selectedDB);
+                // pass the selectedDB to Analyster
+                // it is used in sql statements
+                analyster.setDatabase(selectedDB);
 
-            // show Analyster
-            analyster.setLocationRelativeTo(this);
-            analyster.setVisible(true);
+                // show Analyster
+                analyster.setLocationRelativeTo(this);
+                analyster.setVisible(true);
 
-            // terminate this object
-            this.dispose(); // returns used resources
+                // terminate this object
+                this.dispose(); // returns used resources
+            }
+            else{
+                logWindow.addMessageWithDate("This user has not been authorized!"
+                                          + "\n Access denied!");
+                JOptionPane.showMessageDialog(this, "You have not been authorized.");
+            }
+            
         } else {
 
             JOptionPane.showMessageDialog(this,
