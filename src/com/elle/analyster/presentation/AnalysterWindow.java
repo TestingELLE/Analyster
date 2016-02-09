@@ -1699,7 +1699,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         if(DBConnection.open()){ // open a new connection
             Connection connection = DBConnection.getConnection();
             String tableName = getSelectedTable().getName(); // table name to backup
-            JOptionPane.showMessageDialog(this,tableName);
             BackupDBTables backupDBTables = new BackupDBTables(connection, tableName, this);
         }
 
