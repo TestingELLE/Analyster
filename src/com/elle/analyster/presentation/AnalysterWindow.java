@@ -43,10 +43,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1699,10 +1696,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // open new connection
         DBConnection.close(); // connection might be timed out on server
-        DBConnection.open();  // open a new connection
+        if(DBConnection.open()){ // open a new connection
+            Connection connection = DBConnection.getConnection();
+            String tableName = getSelectedTable().getName(); // table name to backup
+            JOptionPane.showMessageDialog(this,tableName);
+            BackupDBTables backupDBTables = new BackupDBTables(connection, tableName, this);
+        }
 
-        String tableName = "Assignments"; // table name to backup
-        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getConnection(), tableName, this);
+
 
 
     }//GEN-LAST:event_menuItemBackupActionPerformed
