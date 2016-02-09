@@ -1694,12 +1694,17 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
 
+        // avoid multiple instances
+        BackupDBTables backupDBTables;
+        // TODO
+        // refactoring the backupDBTables class first
+
         // open new connection
         DBConnection.close(); // connection might be timed out on server
         if(DBConnection.open()){ // open a new connection
             Connection connection = DBConnection.getConnection();
             String tableName = getSelectedTable().getName(); // table name to backup
-            BackupDBTables backupDBTables = new BackupDBTables(connection, tableName, this);
+            backupDBTables = new BackupDBTables(connection, tableName, this);
         }
 
 
