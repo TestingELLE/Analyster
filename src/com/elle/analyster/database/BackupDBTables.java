@@ -224,7 +224,7 @@ public class BackupDBTables{
     
     private void initComponents(){
         
-        String title = ""; // small window so empty
+        String title = "Backup " + tableName; // window title
         String message = "Existing Backup Database tables";
         
         setCheckBoxListListener();
@@ -277,7 +277,7 @@ public class BackupDBTables{
         JButton[] buttons = new JButton[]{btnDelete, btnBackup};
         
         // dimension
-        Dimension dimension = new Dimension(0,200);
+        Dimension dimension = new Dimension(600,400);
         
         // Create a popup window 
         PopupWindow popup = new PopupWindow(title, message, scroll, buttons, dimension);
