@@ -54,6 +54,10 @@ public class FilePathFormat {
      * @return boolean true if windows and false if not
      */
     public static boolean isWindows(){
-        return System.getProperty("sun.desktop").equals(OS_WINDOWS);
+        // All os have the os.name property value.
+        // Not all os have the sun.desktop property value
+        // and it may return null for some os.
+        // Hence os.name is used and checks for "windows" with the startsWith().
+        return System.getProperty("os.name").startsWith(OS_WINDOWS);
     }
 }
