@@ -25,8 +25,9 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Carlos
+ * This is a JDialog window for backing up DB tables.
+ * @author Carlos Igreja
+ * @since  2-11-2016
  */
 public class BackupDBTablesDialog extends javax.swing.JPanel {
 
