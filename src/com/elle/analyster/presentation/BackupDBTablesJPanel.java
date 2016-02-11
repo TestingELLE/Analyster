@@ -100,7 +100,6 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
         //this.setTitle(title);
         
         // show window
-        //setLocationRelativeTo(parentComponent);
         setVisible(true);
         
         // add to a JDialog for modal funtionality
@@ -109,6 +108,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
         dialog.add(this);
         dialog.setSize(dimension);
         //dialog.pack();
+        dialog.setLocationRelativeTo(parentComponent);
         dialog.setVisible(true);
         
     }
