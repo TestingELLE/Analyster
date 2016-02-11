@@ -1,6 +1,5 @@
 package com.elle.analyster.presentation;
 
-import com.elle.analyster.database.BackupDBTables;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.CreateDocumentFilter;
@@ -1701,10 +1700,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // open new connection
         DBConnection.close(); // connection might be timed out on server
-        DBConnection.open();  // open a new connection
-
-        String tableName = "Assignments"; // table name to backup
-        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getConnection(), tableName, this);
+        if(DBConnection.open()){  // open a new connection
+            String tableName = getSelectedTable().getName(); // table name to backup
+            BackupDBTablesDialog backupDBTables = new BackupDBTablesDialog(DBConnection.getConnection(), tableName, this);
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Could not connect to Database");
+        }
 
 
     }//GEN-LAST:event_menuItemBackupActionPerformed
