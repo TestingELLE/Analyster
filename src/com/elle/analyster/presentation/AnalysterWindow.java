@@ -1,6 +1,5 @@
 package com.elle.analyster.presentation;
 
-import com.elle.analyster.database.BackupDBTables;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.CreateDocumentFilter;
@@ -1695,7 +1694,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void menuItemBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBackupActionPerformed
 
         // avoid multiple instances
-        BackupDBTablesJPanel backupDBTables;
+        BackupDBTablesDialog backupDBTables;
         // TODO
         // refactoring the backupDBTables class first
 
@@ -1704,7 +1703,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         if(DBConnection.open()){ // open a new connection
             Connection connection = DBConnection.getConnection();
             String tableName = getSelectedTable().getName(); // table name to backup
-            backupDBTables = new BackupDBTablesJPanel(connection, tableName, this);
+            backupDBTables = new BackupDBTablesDialog(connection, tableName, this);
         }
 
 

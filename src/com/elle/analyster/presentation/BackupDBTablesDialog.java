@@ -1,6 +1,5 @@
 package com.elle.analyster.presentation;
 
-import com.elle.analyster.database.BackupDBTables;
 import com.elle.analyster.database.SQL_Commands;
 import com.elle.analyster.logic.CheckBoxItem;
 import com.elle.analyster.logic.CheckBoxList;
@@ -29,7 +28,7 @@ import javax.swing.JOptionPane;
  *
  * @author Carlos
  */
-public class BackupDBTablesJPanel extends javax.swing.JPanel {
+public class BackupDBTablesDialog extends javax.swing.JPanel {
 
     // backup database table information
     // this information should match the database table
@@ -46,7 +45,6 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
     private Statement statement;
     private Component parentComponent; // used to display message relative to parent component
     private CheckBoxList checkBoxList;
-    private PopupWindow popupWindow;
     private ArrayList<CheckBoxItem> checkBoxItems;
     private SQL_Commands sql_commands;
     private Dimension dimension = new Dimension(600,400); // dimension
@@ -54,7 +52,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
     /**
      * Creates new form BackupDBTablesWindow
      */
-    public BackupDBTablesJPanel(Connection connection, String tableName, Component parent) {
+    public BackupDBTablesDialog(Connection connection, String tableName, Component parent) {
         initComponents();
 
         this.connection = connection;  // testing
@@ -66,7 +64,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
         try {
             this.statement = connection.createStatement();
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
         }
@@ -104,7 +102,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
         
         // add to a JDialog for modal funtionality
         JDialog dialog = new JDialog((Frame) parent, "Backup " + tableName, true);
-        //BackupDBTablesJPanel panel = new BackupDBTablesJPanel(con, tableName, parent);
+        //BackupDBTablesJPanel panel = new BackupDBTablesDialog(con, tableName, parent);
         dialog.add(this);
         dialog.setSize(dimension);
         //dialog.pack();
@@ -214,7 +212,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
             result = statement.executeQuery();
 
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             // if table doesn't exist and needs to be created
             if(ex.getMessage().endsWith("exist")){
@@ -244,7 +242,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
                         items.add(item);
                     }
                 } catch (SQLException ex) {
-                    Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
                     ex.printStackTrace();
                     handleSQLexWithMessageBox(ex); // any errors 
                 }
@@ -282,7 +280,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
             getStatement().executeUpdate(sql);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
             return false;
@@ -303,7 +301,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
             dropTable(tableName);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
             return false;
@@ -337,7 +335,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
             //Accessing driver from the JAR file
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
         }
         
@@ -348,7 +346,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
             // get connection
             connection = DriverManager.getConnection(server, username, password);
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
         }
@@ -367,7 +365,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
         try {
             statement = connection.createStatement();
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
         }
@@ -397,7 +395,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
             return true;
 
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
             return false;
@@ -423,7 +421,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
             displayBackupCompleteMessage();
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
             return false;
@@ -559,7 +557,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
             addBackupRecord(tableName, backupTableName);
             displayBackupCompleteMessage();
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
         }
@@ -637,7 +635,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
             getStatement().executeUpdate(sql);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
             return false;
@@ -653,7 +651,7 @@ public class BackupDBTablesJPanel extends javax.swing.JPanel {
             getStatement().executeUpdate(sql);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTables.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             handleSQLexWithMessageBox(ex);
             return false;
