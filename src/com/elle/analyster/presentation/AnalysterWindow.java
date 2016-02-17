@@ -1,6 +1,5 @@
 package com.elle.analyster.presentation;
 
-import com.elle.analyster.database.BackupDBTables;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.CreateDocumentFilter;
@@ -40,6 +39,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -256,7 +256,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // set title of window to Analyster
         this.setTitle("Analyster");
         this.setSize(this.getWidth(), 560);
-        
+
         // authorize user for this component
         Authorization.authorize(this);
     }
@@ -362,6 +362,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
 
+        ComboBoxForSearch.setEditable(true);
         ComboBoxForSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
@@ -1699,10 +1700,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // open new connection
         DBConnection.close(); // connection might be timed out on server
-        DBConnection.open();  // open a new connection
-
-        String tableName = "Assignments"; // table name to backup
-        BackupDBTables backupDBTables = new BackupDBTables(DBConnection.getConnection(), tableName, this);
+        if(DBConnection.open()){  // open a new connection
+            String tableName = getSelectedTable().getName(); // table name to backup
+            BackupDBTablesDialog backupDBTables = new BackupDBTablesDialog(DBConnection.getConnection(), tableName, this);
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Could not connect to Database");
+        }
 
 
     }//GEN-LAST:event_menuItemBackupActionPerformed
@@ -1790,6 +1794,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             ComboBoxForSearch.getEditor().selectAll();
         } else if (e.isControlDown()) {
             ComboBoxForSearch.showPopup();
+
         }
     }
     private void menuItemStripslashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemStripslashActionPerformed
@@ -1905,7 +1910,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             } else {
                 JOptionPane.showMessageDialog(this, "No row was selected.");
             }
-        } 
+        }
 //        else {
 //            JOptionPane.showMessageDialog(this, "Must be on Reports tab.");
 //        }
@@ -1992,6 +1997,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             if (e.getClickCount() == 2) {
                                 if (e.isControlDown()) {
                                     filterByDoubleClick(table);
+
                                 } else {
                                     Tab tab = tabs.get(table.getName());
 
@@ -2036,9 +2042,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                     selectAllText(e);
                                 }
                                 if (e.isControlDown()) {
-                                
+
                                     openDocumentTool();
-                                    
+
                                 }
                             }
                         } // end if left mouse clicks
@@ -2069,6 +2075,34 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     }
                 }
         );
+        table.addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseMoved(MouseEvent e) {
+                if (e.isControlDown()) {
+
+                    if (getSelectedTable() == reportTable) {
+                        int row = table.rowAtPoint(e.getPoint());
+                        int col = table.columnAtPoint(e.getPoint());
+                        System.out.println(row);
+                        if (col > 3 && col < 6  ){
+                            table.clearSelection();
+                            table.setRowSelectionInterval(row, row);
+                            Cursor cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+                            setCursor(cursor);
+
+                        } else {
+                            Cursor cursor = Cursor.getDefaultCursor();
+                            setCursor(cursor);
+
+                        }
+                    }
+                } else {
+                    Cursor cursor = Cursor.getDefaultCursor();
+                    setCursor(cursor);
+
+                }
+
+            }
+        });
 
         // add table model listener
         table.getModel().addTableModelListener(new TableModelListener() {  // add table model listener every time the table model reloaded
@@ -2758,12 +2792,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         return table;
     }
 
-   private Map loadingDropdownListToTable(JTable table, String[] colNames) {
+    private Map loadingDropdownListToTable(JTable table, String[] colNames) {
         //create empty value List to store drop down list value
         Map<Integer, ArrayList<Object>> valueListMap = new HashMap();
         for (int col = 0; col < table.getColumnCount(); col++) {
             String colName = colNames[col];
-            
 
             ArrayList valueList = new ArrayList<Object>();
 

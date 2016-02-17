@@ -29,7 +29,6 @@ public class FilePathFormat {
         
         final String F_SLASH = "/";   // forward slash for non- windows path
         final String B_SLASH = "\\";  // backslash for windows path
-        System.out.println("1: " + path);
 
         // get the path directories
         String[] dirs; 
@@ -48,8 +47,7 @@ public class FilePathFormat {
         for (String dir : dirs){
             path += dir + slash;
         }
-        System.out.println("2: " + path);
-
+        
         return path;
     }
     
@@ -58,7 +56,10 @@ public class FilePathFormat {
      * @return boolean true if windows and false if not
      */
     public static boolean isWindows(){
-//        System.out.println(System.getProperty("os.name").equals(OS_WINDOWS));
-        return System.getProperty("os.name").equals(OS_WINDOWS);
+        // All os have the os.name property value.
+        // Not all os have the sun.desktop property value
+        // and it may return null for some os.
+        // Hence os.name is used and checks for "windows" with the startsWith().
+        return System.getProperty("os.name").startsWith(OS_WINDOWS);
     }
 }
