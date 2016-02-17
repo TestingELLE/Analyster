@@ -40,8 +40,8 @@ public class LoginWindow extends JFrame {
         // loadDBList();  // this loads from a file which is not really used (it's for use with edit database window)
                 comboBoxDatabase.setSelectedIndex(2);
         comboBoxServer.setSelectedIndex(0);
-        textFieldUsername.setText("pupone_Xiao");
-        passwordFieldPW.setText("XiaoXXXX8");
+//        textFieldUsername.setText("pupone_Xiao");
+//        passwordFieldPW.setText("XiaoXXXX8");
         // show window
         this.setTitle("Log in");
     }

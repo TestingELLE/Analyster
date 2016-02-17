@@ -35,4 +35,6 @@ public interface ITableConstants {
     public static final String[] ASSIGNMENTS_BATCHEDIT_CB_FIELDS = {"analyst", "priority", "dateAssigned", "dateDone", "notes"};
     public static final String[] REPORTS_BATCHEDIT_CB_FIELDS = {"analyst", "analysisDate", "notes", "symbol"};
     public static final String[] ARCHIVE_BATCHEDIT_CB_FIELDS = {"analyst", "priority", "dateAssigned", "notes", "symbol"};
+    
+   
 }
