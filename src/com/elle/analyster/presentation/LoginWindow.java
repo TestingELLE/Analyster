@@ -382,29 +382,30 @@ public class LoginWindow extends JFrame {
             logWindow.addMessageWithDate("Connect successfully!");
 
             // authorize user
-            if(Authorization.getInfoFromDB()){
-                // create an Analyster object
-                analyster = new AnalysterWindow();
-
-                // pass the log window to analyster
-                analyster.setLogWindow(logWindow);
-
-                // pass the selectedDB to Analyster
-                // it is used in sql statements
-                analyster.setDatabase(selectedDB);
-
-                // show Analyster
-                analyster.setLocationRelativeTo(this);
-                analyster.setVisible(true);
-
-                // terminate this object
-                this.dispose(); // returns used resources
-            }
-            else{
+            if(!Authorization.getInfoFromDB()){
+                
                 logWindow.addMessageWithDate("This user has not been authorized!"
                                           + "\n Access denied!");
-                JOptionPane.showMessageDialog(this, "You have not been authorized.");
+                JOptionPane.showMessageDialog(this, "You have not been authorized. Default user access.");
             }
+                
+            // create an Analyster object
+            analyster = new AnalysterWindow();
+
+            // pass the log window to analyster
+            analyster.setLogWindow(logWindow);
+
+            // pass the selectedDB to Analyster
+            // it is used in sql statements
+            analyster.setDatabase(selectedDB);
+
+            // show Analyster
+            analyster.setLocationRelativeTo(this);
+            analyster.setVisible(true);
+
+            // terminate this object
+            this.dispose(); // returns used resources
+
             
         } else {
 

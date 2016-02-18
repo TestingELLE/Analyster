@@ -67,6 +67,7 @@ public class Authorization {
             return true;
         }
         else{
+            accessLevel = LEVEL_3; // defaults to user
             return false;
         }
     }
