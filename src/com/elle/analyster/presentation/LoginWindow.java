@@ -8,6 +8,7 @@ package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.Authorization;
+import static com.elle.analyster.presentation.LogWindow.HYPHENS;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -15,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class LoginWindow extends JFrame {
@@ -375,7 +377,15 @@ public class LoginWindow extends JFrame {
         userName = textFieldUsername.getText();
         char[] pw = passwordFieldPW.getPassword();
         userPassword = String.valueOf(pw);
-        logWindow = new LogWindow(this.getUserName()); 
+        
+        // logwindow
+        logWindow = new LogWindow(); 
+        logWindow.setUserLogFileDir(this.getUserName());
+        // write to log file
+        String date = logWindow.dateFormat.format(new Date());
+        logWindow.addMessage(HYPHENS + date + HYPHENS);
+        logWindow.readMessages(); // read log messages from the log file
+        
         // connect to database
         logWindow.addMessageWithDate("Start to connect local database...");
         if (DBConnection.connect(selectedServer, selectedDB, userName, userPassword)) {

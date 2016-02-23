@@ -68,8 +68,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-2-17";
-    private final String VERSION = "1.0.6a";
+    private final String CREATION_DATE = "2016-2-23";
+    private final String VERSION = "1.0.6b";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -1953,7 +1953,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }
 
     //set the timer for information Label show
-    public void startCountDownFromNow(int waitSeconds) {
+    public static void startCountDownFromNow(int waitSeconds) {
         Timer timer = new Timer(waitSeconds * 1000, new ActionListener() {
 
             @Override
@@ -3156,7 +3156,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JButton btnUploadChanges;
     private javax.swing.JComboBox comboBoxForSearch;
     private javax.swing.JComboBox comboBoxSearch;
-    private javax.swing.JLabel informationLabel;
+    public static javax.swing.JLabel informationLabel;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEdit;
     private javax.swing.JPanel jPanelSQL;
@@ -3203,7 +3203,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JMenu menuTools;
     private javax.swing.JMenu menuView;
     private javax.swing.JTable reportTable;
-    private javax.swing.JLabel searchInformationLabel;
+    public static javax.swing.JLabel searchInformationLabel;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabbedPanel;
     // End of variables declaration//GEN-END:variables
