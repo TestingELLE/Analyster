@@ -22,7 +22,7 @@ public class LogWindow extends JFrame {
 
     // constants
     private String FILENAME;
-    private static final String HYPHENS = "-------------------------"; // delimiter
+    public static final String HYPHENS = "-------------------------"; // delimiter
     private JScrollPane scrollPane;
     private JTextArea logText;
 
@@ -33,26 +33,10 @@ public class LogWindow extends JFrame {
     //private final JCheckBox jCheckBoxOrder;  // check box for order of dates
     private JButton showAll;
     //private final JLabel jLabelOrder; // label for checkbox order
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
+    public final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
 
     // constructor
-    public LogWindow(String userName) {
-
-        String OS = System.getProperty("os.name").toLowerCase();
-        
-        if (OS.startsWith("mac")) {
-            String Analyster = "/Users/" + System.getProperty("user.name") + "/Library/Application Support/Analyster/";
-            File dir = new File(Analyster);
-            dir.mkdir();
-            FILENAME = Analyster + "Analyster_" + userName + "_log.txt";
-            
-        } else {
-//            String Analyster = "Analyster_logs/";
-            String Analyster =  "C:\\Users\\" + System.getProperty("user.name") + "\\Documents\\Analyster\\";
-            File dir = new File(Analyster);
-            dir.mkdir();
-            FILENAME = Analyster + "Analyster_" + userName + "_log.txt";
-        }
+    public LogWindow() {
 
         this.setTitle("Log Window");
         ImageIcon imag = new ImageIcon(
@@ -145,13 +129,6 @@ public class LogWindow extends JFrame {
 
         this.pack();
         this.setVisible(false);
-
-        // write to log file
-        Date date = new Date();
-        addMessage(HYPHENS + dateFormat.format(date) + HYPHENS);
-
-        // read log messages from the log file
-        readMessages();
     }
 
     public void readCurrentMessages(String str) {
@@ -420,6 +397,25 @@ public class LogWindow extends JFrame {
         } catch (FileNotFoundException ex) {
             addMessageWithDate(ex.getMessage());
             ex.printStackTrace();
+        }
+    }
+
+    public void setUserLogFileDir(String userName) {
+        
+        String OS = System.getProperty("os.name").toLowerCase();
+        
+        if (OS.startsWith("mac")) {
+            String Analyster = "/Users/" + System.getProperty("user.name") + "/Library/Application Support/Analyster/";
+            File dir = new File(Analyster);
+            dir.mkdir();
+            FILENAME = Analyster + "Analyster_" + userName + "_log.txt";
+            
+        } else {
+//            String Analyster = "Analyster_logs/";
+            String Analyster =  "C:\\Users\\" + System.getProperty("user.name") + "\\Documents\\Analyster\\";
+            File dir = new File(Analyster);
+            dir.mkdir();
+            FILENAME = Analyster + "Analyster_" + userName + "_log.txt";
         }
     }
 }
