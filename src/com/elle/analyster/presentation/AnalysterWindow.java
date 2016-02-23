@@ -3156,7 +3156,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JButton btnUploadChanges;
     private javax.swing.JComboBox comboBoxForSearch;
     private javax.swing.JComboBox comboBoxSearch;
-    private javax.swing.JLabel informationLabel;
+    public static javax.swing.JLabel informationLabel;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEdit;
     private javax.swing.JPanel jPanelSQL;
