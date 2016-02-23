@@ -1953,7 +1953,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }
 
     //set the timer for information Label show
-    public void startCountDownFromNow(int waitSeconds) {
+    public static void startCountDownFromNow(int waitSeconds) {
         Timer timer = new Timer(waitSeconds * 1000, new ActionListener() {
 
             @Override
@@ -3203,7 +3203,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JMenu menuTools;
     private javax.swing.JMenu menuView;
     private javax.swing.JTable reportTable;
-    private javax.swing.JLabel searchInformationLabel;
+    public static javax.swing.JLabel searchInformationLabel;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabbedPanel;
     // End of variables declaration//GEN-END:variables
