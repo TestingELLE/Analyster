@@ -68,8 +68,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-2-8";
-    private final String VERSION = "1.0.5";
+    private final String CREATION_DATE = "2016-2-23";
+    private final String VERSION = "1.0.6b";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -92,8 +92,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private Color editModeActiveTextColor;
 
     private String editingTabName; // stores the name of the tab that is editing
+    private String searchValue = "";
 
     private boolean isBatchEditWindowShow;
+    private boolean comboBoxStartToSearch;
 
     /**
      * CONSTRUCTOR
@@ -216,7 +218,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(REPORTS_TABLE_NAME).getFilter()));
         tabs.get(ARCHIVE_TABLE_NAME)
                 .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(ARCHIVE_TABLE_NAME).getFilter()));
-
+        boolean comboBoxStartToSearch = false;
         // load data from database to tables
         loadTables(tabs);
 
@@ -252,6 +254,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         String searchContent = comboBoxSearch.getSelectedItem().toString();
         this.updateComboList(searchContent, tabName);
+        this.comboBoxForSearch.setSelectedItem("Enter here");
 
         // set title of window to Analyster
         this.setTitle("Analyster");
@@ -277,7 +280,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         comboBoxSearch = new javax.swing.JComboBox();
         btnClearAllFilter = new javax.swing.JButton();
         searchInformationLabel = new javax.swing.JLabel();
-        ComboBoxForSearch = new javax.swing.JComboBox();
+        comboBoxForSearch = new javax.swing.JComboBox();
         labelRecords = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         tabbedPanel = new javax.swing.JTabbedPane();
@@ -362,8 +365,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
 
-        ComboBoxForSearch.setEditable(true);
-        ComboBoxForSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxForSearch.setEditable(true);
+        comboBoxForSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxForSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxForSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
         searchPanel.setLayout(searchPanelLayout);
@@ -377,7 +385,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addComponent(ComboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSearch)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -392,7 +400,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     .addComponent(btnSearch)
                     .addComponent(comboBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnClearAllFilter)
-                    .addComponent(ComboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(searchInformationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE)
                 .addContainerGap())
@@ -980,7 +988,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             JTable table = tab.getTable();
 
             String searchColName = comboBoxSearch.getSelectedItem().toString();
-            String searchBoxValue = ComboBoxForSearch.getSelectedItem().toString();  // store string from combobox
+            String searchBoxValue = comboBoxForSearch.getSelectedItem().toString();  // store string from combobox
 
             // this matches the combobox newValue with the column name newValue to get the column index
             for (int col = 0; col < table.getColumnCount(); col++) {
@@ -1426,18 +1434,21 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     private void btnClearAllFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllFilterActionPerformed
 
+        String recordsLabel = "";
         // clear all filters
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        TableFilter filter = tab.getFilter();
-        filter.clearAllFilters();
-        filter.applyFilter();
-        filter.applyColorHeaders();
+        //      String tabName = getSelectedTabName();
+        for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
+            Tab tab = tabs.get(entry.getKey());
+            TableFilter filter = tab.getFilter();
+            filter.clearAllFilters();
+            filter.applyFilter();
+            filter.applyColorHeaders();
+            recordsLabel = recordsLabel + tab.getRecordsLabel() + " \n";
 
-        // set label record information
-        String recordsLabel = tab.getRecordsLabel();
+        }
+
         labelRecords.setText(recordsLabel);
-
+        System.out.println(recordsLabel);
     }//GEN-LAST:event_btnClearAllFilterActionPerformed
 
     /**
@@ -1609,12 +1620,25 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // this changes the search fields for the comboBox for each tabName
         // this event is fired from initCompnents hence the null condition
+        String entryValue = comboBoxForSearch.getSelectedItem().toString();
+        String searchCol = comboBoxSearch.getSelectedItem().toString();
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
         String[] searchFields = tab.getSearchFields();
-        if (searchFields != null) {
-            comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
+        System.out.println(tab.getTableName());
+       if (searchFields != null) {
+           comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
+//           if(tab.getTableName().equalsIgnoreCase("Assignments")){
+//           comboBoxSearch.setModel(new DefaultComboBoxModel(ASSIGNMENTS_SEARCH_FIELDS));
+//           }else if(tab.getTableName().equalsIgnoreCase("Reports")){
+//           comboBoxSearch.setModel(new DefaultComboBoxModel(REPORTS_SEARCH_FIELDS));    
+//           }else if(tab.getTableName().equalsIgnoreCase("Assignments_Archived")){
+//           comboBoxSearch.setModel(new DefaultComboBoxModel(ARCHIVE_SEARCH_FIELDS));    
+//           }
         }
+       comboBoxSearch.setSelectedItem(searchCol);
+       updateComboList(searchCol, tabName);
+       comboBoxForSearch.setSelectedItem(entryValue);
     }//GEN-LAST:event_tabbedPanelStateChanged
 
     /**
@@ -1700,11 +1724,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // open new connection
         DBConnection.close(); // connection might be timed out on server
-        if(DBConnection.open()){  // open a new connection
+        if (DBConnection.open()) {  // open a new connection
             String tableName = getSelectedTable().getName(); // table name to backup
             BackupDBTablesDialog backupDBTables = new BackupDBTablesDialog(DBConnection.getConnection(), tableName, this);
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(this, "Could not connect to Database");
         }
 
@@ -1769,31 +1792,22 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_menuItemActivateRecordActionPerformed
 
     private void comboBoxSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSearchActionPerformed
-        // TODO add your handling code here:
+        comboBoxStartToSearch = false;
         String searchColName = comboBoxSearch.getSelectedItem().toString();
+        searchValue = comboBoxForSearch.getSelectedItem().toString();
         String tabName = getSelectedTabName();
         updateComboList(searchColName, tabName);
-//
-//        if (searchColName.equals("Symbol")) {
-//            ComboBoxForSearch.setText("Enter Symbol name");
-//
-//        } else if (searchColName.equals("Analyst")) {
-//            ComboBoxForSearch.setText("Enter Analyst name");
-//
-//        } else if (searchColName.equals("Notes")) {
-//            ComboBoxForSearch.setText("Enter notes");
-//
-//        } else if (searchColName.equals("Priority")) {
-//            ComboBoxForSearch.setText("Enter priority");
-//
-//        }
+
+        comboBoxForSearch.setSelectedItem(searchValue);
+
+
     }//GEN-LAST:event_comboBoxSearchActionPerformed
 
     public void comboBoxForSearchMouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {
-            ComboBoxForSearch.getEditor().selectAll();
+            comboBoxForSearch.getEditor().selectAll();
         } else if (e.isControlDown()) {
-            ComboBoxForSearch.showPopup();
+            comboBoxForSearch.showPopup();
 
         }
     }
@@ -1866,6 +1880,28 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         openDocumentTool();
     }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
 
+    private void comboBoxForSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxForSearchActionPerformed
+        if (!comboBoxForSearch.getSelectedItem().toString().equals(searchValue)) {
+            if (comboBoxStartToSearch) {
+                if (comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Analyst")
+                        || comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Priority")
+                        || comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Path")) {
+                    if (!comboBoxForSearch.getSelectedItem().toString().startsWith("Enter")
+                            || !comboBoxForSearch.getSelectedItem().toString().endsWith("here")) {
+//            
+
+                        filterBySearch();
+//
+                    }
+//
+////           
+                }
+
+            }
+        }
+
+    }//GEN-LAST:event_comboBoxForSearchActionPerformed
+
     // menu item open document tool 
     public void openDocumentTool() {
         // must be on reports tab
@@ -1917,7 +1953,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }
 
     //set the timer for information Label show
-    public void startCountDownFromNow(int waitSeconds) {
+    public static void startCountDownFromNow(int waitSeconds) {
         Timer timer = new Timer(waitSeconds * 1000, new ActionListener() {
 
             @Override
@@ -2083,7 +2119,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         int row = table.rowAtPoint(e.getPoint());
                         int col = table.columnAtPoint(e.getPoint());
                         System.out.println(row);
-                        if (col > 3 && col < 6  ){
+                        if (col > 3 && col < 6) {
                             table.clearSelection();
                             table.setRowSelectionInterval(row, row);
                             Cursor cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
@@ -2803,7 +2839,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             if (colName.equalsIgnoreCase("symbol") || colName.equalsIgnoreCase("notes") || colName.equalsIgnoreCase("document")) {
                 valueList.add("");
             } else {
-                valueList.add("Enter " + colName + " here");
+                //  valueList.add("Enter " + colName + " here");
                 Object cellValue = table.getValueAt(0, col);
                 Object newValue;
                 if (cellValue != null) {
@@ -2840,7 +2876,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     private void updateComboList(String colName, String tableName) {
         DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
-        ComboBoxForSearch.setModel(comboBoxSearchModel);
+        comboBoxForSearch.setModel(comboBoxSearchModel);
 
         Map comboBoxForSearchValue = this.comboBoxForSearchDropDown.get(tableName);
 
@@ -2849,7 +2885,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             if (table.getColumnName(col).equalsIgnoreCase(colName)) {
                 ArrayList<Object> dropDownList = (ArrayList<Object>) comboBoxForSearchValue.get(col);
                 for (Object item : dropDownList) {
-                    List<Object> sortlist = dropDownList.subList(1, dropDownList.size());
+                    List<Object> sortlist = dropDownList.subList(0, dropDownList.size());
 
                     Collections.sort(sortlist, new Comparator<Object>() {
                         public int compare(Object o1, Object o2) {
@@ -2857,11 +2893,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         }
 
                     });
-
+                    comboBoxStartToSearch = false;
                     comboBoxSearchModel.addElement(item);
                 }
+                 comboBoxStartToSearch = true;
             }
         }
+       
     }
 
     /**
@@ -2999,7 +3037,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }
 
     public JComboBox getComboBoxForSearch() {
-        return ComboBoxForSearch;
+        return comboBoxForSearch;
     }
 
     /**
@@ -3104,7 +3142,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox ComboBoxForSearch;
     private javax.swing.JPanel addPanel_control;
     private javax.swing.JTable archiveTable;
     private javax.swing.JTable assignmentTable;
@@ -3117,8 +3154,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JButton btnRevertChanges;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUploadChanges;
+    private javax.swing.JComboBox comboBoxForSearch;
     private javax.swing.JComboBox comboBoxSearch;
-    private javax.swing.JLabel informationLabel;
+    public static javax.swing.JLabel informationLabel;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEdit;
     private javax.swing.JPanel jPanelSQL;
@@ -3165,7 +3203,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JMenu menuTools;
     private javax.swing.JMenu menuView;
     private javax.swing.JTable reportTable;
-    private javax.swing.JLabel searchInformationLabel;
+    public static javax.swing.JLabel searchInformationLabel;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabbedPanel;
     // End of variables declaration//GEN-END:variables
