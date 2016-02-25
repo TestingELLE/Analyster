@@ -1899,7 +1899,21 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             }
         }
-
+        comboBoxForSearch.getEditor().getEditorComponent().addKeyListener(new KeyAdapter(){
+            @Override
+        public void keyReleased(KeyEvent ke) {
+           if (ke.getKeyChar() == KeyEvent.VK_ENTER){
+               filterBySearch();
+               System.out.println("key");
+                      
+           }
+        }
+            
+            
+        });
+        
+         
+        
     }//GEN-LAST:event_comboBoxForSearchActionPerformed
 
     // menu item open document tool 
