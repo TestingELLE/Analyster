@@ -3,6 +3,7 @@ package com.elle.analyster.presentation;
 import com.elle.analyster.database.SQL_Commands;
 import com.elle.analyster.logic.CheckBoxItem;
 import com.elle.analyster.logic.CheckBoxList;
+import com.elle.analyster.logic.LoggingAspect;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -65,9 +66,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         try {
             this.statement = connection.createStatement();
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
         }
         
         setCheckBoxListListener();
@@ -213,16 +212,12 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             result = statement.executeQuery();
 
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
+            LoggingAspect.afterThrown(ex);
             // if table doesn't exist and needs to be created
             if(ex.getMessage().endsWith("exist")){
-                System.out.println("ENTERED !!!!!!!!!!!!!!!!!!!!!");
                 createDBTableToStoreBackupsInfo();
                 result = sql_commands.executeQuery(sql);
-            }else{
-                handleSQLexWithMessageBox(ex); // all other error messages
-            } 
+            }
         } finally{
             // create checkbox items from result set and load up array list
             if(result != null){
@@ -243,9 +238,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
                         items.add(item);
                     }
                 } catch (SQLException ex) {
-                    Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-                    ex.printStackTrace();
-                    handleSQLexWithMessageBox(ex); // any errors 
+                    LoggingAspect.afterThrown(ex);
                 }
             }
         }
@@ -281,9 +274,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             getStatement().executeUpdate(sql);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
             return false;
         }
     }
@@ -302,9 +293,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             dropTable(tableName);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
             return false;
         }
     }
@@ -336,8 +325,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             //Accessing driver from the JAR file
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
+            LoggingAspect.afterThrown(ex);
         }
         
         String server = "jdbc:mysql://" + host +":3306/" + database;
@@ -347,9 +335,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             // get connection
             connection = DriverManager.getConnection(server, username, password);
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
         }
         
         return connection;
@@ -366,9 +352,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         try {
             statement = connection.createStatement();
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
         }
         return statement;
     }
@@ -396,9 +380,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             return true;
 
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
             return false;
         }
     }
@@ -422,9 +404,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             displayBackupCompleteMessage();
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
             return false;
         }
     }
@@ -558,9 +538,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             addBackupRecord(tableName, backupTableName);
             displayBackupCompleteMessage();
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
         }
     }
     
@@ -636,9 +614,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             getStatement().executeUpdate(sql);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
             return false;
         }
     }
@@ -652,9 +628,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             getStatement().executeUpdate(sql);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
             return false;
         }
     }

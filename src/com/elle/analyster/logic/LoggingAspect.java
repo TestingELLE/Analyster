@@ -46,6 +46,13 @@ public class LoggingAspect {
     
     public static void afterThrown(Exception e){
         
+        //NOTES
+        // seTinformationLabel method
+        // analyster.setInformationLabel("Upload failed!", 10);
+        // I can probably get this specific message and handle user output
+        // handle specific exception in specific ways
+        // getmessage or exception type or name 
+        
         // display message to user
         informationLabel.setText("An error occurred. Please see log file.");
         timerCntDwn(10);

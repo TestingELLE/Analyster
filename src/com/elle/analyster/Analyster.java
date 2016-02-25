@@ -1,6 +1,7 @@
 
 package com.elle.analyster;
 
+import com.elle.analyster.logic.LoggingAspect;
 import com.elle.analyster.presentation.AnalysterWindow;
 import com.elle.analyster.presentation.LoginWindow;
 
@@ -23,8 +24,9 @@ public class Analyster {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AnalysterWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } 
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            LoggingAspect.afterThrown(ex);
         }
 
         // this is the first window that is shown to log in to the database.

@@ -1,7 +1,6 @@
 package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.DBConnection;
-import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.database.ModifiedTableData;
 import com.elle.analyster.logic.*;
 import javax.swing.*;
@@ -311,19 +310,7 @@ public class AddRecordsWindow extends JFrame {
                         numRowsAdded++;   // increment the number of rows added
                     }
                 } catch (SQLException sqlException) {
-                    try {
-                        analyster.setInformationLabel("Upload failed!", 10);
-
-                        if (statement.getWarnings().getMessage() != null) {
-                            logWindow.addMessageWithDate(statement.getWarnings().getMessage());
-                            System.out.println(statement.getWarnings().getMessage());
-                            statement.clearWarnings();
-                        }
-                    } // end try-catch
-                    catch (SQLException ex) {
-                        // this should never be called
-                        ex.printStackTrace();
-                    }
+                    LoggingAspect.afterThrown(sqlException);
                 }
             }
 
