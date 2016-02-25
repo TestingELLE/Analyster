@@ -25,14 +25,6 @@ public class LoggingAspect {
         AnalysterWindow.startCountDownFromNow(time);
     }
     
-    public static void addInfoMsg(String msg){
-        informationLabel.setText(msg);
-    }
-    
-    public static void addSearchInfoMsg(String msg){
-        searchInformationLabel.setText(msg);
-    }
-    
     public static void afterReturn(String msg){
         
         // display message to user
