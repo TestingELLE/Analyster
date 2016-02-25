@@ -36,12 +36,14 @@ public class LoggingAspect {
     public static void afterReturn(String msg){
         
         // display message to user
-        informationLabel.setText(msg);
-        timerCntDwn(10);
-        
+        System.out.println(msg);
+        if (informationLabel != null) {
+            informationLabel.setText(msg);
+            timerCntDwn(10);
+        }
+
         // add message to log
         addLogMsgWthDate(msg);
-        
     }
     
     public static void afterThrown(Exception e){
@@ -54,8 +56,11 @@ public class LoggingAspect {
         // getmessage or exception type or name 
         
         // display message to user
-        informationLabel.setText("An error occurred. Please see log file.");
-        timerCntDwn(10);
+        e.printStackTrace();
+        if(informationLabel != null){
+            informationLabel.setText("An error occurred. Please see log file.");
+            timerCntDwn(10);
+        }
         
         // add error message to log
         addLogMsgWthDate("An exception was thrown: ");
