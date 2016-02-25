@@ -2,9 +2,9 @@
 package com.elle.analyster.logic;
 
 import com.elle.analyster.presentation.AnalysterWindow;
+import static com.elle.analyster.presentation.AnalysterWindow.informationLabel;
+import static com.elle.analyster.presentation.AnalysterWindow.searchInformationLabel;
 import com.elle.analyster.presentation.LogWindow;
-import java.awt.Component;
-import javax.swing.JLabel;
 
 /**
  * LoggingAspect
@@ -12,36 +12,52 @@ import javax.swing.JLabel;
  * @since  Feb 23, 2016
  */
 public class LoggingAspect {
-
-    // variables
-    private static JLabel infoLbl = AnalysterWindow.informationLabel;
-    private static JLabel srchInfoLbl = AnalysterWindow.searchInformationLabel;
     
-    private static void addMsg(String msg){
+    public static void addLogMsg(String msg){
         LogWindow.addMessage(msg);
     }
     
-    private static void addMsgWthDate(String msg){
+    public static void addLogMsgWthDate(String msg){
         LogWindow.addMessageWithDate(msg);
     }
     
-    private static void timerCntDwn(int time){
+    public static void timerCntDwn(int time){
         AnalysterWindow.startCountDownFromNow(time);
     }
     
-    public static void loadingBegin(){
-        System.out.println("loading ...");
+    public static void addInfoMsg(String msg){
+        informationLabel.setText(msg);
     }
     
-    public static void loadingEnd(){
-        System.out.println("");
+    public static void addSearchInfoMsg(String msg){
+        searchInformationLabel.setText(msg);
     }
     
     public static void afterReturn(String msg){
+        
+        // display message to user
+        informationLabel.setText(msg);
+        timerCntDwn(10);
+        
+        // add message to log
+        addLogMsgWthDate(msg);
         
     }
     
     public static void afterThrown(Exception e){
         
+        // display message to user
+        informationLabel.setText("An error occurred. Please see log file.");
+        timerCntDwn(10);
+        
+        // add error message to log
+        addLogMsgWthDate("An exception was thrown: ");
+        
+        // log exception 
+        addLogMsg("Error message: " + e.getMessage());
+        StackTraceElement element = e.getStackTrace()[0]; // first element
+        addLogMsg("Package.Class: " + element.getClassName());
+        addLogMsg("Method: " + element.getMethodName());
+        addLogMsg("Line: " + element.getLineNumber());
     }
 }
