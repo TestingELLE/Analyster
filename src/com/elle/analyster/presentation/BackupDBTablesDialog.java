@@ -357,7 +357,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         return statement;
     }
     
-    /**
+        /**
      * Creates a backup table with the same table name and today's 
      * date appended to the end. 
      * @param tableName table name in the database to backup
@@ -380,8 +380,46 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             return true;
 
         } catch (SQLException ex) {
-            LoggingAspect.afterThrown(ex);
-            return false;
+
+            String message = ex.getMessage();
+
+            // if backup database already exists
+            if (message.endsWith("already exists")) {
+                // option dialog box
+                message = "Backup database " + backupTableName + " already exists";
+                String title = "Backup already exists";
+                int optionType = JOptionPane.YES_NO_CANCEL_OPTION;
+                int messageType = JOptionPane.QUESTION_MESSAGE;
+                Object[] options = {"Overwrite", "Create a new one", "Cancel"};
+                int optionSelected = JOptionPane.showOptionDialog(parentComponent,
+                        message,
+                        title,
+                        optionType,
+                        messageType,
+                        null,
+                        options,
+                        null);
+
+                // handle option selected
+                switch (optionSelected) {
+                    case 0:
+                        overwriteBackupDB();
+                        reloadCheckList();
+                        break;
+                    case 1:
+                        backupTableName = getInputTableNameFromUser();
+                        backupTable(tableName, backupTableName);
+                        reloadCheckList();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            } 
+            else {
+                LoggingAspect.afterThrown(ex);
+                return false;
+            }
         }
     }
     
@@ -470,57 +508,6 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         
         return "_" + year + "_" + month + "_" + day;
-    }
-    
-    /**
-     * Handles sql exceptions with a message box to notify the user
-     * @param ex the sql exception that was thrown
-     */
-    public void handleSQLexWithMessageBox(SQLException ex){
-        
-        String message = ex.getMessage();
-        
-        // if backup database already exists
-        if (message.endsWith("already exists")){
-            // option dialog box
-            message = "Backup database " + backupTableName + " already exists";
-            String title = "Backup already exists";
-            int optionType = JOptionPane.YES_NO_CANCEL_OPTION;
-            int messageType = JOptionPane.QUESTION_MESSAGE;
-            Object[] options = {"Overwrite", "Create a new one", "Cancel"};
-            int optionSelected = JOptionPane.showOptionDialog(parentComponent, 
-                                        message, 
-                                        title, 
-                                        optionType, 
-                                        messageType, 
-                                        null, 
-                                        options, 
-                                        null);
-            
-            // handle option selected
-            switch(optionSelected){
-                case 0:
-                    overwriteBackupDB();
-                    reloadCheckList();
-                    break;
-                case 1:
-                    backupTableName = getInputTableNameFromUser();
-                    backupTable(tableName, backupTableName);
-                    reloadCheckList();
-                    break;
-                default:
-                    break;
-            }
-        }
-        
-        // display message to user
-        else{
-            
-            // message dialog box 
-            String title = "Error";
-            int messageType = JOptionPane.ERROR_MESSAGE;
-            JOptionPane.showMessageDialog(parentComponent, message, title, messageType);
-        }
     }
     
     /**
