@@ -67,9 +67,16 @@ public class LoggingAspect {
         
         // log exception 
         addLogMsg("Error message: " + e.getMessage());
-        StackTraceElement element = e.getStackTrace()[0]; // first element
-        addLogMsg("Package.Class: " + element.getClassName());
-        addLogMsg("Method: " + element.getMethodName());
-        addLogMsg("Line: " + element.getLineNumber());
+        
+        // get first element that package starts with com.elle.
+        StackTraceElement[] elements = e.getStackTrace();
+        for(StackTraceElement element:elements){
+            if(element.getClassName().startsWith("com.elle.")){
+                addLogMsg("Package.Class: " + element.getClassName());
+                addLogMsg("Method: " + element.getMethodName());
+                addLogMsg("Line: " + element.getLineNumber());
+                break;
+            }
+        }
     }
 }
