@@ -62,6 +62,7 @@ public class ShortCutSetting {
                                 undo.undo();
                             }
                         } catch (CannotUndoException e) {
+                            LoggingAspect.afterThrown(e);
                         }
                     }
                 });
@@ -78,6 +79,7 @@ public class ShortCutSetting {
                                 undo.redo();
                             }
                         } catch (CannotRedoException e) {
+                            LoggingAspect.afterThrown(e);
                         }
                     }
                 });

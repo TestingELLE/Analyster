@@ -12,7 +12,7 @@ import java.io.File;
  */
 public class FilePathFormat {
     
-    private static final String OS_WINDOWS = "windows";
+    private static final String OS_WINDOWS = "win";
     
     /**
      * Converts a file path format to either windows or non-windows format.
@@ -60,6 +60,7 @@ public class FilePathFormat {
         // Not all os have the sun.desktop property value
         // and it may return null for some os.
         // Hence os.name is used and checks for "windows" with the startsWith().
-        return System.getProperty("os.name").startsWith(OS_WINDOWS);
+        String osName = System.getProperty("os.name").toLowerCase().trim();
+        return osName.startsWith(OS_WINDOWS);
     }
 }
