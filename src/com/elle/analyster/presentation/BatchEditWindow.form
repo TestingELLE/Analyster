@@ -99,19 +99,11 @@
               </StringArray>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboBoxFieldSelectActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="textFieldNewValue">
           <Properties>
             <Property name="text" type="java.lang.String" value="Please enter new value"/>
           </Properties>
-          <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="textFieldNewValueFocusGained"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldNewValueActionPerformed"/>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textFieldNewValueKeyPressed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>

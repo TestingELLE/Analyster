@@ -1626,8 +1626,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         Tab tab = tabs.get(tabName);
         String[] searchFields = tab.getSearchFields();
         System.out.println(tab.getTableName());
-       if (searchFields != null) {
-           comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
+        if (searchFields != null) {
+            comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
 //           if(tab.getTableName().equalsIgnoreCase("Assignments")){
 //           comboBoxSearch.setModel(new DefaultComboBoxModel(ASSIGNMENTS_SEARCH_FIELDS));
 //           }else if(tab.getTableName().equalsIgnoreCase("Reports")){
@@ -1636,9 +1636,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 //           comboBoxSearch.setModel(new DefaultComboBoxModel(ARCHIVE_SEARCH_FIELDS));    
 //           }
         }
-       comboBoxSearch.setSelectedItem(searchCol);
-       updateComboList(searchCol, tabName);
-       comboBoxForSearch.setSelectedItem(entryValue);
+        comboBoxSearch.setSelectedItem(searchCol);
+        updateComboList(searchCol, tabName);
+        comboBoxForSearch.setSelectedItem(entryValue);
     }//GEN-LAST:event_tabbedPanelStateChanged
 
     /**
@@ -2425,6 +2425,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 //                            int row = table.getSelectedRow();
 //                            int column = table.getSelectedColumn();
                             if (column == table.getRowCount() || column == 0) {
+                                System.out.println("tab first column");
                                 return false;
                             } else {
                                 tableCellSelection(e, table, row, column);
@@ -2441,6 +2442,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         if (e.getID() == KeyEvent.KEY_RELEASED) {
                             if (e.getComponent() instanceof JTable) {
                                 if (column == table.getRowCount() || column == 0) {
+                                    System.out.println("left first columnt");
                                     return false;
                                 } else {
 
@@ -2449,6 +2451,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                             } else {
                                 if (column == 0) {
+                                    System.out.println("left first column");
                                     if (row == 0) {
                                         return false;
                                     } else {
@@ -2471,16 +2474,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         if (e.getID() == KeyEvent.KEY_RELEASED) {
                             if (e.getComponent() instanceof JTable) {
 
-                                System.out.println("enter we are at: " + row + " " + column);
-                                if (column == table.getRowCount() || column == columnCount - 1) {
+                                System.out.println("right we are at: " + row + " " + column);
+                                if (column == table.getRowCount() || column == columnCount - 1 || column == 0) {
+                                    System.out.println("right first columnt");
                                     return false;
                                 } else {
                                     tableCellSelection(e, table, row, column);
                                 }
                             } else {
-                                System.out.println("we are at: " + row + " " + column);
+                                System.out.println("right we are at: " + row + " " + column + " " + columnCount);
                                 if (column == columnCount - 1) {
-                                    if (row == rowCount - 1) {
+                                    if (row == rowCount - 1 || column == 0) {
+                                        System.out.println("right first columnt");
                                         return false;
                                     } else {
                                         row = row + 1;
@@ -2489,7 +2494,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                 } else {
                                     column = column + 1;
                                 }
-                                System.out.println("we are now at: " + row + " " + column);
+                                System.out.println("right we are now at: " + row + " " + column);
                                 table.changeSelection(row, column, false, false);
                                 tableCellSelection(e, table, row, column);
                                 // if table cell is editing 
@@ -2508,7 +2513,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                     tableCellSelection(e, table, row, column);
                                 }
                             } else {
-                                if (row == 0) {
+                                if (row == 0 || column == 0) {
                                     return false;
                                 } else {
                                     row = row - 1;
@@ -2531,7 +2536,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                     tableCellSelection(e, table, row, column);
                                 }
                             } else {
-                                if (row == rowCount - 1) {
+                                if (row == rowCount - 1 || column == 0) {
                                     return false;
                                 } else {
                                     row = row + 1;
@@ -2549,20 +2554,22 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 }
                 if (!isBatchEditWindowShow) {
                     if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
-                        if (labelEditModeState.getText().equals("ON ")) {                       // Default Date input with today's date
-                            JTable table = (JTable) e.getComponent().getParent();
-                            int column = table.getSelectedColumn();
-                            if (table.getColumnName(column).toLowerCase().contains("date")) {
-                                if (e.getID() != 401) { // 401 = key down, 402 = key released
-                                    return false;
-                                } else {
-                                    JTextField selectCom = (JTextField) e.getComponent();
-                                    selectCom.requestFocusInWindow();
-                                    selectCom.selectAll();
-                                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    Date date = new Date();
-                                    String today = dateFormat.format(date);
-                                    selectCom.setText(today);
+                        if (e.getComponent() instanceof JTable) {
+                            if (labelEditModeState.getText().equals("ON ")) {                       // Default Date input with today's date
+                                JTable table = (JTable) e.getComponent().getParent();
+                                int column = table.getSelectedColumn();
+                                if (table.getColumnName(column).toLowerCase().contains("date")) {
+                                    if (e.getID() != 401) { // 401 = key down, 402 = key released
+                                        return false;
+                                    } else {
+                                        JTextField selectCom = (JTextField) e.getComponent();
+                                        selectCom.requestFocusInWindow();
+                                        selectCom.selectAll();
+                                        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                        Date date = new Date();
+                                        String today = dateFormat.format(date);
+                                        selectCom.setText(today);
+                                    }
                                 }
                             }
                         }
@@ -2633,9 +2640,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                 table.getComponentAt(row, column).requestFocus();
                 table.editCellAt(row, column);
-                JTextField selectCom = (JTextField) table.getEditorComponent();
-                selectCom.requestFocusInWindow();
-                selectCom.selectAll();
+                if (table.getEditorComponent() instanceof JTextField) {
+                    JTextField selectCom = (JTextField) table.getEditorComponent();
+                    selectCom.requestFocusInWindow();
+                    selectCom.selectAll();
+                }
 
             }
         });
@@ -2759,6 +2768,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         Vector data = new Vector();
         Vector columnNames = new Vector();
+        Vector columnClass = new Vector();
         int columns;
 
         ResultSet rs = null;
@@ -2773,6 +2783,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         try {
             columns = metaData.getColumnCount();
             for (int i = 1; i <= columns; i++) {
+                columnClass.addElement(metaData.getColumnClassName(i));
                 columnNames.addElement(metaData.getColumnName(i));
             }
             while (rs.next()) {
@@ -2789,7 +2800,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             ex.printStackTrace();
         }
 
-        EditableTableModel model = new EditableTableModel(data, columnNames);
+        EditableTableModel model = new EditableTableModel(data, columnNames, columnClass);
 
         // this has to be set here or else I get errors
         // I tried passing the model to the filter and setting it there
@@ -2896,10 +2907,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     comboBoxStartToSearch = false;
                     comboBoxSearchModel.addElement(item);
                 }
-                 comboBoxStartToSearch = true;
+                comboBoxStartToSearch = true;
             }
         }
-       
+
     }
 
     /**

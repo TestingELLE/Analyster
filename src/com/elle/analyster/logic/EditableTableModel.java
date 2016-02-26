@@ -1,14 +1,16 @@
-
 package com.elle.analyster.logic;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
 
 /**
- * EditableTableModel
- * This class allows switching the table to editable and non editable
- * by overriding the isCellEditable method with a boolean to change
- * it on the fly.
+ * EditableTableModel This class allows switching the table to editable and non
+ * editable by overriding the isCellEditable method with a boolean to change it
+ * on the fly.
+ *
  * @author Carlos Igreja
  * @since June 10, 2015
  * @version 0.6.3
@@ -16,25 +18,27 @@ import java.util.Vector;
 public class EditableTableModel extends DefaultTableModel {
 
     private boolean cellEditable;
-    
+    private Vector columnClass;
+
     /**
-     * CONSTRUCTOR
-     * EditableTableModel
+     * CONSTRUCTOR EditableTableModel
+     *
      * @param data
      * @param columnNames
-     * @param isCellEditable 
+     * @param isCellEditable
      */
-    public EditableTableModel(Vector data, Vector columnNames) {
+    public EditableTableModel(Vector data, Vector columnNames, Vector colClass) {
         super(data, columnNames);
         cellEditable = false;
+        columnClass = colClass;
     }
 
     /**
-     * isCellEditable
-     * Makes table editable or non editable
+     * isCellEditable Makes table editable or non editable
+     *
      * @param row
      * @param col
-     * @return 
+     * @return
      */
     @Override
     public boolean isCellEditable(int row, int col) {
@@ -43,7 +47,8 @@ public class EditableTableModel extends DefaultTableModel {
 
     /**
      * isCellEditable
-     * @return 
+     *
+     * @return
      */
     public boolean isCellEditable() {
         return cellEditable;
@@ -51,13 +56,34 @@ public class EditableTableModel extends DefaultTableModel {
 
     /**
      * setCellEditable
-     * @param cellEditable 
+     *
+     * @param cellEditable
      */
     public void setCellEditable(boolean cellEditable) {
         this.cellEditable = cellEditable;
+            
     }
-    
-    
-    
-    
+
+    /**
+     * Override getColumnClass() in DefaultTableModel
+     *
+     * @param col
+     * @return class
+     */
+    @Override
+    public Class getColumnClass(int col) {
+        if (col == 0) {
+            // get class name of that column
+            String columnClassName = (String) columnClass.get(col);
+
+            int indexOfDotInClassName = columnClassName.indexOf(".", 5) + 1;
+            columnClassName = columnClassName.substring(indexOfDotInClassName).toLowerCase();
+
+            return Integer.class;
+        }
+
+        return Object.class;
+
+    }
+
 }
