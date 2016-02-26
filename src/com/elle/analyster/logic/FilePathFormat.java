@@ -1,5 +1,7 @@
 package com.elle.analyster.logic;
 
+import java.io.File;
+
 /**
  * Converts a file path format to either windows or non-windows format.
  * Windows uses backslash for file paths.

@@ -410,26 +410,33 @@ public class AddRecordsWindow extends JFrame {
                             }
                         }
                     }
-
-                } // end table component condition
-                // ctrl + D fills in the current date
+                     // ctrl + D fills in the current date
                 else if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
-                    JTable table = (JTable) e.getComponent().getParent();
+                    JTable table = (JTable) e.getComponent();
                     int column = table.getSelectedColumn();
+                    
+                    System.out.println("control + d at: " + column);
                     if (table.getColumnName(column).toLowerCase().contains("date")) {
                         if (e.getID() != 401) {
+                            System.out.println("here");
                             return false;
                         } else {
-                            JTextField selectCom = (JTextField) e.getComponent();
-                            selectCom.requestFocusInWindow();
-                            selectCom.selectAll();
+//                            JTextField selectCom = (JTextField) e.getComponent();
+//                            selectCom.requestFocusInWindow();
+//                            selectCom.selectAll();
                             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                             Date date = new Date();
                             String today = dateFormat.format(date);
-                            selectCom.setText(today);
+                            int row = table.getSelectedRow();
+                            System.out.println(row + " " + column + " " + today);
+                            table.setValueAt(today, row, column);
+//                            selectCom.setText(today);
                         }// default date input with today's date}
                     }
                 }
+
+                } // end table component condition
+               
 
                 return false;
             }
