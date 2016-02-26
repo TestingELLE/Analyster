@@ -319,6 +319,10 @@ public class LoginWindow extends JFrame {
             return userName;
         }
     }
+    public String getDBName() {
+        return selectedDB;
+        
+    }
 
     /**
      * Loads the names of the databases from a text file this is if the actual
@@ -428,6 +432,7 @@ public class LoginWindow extends JFrame {
             passwordFieldPW.setText("");
         }
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
