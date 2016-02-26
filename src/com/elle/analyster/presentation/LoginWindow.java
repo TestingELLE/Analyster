@@ -8,6 +8,7 @@ package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.Authorization;
+import com.elle.analyster.logic.LoggingAspect;
 import static com.elle.analyster.presentation.LogWindow.HYPHENS;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -353,13 +354,13 @@ public class LoginWindow extends JFrame {
                 comboBoxDatabase.setModel(new DefaultComboBoxModel(arr));
             }
         } catch (Exception e) {
-
+            LoggingAspect.afterThrown(e);
         } finally {
             if (buf != null) {
                 try {
                     buf.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LoggingAspect.afterThrown(e);
                 }
             }
         }

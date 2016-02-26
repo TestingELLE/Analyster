@@ -1,6 +1,7 @@
 
 package com.elle.analyster.database;
 
+import com.elle.analyster.logic.LoggingAspect;
 import java.awt.Component;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -59,7 +60,6 @@ public class DBConnection {
             DBConnection.userName = userName;
             DBConnection.userPassword = userPassword;
             
-            
             String url = "";
             ArrayList<Server> servers = readServers();
             
@@ -74,12 +74,10 @@ public class DBConnection {
             // connect to server
             connection = DriverManager.getConnection(url, userName, userPassword);
             statement = connection.createStatement();
-            System.out.println("Connection successfully");
+            LoggingAspect.afterReturn("Connection successful");
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
             return false;
         }
              
@@ -107,11 +105,10 @@ public class DBConnection {
         try {
             statement.close();
             connection.close();
+            LoggingAspect.afterReturn("Connection closed successful");
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
             return false;
         }
     }
@@ -126,8 +123,7 @@ public class DBConnection {
                 return false;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
-            handleSQLexWithMessageBox(ex);
+            LoggingAspect.afterThrown(ex);
             return true;
         }
     }
@@ -274,8 +270,9 @@ public class DBConnection {
                 }
                 reader.next();
             }
+            LoggingAspect.afterReturn("read servers file successfully");
         }catch(XMLStreamException e){
-            System.out.println(e);
+            LoggingAspect.afterThrown(e);
         }
         return servers;
     }
@@ -310,8 +307,9 @@ public class DBConnection {
             writer.writeEndElement();
             writer.flush();
             writer.close();
+            LoggingAspect.afterReturn("write to servers successful");
         }catch(IOException | XMLStreamException e){
-            System.out.println(e);
+            LoggingAspect.afterThrown(e);
         }
     }
 

@@ -91,7 +91,7 @@ public class OpenDocumentTool {
             Desktop.getDesktop().open(file);
             return true;
         } catch (IOException ex) {
-            Logger.getLogger(OpenDocumentTool.class.getName()).log(Level.SEVERE, null, ex);
+            LoggingAspect.afterThrown(ex);
             ex.printStackTrace();
             JOptionPane.showMessageDialog(parent, ex.getMessage());
             return false;
