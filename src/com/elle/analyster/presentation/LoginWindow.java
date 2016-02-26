@@ -42,11 +42,6 @@ public class LoginWindow extends JFrame {
         // load selectedDB selections from the text file for the combobox
         // loadDBList();  // this loads from a file which is not really used (it's for use with edit database window)
         // show window
-        
-        comboBoxDatabase.setSelectedIndex(2);
-        comboBoxServer.setSelectedIndex(0);
-        textFieldUsername.setText("pupone_Xiao");
-        passwordFieldPW.setText("XiaoXXXX8");
         this.setTitle("Log in");
     }
 
@@ -324,6 +319,10 @@ public class LoginWindow extends JFrame {
             return userName;
         }
     }
+    public String getDBName() {
+        return selectedDB;
+        
+    }
 
     /**
      * Loads the names of the databases from a text file this is if the actual
@@ -433,6 +432,7 @@ public class LoginWindow extends JFrame {
             passwordFieldPW.setText("");
         }
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
