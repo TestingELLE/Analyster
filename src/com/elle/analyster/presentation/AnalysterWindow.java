@@ -27,6 +27,7 @@ import com.elle.analyster.logic.JTableCellRenderer;
 import com.elle.analyster.logic.LoggingAspect;
 import com.elle.analyster.logic.OpenDocumentTool;
 import com.elle.analyster.logic.ShortCutSetting;
+import com.elle.analyster.logic.TextCellEditor;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -1175,6 +1176,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             JTable table = tab.getTable();
             EditableTableModel model = ((EditableTableModel) table.getModel());
             model.setCellEditable(makeTableEditable);
+
         }
     }
 
@@ -2137,6 +2139,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 ModifiedTableData data = tabs.get(tab).getTableData();
                 Object oldValue = data.getOldData()[row][col];
                 Object newValue = table.getModel().getValueAt(row, col);
+//                System.out.println("table changed: " + oldValue + " " + newValue);
 
                 // check that data is different
                 if (!newValue.equals(oldValue)) {
@@ -2177,7 +2180,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                     table.setRowSelectionAllowed(true);
                     table.setRowSelectionInterval(0, table.getRowCount() - 1);
-                    System.out.println("here");
                 }
             }
 
@@ -2403,11 +2405,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     int rowCount = table.getRowCount();
                     if (e.getKeyCode() == KeyEvent.VK_TAB) {
                         if (e.getComponent() instanceof JTable) {
-//                            JTable table = (JTable) e.getComponent();
-//                            int row = table.getSelectedRow();
-//                            int column = table.getSelectedColumn();
                             if (column == table.getRowCount() || column == 0) {
-                                System.out.println("tab first column");
                                 return false;
                             } else {
                                 tableCellSelection(e, table, row, column);
@@ -2423,26 +2421,28 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                         if (e.getID() == KeyEvent.KEY_RELEASED) {
                             if (e.getComponent() instanceof JTable) {
-                                if (column == table.getRowCount() || column == 0) {
-                                    System.out.println("left first columnt");
+
+//                                System.out.println("left table at: " + row + " " + column );
+                                if (column == table.getRowCount()) {
                                     return false;
                                 } else {
-
+                                    if (column == 0) {
+                                        if (row == 0) {
+                                            return false;
+                                        } else {
+                                            row = row - 1;
+                                            column = columnCount - 1;
+                                        }
+                                    }
                                     tableCellSelection(e, table, row, column);
                                 }
 
                             } else {
-                                if (column == 0) {
-                                    System.out.println("left first column");
-                                    if (row == 0) {
-                                        return false;
-                                    } else {
-                                        row = row - 1;
-                                        column = columnCount - 1;
-                                    }
-                                } else {
+//                                System.out.println("left at: " + row + " " + column );
+                                if (column != 0)  {
                                     column = column - 1;
                                 }
+//                                System.out.println("left now at: " + row + " " + column );
                                 table.changeSelection(row, column, false, false);
                                 tableCellSelection(e, table, row, column);
                             }
@@ -2456,18 +2456,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         if (e.getID() == KeyEvent.KEY_RELEASED) {
                             if (e.getComponent() instanceof JTable) {
 
-                                System.out.println("right we are at: " + row + " " + column);
-                                if (column == table.getRowCount() || column == columnCount - 1 || column == 0) {
-                                    System.out.println("right first columnt");
+//                                System.out.println("right we are at: " + row + " " + column);
+                                if (column == table.getRowCount() || column == columnCount - 1) {
+//                                    System.out.println("right first columnt");
                                     return false;
                                 } else {
                                     tableCellSelection(e, table, row, column);
                                 }
                             } else {
-                                System.out.println("right we are at: " + row + " " + column + " " + columnCount);
+//                                System.out.println("right we are at: " + row + " " + column + " " + columnCount);
                                 if (column == columnCount - 1) {
-                                    if (row == rowCount - 1 || column == 0) {
-                                        System.out.println("right first columnt");
+                                    if (row == rowCount - 1) {
+//                                        System.out.println("right first columnt");
                                         return false;
                                     } else {
                                         row = row + 1;
@@ -2476,7 +2476,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                 } else {
                                     column = column + 1;
                                 }
-                                System.out.println("right we are now at: " + row + " " + column);
+//                                System.out.println("right we are now at: " + row + " " + column);
                                 table.changeSelection(row, column, false, false);
                                 tableCellSelection(e, table, row, column);
                                 // if table cell is editing 
@@ -2489,7 +2489,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     } else if (e.getKeyCode() == KeyEvent.VK_UP) {
                         if (e.getID() == KeyEvent.KEY_RELEASED) {
                             if (e.getComponent() instanceof JTable) {
-                                if (column == table.getRowCount() || column == 0) {
+                                if (column == table.getRowCount()) {
                                     return false;
                                 } else {
                                     tableCellSelection(e, table, row, column);
@@ -2532,6 +2532,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                 }
                             }
                         }
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_Z && e.isMetaDown()) {
+
                     }
                 }
                 if (!isBatchEditWindowShow) {
@@ -2621,8 +2624,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             private void tableCellSelection(KeyEvent e, JTable table, int row, int column) {
 
                 table.getComponentAt(row, column).requestFocus();
-                table.editCellAt(row, column);
-                if (table.getEditorComponent() instanceof JTextField) {
+                if (column != 0) {
+                    table.editCellAt(row, column);
                     JTextField selectCom = (JTextField) table.getEditorComponent();
                     selectCom.requestFocusInWindow();
                     selectCom.selectAll();
@@ -2790,6 +2793,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // check that the filter items are initialized
         String tabName = table.getName();
         Tab tab = tabs.get(tabName);
+        //setTableCellEditor
+        table.setDefaultEditor(Object.class, new TextCellEditor());
 
         // apply filter
         TableFilter filter = tab.getFilter();

@@ -73,16 +73,11 @@ public class EditableTableModel extends DefaultTableModel {
     @Override
     public Class getColumnClass(int col) {
         if (col == 0) {
-            // get class name of that column
-            String columnClassName = (String) columnClass.get(col);
-
-            int indexOfDotInClassName = columnClassName.indexOf(".", 5) + 1;
-            columnClassName = columnClassName.substring(indexOfDotInClassName).toLowerCase();
 
             return Integer.class;
+        }else{
+            return Object.class;
         }
-
-        return Object.class;
 
     }
 
