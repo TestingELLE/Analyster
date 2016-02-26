@@ -24,6 +24,7 @@ import static com.elle.analyster.logic.ITableConstants.REPORTS_TABLE_NAME;
 import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
 import com.elle.analyster.logic.JTableCellRenderer;
+import com.elle.analyster.logic.LoggingAspect;
 import com.elle.analyster.logic.OpenDocumentTool;
 import com.elle.analyster.logic.ShortCutSetting;
 
@@ -70,8 +71,8 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-2-23";
-    private final String VERSION = "1.0.6b";
+    private final String CREATION_DATE = "2016-2-25";
+    private final String VERSION = "1.1.0";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -1125,9 +1126,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             try {
                 statement.executeUpdate(command);
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
+                LoggingAspect.afterThrown(e);
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
+                LoggingAspect.afterThrown(e);
             }
         }
     }//GEN-LAST:event_btnEnterSQLActionPerformed
@@ -1574,23 +1575,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         statement.executeUpdate(insertInto + values);
                     }
                 } catch (SQLException sqlException) {
-                    try {
-                        informationLabel.setText(("Upload failed! "));
-                        this.startCountDownFromNow(10);
-                        errorOccurred = true; // if error occurred then break loop
-
-                        if (statement.getWarnings().getMessage() != null) {
-                            logWindow.addMessageWithDate(statement.getWarnings().getMessage());
-                            System.out.println(statement.getWarnings().getMessage());
-                            statement.clearWarnings();
-                        }
-                        break; // break because error occurred
-                    } // end try-catch
-                    catch (SQLException ex) {
-                        // this should never be called
-                        ex.printStackTrace();
-                        break; // break because error occurred
-                    }
+                    LoggingAspect.afterThrown(sqlException);
+                    break; // break because error occurred
                 }
             }
 
@@ -1787,8 +1773,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     statement.executeUpdate(sqlInsert);
                     //                    ana.getLogWindow().addMessageWithDate(sqlInsert);
                 } catch (SQLException e) {
-                    e.printStackTrace();
-                    System.out.println(e.toString());
+                    LoggingAspect.afterThrown(e);
                 }
             }
 
@@ -2391,10 +2376,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 statement.executeUpdate(sqlChange);
 
             } catch (SQLException e) {
-                informationLabel.setText(("Upload failed! " + e.getMessage()));
-                this.startCountDownFromNow(10);
-                logWindow.addMessageWithDate(e.getMessage());
-                logWindow.addMessageWithDate(e.getSQLState() + "\n");
+                LoggingAspect.afterThrown(e);
                 updateSuccessful = false;
             }
         }
@@ -2798,8 +2780,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             rs = statement.executeQuery(sql);
             metaData = rs.getMetaData();
         } catch (Exception ex) {
-            System.out.println("SQL Error:");
-            ex.printStackTrace();
+            LoggingAspect.afterThrown(ex);
         }
         try {
             columns = metaData.getColumnCount();
@@ -2816,8 +2797,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             rs.close();
 
         } catch (SQLException ex) {
-            System.out.println("SQL Error:");
-            ex.printStackTrace();
+            LoggingAspect.afterThrown(ex);
         }
 
         EditableTableModel model = new EditableTableModel(data, columnNames);
@@ -2992,11 +2972,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 labelRecords.setText(recordsLabel); // update label
 
             } catch (SQLException e) {
-                System.out.println("SQL Error:");
-                e.printStackTrace();
-
-                // output pop up dialog that there was an error 
-                JOptionPane.showMessageDialog(this, "There was an SQL Error.");
+                LoggingAspect.afterThrown(e);
             }
         }
         return sqlDelete;
