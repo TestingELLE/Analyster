@@ -12,6 +12,7 @@ import com.elle.analyster.presentation.ReportWindow;
 
 /**
  * User
+ * The user access level configuration
  * @author Carlos Igreja
  * @since  Mar 1, 2016
  */
