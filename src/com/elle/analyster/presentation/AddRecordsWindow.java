@@ -1,5 +1,6 @@
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.admissions.Authorization;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.database.ModifiedTableData;
 import com.elle.analyster.logic.*;
