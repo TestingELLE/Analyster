@@ -2,7 +2,14 @@ package com.elle.analyster.admissions;
 
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.database.SQL_Commands;
+import com.elle.analyster.presentation.AddRecordsWindow;
 import com.elle.analyster.presentation.AnalysterWindow;
+import com.elle.analyster.presentation.BackupDBTablesDialog;
+import com.elle.analyster.presentation.BatchEditWindow;
+import com.elle.analyster.presentation.EditDatabaseWindow;
+import com.elle.analyster.presentation.LogWindow;
+import com.elle.analyster.presentation.LoginWindow;
+import com.elle.analyster.presentation.ReportWindow;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,19 +92,21 @@ public class Authorization {
         //getComponentType
         // pass IAdminComponent
         
+        IAdminComponent adminComponent;
+        
         if(accessLevel != null) // changed tab state is called from initComponents
             switch(accessLevel){
                 case ADMINISTRATOR:
-                    developerPermissions(c);
+                    setPermissions(c, new Administrator());
                     break;
                 case DEVELOPER:
-                    developerPermissions(c);
+                    setPermissions(c, new Developer());
                     break;
                 case USER:
-                    developerPermissions(c);
+                    setPermissions(c, new User());
                     break;
                 case VIEWER:
-                    developerPermissions(c);
+                    setPermissions(c, new Viewer());
                     break;
                 default:
                     break;
@@ -115,6 +124,34 @@ public class Authorization {
             AnalysterWindow ana = (AnalysterWindow)c;
             // menu item components
             //pm.getMenuItemDummy().setEnabled(false);
+        }
+    }
+    
+    private static void setPermissions(Component c, IAdminComponent admin){
+
+        if(c instanceof AddRecordsWindow){
+            admin.setComponent((AddRecordsWindow)c);
+        }
+        else if(c instanceof AnalysterWindow){
+            admin.setComponent((AnalysterWindow)c);
+        }
+        else if(c instanceof BackupDBTablesDialog){
+            admin.setComponent((BackupDBTablesDialog)c);
+        }
+        else if(c instanceof BatchEditWindow){
+            admin.setComponent((BatchEditWindow)c);
+        }
+        else if(c instanceof EditDatabaseWindow){
+            admin.setComponent((EditDatabaseWindow)c);
+        }
+        else if(c instanceof LogWindow){
+            admin.setComponent((LogWindow)c);
+        }
+        else if(c instanceof LoginWindow){
+            admin.setComponent((LoginWindow)c);
+        }
+        else if(c instanceof ReportWindow){
+            admin.setComponent((ReportWindow)c);
         }
     }
 }
