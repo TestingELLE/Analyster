@@ -24,18 +24,6 @@ public class Viewer implements IAdminComponent{
 
     @Override
     public void setComponent(AnalysterWindow window) {
-        
-        //#A363
-        //2. Set the access level for the following menu commands to "developer"
-        //FILE: Select Connection, Print, Save File
-        window.getMenuSelectConn().setEnabled(false);
-        window.getMenuPrint().setEnabled(false);
-        window.getMenuItemSaveFile().setEnabled(false);
-        //EDIT: Manage databases
-        window.getMenuItemManageDBs().setEnabled(false);
-        //Tools: Log, SQL command
-        window.getMenuItemLogChkBx().setEnabled(false);
-        window.getMenuItemSQLCmdChkBx().setEnabled(false);
     }
 
     @Override
