@@ -59,8 +59,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 
 /**
  * AnalysterWindow
@@ -72,8 +70,8 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-2-26";
-    private final String VERSION = "1.1.1a";
+    private final String CREATION_DATE = "2016-3-1";
+    private final String VERSION = "1.1.2";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
