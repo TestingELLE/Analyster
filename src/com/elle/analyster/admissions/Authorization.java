@@ -1,12 +1,18 @@
-package com.elle.analyster.logic;
+package com.elle.analyster.admissions;
 
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.database.SQL_Commands;
+import com.elle.analyster.presentation.AddRecordsWindow;
 import com.elle.analyster.presentation.AnalysterWindow;
+import com.elle.analyster.presentation.BackupDBTablesDialog;
+import com.elle.analyster.presentation.BatchEditWindow;
+import com.elle.analyster.presentation.EditDatabaseWindow;
+import com.elle.analyster.presentation.LogWindow;
+import com.elle.analyster.presentation.LoginWindow;
+import com.elle.analyster.presentation.ReportWindow;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.JOptionPane;
 
 /**
  * This class will simply override any original behavior depending on the 
@@ -18,34 +24,20 @@ import javax.swing.JOptionPane;
  */
 public class Authorization {
     
-    // constants
+    // database constants
     private static final String DB_TABLE_NAME = "A_accessLevel_tbl";
     private static final String DB_COLUMN_1 = "user";
     private static final String DB_COLUMN_2 = "accessLevel";
-    private static final String LEVEL_1 = "administrator";
-    private static final String LEVEL_2 = "developer";
-    private static final String LEVEL_3 = "user";
-    private static final String LEVEL_4 = "viewer";
+    
+    // constants
+    private static final String ADMINISTRATOR = "administrator";
+    private static final String DEVELOPER = "developer";
+    private static final String USER = "user";
+    private static final String VIEWER = "viewer";
     
     // class variables
     private static String userLogin;
     private static String accessLevel;
-    
-    /**
-     * users table
-     * username accesslevel -> Auth table id, nameType-admin, dev
-     * column names userLogin, userLevel
-     */
-
-    /**
-     * we might want to cascade permissions / restrictions
-     * For example. Level 1, 2, 3 (highest to lowest)
-     * Example: Level 2 disable menu items 1,2 
-     *          and Level 3 disable menu items 1,2,3
-     * Level 3 will have all of Level 2 restrictions plus additional 
-     * restrictions. If this is the case, then the restrictions for 
-     * level 2 may be applied and then level 3. 
-     */
     
     /**
      * When the user logs in, we will need to know the access level and 
@@ -67,50 +59,61 @@ public class Authorization {
             return true;
         }
         else{
-            accessLevel = LEVEL_3; // defaults to user
+            accessLevel = USER; // defaults to user
             return false;
         }
     }
     
     /**
      * This takes any component and overrides any behavior for that component.
-     * Example c instanceOf JFrame then is PM, issue window etc. and regulate
-     * the behavior as needed. If full access no checks required, exit promptly.
-     * Default is full access and restrictions may apply per user type.
      * @param c 
      */
     public static void authorize( Component c){
         
         if(accessLevel != null) // changed tab state is called from initComponents
             switch(accessLevel){
-                case LEVEL_1:
+                case ADMINISTRATOR:
+                    setPermissions(c, new Administrator());
                     break;
-                case LEVEL_2:
-                    //TODO
-                    //developerPermissions(c);
+                case DEVELOPER:
+                    setPermissions(c, new Developer());
                     break;
-                case LEVEL_3:
-                    //TODO
+                case USER:
+                    setPermissions(c, new User());
                     break;
-                case LEVEL_4:
-                    //TODO
+                case VIEWER:
+                    setPermissions(c, new Viewer());
                     break;
                 default:
                     break;
             }
     }
+    
+    private static void setPermissions(Component c, IAdminComponent admin){
 
-    /**
-     * Developer Restrictions
-     * @param c The component to be authorized (restrict features or behavior)
-     */
-    private static void developerPermissions(Component c) {
-        
-        // ProjectManagerWindow
-        if(c instanceof AnalysterWindow){
-            AnalysterWindow ana = (AnalysterWindow)c;
-            // menu item components
-            //pm.getMenuItemDummy().setEnabled(false);
+        if(c instanceof AddRecordsWindow){
+            admin.setComponent((AddRecordsWindow)c);
+        }
+        else if(c instanceof AnalysterWindow){
+            admin.setComponent((AnalysterWindow)c);
+        }
+        else if(c instanceof BackupDBTablesDialog){
+            admin.setComponent((BackupDBTablesDialog)c);
+        }
+        else if(c instanceof BatchEditWindow){
+            admin.setComponent((BatchEditWindow)c);
+        }
+        else if(c instanceof EditDatabaseWindow){
+            admin.setComponent((EditDatabaseWindow)c);
+        }
+        else if(c instanceof LogWindow){
+            admin.setComponent((LogWindow)c);
+        }
+        else if(c instanceof LoginWindow){
+            admin.setComponent((LoginWindow)c);
+        }
+        else if(c instanceof ReportWindow){
+            admin.setComponent((ReportWindow)c);
         }
     }
 }
