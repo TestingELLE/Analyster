@@ -8,7 +8,7 @@ import com.elle.analyster.logic.ITableConstants;
 import com.elle.analyster.logic.FilePathFormat;
 import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.database.ModifiedTableData;
-import com.elle.analyster.logic.Authorization;
+import com.elle.analyster.admissions.Authorization;
 import static com.elle.analyster.logic.ITableConstants.ARCHIVE_BATCHEDIT_CB_FIELDS;
 import static com.elle.analyster.logic.ITableConstants.ARCHIVE_SEARCH_FIELDS;
 import static com.elle.analyster.logic.ITableConstants.ARCHIVE_TABLE_NAME;

@@ -22,10 +22,10 @@ public class Authorization {
     private static final String DB_TABLE_NAME = "A_accessLevel_tbl";
     private static final String DB_COLUMN_1 = "user";
     private static final String DB_COLUMN_2 = "accessLevel";
-    private static final String LEVEL_1 = "administrator";
-    private static final String LEVEL_2 = "developer";
-    private static final String LEVEL_3 = "user";
-    private static final String LEVEL_4 = "viewer";
+    private static final String ADMINISTRATOR = "administrator";
+    private static final String DEVELOPER = "developer";
+    private static final String USER = "user";
+    private static final String VIEWER = "viewer";
     
     // class variables
     private static String userLogin;
@@ -67,7 +67,7 @@ public class Authorization {
             return true;
         }
         else{
-            accessLevel = LEVEL_3; // defaults to user
+            accessLevel = USER; // defaults to user
             return false;
         }
     }
@@ -81,19 +81,23 @@ public class Authorization {
      */
     public static void authorize( Component c){
         
+        // get component type
+        //getComponentType
+        // pass IAdminComponent
+        
         if(accessLevel != null) // changed tab state is called from initComponents
             switch(accessLevel){
-                case LEVEL_1:
+                case ADMINISTRATOR:
+                    developerPermissions(c);
                     break;
-                case LEVEL_2:
-                    //TODO
-                    //developerPermissions(c);
+                case DEVELOPER:
+                    developerPermissions(c);
                     break;
-                case LEVEL_3:
-                    //TODO
+                case USER:
+                    developerPermissions(c);
                     break;
-                case LEVEL_4:
-                    //TODO
+                case VIEWER:
+                    developerPermissions(c);
                     break;
                 default:
                     break;
