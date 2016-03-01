@@ -24,10 +24,12 @@ import java.util.HashMap;
  */
 public class Authorization {
     
-    // constants
+    // database constants
     private static final String DB_TABLE_NAME = "A_accessLevel_tbl";
     private static final String DB_COLUMN_1 = "user";
     private static final String DB_COLUMN_2 = "accessLevel";
+    
+    // constants
     private static final String ADMINISTRATOR = "administrator";
     private static final String DEVELOPER = "developer";
     private static final String USER = "user";
@@ -36,22 +38,6 @@ public class Authorization {
     // class variables
     private static String userLogin;
     private static String accessLevel;
-    
-    /**
-     * users table
-     * username accesslevel -> Auth table id, nameType-admin, dev
-     * column names userLogin, userLevel
-     */
-
-    /**
-     * we might want to cascade permissions / restrictions
-     * For example. Level 1, 2, 3 (highest to lowest)
-     * Example: Level 2 disable menu items 1,2 
-     *          and Level 3 disable menu items 1,2,3
-     * Level 3 will have all of Level 2 restrictions plus additional 
-     * restrictions. If this is the case, then the restrictions for 
-     * level 2 may be applied and then level 3. 
-     */
     
     /**
      * When the user logs in, we will need to know the access level and 
@@ -80,9 +66,6 @@ public class Authorization {
     
     /**
      * This takes any component and overrides any behavior for that component.
-     * Example c instanceOf JFrame then is PM, issue window etc. and regulate
-     * the behavior as needed. If full access no checks required, exit promptly.
-     * Default is full access and restrictions may apply per user type.
      * @param c 
      */
     public static void authorize( Component c){
