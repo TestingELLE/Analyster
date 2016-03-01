@@ -27,6 +27,7 @@ import com.elle.analyster.logic.JTableCellRenderer;
 import com.elle.analyster.logic.LoggingAspect;
 import com.elle.analyster.logic.OpenDocumentTool;
 import com.elle.analyster.logic.ShortCutSetting;
+import com.elle.analyster.logic.TextCellEditor;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -58,6 +59,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import javax.swing.plaf.basic.BasicArrowButton;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 
 /**
  * AnalysterWindow
@@ -69,8 +72,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-2-25";
-    private final String VERSION = "1.1.0";
+    private final String CREATION_DATE = "2016-2-26";
+    private final String VERSION = "1.1.1a";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -261,6 +264,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         this.setTitle("Analyster");
         this.setSize(this.getWidth(), 560);
 
+        setAccessForDeveloper();
+        System.out.println(database + "12313");
         // authorize user for this component
         Authorization.authorize(this);
     }
@@ -322,20 +327,20 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuItemActivateRecord = new javax.swing.JMenuItem();
         menuFind = new javax.swing.JMenu();
         menuReports = new javax.swing.JMenu();
+        menuItemOpenDocument = new javax.swing.JMenuItem();
         menuView = new javax.swing.JMenu();
+        menuItemLogChkBx = new javax.swing.JCheckBoxMenuItem();
+        menuItemSQLCmdChkBx = new javax.swing.JCheckBoxMenuItem();
         menuItemViewAssign = new javax.swing.JMenuItem();
         menuItemViewReports = new javax.swing.JMenuItem();
         menuItemViewAllAssign = new javax.swing.JMenuItem();
         menuItemViewActiveAssign = new javax.swing.JMenuItem();
         menuTools = new javax.swing.JMenu();
         menuItemReloadData = new javax.swing.JMenuItem();
-        menuItemLogChkBx = new javax.swing.JCheckBoxMenuItem();
         menuItemTurnEditModeOff = new javax.swing.JMenuItem();
-        menuItemSQLCmdChkBx = new javax.swing.JCheckBoxMenuItem();
         menuItemBackup = new javax.swing.JMenuItem();
         menuItemAddslash = new javax.swing.JMenuItem();
         menuItemStripslash = new javax.swing.JMenuItem();
-        menuItemOpenDocument = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
         menuItemRepBugSugg = new javax.swing.JMenuItem();
 
@@ -368,6 +373,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         comboBoxForSearch.setEditable(true);
         comboBoxForSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxForSearch.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         comboBoxForSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxForSearchActionPerformed(evt);
@@ -824,9 +830,34 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuBar.add(menuFind);
 
         menuReports.setText("Reports");
+
+        menuItemOpenDocument.setText("Open Document");
+        menuItemOpenDocument.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemOpenDocumentActionPerformed(evt);
+            }
+        });
+        menuReports.add(menuItemOpenDocument);
+
         menuBar.add(menuReports);
 
         menuView.setText("View");
+
+        menuItemLogChkBx.setText("Log");
+        menuItemLogChkBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemLogChkBxActionPerformed(evt);
+            }
+        });
+        menuView.add(menuItemLogChkBx);
+
+        menuItemSQLCmdChkBx.setText("SQL Command");
+        menuItemSQLCmdChkBx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemSQLCmdChkBxActionPerformed(evt);
+            }
+        });
+        menuView.add(menuItemSQLCmdChkBx);
 
         menuItemViewAssign.setText("View Assignments Columns");
         menuItemViewAssign.setEnabled(false);
@@ -866,14 +897,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
         menuTools.add(menuItemReloadData);
 
-        menuItemLogChkBx.setText("Log");
-        menuItemLogChkBx.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemLogChkBxActionPerformed(evt);
-            }
-        });
-        menuTools.add(menuItemLogChkBx);
-
         menuItemTurnEditModeOff.setText("Turn Edit Mode OFF");
         menuItemTurnEditModeOff.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -881,14 +904,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
         menuTools.add(menuItemTurnEditModeOff);
-
-        menuItemSQLCmdChkBx.setText("SQL Command");
-        menuItemSQLCmdChkBx.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemSQLCmdChkBxActionPerformed(evt);
-            }
-        });
-        menuTools.add(menuItemSQLCmdChkBx);
 
         menuItemBackup.setText("Backup");
         menuItemBackup.addActionListener(new java.awt.event.ActionListener() {
@@ -913,14 +928,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
         menuTools.add(menuItemStripslash);
-
-        menuItemOpenDocument.setText("Open Document");
-        menuItemOpenDocument.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemOpenDocumentActionPerformed(evt);
-            }
-        });
-        menuTools.add(menuItemOpenDocument);
 
         menuBar.add(menuTools);
 
@@ -987,13 +994,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
             Tab tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
+            TableModel tableModel = table.getModel();
 
             String searchColName = comboBoxSearch.getSelectedItem().toString();
             String searchBoxValue = comboBoxForSearch.getSelectedItem().toString();  // store string from combobox
 
             // this matches the combobox newValue with the column name newValue to get the column index
             for (int col = 0; col < table.getColumnCount(); col++) {
-                String tableColName = table.getColumnName(col);
+                String tableColName = tableModel.getColumnName(col);
                 if (tableColName.equalsIgnoreCase(searchColName)) {
 
                     // add item to filter
@@ -1002,11 +1010,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     filter.applyFilter();
 
                     boolean isValueInTable = false;
-                    isValueInTable = checkValueInTableCell(col, searchBoxValue, table);
+                    isValueInTable = checkValueInTableCell(col, searchBoxValue, tableModel);
 
                     filter.addFilterItem(col, searchBoxValue);
                     filter.applyFilter();
-                    if (!isValueInTable) {
+                    if (isValueInTable == false) {
                         count++;
                     }
 
@@ -1015,10 +1023,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     labelRecords.setText(recordsLabel);
                 }
             }
-            if (count == 2) {
+            if (count == 3) {
                 text = "There is no " + searchBoxValue
                         + " under " + searchColName + " in all tables";
             }
+            System.out.println(count);
         }
         if (!text.equals("")) {
             searchInformationLabel.setText(text);
@@ -1026,22 +1035,25 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         }
     }
 
-    private boolean checkValueInTableCell(int col, String target, JTable table) {
-        System.out.println("target is : " + target + " at column " + col);
+    private boolean checkValueInTableCell(int col, String target, TableModel tableModel) {
+        //   System.out.println("target is : " + target + " at column " + col);
         int count = 0;
-        for (int row = 0; row < table.getRowCount(); row++) {
+        for (int row = 0; row < tableModel.getRowCount(); row++) {
             String cellValue = "";
-            if (table.getValueAt(row, col) != null) {
-                cellValue = table.getValueAt(row, col).toString();
+            if (tableModel.getValueAt(row, col) != null) {
+                cellValue = tableModel.getValueAt(row, col).toString();
             }
 
             if (cellValue.equalsIgnoreCase(target)) {
                 count++;
+                System.out.println("found" + target);
             }
         }
         if (count > 0) {
+            System.out.println(">0");
             return true;
         } else {
+            System.out.println("=0");
             return false;
         }
     }
@@ -1175,6 +1187,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             JTable table = tab.getTable();
             EditableTableModel model = ((EditableTableModel) table.getModel());
             model.setCellEditable(makeTableEditable);
+
         }
     }
 
@@ -1612,8 +1625,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         Tab tab = tabs.get(tabName);
         String[] searchFields = tab.getSearchFields();
         System.out.println(tab.getTableName());
-       if (searchFields != null) {
-           comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
+        if (searchFields != null) {
+            comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
 //           if(tab.getTableName().equalsIgnoreCase("Assignments")){
 //           comboBoxSearch.setModel(new DefaultComboBoxModel(ASSIGNMENTS_SEARCH_FIELDS));
 //           }else if(tab.getTableName().equalsIgnoreCase("Reports")){
@@ -1622,9 +1635,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 //           comboBoxSearch.setModel(new DefaultComboBoxModel(ARCHIVE_SEARCH_FIELDS));    
 //           }
         }
-       comboBoxSearch.setSelectedItem(searchCol);
-       updateComboList(searchCol, tabName);
-       comboBoxForSearch.setSelectedItem(entryValue);
+        comboBoxSearch.setSelectedItem(searchCol);
+        updateComboList(searchCol, tabName);
+        comboBoxForSearch.setSelectedItem(entryValue);
     }//GEN-LAST:event_tabbedPanelStateChanged
 
     /**
@@ -1656,6 +1669,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             // hide log window
             logWindow.setVisible(false);
         }
+
+
     }//GEN-LAST:event_menuItemLogChkBxActionPerformed
 
     /**
@@ -1874,16 +1889,30 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     if (!comboBoxForSearch.getSelectedItem().toString().startsWith("Enter")
                             || !comboBoxForSearch.getSelectedItem().toString().endsWith("here")) {
 //            
-
                         filterBySearch();
 //
                     }
 //
 ////           
+                } else {
+                  
+
                 }
 
             }
         }
+        comboBoxForSearch.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                if (ke.getKeyChar() == KeyEvent.VK_ENTER) {
+                    filterBySearch();
+                    System.out.println("key");
+
+                }
+            }
+
+        });
+
 
     }//GEN-LAST:event_comboBoxForSearchActionPerformed
 
@@ -1927,6 +1956,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             JOptionPane.showMessageDialog(this, "Could not open file!");
                         }
                     }
+                    String text = "Opening " + document.toString() + " from path: " + pathToDoc.toString();
+                    setInformationLabel(text, 10);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "No row was selected.");
@@ -2098,12 +2129,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         );
         table.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
-                if (e.isControlDown()) {
 
-                    if (getSelectedTable() == reportTable) {
-                        int row = table.rowAtPoint(e.getPoint());
-                        int col = table.columnAtPoint(e.getPoint());
-                        System.out.println(row);
+                if (getSelectedTable() == reportTable) {
+                    int row = table.rowAtPoint(e.getPoint());
+                    int col = table.columnAtPoint(e.getPoint());
+                    Point p = e.getPoint();
+                    int diff = e.getLocationOnScreen().y - table.getLocationOnScreen().y;
+       //             System.out.println( e.getLocationOnScreen().y + " " +  table.getLocationOnScreen().y );
+                    if (e.getLocationOnScreen().y > table.getLocationOnScreen().y + 3
+                            && e.getLocationOnScreen().y < table.getLocationOnScreen().y + 300) {
                         if (col > 3 && col < 6) {
                             table.clearSelection();
                             table.setRowSelectionInterval(row, row);
@@ -2115,11 +2149,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             setCursor(cursor);
 
                         }
+                    } else {
+                        Cursor cursor = Cursor.getDefaultCursor();
+                        setCursor(cursor);
                     }
-                } else {
-                    Cursor cursor = Cursor.getDefaultCursor();
-                    setCursor(cursor);
-
                 }
 
             }
@@ -2137,6 +2170,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 ModifiedTableData data = tabs.get(tab).getTableData();
                 Object oldValue = data.getOldData()[row][col];
                 Object newValue = table.getModel().getValueAt(row, col);
+//                System.out.println("table changed: " + oldValue + " " + newValue);
 
                 // check that data is different
                 if (!newValue.equals(oldValue)) {
@@ -2177,7 +2211,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                     table.setRowSelectionAllowed(true);
                     table.setRowSelectionInterval(0, table.getRowCount() - 1);
-                    System.out.println("here");
                 }
             }
 
@@ -2403,9 +2436,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     int rowCount = table.getRowCount();
                     if (e.getKeyCode() == KeyEvent.VK_TAB) {
                         if (e.getComponent() instanceof JTable) {
-//                            JTable table = (JTable) e.getComponent();
-//                            int row = table.getSelectedRow();
-//                            int column = table.getSelectedColumn();
                             if (column == table.getRowCount() || column == 0) {
                                 return false;
                             } else {
@@ -2422,24 +2452,28 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                         if (e.getID() == KeyEvent.KEY_RELEASED) {
                             if (e.getComponent() instanceof JTable) {
-                                if (column == table.getRowCount() || column == 0) {
+
+//                                System.out.println("left table at: " + row + " " + column );
+                                if (column == table.getRowCount()) {
                                     return false;
                                 } else {
-
+                                    if (column == 0) {
+                                        if (row == 0) {
+                                            return false;
+                                        } else {
+                                            row = row - 1;
+                                            column = columnCount - 1;
+                                        }
+                                    }
                                     tableCellSelection(e, table, row, column);
                                 }
 
                             } else {
-                                if (column == 0) {
-                                    if (row == 0) {
-                                        return false;
-                                    } else {
-                                        row = row - 1;
-                                        column = columnCount - 1;
-                                    }
-                                } else {
+//                                System.out.println("left at: " + row + " " + column );
+                                if (column != 0)  {
                                     column = column - 1;
                                 }
+//                                System.out.println("left now at: " + row + " " + column );
                                 table.changeSelection(row, column, false, false);
                                 tableCellSelection(e, table, row, column);
                             }
@@ -2453,16 +2487,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         if (e.getID() == KeyEvent.KEY_RELEASED) {
                             if (e.getComponent() instanceof JTable) {
 
-                                System.out.println("enter we are at: " + row + " " + column);
+//                                System.out.println("right we are at: " + row + " " + column);
                                 if (column == table.getRowCount() || column == columnCount - 1) {
+//                                    System.out.println("right first columnt");
                                     return false;
                                 } else {
                                     tableCellSelection(e, table, row, column);
                                 }
                             } else {
-                                System.out.println("we are at: " + row + " " + column);
+//                                System.out.println("right we are at: " + row + " " + column + " " + columnCount);
                                 if (column == columnCount - 1) {
                                     if (row == rowCount - 1) {
+//                                        System.out.println("right first columnt");
                                         return false;
                                     } else {
                                         row = row + 1;
@@ -2471,7 +2507,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                 } else {
                                     column = column + 1;
                                 }
-                                System.out.println("we are now at: " + row + " " + column);
+//                                System.out.println("right we are now at: " + row + " " + column);
                                 table.changeSelection(row, column, false, false);
                                 tableCellSelection(e, table, row, column);
                                 // if table cell is editing 
@@ -2484,13 +2520,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     } else if (e.getKeyCode() == KeyEvent.VK_UP) {
                         if (e.getID() == KeyEvent.KEY_RELEASED) {
                             if (e.getComponent() instanceof JTable) {
-                                if (column == table.getRowCount() || column == 0) {
+                                if (column == table.getRowCount()) {
                                     return false;
                                 } else {
                                     tableCellSelection(e, table, row, column);
                                 }
                             } else {
-                                if (row == 0) {
+                                if (row == 0 || column == 0) {
                                     return false;
                                 } else {
                                     row = row - 1;
@@ -2513,7 +2549,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                     tableCellSelection(e, table, row, column);
                                 }
                             } else {
-                                if (row == rowCount - 1) {
+                                if (row == rowCount - 1 || column == 0) {
                                     return false;
                                 } else {
                                     row = row + 1;
@@ -2528,23 +2564,28 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             }
                         }
                     }
+                    if (e.getKeyCode() == KeyEvent.VK_Z && e.isMetaDown()) {
+
+                    }
                 }
                 if (!isBatchEditWindowShow) {
                     if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
-                        if (labelEditModeState.getText().equals("ON ")) {                       // Default Date input with today's date
-                            JTable table = (JTable) e.getComponent().getParent();
-                            int column = table.getSelectedColumn();
-                            if (table.getColumnName(column).toLowerCase().contains("date")) {
-                                if (e.getID() != 401) { // 401 = key down, 402 = key released
-                                    return false;
-                                } else {
-                                    JTextField selectCom = (JTextField) e.getComponent();
-                                    selectCom.requestFocusInWindow();
-                                    selectCom.selectAll();
-                                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    Date date = new Date();
-                                    String today = dateFormat.format(date);
-                                    selectCom.setText(today);
+                        if (e.getComponent() instanceof JTable) {
+                            if (labelEditModeState.getText().equals("ON ")) {                       // Default Date input with today's date
+                                JTable table = (JTable) e.getComponent().getParent();
+                                int column = table.getSelectedColumn();
+                                if (table.getColumnName(column).toLowerCase().contains("date")) {
+                                    if (e.getID() != 401) { // 401 = key down, 402 = key released
+                                        return false;
+                                    } else {
+                                        JTextField selectCom = (JTextField) e.getComponent();
+                                        selectCom.requestFocusInWindow();
+                                        selectCom.selectAll();
+                                        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                        Date date = new Date();
+                                        String today = dateFormat.format(date);
+                                        selectCom.setText(today);
+                                    }
                                 }
                             }
                         }
@@ -2614,10 +2655,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             private void tableCellSelection(KeyEvent e, JTable table, int row, int column) {
 
                 table.getComponentAt(row, column).requestFocus();
-                table.editCellAt(row, column);
-                JTextField selectCom = (JTextField) table.getEditorComponent();
-                selectCom.requestFocusInWindow();
-                selectCom.selectAll();
+                if (column != 0) {
+                    table.editCellAt(row, column);
+                    JTextField selectCom = (JTextField) table.getEditorComponent();
+                    selectCom.requestFocusInWindow();
+                    selectCom.selectAll();
+                }
 
             }
         });
@@ -2741,6 +2784,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         Vector data = new Vector();
         Vector columnNames = new Vector();
+        Vector columnClass = new Vector();
         int columns;
 
         ResultSet rs = null;
@@ -2754,6 +2798,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         try {
             columns = metaData.getColumnCount();
             for (int i = 1; i <= columns; i++) {
+                columnClass.addElement(metaData.getColumnClassName(i));
                 columnNames.addElement(metaData.getColumnName(i));
             }
             while (rs.next()) {
@@ -2769,7 +2814,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             LoggingAspect.afterThrown(ex);
         }
 
-        EditableTableModel model = new EditableTableModel(data, columnNames);
+        EditableTableModel model = new EditableTableModel(data, columnNames, columnClass);
 
         // this has to be set here or else I get errors
         // I tried passing the model to the filter and setting it there
@@ -2779,6 +2824,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // check that the filter items are initialized
         String tabName = table.getName();
         Tab tab = tabs.get(tabName);
+        //setTableCellEditor
+        table.setDefaultEditor(Object.class, new TextCellEditor());
 
         // apply filter
         TableFilter filter = tab.getFilter();
@@ -2876,10 +2923,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     comboBoxStartToSearch = false;
                     comboBoxSearchModel.addElement(item);
                 }
-                 comboBoxStartToSearch = true;
+                comboBoxStartToSearch = true;
             }
         }
-       
+
     }
 
     /**
@@ -3623,48 +3670,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     public void setTabbedPanel(JTabbedPane tabbedPanel) {
         this.tabbedPanel = tabbedPanel;
     }
-    
-    
-    
-    /**
-     * CLASS
-     */
-    class AlignmentTableHeaderCellRenderer implements TableCellRenderer {
-
-        private final TableCellRenderer wrappedRenderer;
-        private final JLabel label;
-
-        public AlignmentTableHeaderCellRenderer(TableCellRenderer wrappedRenderer) {
-            if (!(wrappedRenderer instanceof JLabel)) {
-                throw new IllegalArgumentException("The supplied renderer must inherit from JLabel");
-            }
-            this.wrappedRenderer = wrappedRenderer;
-            this.label = (JLabel) wrappedRenderer;
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            wrappedRenderer.getTableCellRendererComponent(table, value,
-                    isSelected, hasFocus, row, column);
-            if (table.getName().equals(REPORTS_TABLE_NAME)) {
-
-                if (column < table.getColumnCount() - 4) {
-                    label.setHorizontalAlignment(JLabel.CENTER);
-                    return label;
-                } else {
-                    label.setHorizontalAlignment(JLabel.LEFT);
-                    return label;
-                }
-            }
-
-            label.setHorizontalAlignment(column == table.getColumnCount() - 1 ? JLabel.LEFT : JLabel.CENTER);
-            return label;
-
-        }
-
-    }
-    
 
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -3735,4 +3740,61 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     // End of variables declaration//GEN-END:variables
     // @formatter:on
 
+    private void setAccessForDeveloper() {
+        if (database.equalsIgnoreCase("pupone_dummy")) {
+            menuItemLogChkBx.setEnabled(true);
+            menuItemSQLCmdChkBx.setEnabled(true);
+            menuItemManageDBs.setEnabled(true);
+            menuSelectConn.setEnabled(true);
+            menuPrint.setEnabled(true);
+            menuItemSaveFile.setEnabled(true);
+        } else {
+            menuItemLogChkBx.setEnabled(false);
+            menuItemSQLCmdChkBx.setEnabled(false);
+            menuItemManageDBs.setEnabled(false);
+            menuSelectConn.setEnabled(false);
+            menuPrint.setEnabled(false);
+            menuItemSaveFile.setEnabled(false);
+        }
+
+    }
+
+    /**
+     * CLASS
+     */
+    class AlignmentTableHeaderCellRenderer implements TableCellRenderer {
+
+        private final TableCellRenderer wrappedRenderer;
+        private final JLabel label;
+
+        public AlignmentTableHeaderCellRenderer(TableCellRenderer wrappedRenderer) {
+            if (!(wrappedRenderer instanceof JLabel)) {
+                throw new IllegalArgumentException("The supplied renderer must inherit from JLabel");
+            }
+            this.wrappedRenderer = wrappedRenderer;
+            this.label = (JLabel) wrappedRenderer;
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            wrappedRenderer.getTableCellRendererComponent(table, value,
+                    isSelected, hasFocus, row, column);
+            if (table.getName().equals(REPORTS_TABLE_NAME)) {
+
+                if (column < table.getColumnCount() - 4) {
+                    label.setHorizontalAlignment(JLabel.CENTER);
+                    return label;
+                } else {
+                    label.setHorizontalAlignment(JLabel.LEFT);
+                    return label;
+                }
+            }
+
+            label.setHorizontalAlignment(column == table.getColumnCount() - 1 ? JLabel.LEFT : JLabel.CENTER);
+            return label;
+
+        }
+
+    }
 }
