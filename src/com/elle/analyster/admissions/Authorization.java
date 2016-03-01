@@ -13,7 +13,6 @@ import com.elle.analyster.presentation.ReportWindow;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.JOptionPane;
 
 /**
  * This class will simply override any original behavior depending on the 
@@ -88,12 +87,6 @@ public class Authorization {
      */
     public static void authorize( Component c){
         
-        // get component type
-        //getComponentType
-        // pass IAdminComponent
-        
-        IAdminComponent adminComponent;
-        
         if(accessLevel != null) // changed tab state is called from initComponents
             switch(accessLevel){
                 case ADMINISTRATOR:
@@ -111,20 +104,6 @@ public class Authorization {
                 default:
                     break;
             }
-    }
-
-    /**
-     * Developer Restrictions
-     * @param c The component to be authorized (restrict features or behavior)
-     */
-    private static void developerPermissions(Component c) {
-        
-        // ProjectManagerWindow
-        if(c instanceof AnalysterWindow){
-            AnalysterWindow ana = (AnalysterWindow)c;
-            // menu item components
-            //pm.getMenuItemDummy().setEnabled(false);
-        }
     }
     
     private static void setPermissions(Component c, IAdminComponent admin){
