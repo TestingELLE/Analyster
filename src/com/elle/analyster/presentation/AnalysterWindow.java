@@ -8,7 +8,7 @@ import com.elle.analyster.logic.ITableConstants;
 import com.elle.analyster.logic.FilePathFormat;
 import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.database.ModifiedTableData;
-import com.elle.analyster.logic.Authorization;
+import com.elle.analyster.admissions.Authorization;
 import static com.elle.analyster.logic.ITableConstants.ARCHIVE_BATCHEDIT_CB_FIELDS;
 import static com.elle.analyster.logic.ITableConstants.ARCHIVE_SEARCH_FIELDS;
 import static com.elle.analyster.logic.ITableConstants.ARCHIVE_TABLE_NAME;
@@ -61,8 +61,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 
 /**
  * AnalysterWindow
@@ -74,8 +72,8 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-2-26";
-    private final String VERSION = "1.1.1a";
+    private final String CREATION_DATE = "2016-3-1";
+    private final String VERSION = "1.1.2";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -3178,6 +3176,514 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     public AddRecordsWindow getAddRecordsWindow() {
         return addRecordsWindow;
+    }
+
+    public LoginWindow getLoginWindow() {
+        return loginWindow;
+    }
+
+    public void setLoginWindow(LoginWindow loginWindow) {
+        this.loginWindow = loginWindow;
+    }
+
+    public EditDatabaseWindow getEditDatabaseWindow() {
+        return editDatabaseWindow;
+    }
+
+    public void setEditDatabaseWindow(EditDatabaseWindow editDatabaseWindow) {
+        this.editDatabaseWindow = editDatabaseWindow;
+    }
+
+    public ReportWindow getReportWindow() {
+        return reportWindow;
+    }
+
+    public void setReportWindow(ReportWindow reportWindow) {
+        this.reportWindow = reportWindow;
+    }
+
+    public ShortCutSetting getShortCut() {
+        return ShortCut;
+    }
+
+    public void setShortCut(ShortCutSetting ShortCut) {
+        this.ShortCut = ShortCut;
+    }
+
+    public Color getEditModeDefaultTextColor() {
+        return editModeDefaultTextColor;
+    }
+
+    public void setEditModeDefaultTextColor(Color editModeDefaultTextColor) {
+        this.editModeDefaultTextColor = editModeDefaultTextColor;
+    }
+
+    public Color getEditModeActiveTextColor() {
+        return editModeActiveTextColor;
+    }
+
+    public void setEditModeActiveTextColor(Color editModeActiveTextColor) {
+        this.editModeActiveTextColor = editModeActiveTextColor;
+    }
+
+    public String getSearchValue() {
+        return searchValue;
+    }
+
+    public void setSearchValue(String searchValue) {
+        this.searchValue = searchValue;
+    }
+
+    public boolean isComboBoxStartToSearch() {
+        return comboBoxStartToSearch;
+    }
+
+    public void setComboBoxStartToSearch(boolean comboBoxStartToSearch) {
+        this.comboBoxStartToSearch = comboBoxStartToSearch;
+    }
+
+    public JTable getArchiveTable() {
+        return archiveTable;
+    }
+
+    public void setArchiveTable(JTable archiveTable) {
+        this.archiveTable = archiveTable;
+    }
+
+    public JTable getAssignmentTable() {
+        return assignmentTable;
+    }
+
+    public void setAssignmentTable(JTable assignmentTable) {
+        this.assignmentTable = assignmentTable;
+    }
+
+    public JButton getBtnAddRecords() {
+        return btnAddRecords;
+    }
+
+    public void setBtnAddRecords(JButton btnAddRecords) {
+        this.btnAddRecords = btnAddRecords;
+    }
+
+    public JButton getBtnCancelSQL() {
+        return btnCancelSQL;
+    }
+
+    public void setBtnCancelSQL(JButton btnCancelSQL) {
+        this.btnCancelSQL = btnCancelSQL;
+    }
+
+    public JButton getBtnClearAllFilter() {
+        return btnClearAllFilter;
+    }
+
+    public void setBtnClearAllFilter(JButton btnClearAllFilter) {
+        this.btnClearAllFilter = btnClearAllFilter;
+    }
+
+    public JButton getBtnCloseSQL() {
+        return btnCloseSQL;
+    }
+
+    public void setBtnCloseSQL(JButton btnCloseSQL) {
+        this.btnCloseSQL = btnCloseSQL;
+    }
+
+    public JButton getBtnEnterSQL() {
+        return btnEnterSQL;
+    }
+
+    public void setBtnEnterSQL(JButton btnEnterSQL) {
+        this.btnEnterSQL = btnEnterSQL;
+    }
+
+    public JButton getBtnRevertChanges() {
+        return btnRevertChanges;
+    }
+
+    public void setBtnRevertChanges(JButton btnRevertChanges) {
+        this.btnRevertChanges = btnRevertChanges;
+    }
+
+    public JButton getBtnSearch() {
+        return btnSearch;
+    }
+
+    public void setBtnSearch(JButton btnSearch) {
+        this.btnSearch = btnSearch;
+    }
+
+    public JButton getBtnUploadChanges() {
+        return btnUploadChanges;
+    }
+
+    public void setBtnUploadChanges(JButton btnUploadChanges) {
+        this.btnUploadChanges = btnUploadChanges;
+    }
+
+    public JComboBox getComboBoxSearch() {
+        return comboBoxSearch;
+    }
+
+    public void setComboBoxSearch(JComboBox comboBoxSearch) {
+        this.comboBoxSearch = comboBoxSearch;
+    }
+
+    public JScrollPane getjScrollPane1() {
+        return jScrollPane1;
+    }
+
+    public void setjScrollPane1(JScrollPane jScrollPane1) {
+        this.jScrollPane1 = jScrollPane1;
+    }
+
+    public JScrollPane getjScrollPane2() {
+        return jScrollPane2;
+    }
+
+    public void setjScrollPane2(JScrollPane jScrollPane2) {
+        this.jScrollPane2 = jScrollPane2;
+    }
+
+    public JScrollPane getjScrollPane3() {
+        return jScrollPane3;
+    }
+
+    public void setjScrollPane3(JScrollPane jScrollPane3) {
+        this.jScrollPane3 = jScrollPane3;
+    }
+
+    public JScrollPane getjScrollPane4() {
+        return jScrollPane4;
+    }
+
+    public void setjScrollPane4(JScrollPane jScrollPane4) {
+        this.jScrollPane4 = jScrollPane4;
+    }
+
+    public JTextArea getjTextAreaSQL() {
+        return jTextAreaSQL;
+    }
+
+    public void setjTextAreaSQL(JTextArea jTextAreaSQL) {
+        this.jTextAreaSQL = jTextAreaSQL;
+    }
+
+    public JLabel getLabelEditMode() {
+        return labelEditMode;
+    }
+
+    public void setLabelEditMode(JLabel labelEditMode) {
+        this.labelEditMode = labelEditMode;
+    }
+
+    public JLabel getLabelEditModeState() {
+        return labelEditModeState;
+    }
+
+    public void setLabelEditModeState(JLabel labelEditModeState) {
+        this.labelEditModeState = labelEditModeState;
+    }
+
+    public JLabel getLabelRecords() {
+        return labelRecords;
+    }
+
+    public void setLabelRecords(JLabel labelRecords) {
+        this.labelRecords = labelRecords;
+    }
+
+    public JLabel getLabelTimeLastUpdate() {
+        return labelTimeLastUpdate;
+    }
+
+    public void setLabelTimeLastUpdate(JLabel labelTimeLastUpdate) {
+        this.labelTimeLastUpdate = labelTimeLastUpdate;
+    }
+
+    public void setMenuBar(JMenuBar menuBar) {
+        this.menuBar = menuBar;
+    }
+
+    public JMenu getMenuEdit() {
+        return menuEdit;
+    }
+
+    public void setMenuEdit(JMenu menuEdit) {
+        this.menuEdit = menuEdit;
+    }
+
+    public JMenu getMenuFile() {
+        return menuFile;
+    }
+
+    public void setMenuFile(JMenu menuFile) {
+        this.menuFile = menuFile;
+    }
+
+    public JMenu getMenuFind() {
+        return menuFind;
+    }
+
+    public void setMenuFind(JMenu menuFind) {
+        this.menuFind = menuFind;
+    }
+
+    public JMenu getMenuHelp() {
+        return menuHelp;
+    }
+
+    public void setMenuHelp(JMenu menuHelp) {
+        this.menuHelp = menuHelp;
+    }
+
+    public JMenuItem getMenuItemAWSAssign() {
+        return menuItemAWSAssign;
+    }
+
+    public void setMenuItemAWSAssign(JMenuItem menuItemAWSAssign) {
+        this.menuItemAWSAssign = menuItemAWSAssign;
+    }
+
+    public JMenuItem getMenuItemActivateRecord() {
+        return menuItemActivateRecord;
+    }
+
+    public void setMenuItemActivateRecord(JMenuItem menuItemActivateRecord) {
+        this.menuItemActivateRecord = menuItemActivateRecord;
+    }
+
+    public JMenuItem getMenuItemAddslash() {
+        return menuItemAddslash;
+    }
+
+    public void setMenuItemAddslash(JMenuItem menuItemAddslash) {
+        this.menuItemAddslash = menuItemAddslash;
+    }
+
+    public JMenuItem getMenuItemArchiveRecord() {
+        return menuItemArchiveRecord;
+    }
+
+    public void setMenuItemArchiveRecord(JMenuItem menuItemArchiveRecord) {
+        this.menuItemArchiveRecord = menuItemArchiveRecord;
+    }
+
+    public JMenuItem getMenuItemBackup() {
+        return menuItemBackup;
+    }
+
+    public void setMenuItemBackup(JMenuItem menuItemBackup) {
+        this.menuItemBackup = menuItemBackup;
+    }
+
+    public JMenuItem getMenuItemDeleteRecord() {
+        return menuItemDeleteRecord;
+    }
+
+    public void setMenuItemDeleteRecord(JMenuItem menuItemDeleteRecord) {
+        this.menuItemDeleteRecord = menuItemDeleteRecord;
+    }
+
+    public JCheckBoxMenuItem getMenuItemLogChkBx() {
+        return menuItemLogChkBx;
+    }
+
+    public void setMenuItemLogChkBx(JCheckBoxMenuItem menuItemLogChkBx) {
+        this.menuItemLogChkBx = menuItemLogChkBx;
+    }
+
+    public JMenuItem getMenuItemLogOff() {
+        return menuItemLogOff;
+    }
+
+    public void setMenuItemLogOff(JMenuItem menuItemLogOff) {
+        this.menuItemLogOff = menuItemLogOff;
+    }
+
+    public JMenuItem getMenuItemManageDBs() {
+        return menuItemManageDBs;
+    }
+
+    public void setMenuItemManageDBs(JMenuItem menuItemManageDBs) {
+        this.menuItemManageDBs = menuItemManageDBs;
+    }
+
+    public JMenuItem getMenuItemOpenDocument() {
+        return menuItemOpenDocument;
+    }
+
+    public void setMenuItemOpenDocument(JMenuItem menuItemOpenDocument) {
+        this.menuItemOpenDocument = menuItemOpenDocument;
+    }
+
+    public JMenuItem getMenuItemPrintDisplay() {
+        return menuItemPrintDisplay;
+    }
+
+    public void setMenuItemPrintDisplay(JMenuItem menuItemPrintDisplay) {
+        this.menuItemPrintDisplay = menuItemPrintDisplay;
+    }
+
+    public JMenuItem getMenuItemPrintGUI() {
+        return menuItemPrintGUI;
+    }
+
+    public void setMenuItemPrintGUI(JMenuItem menuItemPrintGUI) {
+        this.menuItemPrintGUI = menuItemPrintGUI;
+    }
+
+    public JMenuItem getMenuItemReloadData() {
+        return menuItemReloadData;
+    }
+
+    public void setMenuItemReloadData(JMenuItem menuItemReloadData) {
+        this.menuItemReloadData = menuItemReloadData;
+    }
+
+    public JMenuItem getMenuItemRepBugSugg() {
+        return menuItemRepBugSugg;
+    }
+
+    public void setMenuItemRepBugSugg(JMenuItem menuItemRepBugSugg) {
+        this.menuItemRepBugSugg = menuItemRepBugSugg;
+    }
+
+    public JCheckBoxMenuItem getMenuItemSQLCmdChkBx() {
+        return menuItemSQLCmdChkBx;
+    }
+
+    public void setMenuItemSQLCmdChkBx(JCheckBoxMenuItem menuItemSQLCmdChkBx) {
+        this.menuItemSQLCmdChkBx = menuItemSQLCmdChkBx;
+    }
+
+    public JMenuItem getMenuItemSaveFile() {
+        return menuItemSaveFile;
+    }
+
+    public void setMenuItemSaveFile(JMenuItem menuItemSaveFile) {
+        this.menuItemSaveFile = menuItemSaveFile;
+    }
+
+    public JMenuItem getMenuItemStripslash() {
+        return menuItemStripslash;
+    }
+
+    public void setMenuItemStripslash(JMenuItem menuItemStripslash) {
+        this.menuItemStripslash = menuItemStripslash;
+    }
+
+    public JMenuItem getMenuItemTurnEditModeOff() {
+        return menuItemTurnEditModeOff;
+    }
+
+    public void setMenuItemTurnEditModeOff(JMenuItem menuItemTurnEditModeOff) {
+        this.menuItemTurnEditModeOff = menuItemTurnEditModeOff;
+    }
+
+    public JMenuItem getMenuItemVersion() {
+        return menuItemVersion;
+    }
+
+    public void setMenuItemVersion(JMenuItem menuItemVersion) {
+        this.menuItemVersion = menuItemVersion;
+    }
+
+    public JMenuItem getMenuItemViewActiveAssign() {
+        return menuItemViewActiveAssign;
+    }
+
+    public void setMenuItemViewActiveAssign(JMenuItem menuItemViewActiveAssign) {
+        this.menuItemViewActiveAssign = menuItemViewActiveAssign;
+    }
+
+    public JMenuItem getMenuItemViewAllAssign() {
+        return menuItemViewAllAssign;
+    }
+
+    public void setMenuItemViewAllAssign(JMenuItem menuItemViewAllAssign) {
+        this.menuItemViewAllAssign = menuItemViewAllAssign;
+    }
+
+    public JMenuItem getMenuItemViewAssign() {
+        return menuItemViewAssign;
+    }
+
+    public void setMenuItemViewAssign(JMenuItem menuItemViewAssign) {
+        this.menuItemViewAssign = menuItemViewAssign;
+    }
+
+    public JMenuItem getMenuItemViewReports() {
+        return menuItemViewReports;
+    }
+
+    public void setMenuItemViewReports(JMenuItem menuItemViewReports) {
+        this.menuItemViewReports = menuItemViewReports;
+    }
+
+    public JMenu getMenuPrint() {
+        return menuPrint;
+    }
+
+    public void setMenuPrint(JMenu menuPrint) {
+        this.menuPrint = menuPrint;
+    }
+
+    public JMenu getMenuReports() {
+        return menuReports;
+    }
+
+    public void setMenuReports(JMenu menuReports) {
+        this.menuReports = menuReports;
+    }
+
+    public JMenu getMenuSelectConn() {
+        return menuSelectConn;
+    }
+
+    public void setMenuSelectConn(JMenu menuSelectConn) {
+        this.menuSelectConn = menuSelectConn;
+    }
+
+    public JMenu getMenuTools() {
+        return menuTools;
+    }
+
+    public void setMenuTools(JMenu menuTools) {
+        this.menuTools = menuTools;
+    }
+
+    public JMenu getMenuView() {
+        return menuView;
+    }
+
+    public void setMenuView(JMenu menuView) {
+        this.menuView = menuView;
+    }
+
+    public JTable getReportTable() {
+        return reportTable;
+    }
+
+    public void setReportTable(JTable reportTable) {
+        this.reportTable = reportTable;
+    }
+
+    public static JLabel getSearchInformationLabel() {
+        return searchInformationLabel;
+    }
+
+    public static void setSearchInformationLabel(JLabel searchInformationLabel) {
+        AnalysterWindow.searchInformationLabel = searchInformationLabel;
+    }
+
+    public JTabbedPane getTabbedPanel() {
+        return tabbedPanel;
+    }
+
+    public void setTabbedPanel(JTabbedPane tabbedPanel) {
+        this.tabbedPanel = tabbedPanel;
     }
 
     // @formatter:off

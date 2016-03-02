@@ -7,7 +7,7 @@
 package com.elle.analyster.presentation;
 
 import com.elle.analyster.database.DBConnection;
-import com.elle.analyster.logic.Authorization;
+import com.elle.analyster.admissions.Authorization;
 import com.elle.analyster.logic.LoggingAspect;
 import static com.elle.analyster.presentation.LogWindow.HYPHENS;
 import javax.swing.*;
@@ -319,10 +319,6 @@ public class LoginWindow extends JFrame {
             return userName;
         }
     }
-    public String getDBName() {
-        return selectedDB;
-        
-    }
 
     /**
      * Loads the names of the databases from a text file this is if the actual
@@ -432,8 +428,184 @@ public class LoginWindow extends JFrame {
             passwordFieldPW.setText("");
         }
     }
-    
 
+    public String getSelectedServer() {
+        return selectedServer;
+    }
+
+    public void setSelectedServer(String selectedServer) {
+        this.selectedServer = selectedServer;
+    }
+
+    public String getSelectedDB() {
+        return selectedDB;
+    }
+
+    public void setSelectedDB(String selectedDB) {
+        this.selectedDB = selectedDB;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public AnalysterWindow getAnalyster() {
+        return analyster;
+    }
+
+    public void setAnalyster(AnalysterWindow analyster) {
+        this.analyster = analyster;
+    }
+
+    public EditDatabaseWindow getEditDatabaseList() {
+        return editDatabaseList;
+    }
+
+    public void setEditDatabaseList(EditDatabaseWindow editDatabaseList) {
+        this.editDatabaseList = editDatabaseList;
+    }
+
+    public LogWindow getLogWindow() {
+        return logWindow;
+    }
+
+    public void setLogWindow(LogWindow logWindow) {
+        this.logWindow = logWindow;
+    }
+
+    public JButton getBtnCancel() {
+        return btnCancel;
+    }
+
+    public void setBtnCancel(JButton btnCancel) {
+        this.btnCancel = btnCancel;
+    }
+
+    public JButton getBtnEditDB() {
+        return btnEditDB;
+    }
+
+    public void setBtnEditDB(JButton btnEditDB) {
+        this.btnEditDB = btnEditDB;
+    }
+
+    public JButton getBtnLogin() {
+        return btnLogin;
+    }
+
+    public void setBtnLogin(JButton btnLogin) {
+        this.btnLogin = btnLogin;
+    }
+
+    public JComboBox getComboBoxDatabase() {
+        return comboBoxDatabase;
+    }
+
+    public void setComboBoxDatabase(JComboBox comboBoxDatabase) {
+        this.comboBoxDatabase = comboBoxDatabase;
+    }
+
+    public JComboBox getComboBoxServer() {
+        return comboBoxServer;
+    }
+
+    public void setComboBoxServer(JComboBox comboBoxServer) {
+        this.comboBoxServer = comboBoxServer;
+    }
+
+    public JPanel getjButtonPanel() {
+        return jButtonPanel;
+    }
+
+    public void setjButtonPanel(JPanel jButtonPanel) {
+        this.jButtonPanel = jButtonPanel;
+    }
+
+    public JPanel getjInputPanel() {
+        return jInputPanel;
+    }
+
+    public void setjInputPanel(JPanel jInputPanel) {
+        this.jInputPanel = jInputPanel;
+    }
+
+    public JLabel getjLabel1() {
+        return jLabel1;
+    }
+
+    public void setjLabel1(JLabel jLabel1) {
+        this.jLabel1 = jLabel1;
+    }
+
+    public JLabel getjLabel2() {
+        return jLabel2;
+    }
+
+    public void setjLabel2(JLabel jLabel2) {
+        this.jLabel2 = jLabel2;
+    }
+
+    public JLabel getjLabel3() {
+        return jLabel3;
+    }
+
+    public void setjLabel3(JLabel jLabel3) {
+        this.jLabel3 = jLabel3;
+    }
+
+    public JLabel getjLabel4() {
+        return jLabel4;
+    }
+
+    public void setjLabel4(JLabel jLabel4) {
+        this.jLabel4 = jLabel4;
+    }
+
+    public JLabel getjLabel5() {
+        return jLabel5;
+    }
+
+    public void setjLabel5(JLabel jLabel5) {
+        this.jLabel5 = jLabel5;
+    }
+
+    public JPanel getjPanel2() {
+        return jPanel2;
+    }
+
+    public void setjPanel2(JPanel jPanel2) {
+        this.jPanel2 = jPanel2;
+    }
+
+    public JPanel getjTextPanel() {
+        return jTextPanel;
+    }
+
+    public void setjTextPanel(JPanel jTextPanel) {
+        this.jTextPanel = jTextPanel;
+    }
+
+    public JPasswordField getPasswordFieldPW() {
+        return passwordFieldPW;
+    }
+
+    public void setPasswordFieldPW(JPasswordField passwordFieldPW) {
+        this.passwordFieldPW = passwordFieldPW;
+    }
+
+    public JTextField getTextFieldUsername() {
+        return textFieldUsername;
+    }
+
+    public void setTextFieldUsername(JTextField textFieldUsername) {
+        this.textFieldUsername = textFieldUsername;
+    }
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnEditDB;
