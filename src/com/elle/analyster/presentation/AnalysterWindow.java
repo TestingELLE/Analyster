@@ -72,8 +72,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-3-1";
-    private final String VERSION = "1.1.2";
+    private final String CREATION_DATE = "2016-3-3";
+    private final String VERSION = "1.1.3";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -2352,42 +2352,50 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         //String uploadQuery = uploadRecord(table, modifiedDataList);
         String sqlChange = "";
+        
+        // open database connection
+        DBConnection.close();
+        if (DBConnection.open()) {
 
-        for (ModifiedData modifiedData : modifiedDataList) {
+            statement = DBConnection.getStatement();
+            
+            for (ModifiedData modifiedData : modifiedDataList) {
 
-            String tableName = modifiedData.getTableName();
-            String columnName = modifiedData.getColumnName();
-            Object value = modifiedData.getValue();
-            int id = modifiedData.getId();
+                String tableName = modifiedData.getTableName();
+                String columnName = modifiedData.getColumnName();
+                Object value = modifiedData.getValue();
+                int id = modifiedData.getId();
 
-            try {
+                try {
 
-                if ("".equals(value)) {
-                    value = null;
-                    sqlChange = "UPDATE " + tableName + " SET " + columnName
-                            + " = " + value + " WHERE ID = " + id + ";";
-                } else {
-                    sqlChange = "UPDATE " + tableName + " SET " + columnName
-                            + " = '" + value + "' WHERE ID = " + id + ";";
+                    if (value.equals("")) {
+                        value = null;
+                        sqlChange = "UPDATE " + tableName + " SET " + columnName
+                                + " = " + value + " WHERE ID = " + id + ";";
+                    } else {
+                        sqlChange = "UPDATE " + tableName + " SET " + columnName
+                                + " = '" + value + "' WHERE ID = " + id + ";";
+                    }
+                    
+                    statement.executeUpdate(sqlChange);
+                    LoggingAspect.afterReturn(sqlChange);
+
+                } catch (SQLException e) {
+                    LoggingAspect.afterThrown(e);
+                    updateSuccessful = false;
                 }
-                System.out.println(sqlChange);
-
-                DBConnection.close();
-                DBConnection.open();
-                statement = DBConnection.getStatement();
-                statement.executeUpdate(sqlChange);
-
-            } catch (SQLException e) {
-                LoggingAspect.afterThrown(e);
-                updateSuccessful = false;
             }
-        }
 
-        if (updateSuccessful) {
-            informationLabel.setText(("Edits uploaded successfully!"));
-            startCountDownFromNow(5);
+            if (updateSuccessful) {
+                LoggingAspect.afterReturn(("Edits uploaded successfully!"));
+            }
+        } else {
+            // connection failed
+            LoggingAspect.afterReturn("Failed to connect");
         }
-
+        
+        // finally close connection
+        DBConnection.close();
     }
 
     /**
