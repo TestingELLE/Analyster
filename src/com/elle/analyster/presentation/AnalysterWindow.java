@@ -56,8 +56,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -2887,16 +2889,19 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             valueList.add(" ");
                             cellValue = newValue;
                         } else {
-                            if (!cellValue.equals(newValue) && !valueList.contains(newValue)) {
+                         
                                 cellValue = newValue;
                                 valueList.add(cellValue);
-                            }
+                            
                         }
                     }
                 }
 
             }
-            valueListMap.put(col, valueList);
+             Set<Object> uniqueValue = new HashSet<Object>(valueList);
+            ArrayList uniqueList = new ArrayList<Object>(uniqueValue);
+            
+            valueListMap.put(col, uniqueList);
         }
 //        DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
 //        comboBoxForSearch.setModel(comboBoxSearchModel);
@@ -2917,18 +2922,30 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         for (int col = 0; col < table.getColumnCount(); col++) {
             if (table.getColumnName(col).equalsIgnoreCase(colName)) {
                 ArrayList<Object> dropDownList = (ArrayList<Object>) comboBoxForSearchValue.get(col);
-                for (Object item : dropDownList) {
-                    List<Object> sortlist = dropDownList.subList(0, dropDownList.size());
+               
+                
+                if (colName.equalsIgnoreCase("priority")){
+                   ArrayList<Integer> dropDownList1 = (ArrayList<Integer>) comboBoxForSearchValue.get(col);
+                   System.out.println(dropDownList1 +"1");
+                    
+                }else{
 
-                    Collections.sort(sortlist, new Comparator<Object>() {
+                    Collections.sort(dropDownList, new Comparator<Object>() {
                         public int compare(Object o1, Object o2) {
                             return o1.toString().compareTo(o2.toString());
                         }
 
                     });
-                    comboBoxStartToSearch = false;
+                }
+                
+                comboBoxStartToSearch = false;
+                
+                for (Object item : dropDownList) {
+                    
+                    
                     comboBoxSearchModel.addElement(item);
                 }
+                System.out.println(dropDownList);
                 comboBoxStartToSearch = true;
             }
         }
