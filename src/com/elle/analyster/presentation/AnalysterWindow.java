@@ -1825,12 +1825,19 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     if (table.getValueAt(i, 4) != null) {
                         String str = table.getValueAt(i, 4).toString();
                         //Identify the column startwith and endwith "/" 
-                        while (str.startsWith("/") && str.endsWith("/")) {
+                        while (str.startsWith("/")) {
                             //Continue strip "/" until the correct format
 
-                            str = str.substring(1, str.length() - 1);
+                            str = str.substring(1, str.length());
 
                         }
+                        while (str.endsWith("/")||str.endsWith(" ") ) {
+                            //Continue strip "/" until the correct format
+
+                            str = str.substring(0, str.length()-1);
+
+                        }
+                        
                         // Set new value back to table
                         table.setValueAt(str, i, 4);
                     }
