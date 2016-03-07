@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -45,7 +46,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     private String backupTableName;
     private Connection connection;
     private Statement statement;
-    private Component parentComponent; // used to display message relative to parent component
+    private Component parentComponent; // used to display noBackupsMsg relative to parent component
     private CheckBoxList checkBoxList;
     private ArrayList<CheckBoxItem> checkBoxItems;
     private SQL_Commands sql_commands;
@@ -77,11 +78,14 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         checkBoxItems.addAll(getCheckBoxItemsFromDB());
         
         // if checkBoxItems only contains one item (check all) then remove it
-        if(checkBoxItems.size() == 1)
+        if(checkBoxItems.size() == 1){
             checkBoxItems.clear();
-        
-        // add CheckBoxItems to CheckBoxList
-        checkBoxList.setListData(checkBoxItems.toArray());
+            displayNoBackupsCheckListMsg();
+        }
+        else{
+            // add CheckBoxItems to CheckBoxList
+            checkBoxList.setListData(checkBoxItems.toArray());
+        }
         
         // add CheckBoxList to the panel
         ScrollPane scroll = new ScrollPane();
@@ -365,7 +369,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
      */
     public boolean backupDBTableWithDate(String tableName) {
         
-        this.tableName = tableName; // needs to be set for backup complete message
+        this.tableName = tableName; // needs to be set for backup complete noBackupsMsg
         
         // create a new backup table name with date
         this.backupTableName = tableName + getTodaysDate();
@@ -431,7 +435,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
      */
     public boolean backupTable(String tableName, String backupTableName){
         
-        // these need to be set for the backup complete message
+        // these need to be set for the backup complete noBackupsMsg
         this.tableName = tableName;
         this.backupTableName = backupTableName;
         
@@ -530,7 +534,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     }
     
     /**
-     * Gets input for the table name from the user using an input message box
+     * Gets input for the table name from the user using an input noBackupsMsg box
      * @return the input the user entered into the input text box
      */
     public String getInputTableNameFromUser(){
@@ -540,8 +544,8 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     }
     
     /**
-     * A message box that displays when 
-     * the backup was completed successfully.
+     * A noBackupsMsg box that displays when 
+ the backup was completed successfully.
      */
     public void displayBackupCompleteMessage(){
         String message = tableName + " was backed up as " + backupTableName;
@@ -750,4 +754,13 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     private javax.swing.JPanel panelButtons;
     private javax.swing.JPanel panelOutput;
     // End of variables declaration//GEN-END:variables
+
+    private void displayNoBackupsCheckListMsg() {
+        // add some noBackupsMsg 
+        String noBackupsMsg = "no known prior backups";
+        JLabel labelCheckListMsg = new JLabel(noBackupsMsg);
+        labelCheckListMsg.setHorizontalAlignment(JLabel.CENTER);
+        labelCheckListMsg.setHorizontalTextPosition(JLabel.CENTER);
+        checkBoxList.setListData(new JLabel[]{labelCheckListMsg});
+    }
 }
