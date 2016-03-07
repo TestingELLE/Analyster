@@ -1,5 +1,6 @@
 package com.elle.analyster.presentation;
 
+import com.elle.analyster.dao.BackupDBTableDAO;
 import com.elle.analyster.database.SQL_Commands;
 import com.elle.analyster.logic.CheckBoxItem;
 import com.elle.analyster.logic.CheckBoxList;
@@ -33,14 +34,6 @@ import javax.swing.JOptionPane;
  */
 public class BackupDBTablesDialog extends javax.swing.JPanel {
 
-    // backup database table information
-    // this information should match the database table
-    private final String BACKUP_DB_TABLE_NAME = "Table_Backups";
-    private final String BACKUP_DB_TABLE_COLUMN_PK = "id";
-    private final String BACKUP_DB_TABLE_COLUMN_1 = "tableName";
-    private final String BACKUP_DB_TABLE_COLUMN_2 = "backupTableName";
-    private final String CHECK_ALL_ITEM_TEXT = "(All)";
-    
     // private variables
     private String tableName;
     private String backupTableName;
@@ -49,8 +42,9 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     private Component parentComponent; // used to display noBackupsMsg relative to parent component
     private CheckBoxList checkBoxList;
     private ArrayList<CheckBoxItem> checkBoxItems;
-    private SQL_Commands sql_commands;
     private Dimension dimension = new Dimension(600,400); // dimension
+    private final String CHECK_ALL_ITEM_TEXT = "(All)";
+    private BackupDBTableDAO dao;
     
     /**
      * Creates new form BackupDBTablesWindow
@@ -63,7 +57,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         this.parentComponent = parent;  // testing
         
         this.backupTableName = null;
-        this.sql_commands = new SQL_Commands(connection);
+        this.dao = new BackupDBTableDAO(connection, parent);
         try {
             this.statement = connection.createStatement();
         } catch (SQLException ex) {
@@ -75,7 +69,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         // checkbox item array
         checkBoxItems = new ArrayList<>();
         checkBoxItems.add(new CheckBoxItem(CHECK_ALL_ITEM_TEXT));
-        checkBoxItems.addAll(getCheckBoxItemsFromDB());
+        checkBoxItems.addAll(dao.getCheckBoxItemsFromDB());
         
         // if checkBoxItems only contains one item (check all) then remove it
         if(checkBoxItems.size() == 1){
@@ -179,107 +173,14 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         for(CheckBoxItem item: checkBoxItems)
             item.setSelected(true);
     }
-    
-    public void createDBTableToStoreBackupsInfo(){
-        
-        String createTableQuery = 
-                "CREATE TABLE " + BACKUP_DB_TABLE_NAME +
-                "(" +
-                BACKUP_DB_TABLE_COLUMN_PK + " int(4) PRIMARY KEY AUTO_INCREMENT, " +
-                BACKUP_DB_TABLE_COLUMN_1 + " VARCHAR(50) NOT NULL, " +
-                BACKUP_DB_TABLE_COLUMN_2 + " VARCHAR(50) NOT NULL " +
-                ");";
-        
-        // TODO - execute sql query
-        if(!sql_commands.updateQuery(createTableQuery))
-            JOptionPane.showMessageDialog(parentComponent, "unable to create table " + BACKUP_DB_TABLE_NAME );
-    }
 
-    public ArrayList<CheckBoxItem> getCheckBoxItemsFromDB() {
-        
-        // check box items array list to return
-        ArrayList<CheckBoxItem> items = new ArrayList<>();
-        
-        // sql query to return a result set
-        String sql = 
-                "SELECT " + BACKUP_DB_TABLE_COLUMN_PK + "," + BACKUP_DB_TABLE_COLUMN_2 +
-               " FROM " + BACKUP_DB_TABLE_NAME +
-               " WHERE " + BACKUP_DB_TABLE_COLUMN_1 + " = '" + getTableName() + "' ;";
-        
-        ResultSet result = null;
-        
-        try {
-            //Here we create our query
-            PreparedStatement statement = getConnection().prepareStatement(sql);
-
-            //Creating a variable to execute query
-            result = statement.executeQuery();
-
-        } catch (SQLException ex) {
-            LoggingAspect.afterThrown(ex);
-            // if table doesn't exist and needs to be created
-            if(ex.getMessage().endsWith("exist")){
-                createDBTableToStoreBackupsInfo();
-                result = sql_commands.executeQuery(sql);
-            }
-        } finally{
-            // create checkbox items from result set and load up array list
-            if(result != null){
-                try {
-                    while(result.next())
-                    {
-                        // get column data
-                        int id = Integer.parseInt(result.getString(1));
-                        String backupName = result.getString(2);
-                        
-                        // create checkBoxItem
-                        CheckBoxItem item = new CheckBoxItem(backupName);
-                        
-                        // set checkbox item id (same id as primary key on db table)
-                        item.setId(id);
-                        
-                        // add checkbox item to the array list
-                        items.add(item);
-                    }
-                } catch (SQLException ex) {
-                    LoggingAspect.afterThrown(ex);
-                }
-            }
-        }
-        
-        return items;
-    }
-    
     public void deleteSelectedItems(){
         
         for(CheckBoxItem item: checkBoxItems){
             if(item.isSelected()){
-                deleteItem(item.getId());
+                dao.deleteItem(item.getId());
                 deleteItem(item.getCapped());
             }
-        }
-    }
-    
-    /**
-     * Deletes record of the backup table (not the actual backup table)
-     * @param id id of record in database table
-     * @return boolean true if successful and false if sql error occurred 
-     */
-    public boolean deleteItem(int id) {
-        
-        if(id == -1)
-            return false;
-        
-        String sql = 
-                "DELETE FROM " + BACKUP_DB_TABLE_NAME +
-               " WHERE " + BACKUP_DB_TABLE_COLUMN_PK + " = " + id + ";";
-        
-        try {
-            getStatement().executeUpdate(sql);
-            return true;
-        } catch (SQLException ex) {
-            LoggingAspect.afterThrown(ex);
-            return false;
         }
     }
     
@@ -305,7 +206,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     public void reloadCheckList() {
         checkBoxItems.clear();
         checkBoxItems.add(new CheckBoxItem(CHECK_ALL_ITEM_TEXT));
-        checkBoxItems.addAll(getCheckBoxItemsFromDB());
+        checkBoxItems.addAll(dao.getCheckBoxItemsFromDB());
         
         // if checkBoxItems only contains one item (check all) then remove it
         if(checkBoxItems.size() == 1)
@@ -379,7 +280,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             
             createTableLike(tableName, backupTableName);
             backupTableData(tableName, backupTableName);
-            addBackupRecord(tableName, backupTableName);
+            dao.addBackupRecord(tableName, backupTableName);
             displayBackupCompleteMessage();
             return true;
 
@@ -442,7 +343,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         try {
             createTableLike(tableName, backupTableName);
             backupTableData(tableName, backupTableName);
-            addBackupRecord(tableName, backupTableName);
+            dao.addBackupRecord(tableName, backupTableName);
             displayBackupCompleteMessage();
             return true;
         } catch (SQLException ex) {
@@ -523,10 +424,10 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         
         try {
             dropTable(backupTableName);
-            dropBackupRecord(tableName, backupTableName);
+            dao.dropBackupRecord(tableName, backupTableName);
             createTableLike(tableName, backupTableName);
             backupTableData(tableName, backupTableName);
-            addBackupRecord(tableName, backupTableName);
+            dao.addBackupRecord(tableName, backupTableName);
             displayBackupCompleteMessage();
         } catch (SQLException ex) {
             LoggingAspect.afterThrown(ex);
@@ -593,35 +494,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     }
     
     public boolean addBackupRecord(){
-        return addBackupRecord(getTableName(), getBackupTableName());
-    }
-    
-    public boolean addBackupRecord(String tableName, String backupTableName){
-        String sql = 
-                "INSERT INTO " + BACKUP_DB_TABLE_NAME + 
-               " ( " + BACKUP_DB_TABLE_COLUMN_1 + ", " + BACKUP_DB_TABLE_COLUMN_2 + ")" 
-                + " VALUES ('" + tableName + "', '" +  backupTableName + "');";
-        try {
-            getStatement().executeUpdate(sql);
-            return true;
-        } catch (SQLException ex) {
-            LoggingAspect.afterThrown(ex);
-            return false;
-        }
-    }
-
-    public boolean dropBackupRecord(String tableName, String backupTableName) {
-        String sql = 
-                "DELETE FROM " + BACKUP_DB_TABLE_NAME + 
-               " WHERE " + BACKUP_DB_TABLE_COLUMN_1 + " = '" + tableName +
-               "' AND " + BACKUP_DB_TABLE_COLUMN_2 + " = '" + backupTableName + "' ;";
-        try {
-            getStatement().executeUpdate(sql);
-            return true;
-        } catch (SQLException ex) {
-            LoggingAspect.afterThrown(ex);
-            return false;
-        }
+        return dao.addBackupRecord(getTableName(), getBackupTableName());
     }
     
     /**
