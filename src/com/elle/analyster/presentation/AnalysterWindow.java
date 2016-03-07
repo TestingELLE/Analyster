@@ -905,7 +905,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
         menuTools.add(menuItemTurnEditModeOff);
 
-        menuItemBackup.setText("Backup");
+        menuItemBackup.setText("Back up all tables");
         menuItemBackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemBackupActionPerformed(evt);
