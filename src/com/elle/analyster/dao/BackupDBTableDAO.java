@@ -182,4 +182,51 @@ public class BackupDBTableDAO {
             return false;
         }
     }
+    
+    /**
+     * Creates a table in the database
+     * @param tableName           the original table name
+     * @param backupTableName     the name of the backup table
+     * @throws SQLException       can use handleSQLexWithMessageBox method in catch
+     */
+    public void createTableLike(String tableName, String backupTableName) throws SQLException{
+        
+        // sql query to create the table 
+        String sqlCreateTable = "CREATE TABLE " + backupTableName
+                             + " LIKE " + tableName + " ; ";
+        
+        // execute sql statements
+        statement.executeUpdate(sqlCreateTable);
+    }
+    
+    /**
+     * Backs up table data in the database
+     * @param tableName           the original table name
+     * @param backupTableName     the name of the backup table
+     * @throws SQLException       can use handleSQLexWithMessageBox method in catch
+     */
+    public void backupTableData(String tableName, String backupTableName) throws SQLException{
+        
+        // sql query to backup the table data
+        String sqlBackupData =  "INSERT INTO " + backupTableName 
+                             + " SELECT * FROM " + tableName +  " ;";
+        
+        // execute sql statements
+        statement.executeUpdate(sqlBackupData);
+    }
+    
+    /**
+     * Drops a table in the database
+     * @param tableName drop this table name from database
+     * @return boolean dropped from database? true or false
+     * @throws SQLException can use handleSQLexWithMessageBox method in catch
+     */
+    public void dropTable(String tableName) throws SQLException{
+        
+        // sql query to drop the table 
+        String sqlCreateTable = "DROP TABLE " + tableName + " ; ";
+        
+        // execute sql statements
+        statement.executeUpdate(sqlCreateTable);
+    }
 }

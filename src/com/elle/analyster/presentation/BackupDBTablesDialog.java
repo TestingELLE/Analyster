@@ -37,8 +37,8 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     // private variables
     private String tableName;
     private String backupTableName;
-    private Connection connection;
-    private Statement statement;
+    //private Connection connection;
+    //private Statement statement;
     private Component parentComponent; // used to display noBackupsMsg relative to parent component
     private CheckBoxList checkBoxList;
     private ArrayList<CheckBoxItem> checkBoxItems;
@@ -52,17 +52,12 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     public BackupDBTablesDialog(Connection connection, String tableName, Component parent) {
         initComponents();
 
-        this.connection = connection;  // testing
+        //this.connection = connection;  // testing
         this.tableName = tableName;  // testing
         this.parentComponent = parent;  // testing
         
         this.backupTableName = null;
         this.dao = new BackupDBTableDAO(connection, parent);
-        try {
-            this.statement = connection.createStatement();
-        } catch (SQLException ex) {
-            LoggingAspect.afterThrown(ex);
-        }
         
         setCheckBoxListListener();
         
@@ -195,7 +190,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             return false;
         
         try {
-            dropTable(tableName);
+            dao.dropTable(tableName);
             return true;
         } catch (SQLException ex) {
             LoggingAspect.afterThrown(ex);
@@ -278,8 +273,8 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         // execute sql statements
         try {
             
-            createTableLike(tableName, backupTableName);
-            backupTableData(tableName, backupTableName);
+            dao.createTableLike(tableName, backupTableName);
+            dao.backupTableData(tableName, backupTableName);
             dao.addBackupRecord(tableName, backupTableName);
             displayBackupCompleteMessage();
             return true;
@@ -341,8 +336,8 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         this.backupTableName = backupTableName;
         
         try {
-            createTableLike(tableName, backupTableName);
-            backupTableData(tableName, backupTableName);
+            dao.createTableLike(tableName, backupTableName);
+            dao.backupTableData(tableName, backupTableName);
             dao.addBackupRecord(tableName, backupTableName);
             displayBackupCompleteMessage();
             return true;
@@ -352,53 +347,6 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         }
     }
     
-    /**
-     * Creates a table in the database
-     * @param tableName           the original table name
-     * @param backupTableName     the name of the backup table
-     * @throws SQLException       can use handleSQLexWithMessageBox method in catch
-     */
-    public void createTableLike(String tableName, String backupTableName) throws SQLException{
-        
-        // sql query to create the table 
-        String sqlCreateTable = "CREATE TABLE " + backupTableName
-                             + " LIKE " + tableName + " ; ";
-        
-        // execute sql statements
-        statement.executeUpdate(sqlCreateTable);
-    }
-    
-    /**
-     * Backs up table data in the database
-     * @param tableName           the original table name
-     * @param backupTableName     the name of the backup table
-     * @throws SQLException       can use handleSQLexWithMessageBox method in catch
-     */
-    public void backupTableData(String tableName, String backupTableName) throws SQLException{
-        
-        // sql query to backup the table data
-        String sqlBackupData =  "INSERT INTO " + backupTableName 
-                             + " SELECT * FROM " + tableName +  " ;";
-        
-        // execute sql statements
-        statement.executeUpdate(sqlBackupData);
-    }
-    
-    /**
-     * Drops a table in the database
-     * @param tableName drop this table name from database
-     * @return boolean dropped from database? true or false
-     * @throws SQLException can use handleSQLexWithMessageBox method in catch
-     */
-    public void dropTable(String tableName) throws SQLException{
-        
-        // sql query to drop the table 
-        String sqlCreateTable = "DROP TABLE " + tableName + " ; ";
-        
-        // execute sql statements
-        statement.executeUpdate(sqlCreateTable);
-    }
-
     /**
      * Gets todays date
      * @return today's date (ex. _2015_12_21)
@@ -423,10 +371,10 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     public void overwriteBackupDB(){
         
         try {
-            dropTable(backupTableName);
+            dao.dropTable(backupTableName);
             dao.dropBackupRecord(tableName, backupTableName);
-            createTableLike(tableName, backupTableName);
-            backupTableData(tableName, backupTableName);
+            dao.createTableLike(tableName, backupTableName);
+            dao.backupTableData(tableName, backupTableName);
             dao.addBackupRecord(tableName, backupTableName);
             displayBackupCompleteMessage();
         } catch (SQLException ex) {
@@ -453,14 +401,6 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(parentComponent, message);
     }
 
-    /**
-     * This can be used to check that the connection is open and not null
-     * @return database connection
-     */
-    public Connection getConnection() {
-        return connection;
-    }
-
     public String getTableName() {
         return tableName;
     }
@@ -475,14 +415,6 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
 
     public void setBackupTableName(String backupTableName) {
         this.backupTableName = backupTableName;
-    }
-
-    public Statement getStatement() {
-        return statement;
-    }
-
-    public void setStatement(Statement statement) {
-        this.statement = statement;
     }
 
     public Component getParentComponent() {
