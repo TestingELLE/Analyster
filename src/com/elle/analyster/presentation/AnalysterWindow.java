@@ -2134,17 +2134,19 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     }
                 }
         );
+        
         table.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
-
+            Point p = e.getPoint();
+            System.out.println(p);
                 if (getSelectedTable() == reportTable) {
                     int row = table.rowAtPoint(e.getPoint());
                     int col = table.columnAtPoint(e.getPoint());
-                    Point p = e.getPoint();
-                    int diff = e.getLocationOnScreen().y - table.getLocationOnScreen().y;
-       //             System.out.println( e.getLocationOnScreen().y + " " +  table.getLocationOnScreen().y );
-                    if (e.getLocationOnScreen().y > table.getLocationOnScreen().y + 3
-                            && e.getLocationOnScreen().y < table.getLocationOnScreen().y + 300) {
+       //             Point p = e.getPoint();
+//                  System.out.println( table.getLocation().y + "");
+//                  System.out.println(table.getLocationOnScreen().y + " screen");
+                    
+                   if(table.getLocation().y < 1 && table.getLocation().y > -8155){
                         if (col > 3 && col < 6) {
                             table.clearSelection();
                             table.setRowSelectionInterval(row, row);
@@ -2156,7 +2158,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             setCursor(cursor);
 
                         }
-                    } else {
+                   }else {
                         Cursor cursor = Cursor.getDefaultCursor();
                         setCursor(cursor);
                     }
