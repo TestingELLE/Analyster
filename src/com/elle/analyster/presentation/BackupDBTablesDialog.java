@@ -69,7 +69,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         // checkbox item array
         checkBoxItems = new ArrayList<>();
         checkBoxItems.add(new CheckBoxItem(CHECK_ALL_ITEM_TEXT));
-        checkBoxItems.addAll(dao.getCheckBoxItemsFromDB());
+        checkBoxItems.addAll(dao.getCheckBoxItemsFromDB(getTableName()));
         
         // if checkBoxItems only contains one item (check all) then remove it
         if(checkBoxItems.size() == 1){
@@ -206,7 +206,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     public void reloadCheckList() {
         checkBoxItems.clear();
         checkBoxItems.add(new CheckBoxItem(CHECK_ALL_ITEM_TEXT));
-        checkBoxItems.addAll(dao.getCheckBoxItemsFromDB());
+        checkBoxItems.addAll(dao.getCheckBoxItemsFromDB(getTableName()));
         
         // if checkBoxItems only contains one item (check all) then remove it
         if(checkBoxItems.size() == 1)

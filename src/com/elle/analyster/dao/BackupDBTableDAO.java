@@ -72,13 +72,12 @@ public class BackupDBTableDAO {
                 BACKUP_DB_TABLE_COLUMN_1 + " VARCHAR(50) NOT NULL, " +
                 BACKUP_DB_TABLE_COLUMN_2 + " VARCHAR(50) NOT NULL " +
                 ");";
-        
-        // TODO - execute sql query
+
         if(!sql_commands.updateQuery(createTableQuery))
             JOptionPane.showMessageDialog(parentComponent, "unable to create table " + BACKUP_DB_TABLE_NAME );
     }
     
-    public ArrayList<CheckBoxItem> getCheckBoxItemsFromDB() {
+    public ArrayList<CheckBoxItem> getCheckBoxItemsFromDB(String tableName) {
         
         // check box items array list to return
         ArrayList<CheckBoxItem> items = new ArrayList<>();
@@ -87,7 +86,7 @@ public class BackupDBTableDAO {
         String sql = 
                 "SELECT " + BACKUP_DB_TABLE_COLUMN_PK + "," + BACKUP_DB_TABLE_COLUMN_2 +
                " FROM " + BACKUP_DB_TABLE_NAME +
-               " WHERE " + BACKUP_DB_TABLE_COLUMN_1 + " = '" + getTableName() + "' ;";
+               " WHERE " + BACKUP_DB_TABLE_COLUMN_1 + " = '" + tableName + "' ;";
         
         ResultSet result = null;
         
