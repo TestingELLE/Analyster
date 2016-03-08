@@ -160,7 +160,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         for(BackupTableCheckBoxItem item: checkBoxItems){
             if(item.isSelected()){
                 if(!item.getText().equals(CHECK_ALL_ITEM_TEXT))
-                dao.deleteRecord(item.getRecord());
+                    dao.deleteRecord(item.getRecord());
             }
         }
     }
@@ -171,11 +171,14 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         checkBoxItems.addAll(getCheckBoxItemsFromDB());
 
         // if checkBoxItems only contains one item (check all) then remove it
-        if (checkBoxItems.size() == 1)
+        if (checkBoxItems.size() == 1) {
             checkBoxItems.clear();
-
-        // add CheckBoxItems to CheckBoxList
-        checkBoxList.setListData(checkBoxItems.toArray());
+            displayNoBackupsCheckListMsg();
+        }
+        else{
+            // add CheckBoxItems to CheckBoxList
+            checkBoxList.setListData(checkBoxItems.toArray());
+        }
     }
 
         /**
@@ -350,11 +353,8 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         deleteSelectedItems();
         reloadCheckList();
-        // if no checkbox items are left
-        if(checkBoxItems.isEmpty()){
-            btnDelete.setEnabled(false);
-            btnBackup.setEnabled(true);
-        }
+        btnDelete.setEnabled(false);
+        btnBackup.setEnabled(true);
     }//GEN-LAST:event_btnDeleteActionPerformed
 
 
