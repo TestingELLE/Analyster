@@ -232,7 +232,7 @@ public class BackupDBTableDAO {
         }
     }
 
-    public boolean updateRecord(BackupDBTableRecord record) {
+    public boolean updateRecord(BackupDBTableRecord record, String oldTableName) {
         
         if(DBConnection.open()){
             int id = record.getId();
@@ -240,14 +240,19 @@ public class BackupDBTableDAO {
             String tableName = record.getTableName();
             String backupName = record.getBackupTableName();
 
-            String sql = "UPDATE " + DB_TABLE_NAME +
-                        " SET " + COL_APPLICATION  + " = '" + app + "', "
-                        + COL_TABLE_NAME + " = '" + tableName + "', "
-                        + COL_BACKUP_NAME + " = '" + backupName + 
-                        "' WHERE " + COL_PK_ID  + " = " + id + ";";
+            String update = "UPDATE " + DB_TABLE_NAME +
+                           " SET " + COL_APPLICATION  + " = '" + app + "', "
+                           + COL_TABLE_NAME + " = '" + tableName + "', "
+                           + COL_BACKUP_NAME + " = '" + backupName + 
+                          "' WHERE " + COL_PK_ID  + " = " + id + ";";
+            
+            String rename = "RENAME TABLE " + oldTableName + 
+                           " TO " + backupName;
             try {
-                statement.executeUpdate(sql);
-                LoggingAspect.afterReturn(sql);
+                statement.executeUpdate(rename);
+                LoggingAspect.afterReturn(update);
+                statement.executeUpdate(update);
+                LoggingAspect.afterReturn(update);
                 DBConnection.close();
                 return true;
             } catch (SQLException ex) {
