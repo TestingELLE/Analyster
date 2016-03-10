@@ -72,8 +72,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-3-3";
-    private final String VERSION = "1.1.3";
+    private final String CREATION_DATE = "2016-3-10";
+    private final String VERSION = "1.2.0";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -905,7 +905,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
         menuTools.add(menuItemTurnEditModeOff);
 
-        menuItemBackup.setText("Back up all tables");
+        menuItemBackup.setText("Backup Tables");
         menuItemBackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemBackupActionPerformed(evt);
