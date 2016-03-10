@@ -40,7 +40,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     /**
      * Creates new form BackupDBTablesWindow
      */
-    public BackupDBTablesDialog(Connection connection, String tableName, Component parent) {
+    public BackupDBTablesDialog(Connection connection, Component parent) {
         initComponents();
 
         this.parentComponent = parent;
@@ -74,17 +74,15 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         btnDelete.setEnabled(false);
 
         // set title
-        String title = "Backup " + tableName; // window title
+        String title = "Backup Tables"; // window title
 
         // show window
         setVisible(true);
 
         // add to a JDialog for modal funtionality
-        JDialog dialog = new JDialog((Frame) parent, "Backup " + tableName, true);
-        //BackupDBTablesJPanel panel = new BackupDBTablesDialog(con, tableName, parent);
+        JDialog dialog = new JDialog((Frame) parent, title, true);
         dialog.add(this);
         dialog.setSize(dimension);
-        //dialog.pack();
         dialog.setLocationRelativeTo(parentComponent);
         dialog.setVisible(true);
 
@@ -157,12 +155,21 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
 
     public void deleteSelectedItems(){
 
+        boolean backupSuccess = true;
+        
         for(BackupTableCheckBoxItem item: checkBoxItems){
             if(item.isSelected()){
-                if(!item.getText().equals(CHECK_ALL_ITEM_TEXT))
-                    dao.deleteRecord(item.getRecord());
+                if(!item.getText().equals(CHECK_ALL_ITEM_TEXT)){
+                    if(!dao.deleteRecord(item.getRecord())){
+                        backupSuccess = false;
+                    }
+                }
             }
         }
+        
+        String msg = (backupSuccess)? "Deletion Complete!":"Deletion Failed!";
+        JOptionPane.showMessageDialog(this, msg);
+        LoggingAspect.afterReturn(msg);
     }
 
     public void reloadCheckList() {
@@ -188,6 +195,8 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
      */
     public void backupDBTablesWithDate() {
 
+        boolean backupSuccess = true;
+        
         for (String tableName : tableNames) {
             String backupTableName = tableName + getTodaysDate();
             BackupDBTableRecord record = new BackupDBTableRecord();
@@ -195,14 +204,19 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             record.setBackupTableName(backupTableName);
             for (BackupTableCheckBoxItem item : checkBoxItems) {
                 if (item.getText().equals(backupTableName)) {
-                    dao.deleteRecord(backupTableName);
+                    if(!dao.deleteRecord(backupTableName)){
+                        backupSuccess = false;
+                    }
                 }
             }
-            dao.addRecord(record);
+            if(!dao.addRecord(record)){
+                backupSuccess = false;
+            }
         }
 
-        JOptionPane.showMessageDialog(this, "Backup complete!");
-        LoggingAspect.afterReturn("Backup complete!");
+        String msg = (backupSuccess)? "Backup Complete!":"Backup Failed!";
+        JOptionPane.showMessageDialog(this, msg);
+        LoggingAspect.afterReturn(msg);
     }
 
     /**

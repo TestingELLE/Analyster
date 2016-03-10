@@ -1726,8 +1726,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // open new connection
         DBConnection.close(); // connection might be timed out on server
         if (DBConnection.open()) {  // open a new connection
-            String tableName = getSelectedTable().getName(); // table name to backup
-            BackupDBTablesDialog backupDBTables = new BackupDBTablesDialog(DBConnection.getConnection(), tableName, this);
+            BackupDBTablesDialog backupDBTables = new BackupDBTablesDialog(DBConnection.getConnection(), this);
         } else {
             JOptionPane.showMessageDialog(this, "Could not connect to Database");
         }
