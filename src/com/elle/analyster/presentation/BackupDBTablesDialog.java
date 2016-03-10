@@ -13,7 +13,6 @@ import java.awt.ScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.JCheckBox;
@@ -116,8 +115,12 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
                           checkAllItems();
                       }
                   }
+                  //rename the checkbox item
+                  else if(e.isControlDown()){
+                      renameCheckBoxItem((BackupTableCheckBoxItem)checkbox);
+                  }
                   else{
-                      // toogle the check for the checkbox item
+                      // toggle the check for the checkbox item
                       checkbox.setSelected(!checkbox.isSelected());
                   }
                   checkBoxList.repaint(); // redraw graphics
@@ -135,6 +138,33 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         });
     }
 
+    public void renameCheckBoxItem(BackupTableCheckBoxItem checkbox) {
+
+        BackupDBTableRecord record = checkbox.getRecord();
+        String backupTableName = record.getBackupTableName();
+        String msg = "Rename " + backupTableName;
+        boolean updateSuccess = true;
+
+        // input dialog
+        String newName = JOptionPane.showInputDialog(this, // parent 
+                                                     msg,  // msg
+                                                     backupTableName); // init selected
+
+        if(newName != null && !newName.equals(backupTableName)){
+            record.setBackupTableName(newName);
+            if(!dao.updateRecord(record)){
+                updateSuccess = false;
+            }
+        }
+
+        msg = (updateSuccess)? "Update Complete!":"Update Failed!";
+        JOptionPane.showMessageDialog(this, msg);
+        LoggingAspect.afterReturn(msg);
+        if(updateSuccess){
+            reloadCheckList();
+        }
+    }
+    
     /**
      * removeAllChecks
      */

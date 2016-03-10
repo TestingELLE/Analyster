@@ -231,4 +231,35 @@ public class BackupDBTableDAO {
             return false;
         }
     }
+
+    public boolean updateRecord(BackupDBTableRecord record) {
+        
+        if(DBConnection.open()){
+            int id = record.getId();
+            String app = record.getApplicationName();
+            String tableName = record.getTableName();
+            String backupName = record.getBackupTableName();
+
+            String sql = "UPDATE " + DB_TABLE_NAME +
+                        " SET " + COL_APPLICATION  + " = '" + app + "', "
+                        + COL_TABLE_NAME + " = '" + tableName + "', "
+                        + COL_BACKUP_NAME + " = '" + backupName + 
+                        "' WHERE " + COL_PK_ID  + " = " + id + ";";
+            try {
+                statement.executeUpdate(sql);
+                LoggingAspect.afterReturn(sql);
+                DBConnection.close();
+                return true;
+            } catch (SQLException ex) {
+                LoggingAspect.afterThrown(ex);
+                DBConnection.close();
+                return false;
+            }
+        }
+        else{
+            DBConnection.close();
+            return false;
+        }
+        
+    }
 }
