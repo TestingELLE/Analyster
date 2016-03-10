@@ -226,6 +226,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     public void backupDBTablesWithDate() {
 
         boolean backupSuccess = true;
+        String overwrite = "undefined";
         
         for (String tableName : tableNames) {
             String backupTableName = tableName + getTodaysDate();
@@ -234,19 +235,35 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             record.setBackupTableName(backupTableName);
             for (BackupTableCheckBoxItem item : checkBoxItems) {
                 if (item.getText().equals(backupTableName)) {
+                    if(overwrite.equals("undefined")){
+                        String msg = "Tables already exist. Overwrite?";
+                        int selection = JOptionPane.showConfirmDialog(this, msg);
+                        if(selection == 0){
+                            overwrite = "true"; // will not ask anymore
+                        }
+                        else{
+                            overwrite = "false"; // flag to break for loop
+                            break;
+                        }
+                    }
                     if(!dao.deleteRecord(backupTableName)){
                         backupSuccess = false;
                     }
                 }
             }
+            if(overwrite.equals("false")){
+                break;
+            }
             if(!dao.addRecord(record)){
                 backupSuccess = false;
             }
         }
-
-        String msg = (backupSuccess)? "Backup Complete!":"Backup Failed!";
-        JOptionPane.showMessageDialog(this, msg);
-        LoggingAspect.afterReturn(msg);
+        
+        if(!overwrite.equals("false")){
+            String msg = (backupSuccess)? "Backup Complete!":"Backup Failed!";
+            JOptionPane.showMessageDialog(this, msg);
+            LoggingAspect.afterReturn(msg);
+        }
     }
 
     /**
