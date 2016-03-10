@@ -1,6 +1,7 @@
 
 package com.elle.analyster.dao;
 
+import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.database.SQL_Commands;
 import com.elle.analyster.dbtables.BackupDBTableRecord;
 import com.elle.analyster.logic.CheckBoxItem;
@@ -49,8 +50,9 @@ public class BackupDBTableDAO {
     }
     
     public void createDBTableToStoreBackupsInfo(){
-        
-        String createTableQuery = 
+
+        if(DBConnection.open()){
+            String createTableQuery = 
                 "CREATE TABLE " + DB_TABLE_NAME +
                 "(" +
                         COL_PK_ID + " int(4) PRIMARY KEY AUTO_INCREMENT, " +
@@ -59,56 +61,63 @@ public class BackupDBTableDAO {
                         COL_BACKUP_NAME + " VARCHAR(50) NOT NULL " +
                 ");";
 
-        if(!sql_commands.updateQuery(createTableQuery))
-            JOptionPane.showMessageDialog(parentComponent, "unable to create table " + DB_TABLE_NAME);
+            if(!sql_commands.updateQuery(createTableQuery)){
+                JOptionPane.showMessageDialog(parentComponent, 
+                        "unable to create table " + DB_TABLE_NAME);
+            }
+        }
+        DBConnection.close();
     }
 
     public ArrayList<BackupDBTableRecord> getRecords() {
-
+        
         ArrayList<BackupDBTableRecord> records = new ArrayList<>();
+        
+        if(DBConnection.open()){
 
-        // sql query to return a result set
-        String sql = "SELECT * " +
-                     " FROM " + DB_TABLE_NAME +
-                     " WHERE " + COL_APPLICATION + " = '" + APPLICATION_NAME + "' ;";
+            // sql query to return a result set
+            String sql = "SELECT * " +
+                         " FROM " + DB_TABLE_NAME +
+                         " WHERE " + COL_APPLICATION + " = '" + APPLICATION_NAME + "' ;";
 
-        ResultSet result = null;
+            ResultSet result = null;
 
-        try {
-            //Here we create our query
-            PreparedStatement statement = connection.prepareStatement(sql);
+            try {
+                //Here we create our query
+                PreparedStatement statement = connection.prepareStatement(sql);
 
-            //Creating a variable to execute query
-            result = statement.executeQuery();
+                //Creating a variable to execute query
+                result = statement.executeQuery();
 
-        }
-        catch (SQLException ex) {
-            LoggingAspect.afterThrown(ex);
-            // if table doesn't exist and needs to be created
-            if(ex.getMessage().endsWith("exist")){
-                createDBTableToStoreBackupsInfo();
-                result = sql_commands.executeQuery(sql);
             }
-        }
-        finally{
-            // create checkbox items from result set and load up array list
-            if(result != null){
-                try {
-                    while(result.next())
-                    {
-                        BackupDBTableRecord record = new BackupDBTableRecord();
-                        record.setId(result.getInt(1));
-                        record.setApplicationName(result.getString(2));
-                        record.setTableName(result.getString(3));
-                        record.setBackupTableName(result.getString(4));
-                        records.add(record);
+            catch (SQLException ex) {
+                LoggingAspect.afterThrown(ex);
+                // if table doesn't exist and needs to be created
+                if(ex.getMessage().endsWith("exist")){
+                    createDBTableToStoreBackupsInfo();
+                    result = sql_commands.executeQuery(sql);
+                }
+            }
+            finally{
+                // create checkbox items from result set and load up array list
+                if(result != null){
+                    try {
+                        while(result.next())
+                        {
+                            BackupDBTableRecord record = new BackupDBTableRecord();
+                            record.setId(result.getInt(1));
+                            record.setApplicationName(result.getString(2));
+                            record.setTableName(result.getString(3));
+                            record.setBackupTableName(result.getString(4));
+                            records.add(record);
+                        }
+                    } catch (SQLException ex) {
+                        LoggingAspect.afterThrown(ex);
                     }
-                } catch (SQLException ex) {
-                    LoggingAspect.afterThrown(ex);
                 }
             }
         }
-
+        DBConnection.close();
         return records;
     }
 
@@ -119,24 +128,32 @@ public class BackupDBTableDAO {
      */
     public boolean deleteRecord(BackupDBTableRecord record) {
 
-        String sql = "";
-        int id = record.getId();
-        String backupTableName = record.getBackupTableName();
+        if(DBConnection.open()){
+            String sql = "";
+            int id = record.getId();
+            String backupTableName = record.getBackupTableName();
 
-        try {
-            // drop table
-            sql = "DROP TABLE " + backupTableName + " ; ";
-            statement.executeUpdate(sql);
+            try {
+                // drop table
+                sql = "DROP TABLE " + backupTableName + " ; ";
+                statement.executeUpdate(sql);
 
-            // delete record
-            sql = "DELETE FROM " + DB_TABLE_NAME +
-                    " WHERE " + COL_PK_ID + " = " + id + ";";
-            statement.executeUpdate(sql);
+                // delete record
+                sql = "DELETE FROM " + DB_TABLE_NAME +
+                        " WHERE " + COL_PK_ID + " = " + id + ";";
+                statement.executeUpdate(sql);
 
-            LoggingAspect.afterReturn("Deleted backup " + backupTableName);
-            return true;
-        } catch (SQLException e) {
-            LoggingAspect.afterThrown(e);
+                LoggingAspect.afterReturn("Deleted backup " + backupTableName);
+                DBConnection.close();
+                return true;
+            } catch (SQLException e) {
+                LoggingAspect.afterThrown(e);
+                DBConnection.close();
+                return false;
+            }
+        }
+        else{
+            DBConnection.close();
             return false;
         }
     }
@@ -148,53 +165,69 @@ public class BackupDBTableDAO {
      */
     public boolean deleteRecord(String backupTableName) {
 
-        String sql = "";
+        if(DBConnection.open()){
+            String sql = "";
 
-        try {
-            // drop table
-            sql = "DROP TABLE " + backupTableName + " ; ";
-            statement.executeUpdate(sql);
+            try {
+                // drop table
+                sql = "DROP TABLE " + backupTableName + " ; ";
+                statement.executeUpdate(sql);
 
-            // delete record
-            sql = "DELETE FROM " + DB_TABLE_NAME +
-                    " WHERE " + COL_BACKUP_NAME + " = '" + backupTableName + "';";
-            statement.executeUpdate(sql);
+                // delete record
+                sql = "DELETE FROM " + DB_TABLE_NAME +
+                        " WHERE " + COL_BACKUP_NAME + " = '" + backupTableName + "';";
+                statement.executeUpdate(sql);
 
-            LoggingAspect.afterReturn("Deleted backup " + backupTableName);
-            return true;
-        } catch (SQLException e) {
-            LoggingAspect.afterThrown(e);
+                LoggingAspect.afterReturn("Deleted backup " + backupTableName);
+                DBConnection.close();
+                return true;
+            } catch (SQLException e) {
+                LoggingAspect.afterThrown(e);
+                DBConnection.close();
+                return false;
+            }
+        }
+        else{
+            DBConnection.close();
             return false;
         }
     }
     
     public boolean addRecord(BackupDBTableRecord record){
 
-        String sql = "";
-        String tableName = record.getTableName();
-        String backupTableName = record.getBackupTableName();
+        if(DBConnection.open()){
+            String sql = "";
+            String tableName = record.getTableName();
+            String backupTableName = record.getBackupTableName();
 
-        try {
+            try {
 
-            // create the backup table
-            sql = "CREATE TABLE " + backupTableName
-                    + " LIKE " + tableName + " ; ";
-            statement.executeUpdate(sql);
+                // create the backup table
+                sql = "CREATE TABLE " + backupTableName
+                        + " LIKE " + tableName + " ; ";
+                statement.executeUpdate(sql);
 
-            // backup the table data
-            sql =  "INSERT INTO " + backupTableName
-                    + " SELECT * FROM " + tableName +  " ;";
-            statement.executeUpdate(sql);
+                // backup the table data
+                sql =  "INSERT INTO " + backupTableName
+                        + " SELECT * FROM " + tableName +  " ;";
+                statement.executeUpdate(sql);
 
-            // add record
-            sql = "INSERT INTO " + DB_TABLE_NAME + " ( " + COL_APPLICATION + ", " + COL_TABLE_NAME + ", " + COL_BACKUP_NAME + ")"
-                    + " VALUES ('" + APPLICATION_NAME + "', '" +  tableName + "', '" +  backupTableName + "');";
-            statement.executeUpdate(sql);
+                // add record
+                sql = "INSERT INTO " + DB_TABLE_NAME + " ( " + COL_APPLICATION + ", " + COL_TABLE_NAME + ", " + COL_BACKUP_NAME + ")"
+                        + " VALUES ('" + APPLICATION_NAME + "', '" +  tableName + "', '" +  backupTableName + "');";
+                statement.executeUpdate(sql);
 
-            LoggingAspect.afterReturn("Created backup " + backupTableName);
-            return true;
-        } catch (SQLException ex) {
-            LoggingAspect.afterThrown(ex);
+                LoggingAspect.afterReturn("Created backup " + backupTableName);
+                DBConnection.close();
+                return true;
+            } catch (SQLException ex) {
+                LoggingAspect.afterThrown(ex);
+                DBConnection.close();
+                return false;
+            }
+        }
+        else{
+            DBConnection.close();
             return false;
         }
     }
