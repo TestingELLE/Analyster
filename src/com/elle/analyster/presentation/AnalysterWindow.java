@@ -72,8 +72,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-3-10";
-    private final String VERSION = "1.2.0";
+    private final String CREATION_DATE = "2016-3-12";
+    private final String VERSION = "1.2.0a";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -265,6 +265,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         this.setSize(this.getWidth(), 560);
 
         setAccessForDeveloper();
+        setPanelListeners();
         System.out.println(database + "12313");
         // authorize user for this component
         Authorization.authorize(this);
@@ -2137,13 +2138,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         table.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
             Point p = e.getPoint();
-            System.out.println(p);
+     
                 if (getSelectedTable() == reportTable) {
                     int row = table.rowAtPoint(e.getPoint());
                     int col = table.columnAtPoint(e.getPoint());
-       //             Point p = e.getPoint();
-//                  System.out.println( table.getLocation().y + "");
-//                  System.out.println(table.getLocationOnScreen().y + " screen");
+
                     
                    if(table.getLocation().y < 1 && table.getLocation().y > -8155){
                         if (col > 3 && col < 6) {
@@ -2248,6 +2247,31 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         }
         return tabs;
     }
+    
+    public void setPanelListeners(){
+        
+     tabbedPanel.addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseMoved(MouseEvent e) {
+                Cursor cursor = Cursor.getDefaultCursor();
+                        setCursor(cursor);
+            }
+                
+            });
+    addPanel_control.addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseMoved(MouseEvent e) {
+                Cursor cursor = Cursor.getDefaultCursor();
+                        setCursor(cursor);
+            }
+                
+            });
+    jPanelEdit.addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseMoved(MouseEvent e) {
+                Cursor cursor = Cursor.getDefaultCursor();
+                        setCursor(cursor);
+            }
+                
+            });
+       }
 
     /**
      * filterByDoubleClick this selects the item double clicked on to be
