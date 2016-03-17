@@ -1814,6 +1814,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void menuItemStripslashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemStripslashActionPerformed
         // Pick out the selected tab
         String tabName = getSelectedTabName();
+        int sqlChangeNum = 0;
+        //      String sqlChange = "";
+        String sql1 = "";
+        String sql2 = "";
+        String sql3 = "";
         Tab tab = tabs.get(tabName);
         // Pick out the table of selected tab
         JTable table = tab.getTable();
@@ -1829,22 +1834,72 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             //Continue strip "/" until the correct format
 
                             str = str.substring(1, str.length());
+                            sqlChangeNum++;
 
                         }
-                        while (str.endsWith("/")||str.endsWith(" ") ) {
+                        while (str.endsWith("/") || str.endsWith(" ")) {
                             //Continue strip "/" until the correct format
 
-                            str = str.substring(0, str.length()-1);
+                            str = str.substring(0, str.length() - 1);
+                            sqlChangeNum++;
 
                         }
+                        String id = table.getValueAt(i, 0).toString();
+//                            sqlChange = "UPDATE " + tabName + " SET " + columnName
+//                                    + " = '" + newstr + "' WHERE ID = '" + id + "' \n" + sqlChange;
+                        sql1 = "UPDATE Reports SET path = CASE ID ";
+                        sql2 += "WHEN '" + id + "' THEN '" + str + "' \n";
+                        sql3 += "'" + id + "',";
                         
+
                         // Set new value back to table
-                        table.setValueAt(str, i, 4);
+                        // table.setValueAt(str, i, 4);
                     }
                 }
                 // Make btn grey when table is not "Report";
                 this.makeTableEditable(true);
             }
+        }
+        if (sqlChangeNum > 0) {
+            sql3 = sql3.substring(0, sql3.length() - 1);
+            String sql = sql1 + sql2 + " END \n" + "WHERE ID IN (" + sql3 + ");";
+            System.out.println(sql);
+            System.out.println(sqlChangeNum);
+            DBConnection.close();
+            if (DBConnection.open()) {
+
+                statement = DBConnection.getStatement();
+                try {
+
+                    statement.executeUpdate(sql);
+                    LoggingAspect.afterReturn(sql);
+                } catch (SQLException e) {
+                    LoggingAspect.afterThrown(e);
+
+                }
+
+            } else {
+                // connection failed
+                LoggingAspect.afterReturn("Failed to connect");
+            }
+            DBConnection.close();
+            
+            JTableCellRenderer cellRenderer = tab.getCellRenderer();
+            ModifiedTableData data = tab.getTableData();
+
+        // reload table from database
+            loadTable(table);
+
+            // clear cellrenderer
+            cellRenderer.clearCellRender();
+
+            // reload modified table data with current table model
+            data.reloadData();
+            LoggingAspect.afterReturn("Slash are stripped from path");
+
+        }else{
+            LoggingAspect.afterReturn("Slash are already stripped from path");
+            
         }
 
 
@@ -1854,6 +1909,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // Pick out the selected tab
         String tabName = getSelectedTabName();
+        int sqlChangeNum = 0;
+        //      String sqlChange = "";
+        String sql1 = "";
+        String sql2 = "";
+        String sql3 = "";
         Tab tab = tabs.get(tabName);
         // Pick out the table of selected tab
         JTable table = tab.getTable();
@@ -1861,6 +1921,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         for (int j = 0; j < table.getColumnCount(); j++) {
             // Locate columns under "path"
             String columnName = table.getColumnName(j);
+
             if (columnName.equalsIgnoreCase("path")) {
                 for (int i = 0; i < table.getRowCount(); i++) {
 
@@ -1871,13 +1932,65 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                             String newstr = "/" + str + "/";
                             // Set new value back to table
-                            table.setValueAt(newstr, i, j);
+//                            table.setValueAt(newstr, i, j);
+//                            
+                            String id = table.getValueAt(i, 0).toString();
+//                            sqlChange = "UPDATE " + tabName + " SET " + columnName
+//                                    + " = '" + newstr + "' WHERE ID = '" + id + "' \n" + sqlChange;
+                            sql1 = "UPDATE Reports SET path = CASE ID ";
+                            sql2 += "WHEN '" + id + "' THEN '" + newstr + "' \n";
+                            sql3 += "'" + id + "',";
+                            sqlChangeNum++;
+
+//
                         }
                     }
                 }
                 // Make btn grey except "Report" table;
                 this.makeTableEditable(true);
             }
+
+        }
+        if (sqlChangeNum > 0) {
+            sql3 = sql3.substring(0, sql3.length() - 1);
+            String sql = sql1 + sql2 + " END \n" + "WHERE ID IN (" + sql3 + ");";
+            System.out.println(sql);
+            DBConnection.close();
+            if (DBConnection.open()) {
+
+                statement = DBConnection.getStatement();
+                try {
+
+                    statement.executeUpdate(sql);
+                    LoggingAspect.afterReturn(sql);
+                } catch (SQLException e) {
+                    LoggingAspect.afterThrown(e);
+
+                }
+
+            } else {
+                // connection failed
+                LoggingAspect.afterReturn("Failed to connect");
+            }
+            DBConnection.close();
+            
+
+            JTableCellRenderer cellRenderer = tab.getCellRenderer();
+            ModifiedTableData data = tab.getTableData();
+
+        // reload table from database
+            loadTable(table);
+
+            // clear cellrenderer
+            cellRenderer.clearCellRender();
+
+            // reload modified table data with current table model
+            data.reloadData();
+             LoggingAspect.afterReturn("Slash are added to path");
+
+        }else{
+            LoggingAspect.afterReturn("Slash are already stripped from path");
+            
         }
 
 
@@ -1902,7 +2015,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 //
 ////           
                 } else {
-                  
 
                 }
 
@@ -2134,17 +2246,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     }
                 }
         );
-        
+
         table.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
-            Point p = e.getPoint();
-     
+                Point p = e.getPoint();
+
                 if (getSelectedTable() == reportTable) {
                     int row = table.rowAtPoint(e.getPoint());
                     int col = table.columnAtPoint(e.getPoint());
 
-                    
-                   if(table.getLocation().y < 1 && table.getLocation().y > -8155){
+                    if (table.getLocation().y < 1 && table.getLocation().y > -8155) {
                         if (col > 3 && col < 6) {
                             table.clearSelection();
                             table.setRowSelectionInterval(row, row);
@@ -2156,7 +2267,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             setCursor(cursor);
 
                         }
-                   }else {
+                    } else {
                         Cursor cursor = Cursor.getDefaultCursor();
                         setCursor(cursor);
                     }
@@ -2247,31 +2358,31 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         }
         return tabs;
     }
-    
-    public void setPanelListeners(){
-        
-     tabbedPanel.addMouseMotionListener(new MouseMotionAdapter() {
+
+    public void setPanelListeners() {
+
+        tabbedPanel.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
                 Cursor cursor = Cursor.getDefaultCursor();
-                        setCursor(cursor);
+                setCursor(cursor);
             }
-                
-            });
-    addPanel_control.addMouseMotionListener(new MouseMotionAdapter() {
+
+        });
+        addPanel_control.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
                 Cursor cursor = Cursor.getDefaultCursor();
-                        setCursor(cursor);
+                setCursor(cursor);
             }
-                
-            });
-    jPanelEdit.addMouseMotionListener(new MouseMotionAdapter() {
+
+        });
+        jPanelEdit.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
                 Cursor cursor = Cursor.getDefaultCursor();
-                        setCursor(cursor);
+                setCursor(cursor);
             }
-                
-            });
-       }
+
+        });
+    }
 
     /**
      * filterByDoubleClick this selects the item double clicked on to be
@@ -2384,13 +2495,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         //String uploadQuery = uploadRecord(table, modifiedDataList);
         String sqlChange = "";
-        
+
         // open database connection
         DBConnection.close();
         if (DBConnection.open()) {
 
             statement = DBConnection.getStatement();
-            
+
             for (ModifiedData modifiedData : modifiedDataList) {
 
                 String tableName = modifiedData.getTableName();
@@ -2408,7 +2519,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         sqlChange = "UPDATE " + tableName + " SET " + columnName
                                 + " = '" + value + "' WHERE ID = " + id + ";";
                     }
-                    
+
                     statement.executeUpdate(sqlChange);
                     LoggingAspect.afterReturn(sqlChange);
 
@@ -2425,7 +2536,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             // connection failed
             LoggingAspect.afterReturn("Failed to connect");
         }
-        
+
         // finally close connection
         DBConnection.close();
     }
@@ -2510,7 +2621,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                             } else {
 //                                System.out.println("left at: " + row + " " + column );
-                                if (column != 0)  {
+                                if (column != 0) {
                                     column = column - 1;
                                 }
 //                                System.out.println("left now at: " + row + " " + column );
@@ -2921,18 +3032,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             valueList.add(" ");
                             cellValue = newValue;
                         } else {
-                         
-                                cellValue = newValue;
-                                valueList.add(cellValue);
-                            
+
+                            cellValue = newValue;
+                            valueList.add(cellValue);
+
                         }
                     }
                 }
 
             }
-             Set<Object> uniqueValue = new HashSet<Object>(valueList);
+            Set<Object> uniqueValue = new HashSet<Object>(valueList);
             ArrayList uniqueList = new ArrayList<Object>(uniqueValue);
-            
+
             valueListMap.put(col, uniqueList);
         }
 //        DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
@@ -2954,13 +3065,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         for (int col = 0; col < table.getColumnCount(); col++) {
             if (table.getColumnName(col).equalsIgnoreCase(colName)) {
                 ArrayList<Object> dropDownList = (ArrayList<Object>) comboBoxForSearchValue.get(col);
-               
-                
-                if (colName.equalsIgnoreCase("priority")){
-                   ArrayList<Integer> dropDownList1 = (ArrayList<Integer>) comboBoxForSearchValue.get(col);
-                   System.out.println(dropDownList1 +"1");
-                    
-                }else{
+
+                if (colName.equalsIgnoreCase("priority")) {
+                    ArrayList<Integer> dropDownList1 = (ArrayList<Integer>) comboBoxForSearchValue.get(col);
+                    System.out.println(dropDownList1 + "1");
+
+                } else {
 
                     Collections.sort(dropDownList, new Comparator<Object>() {
                         public int compare(Object o1, Object o2) {
@@ -2969,12 +3079,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                     });
                 }
-                
+
                 comboBoxStartToSearch = false;
-                
+
                 for (Object item : dropDownList) {
-                    
-                    
+
                     comboBoxSearchModel.addElement(item);
                 }
                 System.out.println(dropDownList);
