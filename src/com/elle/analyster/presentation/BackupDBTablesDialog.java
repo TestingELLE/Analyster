@@ -152,7 +152,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
 
         if(newName != null && !newName.equals(backupTableName)){
             record.setBackupTableName(newName);
-            if(!dao.updateRecord(record)){
+            if(!dao.updateRecord(record,backupTableName)){
                 updateSuccess = false;
             }
         }
