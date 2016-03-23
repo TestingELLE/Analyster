@@ -4,6 +4,8 @@ package com.elle.analyster;
 import com.elle.analyster.logic.LoggingAspect;
 import com.elle.analyster.presentation.AnalysterWindow;
 import com.elle.analyster.presentation.LoginWindow;
+import java.awt.Dimension;
+import javax.swing.UIManager;
 
 /**
  * Main
@@ -28,6 +30,8 @@ public class Analyster {
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             LoggingAspect.afterThrown(ex);
         }
+        
+        UIManager.getLookAndFeelDefaults().put("ScrollBar.minimumThumbSize", new Dimension(30, 30));
 
         // this is the first window that is shown to log in to the database.
         // Once the database connection is made, then an instance
