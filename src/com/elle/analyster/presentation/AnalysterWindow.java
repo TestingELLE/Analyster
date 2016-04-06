@@ -258,7 +258,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         String searchContent = comboBoxSearch.getSelectedItem().toString();
         this.updateComboList(searchContent, tabName);
-        this.comboBoxForSearch.setSelectedItem("Enter here");
+        this.comboBoxValue.setSelectedItem("Enter here");
 
         // set title of window to Analyster
         this.setTitle("Analyster");
@@ -266,7 +266,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         setAccessForDeveloper();
         setPanelListeners();
-        System.out.println(database + "12313");
+
         // authorize user for this component
         Authorization.authorize(this);
     }
@@ -287,7 +287,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         comboBoxSearch = new javax.swing.JComboBox();
         btnClearAllFilter = new javax.swing.JButton();
         searchInformationLabel = new javax.swing.JLabel();
-        comboBoxForSearch = new javax.swing.JComboBox();
+        comboBoxValue = new javax.swing.JComboBox();
         labelRecords = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         tabbedPanel = new javax.swing.JTabbedPane();
@@ -372,12 +372,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
 
-        comboBoxForSearch.setEditable(true);
-        comboBoxForSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        comboBoxForSearch.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        comboBoxForSearch.addActionListener(new java.awt.event.ActionListener() {
+        comboBoxValue.setEditable(true);
+        comboBoxValue.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxValue.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        comboBoxValue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxForSearchActionPerformed(evt);
+                comboBoxValueActionPerformed(evt);
             }
         });
 
@@ -393,7 +393,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addComponent(comboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboBoxValue, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSearch)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -408,7 +408,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     .addComponent(btnSearch)
                     .addComponent(comboBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnClearAllFilter)
-                    .addComponent(comboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboBoxValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(searchInformationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE)
                 .addContainerGap())
@@ -998,7 +998,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             TableModel tableModel = table.getModel();
 
             String searchColName = comboBoxSearch.getSelectedItem().toString();
-            String searchBoxValue = comboBoxForSearch.getSelectedItem().toString();  // store string from combobox
+            String searchBoxValue = comboBoxValue.getSelectedItem().toString();  // store string from combobox
 
             // this matches the combobox newValue with the column name newValue to get the column index
             for (int col = 0; col < table.getColumnCount(); col++) {
@@ -1011,10 +1011,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     filter.applyFilter();
 
                     boolean isValueInTable = false;
-                    isValueInTable = checkValueInTableCell(col, searchBoxValue, tableModel);
 
+                    isValueInTable = checkValueInTableCell(col, searchBoxValue, tableModel);
                     filter.addFilterItem(col, searchBoxValue);
                     filter.applyFilter();
+
                     if (isValueInTable == false) {
                         count++;
                     }
@@ -1039,6 +1040,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private boolean checkValueInTableCell(int col, String target, TableModel tableModel) {
         //   System.out.println("target is : " + target + " at column " + col);
         int count = 0;
+
         for (int row = 0; row < tableModel.getRowCount(); row++) {
             String cellValue = "";
             if (tableModel.getValueAt(row, col) != null) {
@@ -1496,6 +1498,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // reload modified table data with current table model
         data.reloadData();
+        // reload modified table data into dropdown list
+        loadData();
 
         // set label record information
         String recordsLabel = tab.getRecordsLabel();
@@ -1620,7 +1624,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // this changes the search fields for the comboBox for each tabName
         // this event is fired from initCompnents hence the null condition
-        String entryValue = comboBoxForSearch.getSelectedItem().toString();
+        String entryValue = comboBoxValue.getSelectedItem().toString();
         String searchCol = comboBoxSearch.getSelectedItem().toString();
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
@@ -1638,7 +1642,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         }
         comboBoxSearch.setSelectedItem(searchCol);
         updateComboList(searchCol, tabName);
-        comboBoxForSearch.setSelectedItem(entryValue);
+        comboBoxValue.setSelectedItem(entryValue);
     }//GEN-LAST:event_tabbedPanelStateChanged
 
     /**
@@ -1794,20 +1798,21 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void comboBoxSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSearchActionPerformed
         comboBoxStartToSearch = false;
         String searchColName = comboBoxSearch.getSelectedItem().toString();
-        searchValue = comboBoxForSearch.getSelectedItem().toString();
+        searchValue = comboBoxValue.getSelectedItem().toString();
         String tabName = getSelectedTabName();
+
         updateComboList(searchColName, tabName);
 
-        comboBoxForSearch.setSelectedItem(searchValue);
+        comboBoxValue.setSelectedItem(searchValue);
 
 
     }//GEN-LAST:event_comboBoxSearchActionPerformed
 
     public void comboBoxForSearchMouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {
-            comboBoxForSearch.getEditor().selectAll();
+            comboBoxValue.getEditor().selectAll();
         } else if (e.isControlDown()) {
-            comboBoxForSearch.showPopup();
+            comboBoxValue.showPopup();
 
         }
     }
@@ -1850,7 +1855,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         sql1 = "UPDATE Reports SET path = CASE ID ";
                         sql2 += "WHEN '" + id + "' THEN '" + str + "' \n";
                         sql3 += "'" + id + "',";
-                        
 
                         // Set new value back to table
                         // table.setValueAt(str, i, 4);
@@ -1883,11 +1887,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 LoggingAspect.afterReturn("Failed to connect");
             }
             DBConnection.close();
-            
+
             JTableCellRenderer cellRenderer = tab.getCellRenderer();
             ModifiedTableData data = tab.getTableData();
 
-        // reload table from database
+            // reload table from database
             loadTable(table);
 
             // clear cellrenderer
@@ -1897,10 +1901,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             data.reloadData();
             LoggingAspect.afterReturn("Slash are stripped from path");
 
-        }else{
+        } else {
             LoggingAspect.afterReturn("Slash are already stripped from path");
-            
+
         }
+        // reload modified table data into dropdown list
+        loadData();
 
 
     }//GEN-LAST:event_menuItemStripslashActionPerformed
@@ -1946,6 +1952,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                         }
                     }
                 }
+
                 // Make btn grey except "Report" table;
                 this.makeTableEditable(true);
             }
@@ -1973,12 +1980,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 LoggingAspect.afterReturn("Failed to connect");
             }
             DBConnection.close();
-            
 
             JTableCellRenderer cellRenderer = tab.getCellRenderer();
             ModifiedTableData data = tab.getTableData();
 
-        // reload table from database
+            // reload table from database
             loadTable(table);
 
             // clear cellrenderer
@@ -1986,12 +1992,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             // reload modified table data with current table model
             data.reloadData();
-             LoggingAspect.afterReturn("Slash are added to path");
+            LoggingAspect.afterReturn("Slash are added to path");
 
-        }else{
+        } else {
             LoggingAspect.afterReturn("Slash are already stripped from path");
-            
+
         }
+        // reload modified table data into dropdown list
+        loadData();
 
 
     }//GEN-LAST:event_menuItemAddslashActionPerformed
@@ -2000,14 +2008,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         openDocumentTool();
     }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
 
-    private void comboBoxForSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxForSearchActionPerformed
-        if (!comboBoxForSearch.getSelectedItem().toString().equals(searchValue)) {
+    private void comboBoxValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxValueActionPerformed
+        if (!comboBoxValue.getSelectedItem().toString().equals(searchValue)) {
             if (comboBoxStartToSearch) {
                 if (comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Analyst")
                         || comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Priority")
                         || comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Path")) {
-                    if (!comboBoxForSearch.getSelectedItem().toString().startsWith("Enter")
-                            || !comboBoxForSearch.getSelectedItem().toString().endsWith("here")) {
+                    if (!comboBoxValue.getSelectedItem().toString().startsWith("Enter")
+                            || !comboBoxValue.getSelectedItem().toString().endsWith("here")) {
 //            
                         filterBySearch();
 //
@@ -2020,7 +2028,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             }
         }
-        comboBoxForSearch.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+        comboBoxValue.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent ke) {
                 if (ke.getKeyChar() == KeyEvent.VK_ENTER) {
@@ -2033,7 +2041,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
 
 
-    }//GEN-LAST:event_comboBoxForSearchActionPerformed
+    }//GEN-LAST:event_comboBoxValueActionPerformed
 
     // menu item open document tool 
     public void openDocumentTool() {
@@ -3016,7 +3024,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             if (colName.equalsIgnoreCase("symbol") || colName.equalsIgnoreCase("notes") || colName.equalsIgnoreCase("document")) {
                 valueList.add("");
-            } else {
+            }  else {
                 //  valueList.add("Enter " + colName + " here");
                 Object cellValue = table.getValueAt(0, col);
                 Object newValue;
@@ -3046,18 +3054,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             valueListMap.put(col, uniqueList);
         }
-//        DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
-//        comboBoxForSearch.setModel(comboBoxSearchModel);
-//        for (Object item : valueList) {
-//            comboBoxSearchModel.addElement(item);
-//        }
+
+        
         return valueListMap;
 
     }
 
     private void updateComboList(String colName, String tableName) {
         DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
-        comboBoxForSearch.setModel(comboBoxSearchModel);
+        comboBoxValue.setModel(comboBoxSearchModel);
 
         Map comboBoxForSearchValue = this.comboBoxForSearchDropDown.get(tableName);
 
@@ -3083,10 +3088,30 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 comboBoxStartToSearch = false;
 
                 for (Object item : dropDownList) {
+                    if(colName.equalsIgnoreCase("path")){
+                         String str = item.toString();
+                            //Identify the column startwith and endwith "/" 
+                            
+                            while (str.startsWith("/")) {
+                                //Continue strip "/" until the correct format
+
+                                str = str.substring(1, str.length());
+                                
+
+                            }
+                            while (str.endsWith("/") || str.endsWith(" ")) {
+                                //Continue strip "/" until the correct format
+
+                                str = str.substring(0, str.length() - 1);
+                                
+                            }
+                            comboBoxSearchModel.addElement(str);
+                    } else{
 
                     comboBoxSearchModel.addElement(item);
+                    }
                 }
-                System.out.println(dropDownList);
+               
                 comboBoxStartToSearch = true;
             }
         }
@@ -3224,7 +3249,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }
 
     public JComboBox getComboBoxForSearch() {
-        return comboBoxForSearch;
+        return comboBoxValue;
     }
 
     /**
@@ -3849,8 +3874,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JButton btnRevertChanges;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUploadChanges;
-    private javax.swing.JComboBox comboBoxForSearch;
     private javax.swing.JComboBox comboBoxSearch;
+    private javax.swing.JComboBox comboBoxValue;
     public static javax.swing.JLabel informationLabel;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEdit;

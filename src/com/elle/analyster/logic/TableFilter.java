@@ -338,7 +338,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
                     else{
                         // search for a match and ignore case
                         for(Object distinctItem : distinctItems){
-                            if(cellValue.toString().equalsIgnoreCase(distinctItem.toString())){
+                             if (cellValue.toString().toLowerCase().contains(distinctItem.toString().toLowerCase())) {
                                 itemsFound++;
                             }
                         }
