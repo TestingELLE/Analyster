@@ -56,8 +56,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -70,8 +72,8 @@ import java.util.Vector;
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-3-1";
-    private final String VERSION = "1.1.2";
+    private final String CREATION_DATE = "2016-3-22";
+    private final String VERSION = "1.3.0";
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -256,14 +258,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         String searchContent = comboBoxSearch.getSelectedItem().toString();
         this.updateComboList(searchContent, tabName);
-        this.comboBoxForSearch.setSelectedItem("Enter here");
+        this.comboBoxValue.setSelectedItem("Enter here");
 
         // set title of window to Analyster
         this.setTitle("Analyster");
         this.setSize(this.getWidth(), 560);
 
         setAccessForDeveloper();
-        System.out.println(database + "12313");
+        setPanelListeners();
+
         // authorize user for this component
         Authorization.authorize(this);
     }
@@ -284,7 +287,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         comboBoxSearch = new javax.swing.JComboBox();
         btnClearAllFilter = new javax.swing.JButton();
         searchInformationLabel = new javax.swing.JLabel();
-        comboBoxForSearch = new javax.swing.JComboBox();
+        comboBoxValue = new javax.swing.JComboBox();
         labelRecords = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         tabbedPanel = new javax.swing.JTabbedPane();
@@ -369,12 +372,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
 
-        comboBoxForSearch.setEditable(true);
-        comboBoxForSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        comboBoxForSearch.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        comboBoxForSearch.addActionListener(new java.awt.event.ActionListener() {
+        comboBoxValue.setEditable(true);
+        comboBoxValue.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxValue.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        comboBoxValue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxForSearchActionPerformed(evt);
+                comboBoxValueActionPerformed(evt);
             }
         });
 
@@ -390,7 +393,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addComponent(comboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboBoxValue, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSearch)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -405,7 +408,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     .addComponent(btnSearch)
                     .addComponent(comboBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnClearAllFilter)
-                    .addComponent(comboBoxForSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboBoxValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(searchInformationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE)
                 .addContainerGap())
@@ -903,7 +906,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
         menuTools.add(menuItemTurnEditModeOff);
 
-        menuItemBackup.setText("Backup");
+        menuItemBackup.setText("Backup Tables");
         menuItemBackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemBackupActionPerformed(evt);
@@ -995,7 +998,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             TableModel tableModel = table.getModel();
 
             String searchColName = comboBoxSearch.getSelectedItem().toString();
-            String searchBoxValue = comboBoxForSearch.getSelectedItem().toString();  // store string from combobox
+            String searchBoxValue = comboBoxValue.getSelectedItem().toString();  // store string from combobox
 
             // this matches the combobox newValue with the column name newValue to get the column index
             for (int col = 0; col < table.getColumnCount(); col++) {
@@ -1008,10 +1011,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     filter.applyFilter();
 
                     boolean isValueInTable = false;
-                    isValueInTable = checkValueInTableCell(col, searchBoxValue, tableModel);
 
+                    isValueInTable = checkValueInTableCell(col, searchBoxValue, tableModel);
                     filter.addFilterItem(col, searchBoxValue);
                     filter.applyFilter();
+
                     if (isValueInTable == false) {
                         count++;
                     }
@@ -1036,6 +1040,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private boolean checkValueInTableCell(int col, String target, TableModel tableModel) {
         //   System.out.println("target is : " + target + " at column " + col);
         int count = 0;
+
         for (int row = 0; row < tableModel.getRowCount(); row++) {
             String cellValue = "";
             if (tableModel.getValueAt(row, col) != null) {
@@ -1493,6 +1498,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // reload modified table data with current table model
         data.reloadData();
+        // reload modified table data into dropdown list
+        loadData();
 
         // set label record information
         String recordsLabel = tab.getRecordsLabel();
@@ -1617,7 +1624,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // this changes the search fields for the comboBox for each tabName
         // this event is fired from initCompnents hence the null condition
-        String entryValue = comboBoxForSearch.getSelectedItem().toString();
+        String entryValue = comboBoxValue.getSelectedItem().toString();
         String searchCol = comboBoxSearch.getSelectedItem().toString();
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
@@ -1635,7 +1642,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         }
         comboBoxSearch.setSelectedItem(searchCol);
         updateComboList(searchCol, tabName);
-        comboBoxForSearch.setSelectedItem(entryValue);
+        comboBoxValue.setSelectedItem(entryValue);
     }//GEN-LAST:event_tabbedPanelStateChanged
 
     /**
@@ -1724,8 +1731,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         // open new connection
         DBConnection.close(); // connection might be timed out on server
         if (DBConnection.open()) {  // open a new connection
-            String tableName = getSelectedTable().getName(); // table name to backup
-            BackupDBTablesDialog backupDBTables = new BackupDBTablesDialog(DBConnection.getConnection(), tableName, this);
+            BackupDBTablesDialog backupDBTables = new BackupDBTablesDialog(DBConnection.getConnection(), this);
         } else {
             JOptionPane.showMessageDialog(this, "Could not connect to Database");
         }
@@ -1792,26 +1798,32 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void comboBoxSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSearchActionPerformed
         comboBoxStartToSearch = false;
         String searchColName = comboBoxSearch.getSelectedItem().toString();
-        searchValue = comboBoxForSearch.getSelectedItem().toString();
+        searchValue = comboBoxValue.getSelectedItem().toString();
         String tabName = getSelectedTabName();
+
         updateComboList(searchColName, tabName);
 
-        comboBoxForSearch.setSelectedItem(searchValue);
+        comboBoxValue.setSelectedItem(searchValue);
 
 
     }//GEN-LAST:event_comboBoxSearchActionPerformed
 
     public void comboBoxForSearchMouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {
-            comboBoxForSearch.getEditor().selectAll();
+            comboBoxValue.getEditor().selectAll();
         } else if (e.isControlDown()) {
-            comboBoxForSearch.showPopup();
+            comboBoxValue.showPopup();
 
         }
     }
     private void menuItemStripslashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemStripslashActionPerformed
         // Pick out the selected tab
         String tabName = getSelectedTabName();
+        int sqlChangeNum = 0;
+        //      String sqlChange = "";
+        String sql1 = "";
+        String sql2 = "";
+        String sql3 = "";
         Tab tab = tabs.get(tabName);
         // Pick out the table of selected tab
         JTable table = tab.getTable();
@@ -1823,20 +1835,78 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     if (table.getValueAt(i, 4) != null) {
                         String str = table.getValueAt(i, 4).toString();
                         //Identify the column startwith and endwith "/" 
-                        while (str.startsWith("/") && str.endsWith("/")) {
+                        while (str.startsWith("/")) {
                             //Continue strip "/" until the correct format
 
-                            str = str.substring(1, str.length() - 1);
+                            str = str.substring(1, str.length());
+                            sqlChangeNum++;
 
                         }
+                        while (str.endsWith("/") || str.endsWith(" ")) {
+                            //Continue strip "/" until the correct format
+
+                            str = str.substring(0, str.length() - 1);
+                            sqlChangeNum++;
+
+                        }
+                        String id = table.getValueAt(i, 0).toString();
+//                            sqlChange = "UPDATE " + tabName + " SET " + columnName
+//                                    + " = '" + newstr + "' WHERE ID = '" + id + "' \n" + sqlChange;
+                        sql1 = "UPDATE Reports SET path = CASE ID ";
+                        sql2 += "WHEN '" + id + "' THEN '" + str + "' \n";
+                        sql3 += "'" + id + "',";
+
                         // Set new value back to table
-                        table.setValueAt(str, i, 4);
+                        // table.setValueAt(str, i, 4);
                     }
                 }
                 // Make btn grey when table is not "Report";
                 this.makeTableEditable(true);
             }
         }
+        if (sqlChangeNum > 0) {
+            sql3 = sql3.substring(0, sql3.length() - 1);
+            String sql = sql1 + sql2 + " END \n" + "WHERE ID IN (" + sql3 + ");";
+            System.out.println(sql);
+            System.out.println(sqlChangeNum);
+            DBConnection.close();
+            if (DBConnection.open()) {
+
+                statement = DBConnection.getStatement();
+                try {
+
+                    statement.executeUpdate(sql);
+                    LoggingAspect.afterReturn(sql);
+                } catch (SQLException e) {
+                    LoggingAspect.afterThrown(e);
+
+                }
+
+            } else {
+                // connection failed
+                LoggingAspect.afterReturn("Failed to connect");
+            }
+            DBConnection.close();
+
+            JTableCellRenderer cellRenderer = tab.getCellRenderer();
+            ModifiedTableData data = tab.getTableData();
+
+            // reload table from database
+            loadTable(table);
+
+            // clear cellrenderer
+            cellRenderer.clearCellRender();
+
+            // reload modified table data with current table model
+            data.reloadData();
+            LoggingAspect.afterReturn("Slash are stripped from path");
+
+        } else {
+            LoggingAspect.afterReturn("Slash are already stripped from path");
+
+        }
+        // reload modified table data into dropdown list
+        loadData();
 
 
     }//GEN-LAST:event_menuItemStripslashActionPerformed
@@ -1845,6 +1915,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // Pick out the selected tab
         String tabName = getSelectedTabName();
+        int sqlChangeNum = 0;
+        //      String sqlChange = "";
+        String sql1 = "";
+        String sql2 = "";
+        String sql3 = "";
         Tab tab = tabs.get(tabName);
         // Pick out the table of selected tab
         JTable table = tab.getTable();
@@ -1852,6 +1927,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         for (int j = 0; j < table.getColumnCount(); j++) {
             // Locate columns under "path"
             String columnName = table.getColumnName(j);
+
             if (columnName.equalsIgnoreCase("path")) {
                 for (int i = 0; i < table.getRowCount(); i++) {
 
@@ -1862,14 +1938,68 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                             String newstr = "/" + str + "/";
                             // Set new value back to table
-                            table.setValueAt(newstr, i, j);
+//                            table.setValueAt(newstr, i, j);
+//                            
+                            String id = table.getValueAt(i, 0).toString();
+//                            sqlChange = "UPDATE " + tabName + " SET " + columnName
+//                                    + " = '" + newstr + "' WHERE ID = '" + id + "' \n" + sqlChange;
+                            sql1 = "UPDATE Reports SET path = CASE ID ";
+                            sql2 += "WHEN '" + id + "' THEN '" + newstr + "' \n";
+                            sql3 += "'" + id + "',";
+                            sqlChangeNum++;
+
+//
                         }
                     }
                 }
+
                 // Make btn grey except "Report" table;
                 this.makeTableEditable(true);
             }
+
         }
+        if (sqlChangeNum > 0) {
+            sql3 = sql3.substring(0, sql3.length() - 1);
+            String sql = sql1 + sql2 + " END \n" + "WHERE ID IN (" + sql3 + ");";
+            System.out.println(sql);
+            DBConnection.close();
+            if (DBConnection.open()) {
+
+                statement = DBConnection.getStatement();
+                try {
+
+                    statement.executeUpdate(sql);
+                    LoggingAspect.afterReturn(sql);
+                } catch (SQLException e) {
+                    LoggingAspect.afterThrown(e);
+
+                }
+
+            } else {
+                // connection failed
+                LoggingAspect.afterReturn("Failed to connect");
+            }
+            DBConnection.close();
+
+            JTableCellRenderer cellRenderer = tab.getCellRenderer();
+            ModifiedTableData data = tab.getTableData();
+
+            // reload table from database
+            loadTable(table);
+
+            // clear cellrenderer
+            cellRenderer.clearCellRender();
+
+            // reload modified table data with current table model
+            data.reloadData();
+            LoggingAspect.afterReturn("Slash are added to path");
+
+        } else {
+            LoggingAspect.afterReturn("Slash are already stripped from path");
+
+        }
+        // reload modified table data into dropdown list
+        loadData();
 
 
     }//GEN-LAST:event_menuItemAddslashActionPerformed
@@ -1878,14 +2008,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         openDocumentTool();
     }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
 
-    private void comboBoxForSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxForSearchActionPerformed
-        if (!comboBoxForSearch.getSelectedItem().toString().equals(searchValue)) {
+    private void comboBoxValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxValueActionPerformed
+        if (!comboBoxValue.getSelectedItem().toString().equals(searchValue)) {
             if (comboBoxStartToSearch) {
                 if (comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Analyst")
                         || comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Priority")
                         || comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Path")) {
-                    if (!comboBoxForSearch.getSelectedItem().toString().startsWith("Enter")
-                            || !comboBoxForSearch.getSelectedItem().toString().endsWith("here")) {
+                    if (!comboBoxValue.getSelectedItem().toString().startsWith("Enter")
+                            || !comboBoxValue.getSelectedItem().toString().endsWith("here")) {
 //            
                         filterBySearch();
 //
@@ -1893,13 +2023,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 //
 ////           
                 } else {
-                  
 
                 }
 
             }
         }
-        comboBoxForSearch.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+        comboBoxValue.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent ke) {
                 if (ke.getKeyChar() == KeyEvent.VK_ENTER) {
@@ -1912,7 +2041,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
 
 
-    }//GEN-LAST:event_comboBoxForSearchActionPerformed
+    }//GEN-LAST:event_comboBoxValueActionPerformed
 
     // menu item open document tool 
     public void openDocumentTool() {
@@ -2125,17 +2254,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     }
                 }
         );
+
         table.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
+                Point p = e.getPoint();
 
                 if (getSelectedTable() == reportTable) {
                     int row = table.rowAtPoint(e.getPoint());
                     int col = table.columnAtPoint(e.getPoint());
-                    Point p = e.getPoint();
-                    int diff = e.getLocationOnScreen().y - table.getLocationOnScreen().y;
-       //             System.out.println( e.getLocationOnScreen().y + " " +  table.getLocationOnScreen().y );
-                    if (e.getLocationOnScreen().y > table.getLocationOnScreen().y + 3
-                            && e.getLocationOnScreen().y < table.getLocationOnScreen().y + 300) {
+
+                    if (table.getLocation().y < 1 && table.getLocation().y > -8155) {
                         if (col > 3 && col < 6) {
                             table.clearSelection();
                             table.setRowSelectionInterval(row, row);
@@ -2237,6 +2365,31 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             setTableListeners(tabs.get(entry.getKey()).getTable());
         }
         return tabs;
+    }
+
+    public void setPanelListeners() {
+
+        tabbedPanel.addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseMoved(MouseEvent e) {
+                Cursor cursor = Cursor.getDefaultCursor();
+                setCursor(cursor);
+            }
+
+        });
+        addPanel_control.addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseMoved(MouseEvent e) {
+                Cursor cursor = Cursor.getDefaultCursor();
+                setCursor(cursor);
+            }
+
+        });
+        jPanelEdit.addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseMoved(MouseEvent e) {
+                Cursor cursor = Cursor.getDefaultCursor();
+                setCursor(cursor);
+            }
+
+        });
     }
 
     /**
@@ -2351,41 +2504,49 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         //String uploadQuery = uploadRecord(table, modifiedDataList);
         String sqlChange = "";
 
-        for (ModifiedData modifiedData : modifiedDataList) {
+        // open database connection
+        DBConnection.close();
+        if (DBConnection.open()) {
 
-            String tableName = modifiedData.getTableName();
-            String columnName = modifiedData.getColumnName();
-            Object value = modifiedData.getValue();
-            int id = modifiedData.getId();
+            statement = DBConnection.getStatement();
 
-            try {
+            for (ModifiedData modifiedData : modifiedDataList) {
 
-                if ("".equals(value)) {
-                    value = null;
-                    sqlChange = "UPDATE " + tableName + " SET " + columnName
-                            + " = " + value + " WHERE ID = " + id + ";";
-                } else {
-                    sqlChange = "UPDATE " + tableName + " SET " + columnName
-                            + " = '" + value + "' WHERE ID = " + id + ";";
+                String tableName = modifiedData.getTableName();
+                String columnName = modifiedData.getColumnName();
+                Object value = modifiedData.getValue();
+                int id = modifiedData.getId();
+
+                try {
+
+                    if (value.equals("")) {
+                        value = null;
+                        sqlChange = "UPDATE " + tableName + " SET " + columnName
+                                + " = " + value + " WHERE ID = " + id + ";";
+                    } else {
+                        sqlChange = "UPDATE " + tableName + " SET " + columnName
+                                + " = '" + value + "' WHERE ID = " + id + ";";
+                    }
+
+                    statement.executeUpdate(sqlChange);
+                    LoggingAspect.afterReturn(sqlChange);
+
+                } catch (SQLException e) {
+                    LoggingAspect.afterThrown(e);
+                    updateSuccessful = false;
                 }
-                System.out.println(sqlChange);
-
-                DBConnection.close();
-                DBConnection.open();
-                statement = DBConnection.getStatement();
-                statement.executeUpdate(sqlChange);
-
-            } catch (SQLException e) {
-                LoggingAspect.afterThrown(e);
-                updateSuccessful = false;
             }
+
+            if (updateSuccessful) {
+                LoggingAspect.afterReturn(("Edits uploaded successfully!"));
+            }
+        } else {
+            // connection failed
+            LoggingAspect.afterReturn("Failed to connect");
         }
 
-        if (updateSuccessful) {
-            informationLabel.setText(("Edits uploaded successfully!"));
-            startCountDownFromNow(5);
-        }
-
+        // finally close connection
+        DBConnection.close();
     }
 
     /**
@@ -2468,7 +2629,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                             } else {
 //                                System.out.println("left at: " + row + " " + column );
-                                if (column != 0)  {
+                                if (column != 0) {
                                     column = column - 1;
                                 }
 //                                System.out.println("left now at: " + row + " " + column );
@@ -2863,7 +3024,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             if (colName.equalsIgnoreCase("symbol") || colName.equalsIgnoreCase("notes") || colName.equalsIgnoreCase("document")) {
                 valueList.add("");
-            } else {
+            }  else {
                 //  valueList.add("Enter " + colName + " here");
                 Object cellValue = table.getValueAt(0, col);
                 Object newValue;
@@ -2879,29 +3040,29 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                             valueList.add(" ");
                             cellValue = newValue;
                         } else {
-                            if (!cellValue.equals(newValue) && !valueList.contains(newValue)) {
-                                cellValue = newValue;
-                                valueList.add(cellValue);
-                            }
+
+                            cellValue = newValue;
+                            valueList.add(cellValue);
+
                         }
                     }
                 }
 
             }
-            valueListMap.put(col, valueList);
+            Set<Object> uniqueValue = new HashSet<Object>(valueList);
+            ArrayList uniqueList = new ArrayList<Object>(uniqueValue);
+
+            valueListMap.put(col, uniqueList);
         }
-//        DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
-//        comboBoxForSearch.setModel(comboBoxSearchModel);
-//        for (Object item : valueList) {
-//            comboBoxSearchModel.addElement(item);
-//        }
+
+        
         return valueListMap;
 
     }
 
     private void updateComboList(String colName, String tableName) {
         DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
-        comboBoxForSearch.setModel(comboBoxSearchModel);
+        comboBoxValue.setModel(comboBoxSearchModel);
 
         Map comboBoxForSearchValue = this.comboBoxForSearchDropDown.get(tableName);
 
@@ -2909,18 +3070,48 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         for (int col = 0; col < table.getColumnCount(); col++) {
             if (table.getColumnName(col).equalsIgnoreCase(colName)) {
                 ArrayList<Object> dropDownList = (ArrayList<Object>) comboBoxForSearchValue.get(col);
-                for (Object item : dropDownList) {
-                    List<Object> sortlist = dropDownList.subList(0, dropDownList.size());
 
-                    Collections.sort(sortlist, new Comparator<Object>() {
+                if (colName.equalsIgnoreCase("priority")) {
+                    ArrayList<Integer> dropDownList1 = (ArrayList<Integer>) comboBoxForSearchValue.get(col);
+                    System.out.println(dropDownList1 + "1");
+
+                } else {
+
+                    Collections.sort(dropDownList, new Comparator<Object>() {
                         public int compare(Object o1, Object o2) {
                             return o1.toString().compareTo(o2.toString());
                         }
 
                     });
-                    comboBoxStartToSearch = false;
-                    comboBoxSearchModel.addElement(item);
                 }
+
+                comboBoxStartToSearch = false;
+
+                for (Object item : dropDownList) {
+                    if(colName.equalsIgnoreCase("path")){
+                         String str = item.toString();
+                            //Identify the column startwith and endwith "/" 
+                            
+                            while (str.startsWith("/")) {
+                                //Continue strip "/" until the correct format
+
+                                str = str.substring(1, str.length());
+                                
+
+                            }
+                            while (str.endsWith("/") || str.endsWith(" ")) {
+                                //Continue strip "/" until the correct format
+
+                                str = str.substring(0, str.length() - 1);
+                                
+                            }
+                            comboBoxSearchModel.addElement(str);
+                    } else{
+
+                    comboBoxSearchModel.addElement(item);
+                    }
+                }
+               
                 comboBoxStartToSearch = true;
             }
         }
@@ -3058,7 +3249,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }
 
     public JComboBox getComboBoxForSearch() {
-        return comboBoxForSearch;
+        return comboBoxValue;
     }
 
     /**
@@ -3683,8 +3874,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JButton btnRevertChanges;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUploadChanges;
-    private javax.swing.JComboBox comboBoxForSearch;
     private javax.swing.JComboBox comboBoxSearch;
+    private javax.swing.JComboBox comboBoxValue;
     public static javax.swing.JLabel informationLabel;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelEdit;

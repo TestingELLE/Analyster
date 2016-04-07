@@ -52,6 +52,25 @@ public class FilePathFormat {
     }
     
     /**
+     * This method will return the path of where the we put our support file is
+     * @supportFilePath string
+     */
+    public static String supportFilePath(){
+        String supportFilePath = "";
+
+        if (isWindows()) {
+            supportFilePath = "C:\\Users\\" + System.getProperty("user.name") + 
+                    "\\Documents\\Analyster\\";
+        } else {
+            supportFilePath = "/Users/" + System.getProperty("user.name") + 
+                    "/Library/Application Support/Analyster/";
+        }
+        File dir = new File(supportFilePath);
+        dir.mkdir();
+        return supportFilePath;
+    }
+    
+    /**
      * This method will return if the platform is windows or not.
      * @return boolean true if windows and false if not
      */

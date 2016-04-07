@@ -17,7 +17,6 @@ public class CheckBoxItem extends JCheckBox{
     private ArrayList<String> distinctItems;      // original distinct value used by filter
     private String capped;        // capped value that is diplayed for checkbox item selection
     private int count;            // count of distinct items to display along side the check box selections
-    private int id;               // this is used to store primary key of item in DB table
 
     public CheckBoxItem(String capped) {
         super(capped);
@@ -52,14 +51,6 @@ public class CheckBoxItem extends JCheckBox{
 
     public void incrementCount(){
         count++;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
     
     
