@@ -607,6 +607,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
 
         labelEditModeState.setText("OFF");
+        labelEditModeState.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelEditModeStateMouseClicked(evt);
+            }
+        });
 
         labelEditMode.setText("Edit Mode:");
 
@@ -2043,6 +2048,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     }//GEN-LAST:event_comboBoxValueActionPerformed
 
+    private void labelEditModeStateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelEditModeStateMouseClicked
+        if (labelEditModeState.getText().equals("ON ")) {
+            this.makeTableEditable(false);
+        }
+    }//GEN-LAST:event_labelEditModeStateMouseClicked
+
     // menu item open document tool 
     public void openDocumentTool() {
         // must be on reports tab
@@ -3024,7 +3035,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             if (colName.equalsIgnoreCase("symbol") || colName.equalsIgnoreCase("notes") || colName.equalsIgnoreCase("document")) {
                 valueList.add("");
-            }  else {
+            } else {
                 //  valueList.add("Enter " + colName + " here");
                 Object cellValue = table.getValueAt(0, col);
                 Object newValue;
@@ -3055,7 +3066,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             valueListMap.put(col, uniqueList);
         }
 
-        
         return valueListMap;
 
     }
@@ -3088,30 +3098,29 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 comboBoxStartToSearch = false;
 
                 for (Object item : dropDownList) {
-                    if(colName.equalsIgnoreCase("path")){
-                         String str = item.toString();
+                    if (colName.equalsIgnoreCase("path")) {
+                        String str = item.toString();
                             //Identify the column startwith and endwith "/" 
-                            
-                            while (str.startsWith("/")) {
-                                //Continue strip "/" until the correct format
 
-                                str = str.substring(1, str.length());
-                                
+                        while (str.startsWith("/")) {
+                            //Continue strip "/" until the correct format
 
-                            }
-                            while (str.endsWith("/") || str.endsWith(" ")) {
-                                //Continue strip "/" until the correct format
+                            str = str.substring(1, str.length());
 
-                                str = str.substring(0, str.length() - 1);
-                                
-                            }
-                            comboBoxSearchModel.addElement(str);
-                    } else{
+                        }
+                        while (str.endsWith("/") || str.endsWith(" ")) {
+                            //Continue strip "/" until the correct format
 
-                    comboBoxSearchModel.addElement(item);
+                            str = str.substring(0, str.length() - 1);
+
+                        }
+                        comboBoxSearchModel.addElement(str);
+                    } else {
+
+                        comboBoxSearchModel.addElement(item);
                     }
                 }
-               
+
                 comboBoxStartToSearch = true;
             }
         }
