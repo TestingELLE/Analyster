@@ -286,7 +286,7 @@ public class DBConnection {
                         }
                         else if(elementName.equals("db-default")){
                             dbDefault = (xmlStrReader.getElementText().equals("true"))?true:false;
-                            server.getDatabases().add(new Database(dbName,dbDefault));
+                            server.getDatabases().add(new Database(dbName,dbDefault,"",""));
                         }
                         break;
                     case XMLStreamConstants.END_ELEMENT:
