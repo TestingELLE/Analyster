@@ -2050,7 +2050,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     private void labelEditModeStateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelEditModeStateMouseClicked
         if (labelEditModeState.getText().equals("ON ")) {
-            this.makeTableEditable(false);
+            this.revertChanges();
         }
     }//GEN-LAST:event_labelEditModeStateMouseClicked
 
@@ -2740,22 +2740,22 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 }
                 if (!isBatchEditWindowShow) {
                     if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
-                        if (e.getComponent() instanceof JTable) {
-                            if (labelEditModeState.getText().equals("ON ")) {                       // Default Date input with today's date
-                                JTable table = (JTable) e.getComponent().getParent();
-                                int column = table.getSelectedColumn();
-                                if (table.getColumnName(column).toLowerCase().contains("date")) {
-                                    if (e.getID() != 401) { // 401 = key down, 402 = key released
-                                        return false;
-                                    } else {
-                                        JTextField selectCom = (JTextField) e.getComponent();
-                                        selectCom.requestFocusInWindow();
-                                        selectCom.selectAll();
-                                        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                        Date date = new Date();
-                                        String today = dateFormat.format(date);
-                                        selectCom.setText(today);
-                                    }
+                        if (labelEditModeState.getText().equals("ON ")) { 
+                            JTable table = (JTable) e.getComponent().getParent();
+                            int column = table.getSelectedColumn();
+                            if (table.getColumnName(column).toLowerCase().contains("date")) {
+                                System.out.println("date");
+                                if (e.getID() != 401) { // 401 = key down, 402 = key released
+                                    return false;
+                                } else {
+                                    JTextField selectCom = (JTextField) e.getComponent();
+                                    selectCom.requestFocusInWindow();
+                                    selectCom.selectAll();
+                                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    Date date = new Date();
+                                    String today = dateFormat.format(date);
+                                    selectCom.setText(today);
+
                                 }
                             }
                         }
@@ -3100,7 +3100,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 for (Object item : dropDownList) {
                     if (colName.equalsIgnoreCase("path")) {
                         String str = item.toString();
-                            //Identify the column startwith and endwith "/" 
+                        //Identify the column startwith and endwith "/" 
 
                         while (str.startsWith("/")) {
                             //Continue strip "/" until the correct format
@@ -3314,6 +3314,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // no changes to upload or revert
         setEnabledEditingButtons(false, false);
+        
+        makeTableEditable(false);
 
         // set the color of the edit mode text
         editModeTextColor(tab.isEditing());
