@@ -288,16 +288,12 @@ public class LoginWindow extends JFrame {
 
     private void comboBoxDatabaseActionPerformed(ActionEvent evt) {//GEN-FIRST:event_comboBoxDatabaseActionPerformed
 
-
+        updateSelection();
     }//GEN-LAST:event_comboBoxDatabaseActionPerformed
 
     private void comboBoxServerActionPerformed(ActionEvent evt) {//GEN-FIRST:event_comboBoxServerActionPerformed
 
-        String selectedServer;
-        selectedServer = comboBoxServer.getSelectedItem().toString();
-        comboBoxDatabase.setModel(getDatabasesCBModel(selectedServer));
-        int server = comboBoxServer.getSelectedIndex();
-        comboBoxDatabase.setSelectedIndex(getDefaultDatabase(server));
+        updateSelection();
     }//GEN-LAST:event_comboBoxServerActionPerformed
 
     private void btnEditDBActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnEditDBActionPerformed
@@ -597,7 +593,11 @@ public class LoginWindow extends JFrame {
         comboBoxDatabase.setModel(getDatabasesCBModel(servers.get(0).getName()));
         comboBoxServer.setSelectedIndex(getDefaultServer());
         int server = comboBoxServer.getSelectedIndex();
-        comboBoxDatabase.setSelectedIndex(getDefaultDatabase(server));
+        int defaultDbIndex = getDefaultDatabase(server);
+        Database db = servers.get(server).getDatabases().get(defaultDbIndex);
+        comboBoxDatabase.setSelectedIndex(defaultDbIndex);
+        textFieldUsername.setText(db.getUsername());
+        passwordFieldPW.setText(db.getPassword());
     }
     
     private int getDefaultServer() {
@@ -621,6 +621,21 @@ public class LoginWindow extends JFrame {
             }
         }
         return database;
+    }
+    
+    /**
+     * used to update the selection when a combobox is changed
+     */
+    private void updateSelection() {
+        String selectedServer;
+        selectedServer = comboBoxServer.getSelectedItem().toString();
+        comboBoxDatabase.setModel(getDatabasesCBModel(selectedServer));
+        int server = comboBoxServer.getSelectedIndex();
+        int dbIndex = getDefaultDatabase(server);
+        comboBoxDatabase.setSelectedIndex(dbIndex);
+        Database db = servers.get(server).getDatabases().get(dbIndex);
+        textFieldUsername.setText(db.getUsername());
+        passwordFieldPW.setText(db.getPassword());
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
