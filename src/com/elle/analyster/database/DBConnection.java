@@ -11,13 +11,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -240,14 +239,17 @@ public class DBConnection {
 
         // create an XMLInputFactory object
         XMLInputFactory inputFactory = XMLInputFactory.newFactory();
+        InputStream inputStream = null;
+        InputStreamReader inStrReader = null;
+        XMLStreamReader xmlStrReader = null;
+        FileReader fileReader = null;
+        File file = null;
+        String path = null;
         try{
-            // Reader
-            InputStream inputStream;
-            String file = FilePathFormat.supportFilePath() + SERVERS_FILENAME;
-            InputStreamReader inStrReader;
-            XMLStreamReader xmlStrReader;
-            if((new File(file)).exists()){
-                FileReader fileReader = new FileReader(file);
+            path = FilePathFormat.supportFilePath() + SERVERS_FILENAME;
+            file = new File(path);
+            if(file.exists()){
+                fileReader = new FileReader(path);
                 xmlStrReader = inputFactory.createXMLStreamReader(fileReader);
             }
             else{
@@ -261,6 +263,11 @@ public class DBConnection {
             String dbUsername = "";
             String dbPassword = "";
             boolean dbDefault = false;
+            
+            // check for outdated path
+            boolean readDB = false; // check that db was read then db-username
+            boolean readDBUsername = false; // if username not readDBUsername then outdated
+            boolean deleteFile = false; // delete file if corrupted
             
             //Read XML here
             while(xmlStrReader.hasNext()){
@@ -283,11 +290,19 @@ public class DBConnection {
                             boolean serverDefault = (xmlStrReader.getElementText().equals("true"))?true:false;
                             server.setDefaultSelection(serverDefault);
                         }
+                        else if(elementName.equals("database")){
+                            readDB = true;
+                        }
                         else if(elementName.equals("db-name")){
                             dbName = xmlStrReader.getElementText();
                         }
                         else if(elementName.equals("db-username")){
                             dbUsername = xmlStrReader.getElementText();
+                            // this was newly added element.
+                            // if this is checked then the path is updated.
+                            // Otherwise the older path should be deleted
+                            // and the jar path should be readDBUsername.
+                            readDBUsername = true; 
                         }
                         else if(elementName.equals("db-password")){
                             dbPassword = xmlStrReader.getElementText();
@@ -300,15 +315,47 @@ public class DBConnection {
                     case XMLStreamConstants.END_ELEMENT:
                         elementName = xmlStrReader.getLocalName();
                         if(elementName.equals("server")){
+                            if(readDB){
+                                if(readDBUsername){
+                                    // reset boolean checks
+                                    readDB = false;
+                                    readDBUsername = false;
+                                }
+                                else{
+                                    deleteFile = true;
+                                    break;
+                                }
+                            }
                             servers.add(server);
                         }
                         break;
                     default:
                         break;
                 }
-                xmlStrReader.next();
+                if(deleteFile){
+                    break;
+                }
+                else{
+                    xmlStrReader.next();
+                }
             }
-            LoggingAspect.afterReturn("read servers file successfully");
+            if(deleteFile){
+                try {
+                    fileReader.close();
+                    xmlStrReader.close();
+                    Files.delete(file.toPath());
+                    String msg = "servers.xml file corrupted and was deleted";
+                    LoggingAspect.afterReturn(msg);
+                    return readServers();
+                } catch (IOException ex) {
+                    String msg = "servers.xml file corrupted and was unable to delete";
+                    msg += "\nError Message: " + ex.getMessage();
+                    LoggingAspect.afterReturn(msg);
+                }
+            }
+            else{
+                LoggingAspect.afterReturn("read servers file successfully");
+            }
         }catch(XMLStreamException e){
             LoggingAspect.afterThrown(e);
         } catch (FileNotFoundException ex) {
