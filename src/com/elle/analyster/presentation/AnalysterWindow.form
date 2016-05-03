@@ -836,6 +836,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="OFF"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="labelEditModeStateMouseClicked"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="labelEditMode">
               <Properties>

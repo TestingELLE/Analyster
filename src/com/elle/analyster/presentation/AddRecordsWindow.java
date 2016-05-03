@@ -416,10 +416,8 @@ public class AddRecordsWindow extends JFrame {
                     JTable table = (JTable) e.getComponent();
                     int column = table.getSelectedColumn();
                     
-                    System.out.println("control + d at: " + column);
                     if (table.getColumnName(column).toLowerCase().contains("date")) {
                         if (e.getID() != 401) {
-                            System.out.println("here");
                             return false;
                         } else {
 //                            JTextField selectCom = (JTextField) e.getComponent();
@@ -429,7 +427,6 @@ public class AddRecordsWindow extends JFrame {
                             Date date = new Date();
                             String today = dateFormat.format(date);
                             int row = table.getSelectedRow();
-                            System.out.println(row + " " + column + " " + today);
                             table.setValueAt(today, row, column);
 //                            selectCom.setText(today);
                         }// default date input with today's date}
