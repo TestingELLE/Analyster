@@ -16,14 +16,16 @@ import com.elle.analyster.presentation.ReportWindow;
  * @author Carlos Igreja
  * @since  Mar 1, 2016
  */
-public class User implements IAdminComponent{
+public class User extends Developer{
 
     @Override
     public void setComponent(AddRecordsWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(AnalysterWindow window) {
+        super.setComponent(window);
         
         //#A363
         //2. Set the access level for the following menu commands to "developer"
@@ -40,26 +42,32 @@ public class User implements IAdminComponent{
 
     @Override
     public void setComponent(BackupDBTablesDialog window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(BatchEditWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(EditDatabaseWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(LogWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(LoginWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(ReportWindow window) {
+        super.setComponent(window);
     }
 
 }

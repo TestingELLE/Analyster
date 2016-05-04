@@ -16,38 +16,46 @@ import com.elle.analyster.presentation.ReportWindow;
  * @author Carlos Igreja
  * @since  Mar 1, 2016
  */
-public class Developer implements IAdminComponent{
+public class Developer extends Administrator{
 
     @Override
     public void setComponent(AddRecordsWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(AnalysterWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(BackupDBTablesDialog window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(BatchEditWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(EditDatabaseWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(LogWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(LoginWindow window) {
+        super.setComponent(window);
     }
 
     @Override
     public void setComponent(ReportWindow window) {
+        super.setComponent(window);
     }
 
 }
