@@ -1,6 +1,6 @@
 package com.elle.analyster.logic;
 
-import com.elle.analyster.dbtables.BackupDBTableRecord;
+import com.elle.analyster.entities.BackupDBTableRecord;
 
 import javax.swing.*;
 

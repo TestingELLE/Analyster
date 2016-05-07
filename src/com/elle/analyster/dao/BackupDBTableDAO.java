@@ -3,7 +3,7 @@ package com.elle.analyster.dao;
 
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.database.SQL_Commands;
-import com.elle.analyster.dbtables.BackupDBTableRecord;
+import com.elle.analyster.entities.BackupDBTableRecord;
 import com.elle.analyster.logic.CheckBoxItem;
 import com.elle.analyster.logic.LoggingAspect;
 import java.awt.Component;
