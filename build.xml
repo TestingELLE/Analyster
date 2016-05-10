@@ -6,19 +6,31 @@
     <!-- this is netbeans generated code -->
     <import file="nbproject/build-impl.xml"/>
     
-    <!-- set the version of Analyster here -->
-    <property name="version" value="Analyster-1.4.3"/>
+    <!-- set the date and version of here -->
+    <property name="creation-date" value="2016-05-09"/>
+    <property name="version" value="1.4.4"/>
     
-    <!-- This creates the jar that we want with the included dependancies -->
+    <!-- this is the jar name when it is created -->
+    <property name="jarname" value="Analyster-${version}"/>
+
+    <!-- this creates a manifest to get the date and version of the jar -->
+    <target name="-post-init">
+        <manifest file="src/com/elle/analyster/MANIFEST.MF">
+            <attribute name="creation-date" value="${creation-date}" />
+            <attribute name="version" value="${version}" />
+        </manifest>
+    </target>
+ 
+    <!-- This creates the jar that we want with the included dependencies -->
     <!-- There should be no need to edit this code -->
     <!-- other than adding or removing dependancies-->
     <!-- Dependancies are kept in the lib folder in Analyster-->
     <!-- The new jar will be in the target folder in Analyster --> 
     <target name="-post-jar"> 
       <delete dir="target"/>
-      <jar jarfile="target/${version}.jar">
+      <jar jarfile="target/${jarname}.jar">
         <zipfileset src="${dist.jar}" excludes="META-INF/*" />
-        <zipfileset src="lib/mysql-connector-java-5.1.23-bin.jar" excludes="META-INF/*" />
+        <zipgroupfileset dir="lib" excludes="META-INF/*" />
         <manifest>
             <attribute name="Main-Class" value="com.elle.analyster.Analyster"/>
         </manifest>

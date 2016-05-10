@@ -2,9 +2,15 @@
 package com.elle.analyster;
 
 import com.elle.analyster.logic.LoggingAspect;
-import com.elle.analyster.presentation.AnalysterWindow;
+import static com.elle.analyster.presentation.AnalysterWindow.creationDate;
+import static com.elle.analyster.presentation.AnalysterWindow.version;
 import com.elle.analyster.presentation.LoginWindow;
 import java.awt.Dimension;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -33,6 +39,20 @@ public class Analyster {
         
         UIManager.getLookAndFeelDefaults().put("ScrollBar.minimumThumbSize", new Dimension(30, 30));
 
+        // get the creation date and version from the manifest
+        Manifest mf = new Manifest();
+        Attributes atts;
+        String s = "MANIFEST.MF";
+        InputStream inputStream = Analyster.class.getResourceAsStream(s);
+        try {
+            mf.read(inputStream);
+            atts = mf.getMainAttributes();
+            creationDate = atts.getValue("creation-date");
+            version = atts.getValue("version");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+        }
+        
         // this is the first window that is shown to log in to the database.
         // Once the database connection is made, then an instance
         // of Analyster is created.
