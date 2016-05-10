@@ -89,6 +89,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private EditDatabaseWindow editDatabaseWindow;
     private ReportWindow reportWindow;
     private ShortCutSetting ShortCut;
+    private SqlOutputWindow sqlOutputWindow;
 
     // colors - Edit mode labels
     private Color editModeDefaultTextColor;
@@ -1128,16 +1129,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         int commandStart = jTextAreaSQL.getText().lastIndexOf(">>") + 2;
         String command = jTextAreaSQL.getText().substring(commandStart);
-        if (command.toLowerCase().contains("select")) {
-            loadTable(command, assignmentTable);
-        } else {
-            try {
-                statement.executeUpdate(command);
-            } catch (SQLException e) {
-                LoggingAspect.afterThrown(e);
-            } catch (Exception e) {
-                LoggingAspect.afterThrown(e);
-            }
+        if(sqlOutputWindow == null){
+            sqlOutputWindow = new SqlOutputWindow(command,this); 
+        }
+        else{
+            sqlOutputWindow.setLocationRelativeTo(this);
+            sqlOutputWindow.toFront();
+            sqlOutputWindow.setTableModel(command);
+            sqlOutputWindow.setVisible(true);
         }
     }//GEN-LAST:event_btnEnterSQLActionPerformed
 
