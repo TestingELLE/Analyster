@@ -71,9 +71,8 @@ import java.util.Vector;
  */
 public class AnalysterWindow extends JFrame implements ITableConstants {
 
-    // Edit the version and date it was created for new archives and jars
-    private final String CREATION_DATE = "2016-5-5";
-    private final String VERSION = "1.4.3";
+    public static String creationDate;  // set automatically from manifest
+    public static String version;       // set automatically from manifest
 
     // attributes
     private Map<String, Tab> tabs; // stores individual tab objects 
@@ -973,8 +972,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void menuItemVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemVersionActionPerformed
 
         JOptionPane.showMessageDialog(this, "Creation Date: "
-                + CREATION_DATE + "\n"
-                + "Version: " + VERSION);
+                + creationDate + "\n"
+                + "Version: " + version);
     }//GEN-LAST:event_menuItemVersionActionPerformed
 
     /**

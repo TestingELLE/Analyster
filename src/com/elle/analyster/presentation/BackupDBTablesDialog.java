@@ -1,7 +1,7 @@
 package com.elle.analyster.presentation;
 
 import com.elle.analyster.dao.BackupDBTableDAO;
-import com.elle.analyster.dbtables.BackupDBTableRecord;
+import com.elle.analyster.entities.BackupDBTableRecord;
 import com.elle.analyster.logic.BackupTableCheckBoxItem;
 import com.elle.analyster.logic.CheckBoxList;
 import com.elle.analyster.logic.LoggingAspect;

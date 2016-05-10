@@ -1,5 +1,5 @@
 
-package com.elle.analyster.dbtables;
+package com.elle.analyster.entities;
 
 /**
  * BackupDBTableRecord
