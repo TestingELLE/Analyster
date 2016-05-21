@@ -35,7 +35,6 @@ public class Authorization {
     public static boolean getInfoFromDB(){
         userLogin = DBConnection.getUserName();
         accessLevel = AccessLevelDAO.get(userLogin);
-
         if(accessLevel != null){
             setAdminComponentType(accessLevel);
             return true;
