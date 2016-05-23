@@ -2173,7 +2173,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                     }
                     
                     
-                    if (e.getClickCount() == 1 && !e.isConsumed()) {
+                    if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1 && !e.isConsumed()) {
                         
                         int columnIndex = header.columnAtPoint(e.getPoint());
                         if (columnIndex != -1) {
