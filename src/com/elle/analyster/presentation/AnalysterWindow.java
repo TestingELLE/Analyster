@@ -3178,7 +3178,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         //if table is sorted, save the info
         List<SortKey> keys = (List<SortKey>) table.getRowSorter().getSortKeys();
         SortKey currentSortKey = null;
-        if (keys != null) {
+        if (keys != null && keys.size() >= 1){
             currentSortKey = keys.get(0);
         }
         
@@ -3231,8 +3231,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 //after fresh loading table data, the sortkeys have to be added to maintain original sort status
                     table.getRowSorter().setSortKeys(keys);
                 }
-                else
+                else{
+                    System.out.println("directly load table");
                     loadTable(table);
+                }
+                    
 
                 // show information that a record was deleted 
                 String text = rowCount + " Record(s) Deleted!";
