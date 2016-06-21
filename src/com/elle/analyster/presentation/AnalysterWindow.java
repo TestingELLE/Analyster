@@ -44,6 +44,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -68,6 +69,8 @@ import javax.swing.ListCellRenderer;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
+import javax.swing.RowSorter.SortKey;
+
 /**
  * AnalysterWindow
  *
@@ -2135,16 +2138,55 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // this adds a mouselistener to the table header
         JTableHeader header = table.getTableHeader();
+        
+        //disable default mouse listeners
+        MouseListener[] listeners = header.getMouseListeners();
+
+        for (MouseListener ml: listeners)
+        {
+            String className = ml.getClass().toString();
+
+            if (className.contains("BasicTableHeaderUI"))
+               
+                header.removeMouseListener(ml);
+                
+           
+        }
+        
+        
+        
         if (header != null) {
             header.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
 
                     if (e.getClickCount() == 2) {
+                        e.consume();
                         clearFilterDoubleClick(e, table);
+                        
 
                     }
-
+                    
+                    if (e.getClickCount() == 1 && !e.isConsumed() && e.isControlDown()) {
+                        e.consume();
+                        tabs.get(table.getName())
+                                .getColumnPopupMenu().showPopupMenu(e);
+                        
+                    }
+                    
+                    
+                    if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1 && !e.isConsumed()) {
+                        
+                        int columnIndex = header.columnAtPoint(e.getPoint());
+                        if (columnIndex != -1) {
+                                columnIndex = table.convertColumnIndexToModel(columnIndex);
+                                table.getRowSorter().toggleSortOrder(columnIndex);
+                                //System.out.println("clicked " + columnIndex);
+                                
+                        }
+                        e.consume();
+                    }
+                
                 }
 
                 /**
@@ -2918,7 +2960,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             loadTable(table);
             informationLabel.setText("Table loaded succesfully");
             startCountDownFromNow(10);
-            setTableListeners(table);
+            //setTableListeners(table);
 
             String[] colNames = tab.getTableColNames();
             Map tableComboBoxForSearchDropDownList = this.loadingDropdownListToTable(table, colNames);
@@ -3260,17 +3302,37 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @throws HeadlessException
      */
     public String deleteRecordsSelected(JTable table) throws HeadlessException {
+        
+        //if table is sorted, save the info
+        List<SortKey> keys = (List<SortKey>) table.getRowSorter().getSortKeys();
+        SortKey currentSortKey = null;
+        if (keys != null && keys.size() >= 1){
+            currentSortKey = keys.get(0);
+        }
+        
+        if (!Authorization.getAccessLevel().equals("administrator")) {
+                    
+               
+            JOptionPane.showMessageDialog(this,
+                "You are not authorized to delete the records.",
+                "Error Message",
+                JOptionPane.ERROR_MESSAGE);
+            return "";
+         }
+        
 
         String sqlDelete = ""; // String for the SQL Statement
         String tableName = table.getName(); // name of the table
 
         int[] selectedRows = table.getSelectedRows(); // array of the rows selected
         int rowCount = selectedRows.length; // the number of rows selected
+        
+        ArrayList<Integer> authorizedRows = new ArrayList();
         if (rowCount != -1) {
             for (int i = 0; i < rowCount; i++) {
                 int row = selectedRows[i];
                 Integer selectedID = (Integer) table.getValueAt(row, 0); // Add Note to selected taskID
-
+                
                 if (i == 0) // this is the first rowIndex
                 {
                     sqlDelete += "DELETE FROM " + database + "." + tableName
@@ -3294,7 +3356,26 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 statement.executeUpdate(sqlDelete);
 
                 // refresh table and retain filters
-                loadTable(table);
+                // if sortkey info exists
+                if (currentSortKey != null) {
+                    String colName = table.getColumnName(currentSortKey.getColumn());
+                    SortOrder colOrder = currentSortKey.getSortOrder();
+                    String orderStr = "";
+                    if (colOrder == SortOrder.ASCENDING) 
+                        orderStr = " ORDER BY "+colName + " ASC";
+                    if (colOrder == SortOrder.DESCENDING)
+                        orderStr = " ORDER BY "+colName + " DESC";
+                        
+                    String sql = "SELECT * FROM " + table.getName() + orderStr;
+                    loadTable(sql, table);
+                //after fresh loading table data, the sortkeys have to be added to maintain original sort status
+                    table.getRowSorter().setSortKeys(keys);
+                }
+                else{
+                    System.out.println("directly load table");
+                    loadTable(table);
+                }
+                    
 
                 // show information that a record was deleted 
                 String text = rowCount + " Record(s) Deleted!";

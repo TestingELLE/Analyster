@@ -232,9 +232,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Report a bug/suggestion"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemRepBugSuggActionPerformed"/>
-              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -341,11 +338,14 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="comboBoxValue" min="-2" pref="153" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="370" max="-2" attributes="0"/>
                               <Component id="btnSearch" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="searchInformationLabel" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+                              <Component id="searchInformationLabel" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -361,7 +361,6 @@
                           <Component id="btnClearAllFilter" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="comboBoxValue" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="searchInformationLabel" pref="17" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -438,7 +437,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="tabbedPanel" max="32767" attributes="0"/>
-              <Component id="jPanelEdit" alignment="0" pref="909" max="32767" attributes="0"/>
+              <Component id="jPanelEdit" alignment="0" pref="1088" max="32767" attributes="0"/>
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jPanelSQL" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
@@ -768,7 +767,7 @@
                               <Component id="btnUploadChanges" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnRevertChanges" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="66" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="btnAddRecords" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnBatchEdit" min="-2" max="-2" attributes="0"/>

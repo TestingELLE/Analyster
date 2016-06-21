@@ -330,15 +330,21 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
                     // handle null exception
                     if(cellValue == null) 
                         cellValue = "";
-
+                    
+                     /*String pattern = "\\b"+cellValue.toString()+"\\b";
+                    Pattern p=Pattern.compile(pattern);
+                    Matcher m=p.matcher(source);
+                    return m.find();*/
+                     String stringOfValue = cellValue.toString();
+                     
                     // if contains any of the filter items then include
-                    if(distinctItems.contains(cellValue.toString())){
+                    if(distinctItems.contains(stringOfValue) ){
                         itemsFound++;
                     }
                     else{
                         // search for a match and ignore case
                         for(Object distinctItem : distinctItems){
-                             if (cellValue.toString().toLowerCase().contains(distinctItem.toString().toLowerCase())) {
+                             if (cellValue.toString().toLowerCase().equals(distinctItem.toString().toLowerCase())) {
                                 itemsFound++;
                             }
                         }
@@ -356,7 +362,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
                 return false; 
             }
         }
-        else{
+        else {
             return true;  // not filtering
         }
     }
