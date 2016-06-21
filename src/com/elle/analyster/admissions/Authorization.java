@@ -78,6 +78,7 @@ public class Authorization {
         setPermissions(c, adminComponent);
     }
     
+    
     private static void setPermissions(Component c, IAdminComponent admin){
 
         if(c instanceof AddRecordsWindow){
@@ -104,5 +105,9 @@ public class Authorization {
         else if(c instanceof ReportWindow){
             admin.setComponent((ReportWindow)c);
         }
+    }
+    
+    public static String getAccessLevel() {
+        return accessLevel;
     }
 }

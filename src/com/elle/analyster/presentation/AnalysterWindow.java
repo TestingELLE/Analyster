@@ -3182,17 +3182,29 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             currentSortKey = keys.get(0);
         }
         
+        if (!Authorization.getAccessLevel().equals("administrator")) {
+                    
+               
+            JOptionPane.showMessageDialog(this,
+                "You are not authorized to delete the records.",
+                "Error Message",
+                JOptionPane.ERROR_MESSAGE);
+            return "";
+         }
+        
 
         String sqlDelete = ""; // String for the SQL Statement
         String tableName = table.getName(); // name of the table
 
         int[] selectedRows = table.getSelectedRows(); // array of the rows selected
         int rowCount = selectedRows.length; // the number of rows selected
+        
+        ArrayList<Integer> authorizedRows = new ArrayList();
         if (rowCount != -1) {
             for (int i = 0; i < rowCount; i++) {
                 int row = selectedRows[i];
                 Integer selectedID = (Integer) table.getValueAt(row, 0); // Add Note to selected taskID
-
+                
                 if (i == 0) // this is the first rowIndex
                 {
                     sqlDelete += "DELETE FROM " + database + "." + tableName
