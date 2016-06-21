@@ -35,7 +35,6 @@ public class Authorization {
     public static boolean getInfoFromDB(){
         userLogin = DBConnection.getUserName();
         accessLevel = AccessLevelDAO.get(userLogin);
-
         if(accessLevel != null){
             setAdminComponentType(accessLevel);
             return true;
@@ -79,6 +78,7 @@ public class Authorization {
         setPermissions(c, adminComponent);
     }
     
+    
     private static void setPermissions(Component c, IAdminComponent admin){
 
         if(c instanceof AddRecordsWindow){
@@ -105,5 +105,9 @@ public class Authorization {
         else if(c instanceof ReportWindow){
             admin.setComponent((ReportWindow)c);
         }
+    }
+    
+    public static String getAccessLevel() {
+        return accessLevel;
     }
 }
