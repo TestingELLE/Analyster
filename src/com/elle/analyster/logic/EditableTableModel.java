@@ -14,46 +14,40 @@ import java.util.Vector;
  * @author Carlos Igreja
  * @since June 10, 2015
  * @version 0.6.3
- * 
- * Modified by Corinne Martus
- * June 21, 2016
- * Version 1.4.6b
- * To receive a DefaultTableModel and retrieve the column names, 
- * class types, and data from the model
  */
 public class EditableTableModel extends DefaultTableModel {
-    Class [] colClassTypes;
+
     private boolean cellEditable;
-   Vector columnNames;
+    private Vector columnClass;
+
     /**
      * CONSTRUCTOR EditableTableModel
+     *
+     * @param data
+     * @param columnNames
+     * @param isCellEditable
      */
-    public EditableTableModel(DefaultTableModel sourceModel) {  
-        super(sourceModel.getDataVector(),getColumnNamesFromModel(sourceModel));
+    public EditableTableModel(Vector data, Vector columnNames, Vector colClass) {
+        super(data, columnNames);
         cellEditable = false;
-        copyColumnClasses(sourceModel);
-    }
-    public static Vector getColumnNamesFromModel (DefaultTableModel sourceModel){
-       Vector names = new Vector();
-        for (int col = 0; col < sourceModel.getColumnCount(); col ++){
-            names.addElement(sourceModel.getColumnName(col));
-        }
-        return names;
+        columnClass = colClass;
     }
 
     /**
      * isCellEditable Makes table editable or non editable
-     * @param rowIndex
-     * @param columnIndex
+     *
+     * @param row
+     * @param col
      * @return
      */
     @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return cellEditable;
+    public boolean isCellEditable(int row, int col) {
+        return cellEditable;
     }
-    
+
     /**
      * isCellEditable
+     *
      * @return
      */
     public boolean isCellEditable() {
@@ -67,27 +61,24 @@ public class EditableTableModel extends DefaultTableModel {
      */
     public void setCellEditable(boolean cellEditable) {
         this.cellEditable = cellEditable;
+            
     }
-    
-    /*public void getSelectedRowContent(int Id){
-        
-    }*/
+
     /**
-     * Override getColumnClass() in DefaultTableModel     *
-     * @param columnIndex
+     * Override getColumnClass() in DefaultTableModel
+     *
+     * @param col
+     * @return class
      */
     @Override
-    public Class getColumnClass(int columnIndex){
-        Class columnClassType;
-        columnClassType = colClassTypes[columnIndex];
-        return columnClassType;
+    public Class getColumnClass(int col) {
+        if (col == 0) {
+
+            return Integer.class;
+        }else{
+            return Object.class;
+        }
+
     }
-    private void copyColumnClasses(DefaultTableModel sourceModel) {
-        {
-            colClassTypes = new Class[sourceModel.getColumnCount()];
-               for (int col = 0; col < sourceModel.getColumnCount(); col++){
-                   colClassTypes[col] = sourceModel.getColumnClass(col);
-               }
-            }
-    }
+
 }
