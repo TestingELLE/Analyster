@@ -4066,7 +4066,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     // @formatter:on
 
     private void setAccessForDeveloper() {
-        if (database.equalsIgnoreCase("pupone_dummy")) {
+        
+        if (database.equalsIgnoreCase("pupone_Analyster")) {
             menuItemLogChkBx.setEnabled(true);
             menuItemSQLCmdChkBx.setEnabled(true);
             menuItemManageDBs.setEnabled(true);
