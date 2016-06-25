@@ -36,8 +36,8 @@ public class User extends Developer{
         //EDIT: Manage databases
         window.getMenuItemManageDBs().setEnabled(false);
         //Tools: Log, SQL command
-        window.getMenuItemLogChkBx().setEnabled(false);
-        window.getMenuItemSQLCmdChkBx().setEnabled(false);
+        window.getMenuItemLogChkBx().setEnabled(true);
+        window.getMenuItemSQLCmdChkBx().setEnabled(true);
     }
 
     @Override
