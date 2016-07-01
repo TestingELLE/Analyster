@@ -3069,7 +3069,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     }
     public ArrayList getInactiveAnalysts(){
-        String sql = "SELECT * FROM analysts WHERE Status_analyst = 'INACTIVE'";
+        String sql = "SELECT * FROM analysts WHERE status = 'INACTIVE'";
         ResultSet rs = null;
         ArrayList <Object> inactiveAnalysts = new ArrayList<Object>();
         try {
@@ -3079,7 +3079,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             rs = DBConnection.getStatement().executeQuery(sql);
             
             while(rs.next()){
-                inactiveAnalysts.add(rs.getObject("Name_analyst"));
+                inactiveAnalysts.add(rs.getObject("name"));
             }          
         } 
         catch (SQLException e) {
