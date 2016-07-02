@@ -7,8 +7,8 @@
     <import file="nbproject/build-impl.xml"/>
     
     <!-- set the date and version here -->
-    <property name="creation-date" value="2016-06-21"/>
-    <property name="version" value="1.4.6c"/>
+    <property name="creation-date" value="2016-07-01"/>
+    <property name="version" value="1.4.6d"/>
     
     <!-- this is the jar name when it is created -->
     <property name="jarname" value="Analyster-${version}"/>
