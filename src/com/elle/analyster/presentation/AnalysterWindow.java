@@ -1152,12 +1152,20 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         int commandStart = jTextAreaSQL.getText().lastIndexOf(">>") + 2;
         String command = jTextAreaSQL.getText().substring(commandStart);
         if(sqlOutputWindow == null){
-            sqlOutputWindow = new SqlOutputWindow(command,this); 
+            try { 
+                sqlOutputWindow = new SqlOutputWindow(command,this);
+            } catch (Exception ex) {
+                Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else{
             sqlOutputWindow.setLocationRelativeTo(this);
             sqlOutputWindow.toFront();
-            sqlOutputWindow.setTableModel(command);
+            try {
+                sqlOutputWindow.setTableModel(command);
+            } catch (Exception ex) {
+                Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
             sqlOutputWindow.setVisible(true);
         }
     }//GEN-LAST:event_btnEnterSQLActionPerformed
