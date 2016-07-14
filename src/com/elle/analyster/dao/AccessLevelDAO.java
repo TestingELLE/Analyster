@@ -20,7 +20,7 @@ public class AccessLevelDAO {
     public static final String COL_USER = "user";
     public static final String COL_ACCESS_LEVEL = "accessLevel";
 
-    public static String get(String user) {
+    public static String get(String user) throws Exception {
         String sql = "SELECT * FROM " + DB_ACCESS_LEVELS +
                       " WHERE " + COL_USER + " = '" + user +"';";
 

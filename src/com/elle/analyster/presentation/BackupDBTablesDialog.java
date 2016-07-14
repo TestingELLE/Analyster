@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -39,7 +41,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     /**
      * Creates new form BackupDBTablesWindow
      */
-    public BackupDBTablesDialog(Component parent) {
+    public BackupDBTablesDialog(Component parent) throws Exception {
         initComponents();
 
         this.parentComponent = parent;
@@ -117,7 +119,11 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
                   }
                   //rename the checkbox item
                   else if(e.isControlDown()){
-                      renameCheckBoxItem((BackupTableCheckBoxItem)checkbox);
+                      try {
+                          renameCheckBoxItem((BackupTableCheckBoxItem)checkbox);
+                      } catch (Exception ex) {
+                          Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
+                      }
                   }
                   else{
                       // toggle the check for the checkbox item
@@ -138,7 +144,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         });
     }
 
-    public void renameCheckBoxItem(BackupTableCheckBoxItem checkbox) {
+    public void renameCheckBoxItem(BackupTableCheckBoxItem checkbox) throws Exception {
 
         BackupDBTableRecord record = checkbox.getRecord();
         String backupTableName = record.getBackupTableName();
@@ -183,7 +189,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
             item.setSelected(true);
     }
 
-    public void deleteSelectedItems(){
+    public void deleteSelectedItems() throws Exception{
 
         boolean backupSuccess = true;
         
@@ -202,7 +208,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         LoggingAspect.afterReturn(msg);
     }
 
-    public void reloadCheckList() {
+    public void reloadCheckList() throws Exception {
         checkBoxItems.clear();
         checkBoxItems.add(new BackupTableCheckBoxItem(CHECK_ALL_ITEM_TEXT));
         checkBoxItems.addAll(getCheckBoxItemsFromDB());
@@ -223,7 +229,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
      * date appended to the end.
      * @return boolean true if backup successful and false if error exception
      */
-    public void backupDBTablesWithDate() {
+    public void backupDBTablesWithDate() throws Exception {
 
         boolean backupSuccess = true;
         String overwrite = "undefined";
@@ -305,7 +311,7 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
         checkBoxList.setListData(new JLabel[]{labelCheckListMsg});
     }
 
-    public ArrayList<BackupTableCheckBoxItem> getCheckBoxItemsFromDB() {
+    public ArrayList<BackupTableCheckBoxItem> getCheckBoxItemsFromDB() throws Exception {
 
         ArrayList<BackupTableCheckBoxItem> items = new ArrayList<>();
         ArrayList<BackupDBTableRecord> records = dao.getRecords();
@@ -406,14 +412,30 @@ public class BackupDBTablesDialog extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackupActionPerformed
-        // defaults to backup with the date appended
-        backupDBTablesWithDate();
-        reloadCheckList();
+        try {
+            // defaults to backup with the date appended
+            backupDBTablesWithDate();
+        } catch (Exception ex) {
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            reloadCheckList();
+        } catch (Exception ex) {
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnBackupActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        deleteSelectedItems();
-        reloadCheckList();
+        try {
+            deleteSelectedItems();
+        } catch (Exception ex) {
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            reloadCheckList();
+        } catch (Exception ex) {
+            Logger.getLogger(BackupDBTablesDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
         btnDelete.setEnabled(false);
         btnBackup.setEnabled(true);
     }//GEN-LAST:event_btnDeleteActionPerformed

@@ -15,6 +15,8 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -72,6 +74,9 @@ public class AddRecordsWindow extends JFrame {
 
         // create a new empty table
         createEmptyTable();
+        
+        //populate it with the first selected table row
+        populateTableWithSelectedRow();
 
         // sets the keyboard focus manager
         setKeyboardFocusManager();
@@ -109,6 +114,7 @@ public class AddRecordsWindow extends JFrame {
         btnSubmit = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         btnAddRow = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new java.awt.Dimension(894, 560));
@@ -171,6 +177,13 @@ public class AddRecordsWindow extends JFrame {
             }
         });
 
+        btnClear.setText("Clear");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -178,13 +191,18 @@ public class AddRecordsWindow extends JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnAddRow)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 445, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnClear)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSubmit)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnCancel)
                 .addContainerGap())
-            .addComponent(scrollpane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scrollpane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
         );
+
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCancel, btnClear, btnSubmit});
+
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
@@ -193,7 +211,8 @@ public class AddRecordsWindow extends JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSubmit)
                     .addComponent(btnCancel)
-                    .addComponent(btnAddRow))
+                    .addComponent(btnAddRow)
+                    .addComponent(btnClear))
                 .addGap(6, 6, 6))
         );
 
@@ -221,7 +240,11 @@ public class AddRecordsWindow extends JFrame {
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
 
-        submit();
+        try {
+            submit();
+        } catch (Exception ex) {
+            Logger.getLogger(AddRecordsWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
@@ -235,12 +258,17 @@ public class AddRecordsWindow extends JFrame {
         model.addRow(new Object[]{});
     }//GEN-LAST:event_btnAddRowActionPerformed
 
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        model.setRowCount(0);
+        model.addRow(new Object[]{});
+    }//GEN-LAST:event_btnClearActionPerformed
+
     /**
      * submit This is used when the submit button is pressed or if the enter key
      * is pressed when the table is finished editing to submit the data to the
      * database.
      */
-    private void submit() {
+    private void submit() throws Exception {
 
         Object cellValue = null;                 // store cell value
         int col = 0;                             // column index
@@ -393,7 +421,11 @@ public class AddRecordsWindow extends JFrame {
                                 }
                             } // submit the data
                             else if (table.getSelectionBackground() != Color.RED) {
-                                submit();
+                                try {
+                                    submit();
+                                } catch (Exception ex) {
+                                    Logger.getLogger(AddRecordsWindow.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         }
                     } // this toggles the red bg for clearing row data
@@ -452,7 +484,7 @@ public class AddRecordsWindow extends JFrame {
         columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length);
 
         // set the table model - add 10 empty rows
-        model = new DefaultTableModel(columnNames, 1);
+        model = new DefaultTableModel(columnNames,0);
 
         // add the table model to the table
         table.setModel(model);
@@ -462,6 +494,33 @@ public class AddRecordsWindow extends JFrame {
         widths = Arrays.copyOfRange(widths, 1, widths.length);
 
         analyster.setColumnFormat(widths, table);
+    }
+    
+    
+    private void populateTableWithSelectedRow() {
+        String selectedTabName = analyster.getSelectedTabName();
+        Tab selectedTab = tabs.get(selectedTabName);
+        JTable selectedTable = selectedTab.getTable();
+        int[] selectedRows = selectedTable.getSelectedRows();
+        
+        if (selectedRows.length > 0) {
+            DefaultTableModel selectedModel = (DefaultTableModel)selectedTable.getModel();
+            Vector rowdata = (Vector) selectedModel.getDataVector().elementAt(selectedRows[0]);
+            Vector rowcopy = (Vector)rowdata.clone();  
+            rowcopy.remove(0);
+            //add the selected row to the table
+            model.addRow(rowcopy);
+            
+        }
+        else{
+            model.addRow(new Object[]{});
+        }
+        
+        
+        
+        
+        
+        
     }
 
     /**
@@ -706,23 +765,12 @@ public class AddRecordsWindow extends JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddRow;
-    private javax.swing.JButton btnAddRow2;
-    private javax.swing.JButton btnAddRow3;
     private javax.swing.JButton btnCancel;
-    private javax.swing.JButton btnCancel2;
-    private javax.swing.JButton btnCancel3;
+    private javax.swing.JButton btnClear;
     private javax.swing.JButton btnSubmit;
-    private javax.swing.JButton btnSubmit2;
-    private javax.swing.JButton btnSubmit3;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane scrollpane;
-    private javax.swing.JScrollPane scrollpane2;
-    private javax.swing.JScrollPane scrollpane3;
     private javax.swing.JTable table;
-    private javax.swing.JTable table2;
-    private javax.swing.JTable table3;
     // End of variables declaration//GEN-END:variables
 
 }

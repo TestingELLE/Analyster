@@ -28,7 +28,7 @@ public class SqlOutputWindowDAO {
         this.parentComponent = parentComponent;
     }
     
-    public DefaultTableModel getTableModel(String sqlCommand){
+    public DefaultTableModel getTableModel(String sqlCommand) throws Exception{
         
         DefaultTableModel tableModel = null;
         
