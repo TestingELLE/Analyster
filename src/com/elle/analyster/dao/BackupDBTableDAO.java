@@ -39,7 +39,7 @@ public class BackupDBTableDAO {
         this.parentComponent = parentComponent;
     }
     
-    public void createDBTableToStoreBackupsInfo(){
+    public void createDBTableToStoreBackupsInfo() throws Exception{
 
         if(DBConnection.open()){
             String createTableQuery = 
@@ -63,7 +63,7 @@ public class BackupDBTableDAO {
         DBConnection.close();
     }
 
-    public ArrayList<BackupDBTableRecord> getRecords() {
+    public ArrayList<BackupDBTableRecord> getRecords() throws Exception {
         
         ArrayList<BackupDBTableRecord> records = new ArrayList<>();
         
@@ -120,7 +120,7 @@ public class BackupDBTableDAO {
      * @param record database table record
      * @return boolean true if successful and false if sql error occurred 
      */
-    public boolean deleteRecord(BackupDBTableRecord record) {
+    public boolean deleteRecord(BackupDBTableRecord record) throws Exception {
 
         if(DBConnection.open()){
             String sql = "";
@@ -157,37 +157,37 @@ public class BackupDBTableDAO {
      * @param backupTableName name of backup table to delete
      * @return boolean true if successful and false if sql error occurred
      */
-    public boolean deleteRecord(String backupTableName) {
+    public boolean deleteRecord(String backupTableName) throws Exception {
 
-        if(DBConnection.open()){
-            String sql = "";
-
-            try {
-                // drop table
-                sql = "DROP TABLE " + backupTableName + " ; ";
-                DBConnection.getStatement().executeUpdate(sql);
-
-                // delete record
-                sql = "DELETE FROM " + DB_TABLE_NAME +
-                        " WHERE " + COL_BACKUP_NAME + " = '" + backupTableName + "';";
-                DBConnection.getStatement().executeUpdate(sql);
-
-                LoggingAspect.afterReturn("Deleted backup " + backupTableName);
-                DBConnection.close();
-                return true;
-            } catch (SQLException e) {
-                LoggingAspect.afterThrown(e);
+            if(DBConnection.open()){
+                String sql = "";
+                
+                try {
+                    // drop table
+                    sql = "DROP TABLE " + backupTableName + " ; ";
+                    DBConnection.getStatement().executeUpdate(sql);
+                    
+                    // delete record
+                    sql = "DELETE FROM " + DB_TABLE_NAME +
+                            " WHERE " + COL_BACKUP_NAME + " = '" + backupTableName + "';";
+                    DBConnection.getStatement().executeUpdate(sql);
+                    
+                    LoggingAspect.afterReturn("Deleted backup " + backupTableName);
+                    DBConnection.close();
+                    return true;
+                } catch (SQLException e) {
+                    LoggingAspect.afterThrown(e);
+                    DBConnection.close();
+                    return false;
+                }
+            }
+            else{
                 DBConnection.close();
                 return false;
             }
-        }
-        else{
-            DBConnection.close();
-            return false;
-        }
     }
     
-    public boolean addRecord(BackupDBTableRecord record){
+    public boolean addRecord(BackupDBTableRecord record) throws Exception{
 
         if(DBConnection.open()){
             String sql = "";
@@ -226,7 +226,7 @@ public class BackupDBTableDAO {
         }
     }
 
-    public boolean updateRecord(BackupDBTableRecord record, String oldTableName) {
+    public boolean updateRecord(BackupDBTableRecord record, String oldTableName) throws Exception {
         
         if(DBConnection.open()){
             int id = record.getId();

@@ -4,6 +4,8 @@ package com.elle.analyster.presentation;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.database.Database;
 import com.elle.analyster.database.Server;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -12,12 +14,24 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.Timer;
+import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 
 /**
@@ -36,13 +50,14 @@ public class EditDatabaseWindow extends javax.swing.JFrame {
     /**
      * Creates new form EditDatabaseList
      */
-    public EditDatabaseWindow() {
+    public EditDatabaseWindow() throws Exception {
         this(null);
     }
     
     // Call this class from log in window
-    public EditDatabaseWindow(LoginWindow loginWindow) {
+    public EditDatabaseWindow(LoginWindow loginWindow) throws Exception {
         initComponents();
+
         this.loginWindow = loginWindow;
 
         labelServersInfo.setText("");
@@ -54,6 +69,13 @@ public class EditDatabaseWindow extends javax.swing.JFrame {
         fillServersTable(tableServers);
         cbServer.setModel(getServerNamesCBModel());
         fillDatabasesTable(tableDatabases, servers.get(0).getName());
+        
+        //set cellrenderers to make the password invisible
+        JPasswordField password = new JPasswordField();
+        password.setBorder( new LineBorder(Color.BLACK) );
+        TableCellEditor editor = new DefaultCellEditor( password );
+        tableDatabases.getColumnModel().getColumn(3).setCellEditor( editor );
+        tableDatabases.getColumnModel().getColumn(3).setCellRenderer(new passwordrender());
         
         // set table listeners
         setTableListeners(tableServers);
@@ -240,6 +262,7 @@ public class EditDatabaseWindow extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+
         jScrollPane3.setViewportView(tableDatabases);
         if (tableDatabases.getColumnModel().getColumnCount() > 0) {
             tableDatabases.getColumnModel().getColumn(0).setMinWidth(50);
@@ -357,7 +380,11 @@ public class EditDatabaseWindow extends javax.swing.JFrame {
             servers.get(row).setUrl(serverURL);
         }
         
-        DBConnection.writeServers(servers); // save to file
+        try {
+            DBConnection.writeServers(servers); // save to file
+        } catch (Exception ex) {
+            Logger.getLogger(EditDatabaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
         cbServer.setModel(getServerNamesCBModel()); // update server dropdown
         fillDatabasesTable(tableDatabases, cbServer.getSelectedItem().toString());
         labelServersInfo.setText("Servers saved!");
@@ -365,7 +392,11 @@ public class EditDatabaseWindow extends javax.swing.JFrame {
         
         //update loginwindow
         if(loginWindow != null){
-            loginWindow.loadServers();
+            try {
+                loginWindow.loadServers();
+            } catch (Exception ex) {
+                Logger.getLogger(EditDatabaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnSaveServersActionPerformed
 
@@ -384,13 +415,21 @@ public class EditDatabaseWindow extends javax.swing.JFrame {
             servers.get(server).getDatabases().get(db).setUsername(dbUsername);
             servers.get(server).getDatabases().get(db).setPassword(dbPassword);
         }
-        DBConnection.writeServers(servers);
+        try {
+            DBConnection.writeServers(servers);
+        } catch (Exception ex) {
+            Logger.getLogger(EditDatabaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
         labelDatabasesInfo.setText("Databases saved!");
         startCountDownFromNow();
         
         //update loginwindow
         if(loginWindow != null){
-            loginWindow.loadServers();
+            try {
+                loginWindow.loadServers();
+            } catch (Exception ex) {
+                Logger.getLogger(EditDatabaseWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnSaveDatabasesActionPerformed
 
@@ -564,6 +603,34 @@ public class EditDatabaseWindow extends javax.swing.JFrame {
                 }
             }
         });
+    }
+      
+    public class passwordrender extends DefaultTableCellRenderer {
+
+        private static final String ASTERISKS = "************************";
+        
+        @Override public void setValue(Object aValue) {
+            int length =0;
+            if (aValue instanceof String) {
+                length =  ((String) aValue).length();
+            } else if (aValue instanceof char[]) {
+                length = ((char[])aValue).length;
+            }
+                super.setText(asterisks(length));
+
+        }
+
+        private String asterisks(int length) {
+            if (length > ASTERISKS.length()) {
+                StringBuilder sb = new StringBuilder(length);
+                for (int i = 0; i < length; i++) {
+                    sb.append('*');
+                }
+                return sb.toString();
+            } else {
+                return ASTERISKS.substring(0, length);
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
