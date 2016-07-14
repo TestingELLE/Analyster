@@ -290,6 +290,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         addPanel_control = new javax.swing.JPanel();
         labelTimeLastUpdate = new javax.swing.JLabel();
@@ -357,10 +358,24 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuItemRepBugSugg = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(900, 574));
+        setPreferredSize(new java.awt.Dimension(900, 574));
+        getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        addPanel_control.setLayout(new java.awt.GridBagLayout());
 
         labelTimeLastUpdate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelTimeLastUpdate.setText("Last updated: ");
         labelTimeLastUpdate.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 4);
+        addPanel_control.add(labelTimeLastUpdate, gridBagConstraints);
+
+        searchPanel.setLayout(new java.awt.GridBagLayout());
 
         btnSearch.setText("Search");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -368,6 +383,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 btnSearchActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 10);
+        searchPanel.add(btnSearch, gridBagConstraints);
 
         comboBoxSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "symbol", "analyst" }));
         comboBoxSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -375,6 +396,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 comboBoxSearchActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        searchPanel.add(comboBoxSearch, gridBagConstraints);
 
         btnClearAllFilter.setText("Clear All Filters");
         btnClearAllFilter.addActionListener(new java.awt.event.ActionListener() {
@@ -382,6 +409,22 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 btnClearAllFilterActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
+        searchPanel.add(btnClearAllFilter, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 224;
+        gridBagConstraints.ipady = 17;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 11, 10);
+        searchPanel.add(searchInformationLabel, gridBagConstraints);
 
         comboBoxValue.setEditable(true);
         comboBoxValue.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -391,74 +434,47 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 comboBoxValueActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 55;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        searchPanel.add(comboBoxValue, gridBagConstraints);
 
-        javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
-        searchPanel.setLayout(searchPanelLayout);
-        searchPanelLayout.setHorizontalGroup(
-            searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(searchPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnClearAllFilter)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(comboBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addComponent(comboBoxValue, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(370, 370, 370)
-                        .addComponent(btnSearch)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addComponent(searchInformationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        searchPanelLayout.setVerticalGroup(
-            searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(searchPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSearch)
-                    .addComponent(comboBoxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnClearAllFilter)
-                    .addComponent(comboBoxValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addComponent(searchInformationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 0);
+        addPanel_control.add(searchPanel, gridBagConstraints);
 
         labelRecords.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelRecords.setText("labelRecords");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 2);
+        addPanel_control.add(labelRecords, gridBagConstraints);
 
-        javax.swing.GroupLayout addPanel_controlLayout = new javax.swing.GroupLayout(addPanel_control);
-        addPanel_control.setLayout(addPanel_controlLayout);
-        addPanel_controlLayout.setHorizontalGroup(
-            addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(addPanel_controlLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(addPanel_controlLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addPanel_controlLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(labelTimeLastUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        addPanel_controlLayout.setVerticalGroup(
-            addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(addPanel_controlLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(addPanel_controlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(addPanel_controlLayout.createSequentialGroup()
-                        .addComponent(labelRecords, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelTimeLastUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 185;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        getContentPane().add(addPanel_control, gridBagConstraints);
 
-        tabbedPanel.setPreferredSize(new java.awt.Dimension(800, 584));
+        jPanel5.setMinimumSize(new java.awt.Dimension(900, 400));
+        jPanel5.setPreferredSize(new java.awt.Dimension(900, 400));
+        jPanel5.setLayout(new java.awt.GridBagLayout());
+
+        tabbedPanel.setMinimumSize(new java.awt.Dimension(850, 120));
+        tabbedPanel.setPreferredSize(new java.awt.Dimension(875, 300));
         tabbedPanel.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tabbedPanelStateChanged(evt);
@@ -466,6 +482,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(1072, 150));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(1072, 300));
 
         assignmentTable.setAutoCreateRowSorter(true);
         assignmentTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -513,6 +531,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         tabbedPanel.addTab("Assignments", jScrollPane1);
 
+        jScrollPane4.setMinimumSize(new java.awt.Dimension(900, 300));
+        jScrollPane4.setPreferredSize(new java.awt.Dimension(1072, 400));
+
         reportTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, "", null, null, null, null, null, null},
@@ -544,10 +565,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
         reportTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        reportTable.setMinimumSize(new java.awt.Dimension(10, 240));
+        reportTable.setMinimumSize(new java.awt.Dimension(1500, 400));
+        reportTable.setPreferredSize(new java.awt.Dimension(1500, 400));
         jScrollPane4.setViewportView(reportTable);
 
         tabbedPanel.addTab("Reports", jScrollPane4);
+
+        jScrollPane3.setMinimumSize(new java.awt.Dimension(900, 300));
+        jScrollPane3.setPreferredSize(new java.awt.Dimension(1072, 400));
 
         archiveTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -593,7 +618,20 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         tabbedPanel.addTab("Assignments_Archived", jScrollPane3);
 
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipady = 274;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel5.add(tabbedPanel, gridBagConstraints);
+        tabbedPanel.getAccessibleContext().setAccessibleName("Reports");
+        tabbedPanel.getAccessibleContext().setAccessibleParent(tabbedPanel);
+
         jPanelEdit.setPreferredSize(new java.awt.Dimension(636, 180));
+        jPanelEdit.setLayout(new java.awt.GridBagLayout());
 
         btnBatchEdit.setText("Batch Edit");
         btnBatchEdit.addActionListener(new java.awt.event.ActionListener() {
@@ -601,6 +639,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 btnBatchEditActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
+        jPanelEdit.add(btnBatchEdit, gridBagConstraints);
 
         btnAddRecords.setText("Add Record(s)");
         btnAddRecords.addActionListener(new java.awt.event.ActionListener() {
@@ -608,6 +653,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 btnAddRecordsActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 14, 0);
+        jPanelEdit.add(btnAddRecords, gridBagConstraints);
 
         btnUploadChanges.setText("Upload Changes");
         btnUploadChanges.setMaximumSize(new java.awt.Dimension(95, 30));
@@ -617,6 +670,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 btnUploadChangesActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, -30, 0, 0);
+        jPanelEdit.add(btnUploadChanges, gridBagConstraints);
 
         labelEditModeState.setText("OFF");
         labelEditModeState.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -624,8 +684,20 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 labelEditModeStateMouseClicked(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
+        jPanelEdit.add(labelEditModeState, gridBagConstraints);
 
         labelEditMode.setText("Edit Mode:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
+        jPanelEdit.add(labelEditMode, gridBagConstraints);
 
         btnRevertChanges.setText("Revert Changes");
         btnRevertChanges.addActionListener(new java.awt.event.ActionListener() {
@@ -633,48 +705,31 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 btnRevertChangesActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 14, 0);
+        jPanelEdit.add(btnRevertChanges, gridBagConstraints);
 
         informationLabel.setText("jLabel2");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 6;
+        jPanelEdit.add(informationLabel, gridBagConstraints);
 
-        javax.swing.GroupLayout jPanelEditLayout = new javax.swing.GroupLayout(jPanelEdit);
-        jPanelEdit.setLayout(jPanelEditLayout);
-        jPanelEditLayout.setHorizontalGroup(
-            jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelEditLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelEditMode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelEditModeState)
-                .addGap(179, 179, 179)
-                .addGroup(jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelEditLayout.createSequentialGroup()
-                        .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnRevertChanges)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnAddRecords)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBatchEdit)
-                        .addGap(26, 26, 26))
-                    .addGroup(jPanelEditLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(informationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
-        );
-        jPanelEditLayout.setVerticalGroup(
-            jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelEditLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
-                .addGroup(jPanelEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnUploadChanges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelEditMode)
-                    .addComponent(labelEditModeState)
-                    .addComponent(btnBatchEdit)
-                    .addComponent(btnAddRecords)
-                    .addComponent(btnRevertChanges))
-                .addGap(0, 0, 0)
-                .addComponent(informationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 195;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
+        jPanel5.add(jPanelEdit, gridBagConstraints);
 
         jScrollPane2.setBorder(null);
 
@@ -716,52 +771,49 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         jPanelSQLLayout.setHorizontalGroup(
             jPanelSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSQLLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
+                .addGap(0, 0, 0)
                 .addGroup(jPanelSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnCancelSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnEnterSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCloseSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(4, 4, 4)
-                .addComponent(jScrollPane2))
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1935, Short.MAX_VALUE)
+                .addGap(2, 2, 2))
         );
         jPanelSQLLayout.setVerticalGroup(
             jPanelSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSQLLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
+                .addGap(0, 0, 0)
                 .addGroup(jPanelSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
                     .addGroup(jPanelSQLLayout.createSequentialGroup()
                         .addComponent(btnEnterSQL)
-                        .addGap(4, 4, 4)
+                        .addGap(0, 0, 0)
                         .addComponent(btnCancelSQL)
-                        .addGap(4, 4, 4)
+                        .addGap(0, 0, 0)
                         .addComponent(btnCloseSQL)
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(2, 2, 2))
         );
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanelEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 1088, Short.MAX_VALUE)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jPanelSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(4, 4, 4))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(tabbedPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanelSQL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 811;
+        gridBagConstraints.ipady = 17;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel5.add(jPanelSQL, gridBagConstraints);
 
-        tabbedPanel.getAccessibleContext().setAccessibleName("Reports");
-        tabbedPanel.getAccessibleContext().setAccessibleParent(tabbedPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        getContentPane().add(jPanel5, gridBagConstraints);
 
         menuFile.setText("File");
 
@@ -952,27 +1004,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuHelp.setText("Help");
 
         menuItemRepBugSugg.setText("Report a bug/suggestion");
+        menuItemRepBugSugg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemRepBugSuggActionPerformed(evt);
+            }
+        });
         menuHelp.add(menuItemRepBugSugg);
 
         menuBar.add(menuHelp);
 
         setJMenuBar(menuBar);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(addPanel_control, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(addPanel_control, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
-        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -999,6 +1040,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * method is called by the searchActionPerformed method and the
      * textForSearchKeyPressed method
      */
+    
+    // Corinne
+    private void menuItemRepBugSuggActionPerformed(java.awt.event.ActionEvent evt){}
+    
     public void filterBySearch() {
 
         String text = "";
@@ -1645,8 +1690,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 //           }
         }
         comboBoxSearch.setSelectedItem(searchCol);
-        updateComboList(searchCol, tabName);
-        comboBoxValue.setSelectedItem(entryValue);
+        //updateComboList(searchCol, tabName);
+        //comboBoxValue.setSelectedItem(entryValue);
     }//GEN-LAST:event_tabbedPanelStateChanged
 
     /**
@@ -2013,25 +2058,27 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_menuItemOpenDocumentActionPerformed
 
     private void comboBoxValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxValueActionPerformed
-        if (!comboBoxValue.getSelectedItem().toString().equals(searchValue)) {
-            if (comboBoxStartToSearch) {
-                if (comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Analyst")
-                        || comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Priority")
-                        || comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Path")) {
-                    if (!comboBoxValue.getSelectedItem().toString().startsWith("Enter")
-                            || !comboBoxValue.getSelectedItem().toString().endsWith("here")) {
-//            
-                        filterBySearch();
-//
-                    }
-//
-////           
-                } else {
+        if (comboBoxValue.getSelectedItem() != null){
+            if (!comboBoxValue.getSelectedItem().toString().equals(searchValue)) {
+                if (comboBoxStartToSearch) {
+                    if (comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Analyst")
+                            || comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Priority")
+                            || comboBoxSearch.getSelectedItem().toString().equalsIgnoreCase("Path")) {
+                        if (!comboBoxValue.getSelectedItem().toString().startsWith("Enter")
+                                || !comboBoxValue.getSelectedItem().toString().endsWith("here")) {
+    //            
+                            filterBySearch();
+    //
+                        }
+    //
+    ////           
+                    } else {
 
                 }
 
             }
         }
+    }
         comboBoxValue.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent ke) {
@@ -2475,6 +2522,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             } else {
                 column.setPreferredWidth(colWidth);
                 column.setMinWidth(colWidth);
+                column.setMaxWidth(colWidth);
             }
         }
         for (int j = 0; j < assignmentTable.getColumnCount(); j++) {
@@ -3107,39 +3155,46 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }else{
                 return statusComparisonResult;  
             }
+           //return statusComparisonResult;  
         }
     }
-    public Set getAnalystSet(JTable table){
-        Set <Object> analysts = new HashSet <> ();
-        for (int col = 0; col < table.getColumnCount(); col++) {
-            if ((table.getColumnName(col).equalsIgnoreCase("analyst"))){
-                for(int row = 0; row < table.getRowCount(); row++){
-                    if (table.getValueAt(row, col) != null){
-                    analysts.add(table.getValueAt(row, col));
-                    }
-                }
+    
+    // gets a unique set of values from a table column
+    private Set getUniqueColumnValues(String colName, String tableName){
+        JTable table = tabs.get(tableName).getTable(); 
+        Map comboBoxForSearchValue = this.comboBoxForSearchDropDown.get(tableName);
+        List<Object> columnValues = new ArrayList<>();
+        Set <Object> uniqueColumnValues = new HashSet<>();
+        
+         for (int col = 0; col < table.getColumnCount(); col++) {
+            if (table.getColumnName(col).equalsIgnoreCase(colName)) {
+                columnValues  = (ArrayList<Object>)comboBoxForSearchValue.get(col);
             }
         }
-        return analysts;
-    } 
+         
+         for(Object value: columnValues){
+             uniqueColumnValues.add(value);
+         }
+         return uniqueColumnValues;
+    }
     
     private void updateComboList(String colName, String tableName) {
        DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
        comboBoxValue.setModel(comboBoxSearchModel);
         Map comboBoxForSearchValue = this.comboBoxForSearchDropDown.get(tableName);
+        Set <Object> uniqueValues= new HashSet<>(); 
         ArrayList<Object> dropDownList = new ArrayList<>();
-        
-            if (colName.equalsIgnoreCase("analyst")) { //Here create dropList of unique table values, add separator, renderer,and sort
+            
+            //Here create an ArrayList of unique table values, add separator, custom renderer,and custom sort
+            //by Corinne Martus 
+            if (colName.equalsIgnoreCase("analyst")) { 
                 JTable assignmentsTable = tabs.get("Assignments").getTable();
-                JTable assignments_ArchivedTable = tabs.get("Assignments_Archived").getTable();
-                JTable reportsTable = tabs.get("Reports").getTable();
-                Set <Object> uniqueAnalysts = new HashSet<>(); 
                 
-                uniqueAnalysts.addAll(getAnalystSet(assignmentsTable));
-                uniqueAnalysts.addAll(getAnalystSet(assignments_ArchivedTable));
-                uniqueAnalysts.addAll(getAnalystSet(reportsTable));
+                uniqueValues.addAll(getUniqueColumnValues("analyst","Assignments"));
+                uniqueValues.addAll(getUniqueColumnValues("analyst","Assignments_Archived"));
+                uniqueValues.addAll(getUniqueColumnValues("analyst","Reports"));
                 
-                dropDownList = new ArrayList<>(uniqueAnalysts);
+                dropDownList = new ArrayList<>(uniqueValues);
                 Collections.sort(dropDownList, new AnalystComparator());
                 int listLength = dropDownList.size();
                     for (int i = 0; i < listLength; i++)
@@ -3159,29 +3214,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
           
             else{
-                JTable table = tabs.get(tableName).getTable();
-                for (int col = 0; col < table.getColumnCount(); col++) {
-                    if (table.getColumnName(col).equalsIgnoreCase(colName)) {
-                        dropDownList = (ArrayList<Object>) comboBoxForSearchValue.get(col);
-                        Collections.sort(dropDownList, new Comparator<Object>() {
-                            public int compare(Object o1, Object o2) {
-                            return o1.toString().compareTo(o2.toString());
-                            }
-                        });
-                    }
+                    uniqueValues.addAll(getUniqueColumnValues(colName,tableName));
+                    dropDownList = new ArrayList<>(uniqueValues);
+                    Collections.sort(dropDownList, new Comparator<Object>() {
+                        public int compare(Object o1, Object o2) {
+                        return o1.toString().compareTo(o2.toString());
+                        }
+                    });
                 }
-            }
-           
-
-            
-                
-                
-               /* if (colName.equalsIgnoreCase("priority")) {
-                    ArrayList<Integer> dropDownList1 = (ArrayList<Integer>) comboBoxForSearchValue.get(col);
-                    System.out.println(dropDownList1 + "1");*/
-                
-                
-                comboBoxStartToSearch = false;
+              comboBoxStartToSearch = false;
 
                 for (Object item : dropDownList) {
                     if (colName.equalsIgnoreCase("path")) {
@@ -3210,7 +3251,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 comboBoxStartToSearch = true;
         
     }
-   
+   //custom renderer used to render the list of analysts in comboBoxValue with a seperator line
+    //by Corinne Martus
     class ComboBoxRenderer extends BasicComboBoxRenderer implements ListCellRenderer {
     JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
     
@@ -3231,6 +3273,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
       return renderComponent;      
     }
     }
+    
+     //custom combo box listener applied to the list of analysts in comboBoxValue 
+    // prevents the seperator line from being selected
+    //by Corinne Martus
     class BlockComboListener implements ActionListener {
     JComboBox comboBoxValue;
 
