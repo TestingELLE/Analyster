@@ -22,7 +22,7 @@ import javax.swing.UIManager;
  */
 public class Analyster {
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
         
         // set the look and feel
         try {
