@@ -32,7 +32,7 @@ public class Authorization {
      * This information will be stored and retrieved from the database.
      * This method will get the required information from the database.
      */
-    public static boolean getInfoFromDB(){
+    public static boolean getInfoFromDB() throws Exception{
         userLogin = DBConnection.getUserName();
         accessLevel = AccessLevelDAO.get(userLogin);
         if(accessLevel != null){

@@ -64,6 +64,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ListCellRenderer;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
@@ -113,7 +115,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     /**
      * CONSTRUCTOR
      */
-    public AnalysterWindow() {
+    public AnalysterWindow() throws Exception {
 
         /**
          * Note: initComponents() executes the tabpaneChanged method. Thus, some
@@ -275,6 +277,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         setAccessForDeveloper();
         setPanelListeners();
+        
+        //set tooltips
+        btnClearAllFilter.setToolTipText("You can reset the filter here!");
 
         // authorize user for this component
         Authorization.authorize(this);
@@ -821,7 +826,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuItemDeleteRecord.setText("Delete Records");
         menuItemDeleteRecord.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemDeleteRecordActionPerformed(evt);
+                try {
+                    menuItemDeleteRecordActionPerformed(evt);
+                } catch (Exception ex) {
+                    Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         menuEdit.add(menuItemDeleteRecord);
@@ -1076,15 +1085,27 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     // not sure what this is
     private void menuItemAWSAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAWSAssignActionPerformed
 
-        loadTable(assignmentTable);
-        loadTable(reportTable);
+        try {
+            loadTable(assignmentTable);
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            loadTable(reportTable);
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
 
     }//GEN-LAST:event_menuItemAWSAssignActionPerformed
 
     private void btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadChangesActionPerformed
 
-        uploadChanges();
+        try {
+            uploadChanges();
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnUploadChangesActionPerformed
 
     /**
@@ -1093,7 +1114,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) and also
      * a keylistener when editing mode is on and enter is pressed
      */
-    public void uploadChanges() {
+    public void uploadChanges() throws Exception {
 
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
@@ -1334,7 +1355,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
     private void menuItemManageDBsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemManageDBsActionPerformed
-        editDatabaseWindow = new EditDatabaseWindow();
+        try {
+            editDatabaseWindow = new EditDatabaseWindow();
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
         editDatabaseWindow.setLocationRelativeTo(this);
         editDatabaseWindow.setVisible(true);
     }//GEN-LAST:event_menuItemManageDBsActionPerformed
@@ -1385,10 +1410,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 options[0]); //default button title
 
         switch (n) {
-            case 0: {               // Reconnect
-
+            case 0: {               try {
+                // Reconnect
+                
                 // create a new Login Window
                 loginWindow = new LoginWindow();
+            } catch (Exception ex) {
+                Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
                 loginWindow.setLocationRelativeTo(this);
                 loginWindow.setVisible(true);
 
@@ -1408,7 +1437,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      *
      * @param evt
      */
-    private void menuItemDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
+    private void menuItemDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) throws Exception {
 
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
@@ -1423,7 +1452,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param evt
      */
     private void menuItemViewAllAssignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemViewAllAssignActionPerformed
-        loadData();
+        try {
+            loadData();
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_menuItemViewAllAssignActionPerformed
 
     /**
@@ -1479,7 +1512,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     private void menuItemReloadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemReloadDataActionPerformed
 
-        reloadDataAction();
+        try {
+            reloadDataAction();
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String text = "Data reloaded!";
         setInformationLabel(text, 5);
         logWindow.addMessageWithDate(text);
@@ -1487,7 +1524,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }//GEN-LAST:event_menuItemReloadDataActionPerformed
 
     // reload the data
-    private void reloadDataAction() {
+    private void reloadDataAction() throws Exception {
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);
         JTableCellRenderer cellRenderer = tab.getCellRenderer();
@@ -1588,6 +1625,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 } catch (SQLException sqlException) {
                     LoggingAspect.afterThrown(sqlException);
                     break; // break because error occurred
+                } catch (Exception ex) {
+                    Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -1598,8 +1637,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                 logWindow.addMessageWithDate(text);
                 System.out.println(text);
 
-                // load the assignments archived table to refresh with new data
-                loadTable(archiveTable);
+                try {
+                    // load the assignments archived table to refresh with new data
+                    loadTable(archiveTable);
+                } catch (Exception ex) {
+                    Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
                 // update records shown for archive table tab
                 Tab archiveTab = tabs.get(ARCHIVE_TABLE_NAME);
@@ -1721,7 +1764,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     private void btnRevertChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRevertChangesActionPerformed
 
-        revertChanges();
+        try {
+            revertChanges();
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnRevertChangesActionPerformed
 
     /**
@@ -1734,10 +1781,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         // open new connection
         DBConnection.close(); // connection might be timed out on server
-        if (DBConnection.open()) {  // open a new connection
-            BackupDBTablesDialog backupDBTables = new BackupDBTablesDialog(this);
-        } else {
-            JOptionPane.showMessageDialog(this, "Could not connect to Database");
+        try {
+            if (DBConnection.open()) {  // open a new connection
+                BackupDBTablesDialog backupDBTables = new BackupDBTablesDialog(this);
+            } else {
+                JOptionPane.showMessageDialog(this, "Could not connect to Database");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
 
 
@@ -1745,7 +1796,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     private void menuItemTurnEditModeOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTurnEditModeOffActionPerformed
         makeTableEditable(false);
-        reloadDataAction();
+        try {
+            reloadDataAction();
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String text = "Edit mode turned off!";
         setInformationLabel(text, 5);
         logWindow.addMessageWithDate(text);
@@ -1788,8 +1843,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
 
             archiveTable.setRowSelectionInterval(rowsSelected[0], rowsSelected[0]);
-            loadTable(archiveTable);
-            loadTable(assignmentTable);
+            try {
+                loadTable(archiveTable);
+            } catch (Exception ex) {
+                Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                loadTable(assignmentTable);
+            } catch (Exception ex) {
+                Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             String text = rowSelected + " Record(s) Activated!";
             this.setInformationLabel(text, 5);
@@ -1874,29 +1937,37 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             System.out.println(sql);
             System.out.println(sqlChangeNum);
             DBConnection.close();
-            if (DBConnection.open()) {
-
-                statement = DBConnection.getStatement();
-                try {
-
-                    statement.executeUpdate(sql);
-                    LoggingAspect.afterReturn(sql);
-                } catch (SQLException e) {
-                    LoggingAspect.afterThrown(e);
-
+            try {
+                if (DBConnection.open()) {
+                    
+                    statement = DBConnection.getStatement();
+                    try {
+                        
+                        statement.executeUpdate(sql);
+                        LoggingAspect.afterReturn(sql);
+                    } catch (SQLException e) {
+                        LoggingAspect.afterThrown(e);
+                        
+                    }
+                    
+                } else {
+                    // connection failed
+                    LoggingAspect.afterReturn("Failed to connect");
                 }
-
-            } else {
-                // connection failed
-                LoggingAspect.afterReturn("Failed to connect");
+            } catch (Exception ex) {
+                Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
             DBConnection.close();
 
             JTableCellRenderer cellRenderer = tab.getCellRenderer();
             ModifiedTableData data = tab.getTableData();
 
-            // reload table from database
-            loadTable(table);
+            try {
+                // reload table from database
+                loadTable(table);
+            } catch (Exception ex) {
+                Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             // clear cellrenderer
             cellRenderer.clearCellRender();
@@ -1909,8 +1980,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             LoggingAspect.afterReturn("Slash are already stripped from path");
 
         }
-        // reload modified table data into dropdown list
-        loadData();
+        try {
+            // reload modified table data into dropdown list
+            loadData();
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
 
     }//GEN-LAST:event_menuItemStripslashActionPerformed
@@ -1967,29 +2042,37 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             String sql = sql1 + sql2 + " END \n" + "WHERE ID IN (" + sql3 + ");";
             System.out.println(sql);
             DBConnection.close();
-            if (DBConnection.open()) {
-
-                statement = DBConnection.getStatement();
-                try {
-
-                    statement.executeUpdate(sql);
-                    LoggingAspect.afterReturn(sql);
-                } catch (SQLException e) {
-                    LoggingAspect.afterThrown(e);
-
+            try {
+                if (DBConnection.open()) {
+                    
+                    statement = DBConnection.getStatement();
+                    try {
+                        
+                        statement.executeUpdate(sql);
+                        LoggingAspect.afterReturn(sql);
+                    } catch (SQLException e) {
+                        LoggingAspect.afterThrown(e);
+                        
+                    }
+                    
+                } else {
+                    // connection failed
+                    LoggingAspect.afterReturn("Failed to connect");
                 }
-
-            } else {
-                // connection failed
-                LoggingAspect.afterReturn("Failed to connect");
+            } catch (Exception ex) {
+                Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
             DBConnection.close();
 
             JTableCellRenderer cellRenderer = tab.getCellRenderer();
             ModifiedTableData data = tab.getTableData();
 
-            // reload table from database
-            loadTable(table);
+            try {
+                // reload table from database
+                loadTable(table);
+            } catch (Exception ex) {
+                Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             // clear cellrenderer
             cellRenderer.clearCellRender();
@@ -2002,8 +2085,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             LoggingAspect.afterReturn("Slash are already stripped from path");
 
         }
-        // reload modified table data into dropdown list
-        loadData();
+        try {
+            // reload modified table data into dropdown list
+            loadData();
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
 
     }//GEN-LAST:event_menuItemAddslashActionPerformed
@@ -2049,7 +2136,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     private void labelEditModeStateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelEditModeStateMouseClicked
         if (labelEditModeState.getText().equals("ON ")) {
-            this.revertChanges();
+            try {
+                this.revertChanges();
+            } catch (Exception ex) {
+                Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_labelEditModeStateMouseClicked
 
@@ -2122,7 +2213,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     /**
      * loadData
      */
-    public void loadData() {
+    public void loadData() throws Exception {
         loadTables(tabs);
     }
 
@@ -2504,7 +2595,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param table
      * @param modifiedDataList
      */
-    public void updateTable(JTable table, List<ModifiedData> modifiedDataList) {
+    public void updateTable(JTable table, List<ModifiedData> modifiedDataList) throws Exception {
         boolean updateSuccessful = true;
 
         // should probably not be here
@@ -2786,12 +2877,24 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
                                     switch (selectedOption) {
                                         case 0:
+                                    {
+                                        try {
                                             // if Commit, upload changes and return to editing
                                             uploadChanges();  // upload changes to database
+                                        } catch (Exception ex) {
+                                            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                    }
                                             break;
                                         case 1:
+                                    {
+                                        try {
                                             // if Revert, revert changes
                                             revertChanges(); // reverts the model back
+                                        } catch (Exception ex) {
+                                            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                    }
                                             break;
                                         default:
                                             // do nothing -> cancel
@@ -2911,7 +3014,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @param tabs
      * @return
      */
-    public Map<String, Tab> loadTables(Map<String, Tab> tabs) {
+    public Map<String, Tab> loadTables(Map<String, Tab> tabs) throws Exception {
         for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
             Tab tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
@@ -2937,7 +3040,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      *
      * @param table
      */
-    public JTable loadTable(JTable table) {
+    public JTable loadTable(JTable table) throws Exception {
 
         // open connection because might time out
         DBConnection.close();
@@ -3068,7 +3171,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         return valueListMap;
 
     }
-    public ArrayList getInactiveAnalysts(){
+    public ArrayList getInactiveAnalysts() throws Exception{
         String sql = "SELECT * FROM analysts WHERE status = 'INACTIVE'";
         ResultSet rs = null;
         ArrayList <Object> inactiveAnalysts = new ArrayList<Object>();
@@ -3259,7 +3362,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * @return
      * @throws HeadlessException
      */
-    public String deleteRecordsSelected(JTable table) throws HeadlessException {
+    public String deleteRecordsSelected(JTable table) throws HeadlessException, Exception {
 
         String sqlDelete = ""; // String for the SQL Statement
         String tableName = table.getName(); // name of the table
@@ -3427,7 +3530,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     /**
      * revertChanges used to revert changes of modified data to original data
      */
-    public void revertChanges() {
+    public void revertChanges() throws Exception {
 
         String tabName = getSelectedTabName();
         Tab tab = tabs.get(tabName);

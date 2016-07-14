@@ -15,6 +15,8 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -221,7 +223,11 @@ public class AddRecordsWindow extends JFrame {
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
 
-        submit();
+        try {
+            submit();
+        } catch (Exception ex) {
+            Logger.getLogger(AddRecordsWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
@@ -240,7 +246,7 @@ public class AddRecordsWindow extends JFrame {
      * is pressed when the table is finished editing to submit the data to the
      * database.
      */
-    private void submit() {
+    private void submit() throws Exception {
 
         Object cellValue = null;                 // store cell value
         int col = 0;                             // column index
@@ -393,7 +399,11 @@ public class AddRecordsWindow extends JFrame {
                                 }
                             } // submit the data
                             else if (table.getSelectionBackground() != Color.RED) {
-                                submit();
+                                try {
+                                    submit();
+                                } catch (Exception ex) {
+                                    Logger.getLogger(AddRecordsWindow.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         }
                     } // this toggles the red bg for clearing row data
