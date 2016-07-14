@@ -16,14 +16,14 @@ public class SqlOutputWindow extends JFrame {
     SqlOutputWindowDAO sqlOutputWindowDAO;
     Component parentComponent;
             
-    public SqlOutputWindow(String sqlCommand){
+    public SqlOutputWindow(String sqlCommand) throws Exception{
         this(sqlCommand,null);
     }
     
     /**
      * Creates new form SqlOutputWindow
      */
-    public SqlOutputWindow(String sqlCommand, Component parentComponent) {
+    public SqlOutputWindow(String sqlCommand, Component parentComponent) throws Exception {
         initComponents();
         setTitle("SQL Output");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -38,7 +38,7 @@ public class SqlOutputWindow extends JFrame {
         }
     }
     
-    public boolean setTableModel(String sqlCommand) {
+    public boolean setTableModel(String sqlCommand) throws Exception {
         DefaultTableModel model = sqlOutputWindowDAO.getTableModel(sqlCommand);
         if(model != null){
             tableOutput.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );

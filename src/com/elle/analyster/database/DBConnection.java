@@ -1,6 +1,8 @@
 
 package com.elle.analyster.database;
 
+import static com.elle.analyster.admissions.AESCrypt.decrypt;
+import static com.elle.analyster.admissions.AESCrypt.encrypt;
 import com.elle.analyster.logic.FilePathFormat;
 import com.elle.analyster.logic.LoggingAspect;
 import java.awt.Component;
@@ -11,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,6 +27,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import sun.misc.IOUtils;
 
 /**
  * DBConnection
@@ -55,7 +59,7 @@ public class DBConnection {
      * @param userPassword
      * @return boolean true if successful and false if an error occurred
      */
-    public static boolean connect(String selectedServer, String selectedDB, String userName, String userPassword){
+    public static boolean connect(String selectedServer, String selectedDB, String userName, String userPassword) throws Exception{
         
         try {
             DBConnection.server = selectedServer;
@@ -93,7 +97,7 @@ public class DBConnection {
      * from servers.
      * @return boolean true if successful and false if an error occurred
      */
-    public static boolean open(){
+    public static boolean open() throws Exception{
         return connect(server, database, userName, userPassword);
     }
     
@@ -232,7 +236,7 @@ public class DBConnection {
      * read servers data from xml file
      * @return 
      */
-    public static ArrayList<Server> readServers()
+    public static ArrayList<Server> readServers() throws Exception
     {
         ArrayList<Server> servers = new ArrayList<>();
         Server server = null;
@@ -305,7 +309,8 @@ public class DBConnection {
                             readDBUsername = true; 
                         }
                         else if(elementName.equals("db-password")){
-                            dbPassword = xmlStrReader.getElementText();
+                            String encryptedpw = xmlStrReader.getElementText();
+                            dbPassword = decrypt(encryptedpw);
                         }
                         else if(elementName.equals("db-default")){
                             dbDefault = (xmlStrReader.getElementText().equals("true"))?true:false;
@@ -369,7 +374,7 @@ public class DBConnection {
      * write server data to xml file
      * @param servers 
      */
-    public static void writeServers(ArrayList<Server> servers)
+    public static void writeServers(ArrayList<Server> servers) throws Exception
     {
         // create the XMLOutputFactory object
         XMLOutputFactory outputFactory = XMLOutputFactory.newFactory();
@@ -402,7 +407,11 @@ public class DBConnection {
                     writer.writeCharacters(database.getUsername());
                     writer.writeEndElement();
                     writer.writeStartElement("db-password");
-                    writer.writeCharacters(database.getPassword());
+                    
+                    String password = database.getPassword();
+                    String encryptedpassword = encrypt(password);
+                    writer.writeCharacters(encryptedpassword);
+                    
                     writer.writeEndElement();
                     writer.writeStartElement("db-default");
                     writer.writeCharacters(Boolean.toString(database.isDefaultSelection()));

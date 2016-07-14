@@ -17,6 +17,8 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LoginWindow extends JFrame {
 
@@ -40,13 +44,11 @@ public class LoginWindow extends JFrame {
     private LogWindow logWindow;
     private ArrayList<Server> servers;
 
-    public LoginWindow() {
+    public LoginWindow() throws Exception {
 
         initComponents();
         this.setTitle();
         loadServers();
-//        textFieldUsername.setText("pupone_Xiao");
-//        passwordFieldPW.setText("XiaoXXXX8");
     }
 
     /**
@@ -213,20 +215,20 @@ public class LoginWindow extends JFrame {
                 .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jInputPanelLayout.createSequentialGroup()
                         .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(passwordFieldPW)
-                            .addComponent(textFieldUsername)))
-                    .addGroup(jInputPanelLayout.createSequentialGroup()
-                        .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(comboBoxServer, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(comboBoxDatabase, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(comboBoxDatabase, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jInputPanelLayout.createSequentialGroup()
+                        .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(passwordFieldPW)
+                            .addComponent(textFieldUsername))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnEditDB)
                 .addContainerGap())
@@ -251,11 +253,11 @@ public class LoginWindow extends JFrame {
                 .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(textFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addGap(11, 11, 11)
+                .addGap(10, 10, 10)
                 .addGroup(jInputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(passwordFieldPW, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(38, 38, 38)
                 .addComponent(jButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -296,12 +298,21 @@ public class LoginWindow extends JFrame {
         System.exit(0); // Terminates the currently running Java Virtual Machine.
     }
     private void btnLoginActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        login();
+        try {
+            login();
+        } catch (Exception ex) {
+            Logger.getLogger(LoginWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void passwordFieldPWKeyPressed(KeyEvent evt) {//GEN-FIRST:event_passwordFieldPWKeyPressed
+        System.out.println(KeyEvent.VK_ENTER);
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            login();
+            try {
+                login();
+            } catch (Exception ex) {
+                Logger.getLogger(LoginWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_passwordFieldPWKeyPressed
 
@@ -317,8 +328,12 @@ public class LoginWindow extends JFrame {
 
     private void btnEditDBActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnEditDBActionPerformed
 
-        // create a new edit selectedDB window
-        editDatabaseList = new EditDatabaseWindow(this); // maybe we can make it not dependant on this
+        try {
+            // create a new edit selectedDB window
+            editDatabaseList = new EditDatabaseWindow(this); // maybe we can make it not dependant on this
+        } catch (Exception ex) {
+            Logger.getLogger(LoginWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
         editDatabaseList.setLocationRelativeTo(this);
         editDatabaseList.setVisible(true);
     }//GEN-LAST:event_btnEditDBActionPerformed
@@ -344,13 +359,13 @@ public class LoginWindow extends JFrame {
     /**
      * login
      */
-    public void login() {
+    public void login() throws Exception {
 
         // get user data
         selectedServer = comboBoxServer.getSelectedItem().toString();
         selectedDB = comboBoxDatabase.getSelectedItem().toString();
         userName = textFieldUsername.getText();
-        char[] pw = passwordFieldPW.getPassword();
+        char[] pw = passwordFieldPW.getPassword();   
         userPassword = String.valueOf(pw);
         
         // logwindow
@@ -596,7 +611,7 @@ public class LoginWindow extends JFrame {
     public void setTextFieldUsername(JTextField textFieldUsername) {
         this.textFieldUsername = textFieldUsername;
     }
-
+      
     private DefaultComboBoxModel getServersCBModel() {
         Vector serverNames = new Vector();
         for(Server server: servers){
@@ -623,7 +638,7 @@ public class LoginWindow extends JFrame {
         return new DefaultComboBoxModel(databases);
     }
     
-    public void loadServers() {
+    public void loadServers() throws Exception {
         servers = DBConnection.readServers();
         // set comboboxes for servers and databases
         comboBoxServer.setModel(getServersCBModel());
