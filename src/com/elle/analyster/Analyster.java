@@ -1,4 +1,3 @@
-
 package com.elle.analyster;
 
 import com.elle.analyster.logic.LoggingAspect;
