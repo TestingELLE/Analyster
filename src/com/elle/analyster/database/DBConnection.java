@@ -27,7 +27,6 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-import sun.misc.IOUtils;
 
 /**
  * DBConnection
@@ -48,6 +47,10 @@ public class DBConnection {
     private static Statement statement;
     private static final String SERVERS_FILENAME = "servers.xml";
     private static Component parentComponent;
+    
+    private static String key = "Bar12345Bar12345"; // 128 bit key
+    private static String initVector = "RandomInitVector"; // 16 bytes IV
+
     
     /**
      * connect
@@ -310,7 +313,7 @@ public class DBConnection {
                         }
                         else if(elementName.equals("db-password")){
                             String encryptedpw = xmlStrReader.getElementText();
-                            dbPassword = decrypt(encryptedpw);
+                            dbPassword = decrypt(key, initVector, encryptedpw);
                         }
                         else if(elementName.equals("db-default")){
                             dbDefault = (xmlStrReader.getElementText().equals("true"))?true:false;
@@ -409,7 +412,7 @@ public class DBConnection {
                     writer.writeStartElement("db-password");
                     
                     String password = database.getPassword();
-                    String encryptedpassword = encrypt(password);
+                    String encryptedpassword = encrypt(key, initVector, password);
                     writer.writeCharacters(encryptedpassword);
                     
                     writer.writeEndElement();
