@@ -87,7 +87,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private Map<String, Map<Integer, ArrayList<Object>>> comboBoxForSearchDropDown;
     private static Statement statement;
     private String database;
-
+    private String server;
+    
     // components
     private static AnalysterWindow instance;
     private AddRecordsWindow addRecordsWindow;
@@ -103,6 +104,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private Color editModeDefaultTextColor;
     private Color editModeActiveTextColor;
 
+    // create a jlabel to show the database and server used
+    private JLabel databaseLabel;
     private String editingTabName; // stores the name of the tab that is editing
     private String searchValue = "";
     public final static String SEPARATOR = "SEPARATOR";
@@ -458,6 +461,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         labelRecords.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelRecords.setText("labelRecords");
+        labelRecords.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        labelRecords.setInheritsPopupMenu(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -664,7 +669,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 12, 14, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
         jPanelEdit.add(btnAddRecords, gridBagConstraints);
 
         btnUploadChanges.setText("Upload Changes");
@@ -678,6 +683,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, -30, 0, 0);
@@ -700,6 +706,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
         jPanelEdit.add(labelEditMode, gridBagConstraints);
@@ -713,16 +720,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 12, 14, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
         jPanelEdit.add(btnRevertChanges, gridBagConstraints);
 
-        informationLabel.setText("jLabel2");
+        informationLabel.setText("Information Label");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 2, 0);
         jPanelEdit.add(informationLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -733,7 +742,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints.ipadx = 195;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
         jPanel5.add(jPanelEdit, gridBagConstraints);
 
         jScrollPane2.setBorder(null);
@@ -878,11 +886,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuItemDeleteRecord.setText("Delete Records");
         menuItemDeleteRecord.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    menuItemDeleteRecordActionPerformed(evt);
-                } catch (Exception ex) {
-                    Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                menuItemDeleteRecordActionPerformed(evt);
             }
         });
         menuEdit.add(menuItemDeleteRecord);
@@ -1484,19 +1488,24 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         }
     }//GEN-LAST:event_menuItemLogOffActionPerformed
 
-    /**
+    /**?
      * menuItemDeleteRecordActionPerformed Delete records menu item action
      * performed
      *
      * @param evt
      */
-    private void menuItemDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) throws Exception {
-
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        JTable table = tab.getTable();
-        String sqlDelete = deleteRecordsSelected(table);
-        logWindow.addMessageWithDate(sqlDelete);
+    private void menuItemDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
+        
+        try {
+            String tabName = getSelectedTabName();
+            Tab tab = tabs.get(tabName);
+            JTable table = tab.getTable();
+            String sqlDelete = deleteRecordsSelected(table);
+            logWindow.addMessageWithDate(sqlDelete);
+        } catch (Exception ex) {
+            Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
     }
 
     /**
@@ -2257,7 +2266,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                informationLabel.setText("");
+                informationLabel.setText("v."+version);
                 searchInformationLabel.setText("");
             }
         });
@@ -3075,8 +3084,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             Tab tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
             loadTable(table);
-            informationLabel.setText("Table loaded succesfully");
-            startCountDownFromNow(10);
+            setInformationLabel("Table loaded succesfully", 10);
             setTableListeners(table);
 
             String[] colNames = tab.getTableColNames();
@@ -3635,6 +3643,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         ((Window) (c)).setAlwaysOnTop(true);
 
+    }
+    public void setServer(String server){
+        this.server = server;
+    }
+
+     public void showDatabase() {
+        databaseLabel = new JLabel(
+            server + "." + database);
+        menuBar.add(Box.createHorizontalGlue());
+        menuBar.add(databaseLabel);
     }
 
     public String getEditingTabName() {
