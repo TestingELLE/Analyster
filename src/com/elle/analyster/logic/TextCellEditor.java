@@ -17,6 +17,7 @@ import javax.swing.border.Border;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.table.TableCellEditor;
+import javax.swing.text.DefaultEditorKit;
 import javax.swing.undo.UndoManager;
 
 /**
@@ -79,6 +80,14 @@ public class TextCellEditor extends DefaultCellEditor
                 getDefaultToolkit().getMenuShortcutKeyMask()), UNDO);
         cellEditor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.
                 getDefaultToolkit().getMenuShortcutKeyMask()), REDO);
+        
+        //bind the copy, paste and cut function
+        cellEditor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit()
+                .getMenuShortcutKeyMask()), DefaultEditorKit.copyAction);
+        cellEditor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit()
+                .getMenuShortcutKeyMask()), DefaultEditorKit.pasteAction);
+        cellEditor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_X, Toolkit.getDefaultToolkit()
+                .getMenuShortcutKeyMask()), DefaultEditorKit.cutAction);
 
     }
 

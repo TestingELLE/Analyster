@@ -69,6 +69,7 @@ import java.util.logging.Logger;
 import javax.swing.ListCellRenderer;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 /**
  * AnalysterWindow
@@ -259,7 +260,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         tabs.get(ASSIGNMENTS_TABLE_NAME).setEditing(false);
         tabs.get(REPORTS_TABLE_NAME).setEditing(false);
         tabs.get(ARCHIVE_TABLE_NAME).setEditing(false);
-
+        
         // add copy+paste short cut into table and text Area
         InputMap ip = (InputMap) UIManager.get("TextField.focusInputMap");
         InputMap ip2 = this.jTextAreaSQL.getInputMap();
