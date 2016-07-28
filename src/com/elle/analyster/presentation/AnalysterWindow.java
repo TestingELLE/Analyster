@@ -368,7 +368,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(900, 574));
-        setPreferredSize(new java.awt.Dimension(900, 574));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         addPanel_control.setLayout(new java.awt.GridBagLayout());
@@ -687,7 +686,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, -30, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, -15, 0, 0);
         jPanelEdit.add(btnUploadChanges, gridBagConstraints);
 
         labelEditModeState.setText("OFF");
@@ -731,6 +730,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 2, 0);
         jPanelEdit.add(informationLabel, gridBagConstraints);
