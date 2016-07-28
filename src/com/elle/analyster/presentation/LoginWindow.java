@@ -91,9 +91,9 @@ public class LoginWindow extends JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("<html><b>Please input your username and password to log in.</b></html>");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabel1.setMaximumSize(new java.awt.Dimension(320, 14));
-        jLabel1.setMinimumSize(new java.awt.Dimension(320, 14));
-        jLabel1.setPreferredSize(new java.awt.Dimension(320, 14));
+        jLabel1.setMaximumSize(new java.awt.Dimension(400, 17));
+        jLabel1.setMinimumSize(new java.awt.Dimension(400, 17));
+        jLabel1.setPreferredSize(new java.awt.Dimension(400, 17));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -255,16 +255,21 @@ public class LoginWindow extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(12, 6, 0, 0);
         jInputPanel.add(btnEditDB, gridBagConstraints);
 
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel6.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         jLabel6.setMaximumSize(new java.awt.Dimension(250, 21));
         jLabel6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 260;
         gridBagConstraints.ipady = 50;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 20, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 8, 30, 0);
         jInputPanel.add(jLabel6, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -370,8 +375,8 @@ public class LoginWindow extends JFrame {
         logWindow.readMessages(); // read log messages from the log file
         
         // connect to database
-        logWindow.addMessageWithDate("Connecting to local database...");
-         jLabel6.setText("<html><b>Connecting to local database...</b></html>");
+        logWindow.addMessageWithDate("Connecting to the server...");
+         jLabel6.setText("<html><b>Connecting to the server...</b></html>");
         jLabel6.paintImmediately(jLabel6.getVisibleRect());
 
         if (DBConnection.connect(selectedServer, selectedDB, userName, userPassword)) {
