@@ -36,30 +36,24 @@ import javax.swing.table.TableColumnModel;
 public class ColumnPopupMenu extends JPopupMenu {
 
     // attributes
+    private BaseTab tab;
     private CheckBoxList checkBoxList;
     private TableFilter filter;
     private JTable table;
     private Map<Integer, ArrayList<CheckBoxItem>> checkBoxItems; // distinct items for options
     private int columnIndex; // selected colunm
 
-    // for updating the records label when a filter is applied
-    private AnalysterWindow analyster;
-    private Map<String, Tab> tabs;
+   
 
     /**
      * CONSTRUCTOR ColumnPopupMenu creates a ColumnPopupMenu
      */
-    public ColumnPopupMenu(TableFilter filter) {
+    public ColumnPopupMenu(BaseTab tab) {
         initComponents();
-        this.filter = filter;
-        table = filter.getTable();
-
-        // load all check box items
-        //loadAllCheckBoxItems();
-        // initialize analyster and tabs 
-        // for updating the records label when filter is applied
-        analyster = AnalysterWindow.getInstance();
-        tabs = analyster.getTabs();
+        this.tab = tab;
+        table = tab.getTable();
+        this.filter = tab.getFilter();
+   
     }
 
     /**
@@ -485,12 +479,6 @@ public class ColumnPopupMenu extends JPopupMenu {
         filter.addFilterItems(columnIndex, filterItems);
         filter.applyFilter();
 
-        // update record label
-        String tabName = table.getName();
-        Tab tab = tabs.get(tabName);
-        String recordsLabelText = tab.getRecordsLabel();
-        JLabel recordsLabel = analyster.getRecordsLabel();
-        recordsLabel.setText(recordsLabelText);
     }
 
     /**

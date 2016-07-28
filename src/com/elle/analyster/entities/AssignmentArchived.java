@@ -6,11 +6,11 @@ package com.elle.analyster.entities;
  * @author Carlos Igreja
  * @since  May 7, 2016
  */
-public class AssignmentArchived {
+public class AssignmentArchived extends DbEntity{
 
-    private String id;
+    private int id;
     private String dateArchived;
-    private String aId;
+    private int aId;
     private String symbol;
     private String analyst;
     private String priority;
@@ -18,11 +18,11 @@ public class AssignmentArchived {
     private String dateDone;
     private String notes;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -34,11 +34,11 @@ public class AssignmentArchived {
         this.dateArchived = dateArchived;
     }
 
-    public String getaId() {
+    public int getaId() {
         return aId;
     }
 
-    public void setaId(String aId) {
+    public void setaId(int aId) {
         this.aId = aId;
     }
 
@@ -88,6 +88,11 @@ public class AssignmentArchived {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public Object deepClone() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

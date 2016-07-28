@@ -1,7 +1,5 @@
 package com.elle.analyster.presentation;
 
-import java.sql.SQLException;
-import java.sql.Statement;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.logic.ColumnPopupMenu;
 import com.elle.analyster.logic.CreateDocumentFilter;
@@ -11,26 +9,20 @@ import com.elle.analyster.logic.FilePathFormat;
 import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.database.ModifiedTableData;
 import com.elle.analyster.admissions.Authorization;
-import static com.elle.analyster.logic.ITableConstants.ARCHIVE_BATCHEDIT_CB_FIELDS;
-import static com.elle.analyster.logic.ITableConstants.ARCHIVE_SEARCH_FIELDS;
+import com.elle.analyster.controller.DataManager;
 import static com.elle.analyster.logic.ITableConstants.ARCHIVE_TABLE_NAME;
-import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_BATCHEDIT_CB_FIELDS;
-import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_SEARCH_FIELDS;
 import static com.elle.analyster.logic.ITableConstants.ASSIGNMENTS_TABLE_NAME;
-import static com.elle.analyster.logic.ITableConstants.COL_WIDTH_PER_ARCHIVE;
-import static com.elle.analyster.logic.ITableConstants.COL_WIDTH_PER_ASSIGNMENTS;
-import static com.elle.analyster.logic.ITableConstants.COL_WIDTH_PER_REPORTS;
-import static com.elle.analyster.logic.ITableConstants.REPORTS_BATCHEDIT_CB_FIELDS;
-import static com.elle.analyster.logic.ITableConstants.REPORTS_SEARCH_FIELDS;
 import static com.elle.analyster.logic.ITableConstants.REPORTS_TABLE_NAME;
-import com.elle.analyster.logic.Tab;
 import com.elle.analyster.logic.TableFilter;
 import com.elle.analyster.logic.JTableCellRenderer;
 import com.elle.analyster.logic.LoggingAspect;
 import com.elle.analyster.logic.OpenDocumentTool;
 import com.elle.analyster.logic.ShortCutSetting;
 import com.elle.analyster.logic.TextCellEditor;
-import com.elle.analyster.entities.Analyst;
+import com.elle.analyster.logic.ArchivesTab;
+import com.elle.analyster.logic.AssignmentsTab;
+import com.elle.analyster.logic.BaseTab;
+import com.elle.analyster.logic.ReportsTab;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -81,10 +73,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     public static String creationDate;  // set automatically from manifest
     public static String version;       // set automatically from manifest
+    
+    //data manager
+    DataManager dataManager; 
 
     // attributes
-    private Map<String, Tab> tabs; // stores individual tab objects 
-    private Map<String, Map<Integer, ArrayList<Object>>> comboBoxForSearchDropDown;
+    private Map<Integer, BaseTab> tabs; // stores individual tab objects 
     private static Statement statement;
     private String database;
     private String server;
@@ -119,7 +113,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      * CONSTRUCTOR
      */
     public AnalysterWindow() throws Exception {
-
+        
+        dataManager = DataManager.getInstance();
+        
         /**
          * Note: initComponents() executes the tabpaneChanged method. Thus, some
          * things need to be before or after the initComponents();
@@ -131,134 +127,138 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         DBConnection.setParentComponent(this);   // show message boxes relative to this component
         instance = this;                         // this is used to call this instance of Analyster 
 
-        // initialize tabs
-        tabs = new HashMap();
-        comboBoxForSearchDropDown = new HashMap();
-
-        // create tabName objects -> this has to be before initcomponents();
-        tabs.put(ASSIGNMENTS_TABLE_NAME, new Tab());
-        tabs.put(REPORTS_TABLE_NAME, new Tab());
-        tabs.put(ARCHIVE_TABLE_NAME, new Tab());
-
-        // set table names 
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableName(ASSIGNMENTS_TABLE_NAME);
-        tabs.get(REPORTS_TABLE_NAME).setTableName(REPORTS_TABLE_NAME);
-        tabs.get(ARCHIVE_TABLE_NAME).setTableName(ARCHIVE_TABLE_NAME);
-
-        // set the search fields for the comboBox for each tabName
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setSearchFields(ASSIGNMENTS_SEARCH_FIELDS);
-        tabs.get(REPORTS_TABLE_NAME).setSearchFields(REPORTS_SEARCH_FIELDS);
-        tabs.get(ARCHIVE_TABLE_NAME).setSearchFields(ARCHIVE_SEARCH_FIELDS);
-
-        // set the search fields for the comboBox for each tabName
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setBatchEditFields(ASSIGNMENTS_BATCHEDIT_CB_FIELDS);
-        tabs.get(REPORTS_TABLE_NAME).setBatchEditFields(REPORTS_BATCHEDIT_CB_FIELDS);
-        tabs.get(ARCHIVE_TABLE_NAME).setBatchEditFields(ARCHIVE_BATCHEDIT_CB_FIELDS);
-
-        // set column width percents to tables of the tabName objects
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
-        tabs.get(REPORTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_REPORTS);
-        tabs.get(ARCHIVE_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ARCHIVE);
-
-        // set Activate Records menu item enabled for each tabName
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setActivateRecordMenuItemEnabled(false);
-        tabs.get(REPORTS_TABLE_NAME).setActivateRecordMenuItemEnabled(false);
-        tabs.get(ARCHIVE_TABLE_NAME).setActivateRecordMenuItemEnabled(true);
-
-        // set Archive Records menu item enabled for each tabName
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(true);
-        tabs.get(REPORTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
-        tabs.get(ARCHIVE_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
-
-        // set add records button visible for each tabName
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setAddRecordsBtnVisible(true);
-        tabs.get(REPORTS_TABLE_NAME).setAddRecordsBtnVisible(true);
-        tabs.get(ARCHIVE_TABLE_NAME).setAddRecordsBtnVisible(false);
-
-        // set batch edit button visible for each tabName
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setBatchEditBtnVisible(true);
-        tabs.get(REPORTS_TABLE_NAME).setBatchEditBtnVisible(true);
-        tabs.get(ARCHIVE_TABLE_NAME).setBatchEditBtnVisible(false);
         
-        initComponents(); // generated code
+//        // create tabName objects -> this has to be before initcomponents();
+//        tabs.put(ASSIGNMENTS_TABLE_NAME, new Tab());
+//        tabs.put(REPORTS_TABLE_NAME, new Tab());
+//        tabs.put(ARCHIVE_TABLE_NAME, new Tab());
+//
+//        // set table names 
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableName(ASSIGNMENTS_TABLE_NAME);
+//        tabs.get(REPORTS_TABLE_NAME).setTableName(REPORTS_TABLE_NAME);
+//        tabs.get(ARCHIVE_TABLE_NAME).setTableName(ARCHIVE_TABLE_NAME);
+//
+//        // set the search fields for the comboBox for each tabName
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setSearchFields(ASSIGNMENTS_SEARCH_FIELDS);
+//        tabs.get(REPORTS_TABLE_NAME).setSearchFields(REPORTS_SEARCH_FIELDS);
+//        tabs.get(ARCHIVE_TABLE_NAME).setSearchFields(ARCHIVE_SEARCH_FIELDS);
+//
+//        // set the search fields for the comboBox for each tabName
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setBatchEditFields(ASSIGNMENTS_BATCHEDIT_CB_FIELDS);
+//        tabs.get(REPORTS_TABLE_NAME).setBatchEditFields(REPORTS_BATCHEDIT_CB_FIELDS);
+//        tabs.get(ARCHIVE_TABLE_NAME).setBatchEditFields(ARCHIVE_BATCHEDIT_CB_FIELDS);
+//
+//        // set column width percents to tables of the tabName objects
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
+//        tabs.get(REPORTS_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_REPORTS);
+//        tabs.get(ARCHIVE_TABLE_NAME).setColWidthPercent(COL_WIDTH_PER_ARCHIVE);
+//
+//        // set Activate Records menu item enabled for each tabName
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setActivateRecordMenuItemEnabled(false);
+//        tabs.get(REPORTS_TABLE_NAME).setActivateRecordMenuItemEnabled(false);
+//        tabs.get(ARCHIVE_TABLE_NAME).setActivateRecordMenuItemEnabled(true);
+//
+//        // set Archive Records menu item enabled for each tabName
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(true);
+//        tabs.get(REPORTS_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
+//        tabs.get(ARCHIVE_TABLE_NAME).setArchiveRecordMenuItemEnabled(false);
+//
+//        // set add records button visible for each tabName
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setAddRecordsBtnVisible(true);
+//        tabs.get(REPORTS_TABLE_NAME).setAddRecordsBtnVisible(true);
+//        tabs.get(ARCHIVE_TABLE_NAME).setAddRecordsBtnVisible(false);
+//
+//        // set batch edit button visible for each tabName
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setBatchEditBtnVisible(true);
+//        tabs.get(REPORTS_TABLE_NAME).setBatchEditBtnVisible(true);
+//        tabs.get(ARCHIVE_TABLE_NAME).setBatchEditBtnVisible(false);
+        
+        
+                // set names to tables (this was in tabbedPanelChanged method)
+//        assignmentTable.setName(ASSIGNMENTS_TABLE_NAME);
+//        reportTable.setName(REPORTS_TABLE_NAME);
+//        archiveTable.setName(ARCHIVE_TABLE_NAME);
+//
+//        // set tables to tabName objects
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setTable(assignmentTable);
+//        tabs.get(REPORTS_TABLE_NAME).setTable(reportTable);
+//        tabs.get(ARCHIVE_TABLE_NAME).setTable(archiveTable);
 
-        // initialize the colors for the edit mode text
-        editModeActiveTextColor = new Color(44, 122, 22); //dark green
-        editModeDefaultTextColor = labelEditMode.getForeground();
-
-        // set names to tables (this was in tabbedPanelChanged method)
-        assignmentTable.setName(ASSIGNMENTS_TABLE_NAME);
-        reportTable.setName(REPORTS_TABLE_NAME);
-        archiveTable.setName(ARCHIVE_TABLE_NAME);
-
-        // set tables to tabName objects
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setTable(assignmentTable);
-        tabs.get(REPORTS_TABLE_NAME).setTable(reportTable);
-        tabs.get(ARCHIVE_TABLE_NAME).setTable(archiveTable);
-
+        
         // set array variable of stored column names of the tables
         // this is just to store and use the information
         // to actually change the table names it should be done
         // through properties in the gui design tabName
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableColNames(assignmentTable);
-        tabs.get(REPORTS_TABLE_NAME).setTableColNames(reportTable);
-        tabs.get(ARCHIVE_TABLE_NAME).setTableColNames(archiveTable);
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableColNames(assignmentTable);
+//        tabs.get(REPORTS_TABLE_NAME).setTableColNames(reportTable);
+//        tabs.get(ARCHIVE_TABLE_NAME).setTableColNames(archiveTable);
+        
+        
+        // add filters for each table
+        // must be before setting ColumnPopupMenu because this is its parameter
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setFilter(new TableFilter(assignmentTable));
+//        tabs.get(REPORTS_TABLE_NAME).setFilter(new TableFilter(reportTable));
+//        tabs.get(ARCHIVE_TABLE_NAME).setFilter(new TableFilter(archiveTable));
+//
+//        // initialize columnPopupMenu 
+//        // - must be before setTerminalFunctions is called
+//        // - because the mouslistener is added to the table header
+//        tabs.get(ASSIGNMENTS_TABLE_NAME)
+//                .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(ASSIGNMENTS_TABLE_NAME).getFilter()));
+//        tabs.get(REPORTS_TABLE_NAME)
+//                .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(REPORTS_TABLE_NAME).getFilter()));
+//        tabs.get(ARCHIVE_TABLE_NAME)
+//                .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(ARCHIVE_TABLE_NAME).getFilter()));
+//        boolean comboBoxStartToSearch = false;
+//        // load data from database to tables
+//        loadTables(tabs);
+//
+//        // set initial record counts of now full tables
+//        // this should only need to be called once at start up of Analyster.
+//        // total counts are removed or added in the Tab class
+//        initTotalRowCounts(tabs);
+//
+//        // set the cell renderers for each tabName 
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setCellRenderer(new JTableCellRenderer(assignmentTable));
+//        tabs.get(REPORTS_TABLE_NAME).setCellRenderer(new JTableCellRenderer(reportTable));
+//        tabs.get(ARCHIVE_TABLE_NAME).setCellRenderer(new JTableCellRenderer(archiveTable));
+//
+//        // set the modified table data objects for each tabName
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableData(new ModifiedTableData(assignmentTable));
+//        tabs.get(REPORTS_TABLE_NAME).setTableData(new ModifiedTableData(reportTable));
+//        tabs.get(ARCHIVE_TABLE_NAME).setTableData(new ModifiedTableData(archiveTable));
+//
+//        // set all the tabs initially not in editing mode
+//        tabs.get(ASSIGNMENTS_TABLE_NAME).setEditing(false);
+//        tabs.get(REPORTS_TABLE_NAME).setEditing(false);
+//        tabs.get(ARCHIVE_TABLE_NAME).setEditing(false);
+//        
+        initComponents(); // generated code
+        
+        //initialize tabs
+       
+        tabs = new HashMap();
+        tabs.put(0, new AssignmentsTab(assignmentTable));
+        tabs.put(1, new ReportsTab(reportTable));
+        tabs.put(2, new ArchivesTab(archiveTable));
+        
+        
+        // initialize the colors for the edit mode text
+        editModeActiveTextColor = new Color(44, 122, 22); //dark green
+        editModeDefaultTextColor = labelEditMode.getForeground();
 
         // this sets the KeyboardFocusManger
         setKeyboardFocusManager();
 
-        // show and hide components
-        btnUploadChanges.setVisible(false);
-        jPanelSQL.setVisible(false);
-        btnEnterSQL.setVisible(true);
-        btnCancelSQL.setVisible(true);
-        btnBatchEdit.setVisible(true);
+        // hide sql panel
         jTextAreaSQL.setVisible(true);
-        jPanelEdit.setVisible(true);
-        btnRevertChanges.setVisible(false);
+       
 
-        // set upload/revert buttons initially disabled
-        btnUploadChanges.setEnabled(false);
-        btnRevertChanges.setEnabled(false);
 
-        // add filters for each table
-        // must be before setting ColumnPopupMenu because this is its parameter
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setFilter(new TableFilter(assignmentTable));
-        tabs.get(REPORTS_TABLE_NAME).setFilter(new TableFilter(reportTable));
-        tabs.get(ARCHIVE_TABLE_NAME).setFilter(new TableFilter(archiveTable));
-
-        // initialize columnPopupMenu 
-        // - must be before setTerminalFunctions is called
-        // - because the mouslistener is added to the table header
-        tabs.get(ASSIGNMENTS_TABLE_NAME)
-                .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(ASSIGNMENTS_TABLE_NAME).getFilter()));
-        tabs.get(REPORTS_TABLE_NAME)
-                .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(REPORTS_TABLE_NAME).getFilter()));
-        tabs.get(ARCHIVE_TABLE_NAME)
-                .setColumnPopupMenu(new ColumnPopupMenu(tabs.get(ARCHIVE_TABLE_NAME).getFilter()));
-        boolean comboBoxStartToSearch = false;
-        // load data from database to tables
-        loadTables(tabs);
-
-        // set initial record counts of now full tables
-        // this should only need to be called once at start up of Analyster.
-        // total counts are removed or added in the Tab class
-        initTotalRowCounts(tabs);
-
-        // set the cell renderers for each tabName 
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setCellRenderer(new JTableCellRenderer(assignmentTable));
-        tabs.get(REPORTS_TABLE_NAME).setCellRenderer(new JTableCellRenderer(reportTable));
-        tabs.get(ARCHIVE_TABLE_NAME).setCellRenderer(new JTableCellRenderer(archiveTable));
-
-        // set the modified table data objects for each tabName
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setTableData(new ModifiedTableData(assignmentTable));
-        tabs.get(REPORTS_TABLE_NAME).setTableData(new ModifiedTableData(reportTable));
-        tabs.get(ARCHIVE_TABLE_NAME).setTableData(new ModifiedTableData(archiveTable));
-
-        // set all the tabs initially not in editing mode
-        tabs.get(ASSIGNMENTS_TABLE_NAME).setEditing(false);
-        tabs.get(REPORTS_TABLE_NAME).setEditing(false);
-        tabs.get(ARCHIVE_TABLE_NAME).setEditing(false);
+        //initialize tab related components
+        //including button state, recordsLabel, comboBoxSearchField, addIssue button text ,etc
+        BaseTab currentTab = tabs.get(tabbedPanel.getSelectedIndex()); 
+        changeTabbedPanelState(currentTab);
 
         // add copy+paste short cut into table and text Area
         InputMap ip = (InputMap) UIManager.get("TextField.focusInputMap");
@@ -268,12 +268,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         informationLabel.setText("");
         isBatchEditWindowShow = false;
-        String tabName = getSelectedTabName();
-       
-        String searchContent = comboBoxSearch.getSelectedItem().toString();
-        this.updateComboList(searchContent, tabName);
+        
         this.comboBoxValue.setSelectedItem("Enter here");
-
+        
+        
         // set title of window to Analyster
         this.setTitle("Analyster");
         this.setSize(this.getWidth(), 560);
@@ -535,7 +533,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
         assignmentTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         assignmentTable.setMinimumSize(new java.awt.Dimension(10, 240));
-        assignmentTable.setName(""); // NOI18N
+        assignmentTable.setName("Assignments"); // NOI18N
         assignmentTable.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(assignmentTable);
 
@@ -546,7 +544,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         reportTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, "", null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
@@ -567,15 +565,23 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, true, false, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
         reportTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         reportTable.setMinimumSize(new java.awt.Dimension(1500, 400));
+        reportTable.setName("Reports"); // NOI18N
         reportTable.setPreferredSize(new java.awt.Dimension(1500, 400));
         jScrollPane4.setViewportView(reportTable);
 
@@ -607,10 +613,10 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true, true, true
+                false, true, false, true, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -624,6 +630,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         archiveTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         archiveTable.setAutoscrolls(false);
         archiveTable.setMinimumSize(new java.awt.Dimension(10, 240));
+        archiveTable.setName("Assignments_Archived"); // NOI18N
         jScrollPane3.setViewportView(archiveTable);
 
         tabbedPanel.addTab("Assignments_Archived", jScrollPane3);
@@ -1062,8 +1069,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         String text = "";
 
         int count = 0;
-        for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
-            Tab tab = tabs.get(entry.getKey());
+        for (Map.Entry<Integer, BaseTab> entry : tabs.entrySet()) {
+            BaseTab tab = tabs.get(entry.getKey());
             JTable table = tab.getTable();
             TableModel tableModel = table.getModel();
 
@@ -1151,50 +1158,51 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadChangesActionPerformed
 
         try {
-            uploadChanges();
+            BaseTab currentTab = tabs.get(tabbedPanel.getSelectedIndex());
+            currentTab.uploadChanges();
         } catch (Exception ex) {
             Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnUploadChangesActionPerformed
 
-    /**
-     * This uploads changes made by editing and saves the changes by uploading
-     * them to the database. This method is called by:
-     * btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) and also
-     * a keylistener when editing mode is on and enter is pressed
-     */
-    public void uploadChanges() throws Exception {
-
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        JTable table = tab.getTable();
-        JTableCellRenderer cellRenderer = tab.getCellRenderer();
-        ModifiedTableData data = tab.getTableData();
-
-        updateTable(table, data.getNewData());
-
-        loadTable(table); // refresh table
-
-        // clear cellrenderer
-        cellRenderer.clearCellRender();
-
-        // reload modified table data with current table model
-        data.reloadData();
-
-        data.getNewData().clear();    // reset the arraylist to record future changes
-        setLastUpdateTime();          // update time
-        makeTableEditable(false);
-
-        // no changes to upload or revert		
-        setEnabledEditingButtons(false, false);
-        String text = "Edits uploaded successfully!";
-        setInformationLabel(text, 5);
-        logWindow.addMessageWithDate(text);
-        System.out.println(text);
-
-        // no changes to upload or revert
-        setEnabledEditingButtons(false, false);
-    }
+//    /**
+//     * This uploads changes made by editing and saves the changes by uploading
+//     * them to the database. This method is called by:
+//     * btnUploadChangesActionPerformed(java.awt.event.ActionEvent evt) and also
+//     * a keylistener when editing mode is on and enter is pressed
+//     */
+//    public void uploadChanges() throws Exception {
+//
+//        
+//        BaseTab tab = tabs.get(tabbedPanel.getSelectedIndex());
+//        JTable table = tab.getTable();
+//        JTableCellRenderer cellRenderer = tab.getCellRenderer();
+//        ModifiedTableData data = tab.getTableData();
+//
+//        updateTable(table, data.getNewData());
+//
+//        loadTable(table); // refresh table
+//
+//        // clear cellrenderer
+//        cellRenderer.clearCellRender();
+//
+//        // reload modified table data with current table model
+//        data.reloadData();
+//
+//        data.getNewData().clear();    // reset the arraylist to record future changes
+//        setLastUpdateTime();          // update time
+//        makeTableEditable(false);
+//
+//        // no changes to upload or revert		
+//        setEnabledEditingButtons(false, false);
+//        String text = "Edits uploaded successfully!";
+//        setInformationLabel(text, 5);
+//        logWindow.addMessageWithDate(text);
+//        System.out.println(text);
+//
+//        // no changes to upload or revert
+//        setEnabledEditingButtons(false, false);
+//    }
 
     private void btnEnterSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterSQLActionPerformed
 
@@ -1238,176 +1246,238 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuItemSQLCmdChkBx.setSelected(false);
     }//GEN-LAST:event_btnCloseSQLActionPerformed
 
+//    /**
+//     * makeTableEditable Make tables editable or non editable
+//     *
+//     * @param makeTableEditable // takes boolean true or false to make editable
+//     */
+//    public void makeTableEditable(boolean makeTableEditable) {
+//
+//        BaseTab tab = tabs.get(tabbedPanel.getSelectedIndex());
+//       
+//
+//        if (makeTableEditable) {
+//            tab.setEditing(true);
+//            labelEditModeState.setText("ON ");
+//            btnUploadChanges.setVisible(true);
+//            btnAddRecords.setVisible(false);
+//            btnBatchEdit.setVisible(true);
+//            btnRevertChanges.setVisible(true);
+//        } else {
+//            tab.setEditing(false);
+//            labelEditModeState.setText("OFF");
+//            btnUploadChanges.setVisible(false);
+//            btnAddRecords.setVisible(isAddRecordsBtnVisible);
+//            btnBatchEdit.setVisible(isBatchEditBtnVisible);
+//            btnRevertChanges.setVisible(false);
+//        }
+//        editModeTextColor(tab.isEditing());
+//
+//        for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
+//            tab = tabs.get(entry.getKey());
+//            JTable table = tab.getTable();
+//            EditableTableModel model = ((EditableTableModel) table.getModel());
+//            model.setCellEditable(makeTableEditable);
+//
+//        }
+//    }
+    
+    
+    
+
+//    /**
+//     * changeTabbedPanelState
+//     */
+//    private void changeTabbedPanelState() {
+//
+//        // get selected tab
+//        BaseTab selectedTab = tabs.get(tabbedPanel.getSelectedIndex());
+//        
+//
+//        this.menuItemStripslash.setEnabled(false);
+//        this.menuItemAddslash.setEnabled(false);
+//
+//        if (tabName.equals("Reports")) {
+//            this.menuItemStripslash.setEnabled(true);
+//            this.menuItemAddslash.setEnabled(true);
+//            menuItemOpenDocument.setEnabled(true);
+//        } else {
+//            menuItemOpenDocument.setEnabled(false);
+//        }
+//
+//        // get booleans for the states of the selected tab
+//        boolean isActivateRecordMenuItemEnabled = tab.isActivateRecordMenuItemEnabled();
+//        boolean isArchiveRecordMenuItemEnabled = tab.isArchiveRecordMenuItemEnabled();
+//        boolean isBatchEditBtnEnabled = tab.isBatchEditBtnEnabled();
+//        boolean isBatchEditWindowOpen = tab.isBatchEditWindowOpen();
+//        boolean isBatchEditWindowVisible = tab.isBatchEditWindowVisible();
+//
+//        // this enables or disables the menu components for this tabName
+//        menuItemActivateRecord.setEnabled(isActivateRecordMenuItemEnabled);
+//        menuItemArchiveRecord.setEnabled(isArchiveRecordMenuItemEnabled);
+//
+//        // batch edit button enabled is only allowed for table that is editing
+//        btnBatchEdit.setEnabled(isBatchEditBtnEnabled);
+//        if (isBatchEditWindowOpen) {
+//            batchEditWindow.setVisible(isBatchEditWindowVisible);
+//        }
+//
+//        // check whether editing and display accordingly
+//        boolean editing = tab.isEditing();
+//
+//        // must be instance of EditableTableModel 
+//        // this method is called from init componenents before the table model is set
+//        JTable table = tab.getTable();
+//        if (table.getModel() instanceof EditableTableModel) {
+//            makeTableEditable(editing);
+//        }
+//
+//        // set the color of the edit mode text
+//        editModeTextColor(tab.isEditing());
+//
+//        // set label record information
+//        String recordsLabel = tab.getRecordsLabel();
+//        labelRecords.setText(recordsLabel);
+//
+//        // buttons if in edit mode
+//        if (labelEditModeState.getText().equals("ON ")) {
+//            btnAddRecords.setVisible(false);
+//            btnBatchEdit.setVisible(true);
+//        }
+//
+//        // batch edit window visible only on the editing tab
+//        if (batchEditWindow != null) {
+//            boolean batchWindowVisible = tab.isBatchEditWindowVisible();
+//            batchEditWindow.setVisible(batchWindowVisible);
+//        }
+//
+//        // if this tab is editing
+//        if (editing) {
+//
+//            // if there is no modified data
+//            if (tab.getTableData().getNewData().isEmpty()) {
+//                setEnabledEditingButtons(false, false);
+//            } // there is modified data to upload or revert
+//            else {
+//                setEnabledEditingButtons(true, true);
+//            }
+//
+//            // set edit mode label
+//            labelEditMode.setText("Edit Mode: ");
+//            labelEditModeState.setVisible(true);
+//            editModeTextColor(true);
+//        } // else if no tab is editing
+//        else if (!isTabEditing()) {
+//            btnAddRecords.setEnabled(true);
+//            btnBatchEdit.setEnabled(true);
+//
+//            // set edit mode label
+//            labelEditMode.setText("Edit Mode: ");
+//            labelEditModeState.setVisible(true);
+//
+//            editModeTextColor(false);
+//        } // else if there is a tab editing but it is not this one
+//        else if (isTabEditing()) {
+//            btnAddRecords.setEnabled(false);
+//            btnBatchEdit.setEnabled(false);
+//
+//            // set edit mode label
+//            labelEditMode.setText("Editing " + getEditingTabName() + " ... ");
+//            labelEditModeState.setVisible(false);
+//            editModeTextColor(true);
+//        }
+//
+//        // authorize user
+//        Authorization.authorize(this);
+//    }
+    
+    
     /**
-     * makeTableEditable Make tables editable or non editable
-     *
-     * @param makeTableEditable // takes boolean true or false to make editable
-     */
-    public void makeTableEditable(boolean makeTableEditable) {
-
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        boolean isAddRecordsBtnVisible = tab.isAddRecordsBtnVisible();
-        boolean isBatchEditBtnVisible = tab.isBatchEditBtnVisible();
-
-        if (makeTableEditable) {
-            tab.setEditing(true);
-            labelEditModeState.setText("ON ");
-            btnUploadChanges.setVisible(true);
-            btnAddRecords.setVisible(false);
-            btnBatchEdit.setVisible(true);
-            btnRevertChanges.setVisible(true);
-        } else {
-            tab.setEditing(false);
-            labelEditModeState.setText("OFF");
-            btnUploadChanges.setVisible(false);
-            btnAddRecords.setVisible(isAddRecordsBtnVisible);
-            btnBatchEdit.setVisible(isBatchEditBtnVisible);
-            btnRevertChanges.setVisible(false);
-        }
-        editModeTextColor(tab.isEditing());
-
-        for (Map.Entry<String, Tab> entry : tabs.entrySet()) {
-            tab = tabs.get(entry.getKey());
-            JTable table = tab.getTable();
-            EditableTableModel model = ((EditableTableModel) table.getModel());
-            model.setCellEditable(makeTableEditable);
-
-        }
-    }
-
-    /**
+     * @author Yi 7/28/2016
      * changeTabbedPanelState
+     * getting states from panel, and set up the pwWindow components
      */
-    private void changeTabbedPanelState() {
 
-        // get selected tab
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-
-        this.menuItemStripslash.setEnabled(false);
-        this.menuItemAddslash.setEnabled(false);
-
-        if (tabName.equals("Reports")) {
-            this.menuItemStripslash.setEnabled(true);
-            this.menuItemAddslash.setEnabled(true);
-            menuItemOpenDocument.setEnabled(true);
-        } else {
-            menuItemOpenDocument.setEnabled(false);
+    public void changeTabbedPanelState(BaseTab tab) {
+        
+        //comboBoxField drop down reset
+        String[] searchFields = tab.getSearchFields();
+        if (searchFields != null) {
+            comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
         }
+        //populate comboxValue drop down
+        String searchContent = comboBoxSearch.getSelectedItem().toString();
+        this.updateComboList(searchContent, tab);
+        this.comboBoxValue.setSelectedItem("Enter search value here");
+        
+        
+            
+        //labelRecords reset for # of records andn # of records shown
+        labelRecords.setText(tab.getRecordsLabel());
+        
+        //set buttons state
+        setButtonsState(tab);
+    
 
-        // get booleans for the states of the selected tab
-        boolean isActivateRecordMenuItemEnabled = tab.isActivateRecordMenuItemEnabled();
-        boolean isArchiveRecordMenuItemEnabled = tab.isArchiveRecordMenuItemEnabled();
-        boolean isBatchEditBtnEnabled = tab.isBatchEditBtnEnabled();
-        boolean isBatchEditWindowOpen = tab.isBatchEditWindowOpen();
-        boolean isBatchEditWindowVisible = tab.isBatchEditWindowVisible();
-
-        // this enables or disables the menu components for this tabName
-        menuItemActivateRecord.setEnabled(isActivateRecordMenuItemEnabled);
-        menuItemArchiveRecord.setEnabled(isArchiveRecordMenuItemEnabled);
-
-        // batch edit button enabled is only allowed for table that is editing
-        btnBatchEdit.setEnabled(isBatchEditBtnEnabled);
-        if (isBatchEditWindowOpen) {
-            batchEditWindow.setVisible(isBatchEditWindowVisible);
-        }
-
-        // check whether editing and display accordingly
-        boolean editing = tab.isEditing();
-
-        // must be instance of EditableTableModel 
-        // this method is called from init componenents before the table model is set
-        JTable table = tab.getTable();
-        if (table.getModel() instanceof EditableTableModel) {
-            makeTableEditable(editing);
-        }
-
-        // set the color of the edit mode text
-        editModeTextColor(tab.isEditing());
-
-        // set label record information
-        String recordsLabel = tab.getRecordsLabel();
-        labelRecords.setText(recordsLabel);
-
-        // buttons if in edit mode
-        if (labelEditModeState.getText().equals("ON ")) {
-            btnAddRecords.setVisible(false);
-            btnBatchEdit.setVisible(true);
-        }
-
-        // batch edit window visible only on the editing tab
-        if (batchEditWindow != null) {
-            boolean batchWindowVisible = tab.isBatchEditWindowVisible();
-            batchEditWindow.setVisible(batchWindowVisible);
-        }
-
-        // if this tab is editing
-        if (editing) {
-
-            // if there is no modified data
-            if (tab.getTableData().getNewData().isEmpty()) {
-                setEnabledEditingButtons(false, false);
-            } // there is modified data to upload or revert
-            else {
-                setEnabledEditingButtons(true, true);
-            }
-
-            // set edit mode label
-            labelEditMode.setText("Edit Mode: ");
-            labelEditModeState.setVisible(true);
-            editModeTextColor(true);
-        } // else if no tab is editing
-        else if (!isTabEditing()) {
-            btnAddRecords.setEnabled(true);
-            btnBatchEdit.setEnabled(true);
-
-            // set edit mode label
-            labelEditMode.setText("Edit Mode: ");
-            labelEditModeState.setVisible(true);
-
-            editModeTextColor(false);
-        } // else if there is a tab editing but it is not this one
-        else if (isTabEditing()) {
-            btnAddRecords.setEnabled(false);
-            btnBatchEdit.setEnabled(false);
-
-            // set edit mode label
-            labelEditMode.setText("Editing " + getEditingTabName() + " ... ");
-            labelEditModeState.setVisible(false);
-            editModeTextColor(true);
-        }
-
-        // authorize user
         Authorization.authorize(this);
+    
+    }
+    
+    
+     /**
+     * set button state from tab
+     * @author Yi
+     * @since 07/28/2016
+     *
+     * @param baseTab
+     */
+    private void setButtonsState(BaseTab tab) {
+        
+        //buttons
+        btnAddRecords.setVisible(tab.getState().isAddBtnVisible());
+        btnBatchEdit.setVisible(tab.getState().isBatchEditBtnVisible());
+        btnUploadChanges.setVisible(tab.getState().isUploadChangesBtnVisible());
+        btnRevertChanges.setVisible(tab.getState().isRevertChangesBtnVisible());
+        if(tab.getState().isEditMode()) {
+            labelEditModeState.setText("ON");
+            
+        }
+        else labelEditModeState.setText("OFF");
+        
+        editModeTextColor(tab.getState().isEditMode());
+        
+        //menuItems
+        menuItemActivateRecord.setEnabled(tab.getState().isActivateRecordEnabled());
+        menuItemArchiveRecord.setEnabled(tab.getState().isArchiveRecordEnabled());
+        menuItemOpenDocument.setEnabled(tab.getState().isOpenDocumentEnabled());
+        menuItemStripslash.setEnabled(tab.getState().isStripSlashEnabled());
+        menuItemAddslash.setEnabled(tab.getState().isAddSlashEnabled());
+        
+                
     }
 
+    
+    
+    
     private void btnBatchEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchEditActionPerformed
 
+        
         // get selected tab
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
+        
+        BaseTab tab = tabs.get(tabbedPanel.getSelectedIndex());
+        JTable table = tab.getTable();
+        int[] rows = table.getSelectedRows();
 
-        // set the tab to editing
-        tab.setEditing(true);
-        makeTableEditable(true);
-
-        // set the color of the edit mode text
-        editModeTextColor(tab.isEditing());
-
+        // set the tab state to editing
+        //hide add button, show changes btns, set editmode
+        tab.getState().enableEdit(true);
+        changeTabbedPanelState(tab);
+        
+        //open batch edit window
         // open a batch edit window and make visible only to this tab
-        batchEditWindow = new BatchEditWindow();
+        batchEditWindow = new BatchEditWindow(tab);
+        this.setEnabled(false);
         batchEditWindow.setVisible(true);
-        batchEditWindow.toFront();
-        batchEditWindow.requestFocus();
-        this.isBatchEditWindowShow = true;
-        tab.setBatchEditWindowVisible(true);
-        tab.setBatchEditWindowOpen(true);
-        tab.setBatchEditBtnEnabled(false);
-        setBatchEditButtonStates(tab);
-
-        // show the batch edit window in front of the Main Window
-        showWindowInFront(batchEditWindow);
 
     }//GEN-LAST:event_btnBatchEditActionPerformed
 
@@ -1436,12 +1506,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         else {
             addRecordsWindow.toFront();
         }
-
-        // update records
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        String recordsLabel = tab.getRecordsLabel();
-        labelRecords.setText(recordsLabel);
 
     }//GEN-LAST:event_btnAddRecordsActionPerformed
 
@@ -1497,11 +1561,43 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private void menuItemDeleteRecordActionPerformed(java.awt.event.ActionEvent evt) {
         
         try {
-            String tabName = getSelectedTabName();
-            Tab tab = tabs.get(tabName);
+            
+            BaseTab tab = tabs.get(tabbedPanel.getSelectedIndex());
             JTable table = tab.getTable();
-            String sqlDelete = deleteRecordsSelected(table);
-            logWindow.addMessageWithDate(sqlDelete);
+            int[] selectedRows = table.getSelectedRows(); 
+            
+            //get ids for selected records
+            int[] ids = new int[selectedRows.length];
+            
+            for(int i = 0; i< selectedRows.length; i++) {
+                ids[i] = (int) table.getValueAt(i, 0);
+            }
+            //remove records from datamanager
+            switch(table.getName()) {
+                case "Assignments" : {
+                    dataManager.deleteAssignments(ids);
+                    break;
+                }
+                
+                case "Reports" : {
+                    dataManager.deleteReports(ids);
+                    break;
+                }
+                
+                case "Assignments_Archived" :{
+                    dataManager.deleteArchives(ids);
+                    break;
+                }
+                default : break;
+                    
+            }
+            
+            //remove rows from table
+            for(int index = selectedRows.length -1; index >= 0; index --) {
+                tab.deleteRow(selectedRows[index]);
+            }
+            
+           
         } catch (Exception ex) {
             Logger.getLogger(AnalysterWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1729,31 +1825,18 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     private void tabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPanelStateChanged
 
-        changeTabbedPanelState();
-
-        // this changes the search fields for the comboBox for each tabName
-        // this event is fired from initCompnents hence the null condition
-        String entryValue = comboBoxValue.getSelectedItem().toString();
-        String searchCol = comboBoxSearch.getSelectedItem().toString();
-        String tabName = getSelectedTabName();
-        Tab tab = tabs.get(tabName);
-        String[] searchFields = tab.getSearchFields();
-        System.out.println(tab.getTableName());
-        if (searchFields != null) {
-            comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
-//           if(tab.getTableName().equalsIgnoreCase("Assignments")){
-//           comboBoxSearch.setModel(new DefaultComboBoxModel(ASSIGNMENTS_SEARCH_FIELDS));
-//           }else if(tab.getTableName().equalsIgnoreCase("Reports")){
-//           comboBoxSearch.setModel(new DefaultComboBoxModel(REPORTS_SEARCH_FIELDS));    
-//           }else if(tab.getTableName().equalsIgnoreCase("Assignments_Archived")){
-//           comboBoxSearch.setModel(new DefaultComboBoxModel(ARCHIVE_SEARCH_FIELDS));    
-//           }
+        if (tabs != null) {
+            BaseTab tab = tabs.get(tabbedPanel.getSelectedIndex());
+            
+            //set up related JComponents 
+            changeTabbedPanelState(tab);
         }
-        comboBoxSearch.setSelectedItem(searchCol);
-        //updateComboList(searchCol, tabName);
-        //comboBoxValue.setSelectedItem(entryValue);
+        
     }//GEN-LAST:event_tabbedPanelStateChanged
 
+   
+    
+    
     /**
      * jCheckBoxMenuItemViewLogActionPerformed
      *
@@ -2386,6 +2469,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
                                     selectAllText(e);
                                 }
                                 if (e.isControlDown()) {
+                                    
+                                    //perform open actions
+                                    //need to implement in particular
 
                                     openDocumentTool();
 
@@ -3150,7 +3236,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             LoggingAspect.afterThrown(ex);
         }
 
-        EditableTableModel model = new EditableTableModel(data, columnNames, columnClass);
+        EditableTableModel model = new EditableTableModel(data, columnNames);
 
         // this has to be set here or else I get errors
         // I tried passing the model to the filter and setting it there
@@ -3297,79 +3383,146 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
          return uniqueColumnValues;
     }
     
-    private void updateComboList(String colName, String tableName) {
-       DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
-       comboBoxValue.setModel(comboBoxSearchModel);
-        Map comboBoxForSearchValue = this.comboBoxForSearchDropDown.get(tableName);
-        Set <Object> uniqueValues= new HashSet<>(); 
-        ArrayList<Object> dropDownList = new ArrayList<>();
-            
-            //Here create an ArrayList of unique table values, add separator, custom renderer,and custom sort
-            //by Corinne Martus 
-            if (colName.equalsIgnoreCase("analyst")) { 
-                JTable assignmentsTable = tabs.get("Assignments").getTable();
-                
-                uniqueValues.addAll(getUniqueColumnValues("analyst","Assignments"));
-                uniqueValues.addAll(getUniqueColumnValues("analyst","Assignments_Archived"));
-                uniqueValues.addAll(getUniqueColumnValues("analyst","Reports"));
-                
-                dropDownList = new ArrayList<>(uniqueValues);
-                Collections.sort(dropDownList, new AnalystComparator());
-                int listLength = dropDownList.size();
-                    for (int i = 0; i < listLength; i++)
-                    { 
-                        if (dropDownList.get(i) != null){
-                        String currentAnalyst = dropDownList.get(i).toString();
-                            if(inactiveAnalysts.contains(currentAnalyst))
-                            {
-                              dropDownList.add(i, SEPARATOR);
-                               break;
-                            }
-                        }
-                    } 
-            
-            comboBoxValue.setRenderer(new ComboBoxRenderer());
-            comboBoxValue.addActionListener(new BlockComboListener(comboBoxValue));
-            }
-          
-            else{
-                    uniqueValues.addAll(getUniqueColumnValues(colName,tableName));
-                    dropDownList = new ArrayList<>(uniqueValues);
-                    Collections.sort(dropDownList, new Comparator<Object>() {
-                        public int compare(Object o1, Object o2) {
-                        return o1.toString().compareTo(o2.toString());
-                        }
-                    });
-                }
-              comboBoxStartToSearch = false;
-
-                for (Object item : dropDownList) {
-                    if (colName.equalsIgnoreCase("path")) {
-                        String str = item.toString();
-                        //Identify the column startwith and endwith "/" 
-
-                        while (str.startsWith("/")) {
-                            //Continue strip "/" until the correct format
-
-                            str = str.substring(1, str.length());
-
-                        }
-                        while (str.endsWith("/") || str.endsWith(" ")) {
-                            //Continue strip "/" until the correct format
-
-                            str = str.substring(0, str.length() - 1);
-
-                        }
-                        comboBoxSearchModel.addElement(str);
-                    } else {
-
-                        comboBoxSearchModel.addElement(item);
-                    }
-                }
-                    
-                comboBoxStartToSearch = true;
+    
+    private void updateComboList(String colName, BaseTab tab) {
+        //create a combo box model
+        DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
+        comboBoxValue.setModel(comboBoxSearchModel);
         
+        JTable table = tab.getTable();
+        
+        //loading values for column
+        Map<Integer, ArrayList<Object>> comboBoxForSearchValue  = tab.loadingDropdownList();
+        ArrayList<Object> values =  null;
+        for (int col = 0; col < table.getColumnCount(); col++) {
+            if (table.getColumnName(col).equalsIgnoreCase(colName)) {
+                values = (ArrayList<Object>) comboBoxForSearchValue.get(col);
+            }
+        }
+        
+        //if analyst column, need to add seperator
+        if (colName.equalsIgnoreCase("analyst")) {
+            //sort the values into active vs nonactive
+            Collections.sort(values, new AnalystComparator());
+            for (int i = 0; i < values.size(); i++) {
+                //find the start index of nonactive, add separator
+                String currentAnalyst = values.get(i).toString();
+                if (inactiveAnalysts.contains(currentAnalyst)) {
+                    values.add(i, SEPARATOR);
+                    break;
+                }
+                
+            }
+        }
+        
+        
+        else {
+            //process path column values
+            if (colName.equalsIgnoreCase("path")) {
+                for(Object item : values) {
+                    String str = item.toString();
+                    //Identify the column startwith and endwith "/" 
+                    while (str.startsWith("/")) {
+                    //Continue strip "/" until the correct format
+                         str = str.substring(1, str.length());
+                    }
+                    while (str.endsWith("/") || str.endsWith(" ")) {
+                        //Continue strip "/" until the correct format
+                        str = str.substring(0, str.length() - 1);
+                    }                   
+                }      
+            }
+            
+            //general sorting for column values
+            Collections.sort(values, new Comparator<Object>() {
+                public int compare(Object o1, Object o2) {
+                    return o1.toString().compareTo(o2.toString());
+                }
+            });
+
+       }
+       
+        //add values to combobox searchmodel
+        for(Object value: values) {
+            comboBoxSearchModel.addElement(value);
+        }
+        
+       
     }
+    
+//    private void updateComboList(String colName, String tableName) {
+//       DefaultComboBoxModel comboBoxSearchModel = new DefaultComboBoxModel();
+//       comboBoxValue.setModel(comboBoxSearchModel);
+//        Map comboBoxForSearchValue = this.comboBoxForSearchDropDown.get(tableName);
+//        Set <Object> uniqueValues= new HashSet<>(); 
+//        ArrayList<Object> dropDownList = new ArrayList<>();
+//            
+//            //Here create an ArrayList of unique table values, add separator, custom renderer,and custom sort
+//            //by Corinne Martus 
+//            if (colName.equalsIgnoreCase("analyst")) { 
+//                JTable assignmentsTable = tabs.get("Assignments").getTable();
+//                
+//                uniqueValues.addAll(getUniqueColumnValues("analyst","Assignments"));
+//                uniqueValues.addAll(getUniqueColumnValues("analyst","Assignments_Archived"));
+//                uniqueValues.addAll(getUniqueColumnValues("analyst","Reports"));
+//                
+//                dropDownList = new ArrayList<>(uniqueValues);
+//                Collections.sort(dropDownList, new AnalystComparator());
+//                int listLength = dropDownList.size();
+//                    for (int i = 0; i < listLength; i++)
+//                    { 
+//                        if (dropDownList.get(i) != null){
+//                        String currentAnalyst = dropDownList.get(i).toString();
+//                            if(inactiveAnalysts.contains(currentAnalyst))
+//                            {
+//                              dropDownList.add(i, SEPARATOR);
+//                               break;
+//                            }
+//                        }
+//                    } 
+//                    
+//            comboBoxValue.setRenderer(new ComboBoxRenderer());
+//            comboBoxValue.addActionListener(new BlockComboListener(comboBoxValue));
+//            }
+//          
+//            else{
+//                    uniqueValues.addAll(getUniqueColumnValues(colName,tableName));
+//                    dropDownList = new ArrayList<>(uniqueValues);
+//                    Collections.sort(dropDownList, new Comparator<Object>() {
+//                        public int compare(Object o1, Object o2) {
+//                        return o1.toString().compareTo(o2.toString());
+//                        }
+//                    });
+//                }
+//              comboBoxStartToSearch = false;
+//
+//                for (Object item : dropDownList) {
+//                    if (colName.equalsIgnoreCase("path")) {
+//                        String str = item.toString();
+//                        //Identify the column startwith and endwith "/" 
+//
+//                        while (str.startsWith("/")) {
+//                            //Continue strip "/" until the correct format
+//
+//                            str = str.substring(1, str.length());
+//
+//                        }
+//                        while (str.endsWith("/") || str.endsWith(" ")) {
+//                            //Continue strip "/" until the correct format
+//
+//                            str = str.substring(0, str.length() - 1);
+//
+//                        }
+//                        comboBoxSearchModel.addElement(str);
+//                    } else {
+//
+//                        comboBoxSearchModel.addElement(item);
+//                    }
+//                }
+//                    
+//                comboBoxStartToSearch = true;
+//        
+//    }
    //custom renderer used to render the list of analysts in comboBoxValue with a seperator line
     //by Corinne Martus
     class ComboBoxRenderer extends BasicComboBoxRenderer implements ListCellRenderer {
@@ -3633,6 +3786,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             labelEditModeState.setForeground(editModeDefaultTextColor);
         }
     }
+    
+    
+    
+    
+    
+    
 
     /**
      * showWindowInFront This shows the component in front of the Main Window
