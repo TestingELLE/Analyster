@@ -71,20 +71,21 @@ public class ReportDAO extends BaseDAO implements AbstractDAO<Report> {
     public boolean insert(Report report) {
         
         boolean successful = false;
+        int id = getMaxId() + 1;
+        
         DBConnection.close();
         if(DBConnection.open()){
             
             // set issue id
             
-            int id = getMaxId() + 1;
             report.setId(id);
-            String symbol = report.getSymbol();
-            String analyst = report.getAnalyst();
-            String analysisDate = report.getAnalysisDate();
-            String path = report.getPath();
-            String document = report.getDocument();
-            String decision = report.getDecision();
-            String notes = report.getNotes();
+            String symbol = format(report.getSymbol());
+            String analyst = format(report.getAnalyst());
+            String analysisDate = format(report.getAnalysisDate());
+            String path = format(report.getPath());
+            String document = format(report.getDocument());
+            String decision = format(report.getDecision());
+            String notes = format(report.getNotes());
             
            
             try {

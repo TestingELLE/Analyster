@@ -9,6 +9,7 @@ package com.elle.analyster.presentation;
 import static com.elle.analyster.presentation.AnalysterWindow.version;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.admissions.Authorization;
+import com.elle.analyster.controller.DataManager;
 import com.elle.analyster.database.Database;
 import com.elle.analyster.database.Server;
 import com.elle.analyster.logic.LoggingAspect;
@@ -404,7 +405,9 @@ public class LoginWindow extends JFrame {
             
             
             // create an Analyster object
+            DataManager dataManager = new DataManager();
             analyster = new AnalysterWindow();
+            
            
             // pass the log window to analyster
             analyster.setLogWindow(logWindow);

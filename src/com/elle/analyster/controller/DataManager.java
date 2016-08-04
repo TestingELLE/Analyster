@@ -63,7 +63,7 @@ public class DataManager {
         AssignmentTableController controller = (AssignmentTableController) controllers.get(ASSIGNMENT);
         AssignmentConverter converter = (AssignmentConverter) converters.get(ASSIGNMENT);
         
-        List<Assignment> assignments = (List<Assignment>) controller.getOnlineItems().values();
+        List<Assignment> assignments = new ArrayList<Assignment>(controller.getOnlineItems().values());
         
         ArrayList<Object[]> tableData = new ArrayList();
         assignments.stream().forEach((item) -> {
@@ -88,6 +88,39 @@ public class DataManager {
             controller.delete(id);
     }
     
+    public void updateAssignments(List<Object[]> rowsData) {
+        AssignmentTableController controller = (AssignmentTableController) controllers.get(ASSIGNMENT);
+        AssignmentConverter converter = (AssignmentConverter) converters.get(ASSIGNMENT);
+       
+        ArrayList<Assignment> changedItems = new ArrayList();
+        for(Object[] rowData : rowsData) {
+            
+            changedItems.add(converter.convertFromRow(rowData));
+        }
+        for(Assignment item : changedItems) {
+            
+            controller.update(item);
+        }
+    }
+    
+    public void insertAssignments(List<Assignment> assignments) {
+        AssignmentTableController controller = (AssignmentTableController) controllers.get(ASSIGNMENT);
+        
+        for(Assignment item : assignments) {
+            
+            controller.create(item);
+        }
+    }
+    
+   public void insertAssignmentsFromRows(List<Object[]> rowsData) {
+        AssignmentTableController controller = (AssignmentTableController) controllers.get(ASSIGNMENT);
+        AssignmentConverter converter = (AssignmentConverter) converters.get(ASSIGNMENT);
+        for(Object[] rowData : rowsData) {
+            Assignment item = converter.convertFromRow(rowData);
+            controller.create(item);
+        }
+    }
+    
     
     //reports related
     public List<Object[]> getReports(){
@@ -95,7 +128,7 @@ public class DataManager {
         ReportTableController controller = (ReportTableController) controllers.get(REPORT);
         ReportConverter converter = (ReportConverter) converters.get(REPORT);
         
-        List<Report> reports = (List<Report>) controller.getOnlineItems().values();
+        List<Report> reports = new ArrayList<Report>(controller.getOnlineItems().values());
         
         ArrayList<Object[]> tableData = new ArrayList();
         reports.stream().forEach((item) -> {
@@ -124,12 +157,35 @@ public class DataManager {
     }
     
     
+    public void updateReports(List<Object[]> rowsData) {
+        ReportTableController controller = (ReportTableController) controllers.get(REPORT);
+        ReportConverter converter = (ReportConverter) converters.get(REPORT);
+        
+        ArrayList<Report> changedItems = new ArrayList();
+        for(Object[] rowData : rowsData) {
+            changedItems.add(converter.convertFromRow(rowData));
+        }
+        for(Report item : changedItems) {
+            controller.update(item);
+        }
+    }
+    
+    public void insertReportsFromRows(List<Object[]> rowsData) {
+        ReportTableController controller = (ReportTableController) controllers.get(REPORT);
+        ReportConverter converter = (ReportConverter) converters.get(REPORT);
+        for(Object[] rowData : rowsData) {
+            Report item = converter.convertFromRow(rowData);
+            controller.create(item);
+        }
+    }
+    
+    
     //archives related
     public List<Object[]> getArchives(){
         ArchiveTableController controller = (ArchiveTableController) controllers.get(ARCHIVE);
-        ArchiveConverter converter = (ArchiveConverter) converters.get(ASSIGNMENT);
+        ArchiveConverter converter = (ArchiveConverter) converters.get(ARCHIVE);
         
-        List<AssignmentArchived> archives = (List<AssignmentArchived>) controller.getOnlineItems().values();
+        List<AssignmentArchived> archives =  new ArrayList<AssignmentArchived>(controller.getOnlineItems().values());
         
         ArrayList<Object[]> tableData = new ArrayList();
         archives.stream().forEach((item) -> {
@@ -153,5 +209,38 @@ public class DataManager {
         for(int id: ids)
             controller.delete(id);
     }
+    
+    public void updateArchives(List<Object[]> rowsData) {
+        ArchiveTableController controller = (ArchiveTableController) controllers.get(ARCHIVE);
+        ArchiveConverter converter = (ArchiveConverter) converters.get(ASSIGNMENT);
+        
+        ArrayList<AssignmentArchived> changedItems = new ArrayList();
+        for(Object[] rowData : rowsData) {
+            changedItems.add(converter.convertFromRow(rowData));
+        }
+        for(AssignmentArchived item : changedItems) {
+            controller.update(item);
+        }
+    }
+    
+    public void insertArchives(List<AssignmentArchived> archives) {
+        ArchiveTableController controller = (ArchiveTableController) controllers.get(ARCHIVE);
+        
+        for(AssignmentArchived item : archives) {
+            
+            controller.create(item);
+        }
+    }
+
+    public Map<String, DBTableController> getControllers() {
+        return controllers;
+    }
+
+    public void setControllers(Map<String, DBTableController> controllers) {
+        this.controllers = controllers;
+    }
+    
+    
+    
     
 }

@@ -32,8 +32,8 @@ public class AssignmentsTab extends BaseTab{
     }
 
     @Override
-    protected void uploadData() {
-        
+    protected void uploadData(List<Object[]> rowsData) {
+        dataManager.updateAssignments(rowsData);
     }
 
     @Override

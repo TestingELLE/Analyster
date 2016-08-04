@@ -33,6 +33,7 @@ public class AssignmentDAO extends BaseDAO implements AbstractDAO<Assignment> {
     
     public AssignmentDAO() {
         DB_TABLE_NAME = "Assignments";
+        
     }
     
    
@@ -75,19 +76,21 @@ public class AssignmentDAO extends BaseDAO implements AbstractDAO<Assignment> {
     public boolean insert(Assignment assignment) {
         
         boolean successful = false;
+        int id = getMaxId() + 1;
+        
         DBConnection.close();
         if(DBConnection.open()){
             
             // set issue id
             
-            int id = getMaxId() + 1;
+            
             assignment.setId(id);
-            String symbol = assignment.getSymbol();
-            String analyst = assignment.getAnalyst();
-            String priority = assignment.getPriority();
-            String dateAssigned = assignment.getDateAssigned();
-            String dateDone = assignment.getDateDone();
-            String notes = assignment.getNotes();
+            String symbol = format(assignment.getSymbol());
+            String analyst = format(assignment.getAnalyst());
+            String priority = format(assignment.getPriority());
+            String dateAssigned = format(assignment.getDateAssigned());
+            String dateDone = format(assignment.getDateDone());
+            String notes = format(assignment.getNotes());
             
            
             try {

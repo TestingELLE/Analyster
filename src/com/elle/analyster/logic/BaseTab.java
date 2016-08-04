@@ -5,6 +5,7 @@ import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.database.ModifiedTableData;
 import com.elle.analyster.presentation.AnalysterWindow;
 import java.awt.Component;
+import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -128,49 +129,29 @@ public abstract class BaseTab implements ITableConstants {
     //getData from dataManager
     protected abstract List<Object[]> getData();
     //upload to dataManager
-    protected abstract void uploadData();
+    protected abstract void uploadData(List<Object[]> rowsData);
     //get selected data from dataManager
     protected abstract Object[] getSelectedData(int id);
     //only some table support the left ctrl single click
     protected abstract void leftCtrlMouseClick();
     
     
-    
+    //make table model editable
+    public void makeTableEditable(boolean editable){
+        EditableTableModel model = ((EditableTableModel) table.getModel());
+        model.setCellEditable(editable);
+        
+    }
     
     
     protected void setUpTabData()  {
         //tab-specific data, including fields, state, colwidth
         initializeTabData();
-        
-//        switch(table.getName()){
-//            case ASSIGNMENTS_TABLE_NAME : {
-//                setSearchFields(ASSIGNMENTS_SEARCH_FIELDS);
-//                setBatchEditFields(ASSIGNMENTS_BATCHEDIT_CB_FIELDS);
-//                setColWidthPercent(COL_WIDTH_PER_ASSIGNMENTS);
-//                state = new ButtonsState(true, true, false, false, false, false, true, false);
-//                break;
-//            }
-//            case REPORTS_TABLE_NAME :{
-//                setSearchFields(REPORTS_SEARCH_FIELDS);
-//                setBatchEditFields(REPORTS_BATCHEDIT_CB_FIELDS);
-//                setColWidthPercent(COL_WIDTH_PER_REPORTS);
-//                state = new ButtonsState(true, true, false, false, false, false, false,true);
-//                break;
-//            }
-//            case ARCHIVE_TABLE_NAME:{
-//                setSearchFields(ARCHIVE_SEARCH_FIELDS);
-//                setBatchEditFields(ARCHIVE_BATCHEDIT_CB_FIELDS);
-//                setColWidthPercent(COL_WIDTH_PER_ARCHIVE);
-//                state = new ButtonsState(false, false, false, false, false,true, false, false);
-//                break;
-//            }
-//            default : break;
-//        }
-        
+     
         setTableColNames(table);
         
          //set up objects
-        filter = new TableFilter(table);
+        filter = new TableFilter(this);
         columnPopupMenu = new ColumnPopupMenu(this);
         cellRenderer = new JTableCellRenderer(table);
         
@@ -188,8 +169,10 @@ public abstract class BaseTab implements ITableConstants {
         //set up table listeners
         setTableListeners();
         
-       
-     
+        //make two change buttons disabled
+        enableChangeButtons(false);
+        
+      
     }
     
     
@@ -206,6 +189,7 @@ public abstract class BaseTab implements ITableConstants {
       
         //make table editable 
         EditableTableModel model = new EditableTableModel(listToVector(tableData), arrayToVector(tableColNames));
+        table.setModel(model);
         
          // apply filter
         
@@ -234,10 +218,15 @@ public abstract class BaseTab implements ITableConstants {
         return output;
     }
     
-    protected Vector<Object[]> listToVector(List<Object[]> input) {
-        Vector<Object[]> output = new Vector(input.size());
+    protected Vector<Vector> listToVector(List<Object[]> input) {
+        Vector<Vector> output = new Vector(input.size());
         for(Object[] item : input) {
-            output.add(item);
+            Vector temp = new Vector(item.length);
+            for(Object obj: item) {
+                temp.add(obj);
+                
+            }
+            output.add(temp);
         }
         return output;
     }
@@ -247,49 +236,50 @@ public abstract class BaseTab implements ITableConstants {
         //get changed rows
         ArrayList<Object[]> changedRowsData = new ArrayList();
         List<ModifiedData> modifiedDataList = modTableData.getNewData();
-        
+
         //loop the modified data list
         for (ModifiedData modifiedData : modifiedDataList) {
             int id = modifiedData.getId();
             
             //get the row data
-            if (getRowIndex(id) != -1) {
+            int rowIndex = getRowIndex(id);
+            if (rowIndex != -1) {
                 Object[] rowData = new Object[table.getColumnCount()];
                 for (int i = 0; i < table.getColumnCount(); i++) {
-                    //set null to description field
-                    if( i == 3) rowData[i] = null;
-                    else
-                        rowData[i] = table.getValueAt(0, i);
+                   
+                    rowData[i] = table.getValueAt(rowIndex, i);
+                    
                 }
                 changedRowsData.add(rowData);
             }
         }
-        
+
         //upload changes   
-        uploadData();
-         
-            int[] rows = table.getSelectedRows();
- 
-            ListSelectionModel model = table.getSelectionModel();
-            model.clearSelection();
-            for (int r = 0; r < rows.length; r++) {
-                model.addSelectionInterval(rows[r], rows[r]);
-            }
+        uploadData(changedRowsData);
+        
+        //original code includes reloading the table, however, the tabledata is already updated, no need to reload.
+        
+        // clear cellrenderer
+        cellRenderer.clearCellRender();
+        
+        //clear selection
+        table.getSelectionModel().clearSelection();
 
-            // clear cellrenderer
-            cellRenderer.clearCellRender();
+        // reload modified tableSelected data with current tableSelected model
+        //reload also clears its newData 
+        modTableData.reloadData();
 
-            // reload modified tableSelected data with current tableSelected model
-            modTableData.reloadData();
+        //makeTableEditable(labelEditModeState.getText().equals("OFF") ? true : false);
+        // reset the arraylist to record future changes
+        setLastUpdateTime();          // update time
 
-            //makeTableEditable(labelEditModeState.getText().equals("OFF") ? true : false);
-            modTableData.getNewData().clear();    // reset the arraylist to record future changes
-            setLastUpdateTime();          // update time
-            
-            //set up btton state
-            state.enableEdit(false);
-            analysterWindow.changeTabbedPanelState(this);
-
+        //set up btton state
+        state.enableEdit(false);
+        //change table mode
+        makeTableEditable(false);
+        analysterWindow.changeTabbedPanelState(this);
+        
+        
     }
     
     //get rowIndex for a particular issue id
@@ -313,7 +303,8 @@ public abstract class BaseTab implements ITableConstants {
         LoggingAspect.afterReturn("Nothing has been Changed!");
 
         modTableData.reloadData();  // reloads data of new table (old data) to compare with new changes (new data)
-
+        //disable buttons
+        enableChangeButtons(false);
     
     }
     
@@ -431,8 +422,12 @@ public abstract class BaseTab implements ITableConstants {
     }
 
     public void deleteRow(int rowIndex){
+        
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.removeRow(rowIndex);
+        //need to convert to model index
+        int index  = table.convertRowIndexToModel(rowIndex);
+        
+        model.removeRow(index);
         subtractFromTotalRowCount(1);
         
     }
@@ -455,12 +450,16 @@ public abstract class BaseTab implements ITableConstants {
         JTableHeader header = table.getTableHeader();
         //disable default mouse listeners
         MouseListener[] listeners = header.getMouseListeners();
-
+        
         for (MouseListener ml: listeners)
         {
             String className = ml.getClass().toString();
-            if (className.contains("BasicTableHeaderUI.MouseInputHandler"))
+            System.out.println(className);
+            if (className.contains("BasicTableHeaderUI$MouseInputHandler")){
                 header.removeMouseListener(ml);
+                
+            }
+                
         }
 
         //add customized mouselistener
@@ -471,30 +470,33 @@ public abstract class BaseTab implements ITableConstants {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     //double click header : clear filter for the column
-                    if (e.getClickCount() == 2) {
-                        e.consume();
-                        int columnIndex = table.getColumnModel().getColumnIndexAtX(e.getX());
-                        clearColumnFilter(columnIndex);
-                    }
-                    
-                    //ctrl + click header: show popupmenu
-                    if (e.getClickCount() == 1 && !e.isConsumed() && e.isControlDown()) {
-                        e.consume();
-                        columnPopupMenu.showPopupMenu(e);
-                        
-                    }
-                    
-                    //click : sort asc or desc column
-                    if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1 && !e.isConsumed()) {
-                        int columnIndex = header.columnAtPoint(e.getPoint());
-                        if (columnIndex != -1) {
-                                columnIndex = table.convertColumnIndexToModel(columnIndex);
-                                table.getRowSorter().toggleSortOrder(columnIndex);
-
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        if (e.getClickCount() == 2) {
+                            int columnIndex = table.getColumnModel().getColumnIndexAtX(e.getX());
+                            clearColumnFilter(columnIndex);
+                            
                         }
-                        e.consume();
+                        
+                        else {
+                            if (e.getClickCount() == 1 ) {
+                                
+                                if(e.isControlDown())
+                                    columnPopupMenu.showPopupMenu(e);
+                                else {
+                                    int columnIndex = header.columnAtPoint(e.getPoint());
+                                    if (columnIndex != -1) {
+                                        columnIndex = table.convertColumnIndexToModel(columnIndex);
+                                        table.getRowSorter().toggleSortOrder(columnIndex);
+                                    }
+                                    
+                                }
+                        
+                            }
+                        
+                        }
+           
                     }
- 
+              
                 }
 
                 //right mouse click for showing popupmenu
@@ -520,40 +522,56 @@ public abstract class BaseTab implements ITableConstants {
     
     protected void setTableBodyListeners() {
         BaseTab localTab = this;
+        
         table.addMouseListener(new MouseAdapter() {
         
             @Override
             public void mouseClicked(MouseEvent e) {
-
+               
+                
                 // if left mouse clicks
                 if (SwingUtilities.isLeftMouseButton(e)) {
+                    
                     if (e.getClickCount() == 2) {
+                        e.consume();
                         //select a row, then ctrl + double click  : filter based on selected value
                         if (e.isControlDown()) {
+                            
                             filterByDoubleClick();
                         } else {
                             //double click : enable edit
                             if (e.getComponent() instanceof JTable) {
-                                state.enableEdit(true);
-
-                                analysterWindow.changeTabbedPanelState(localTab);
-
-                                EditableTableModel model = ((EditableTableModel) table.getModel());
-
+                                //if not in edit mode, then swith to edit mode
+                                if (!state.isEditMode()) {
+                                    //change button states
+                                    state.enableEdit(true);
+                                    analysterWindow.changeTabbedPanelState(localTab);
+                                    //make table editable
+                                    makeTableEditable(true);
+                                    
+                                    //check if modtabledata has new data already
+                                    if(modTableData.getNewData().size() > 0) 
+                                        enableChangeButtons(true);
+                                    else enableChangeButtons(false);
+                                    
+                                }
+                                
+                                
                                 // get selected cell for editing
                                 int columnIndex = table.columnAtPoint(e.getPoint()); // this returns the column index
                                 int rowIndex = table.rowAtPoint(e.getPoint()); // this returns the rowIndex index
 
                                 table.changeSelection(rowIndex, columnIndex, false, false);
-                                model.setCellEditable(true);
-                                selectAllText(e);
+                                
+                                selectAllText();
 
                             }
                         }
                     } else {
                         if (e.getClickCount() == 1) {
+                            e.consume();
                             if (state.isEditMode()) {
-                                    selectAllText(e);
+                                    selectAllText();
                                 }
                             if (e.isControlDown()) {
                                 //this part is only for some table
@@ -574,64 +592,72 @@ public abstract class BaseTab implements ITableConstants {
 
                 } // end if 2 clicks 
             } // end if right mouse clicks
+       
+        });
         
-        protected void selectAllText(MouseEvent e) {// Select all text inside jTextField
-
-            int row = table.getSelectedRow();
-            int column = table.getSelectedColumn();
-            if (column != 0) {
-                table.getComponentAt(row, column).requestFocus();
-                table.editCellAt(row, column);
-                JTextField selectCom = (JTextField) table.getEditorComponent();
-                if (selectCom != null) {
-                    selectCom.requestFocusInWindow();
-                    selectCom.selectAll();
+        // add keyListener to the table
+        table.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent ke) {
+                // selects all the row of a table if Ctrl-A (Cmd-A in Mac)
+                //   is pressed
+                if ((ke.getKeyCode() == KeyEvent.VK_A)
+                        && ((ke.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0)) {
+                    table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                    table.setRowSelectionAllowed(true);
+                    table.setRowSelectionInterval(0, table.getRowCount() - 1);
                 }
             }
 
-        }
-            
-        
-        });
-  
-        //drag to select multiple rows 
-        table.addMouseMotionListener(new MouseAdapter() {
             @Override
-            public void mouseDragged(MouseEvent e) {
-                if (e.getComponent() instanceof JTable) {
-                    int[] rows = table.getSelectedRows();
-                    if (rows.length >= 2) {
-                        state.setBatchEditBtnVisible(true);
+            public void keyReleased(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_F2) {
+                    //toggle on/off edit mode
+                    //if it is not in edit mode
+                    if (!state.isEditMode()) {
+                        //change button states
+                        state.enableEdit(true);
                         analysterWindow.changeTabbedPanelState(localTab);
+                        //make table editable
+                        makeTableEditable(true);
 
-                    } else {
-                        state.setBatchEditBtnVisible(true);
+                        //check if modtabledata has new data already
+                        if (modTableData.getNewData().size() > 0) {
+                            enableChangeButtons(true);
+                        } else {
+                            enableChangeButtons(false);
+                        }
+                   
+                    }
+                    //if it is already in edit mode
+                    else {
+                        state.enableEdit(false);
                         analysterWindow.changeTabbedPanelState(localTab);
+                        //make table editable
+                        makeTableEditable(false);
+                        
                     }
                 }
             }
         });
-       
+        
+    }
+    
+    
+    protected void selectAllText() {// Select all text inside jTextField
 
-        // add keyListener to the tableSelected
-        table.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent ke) {
-                if (ke.getKeyCode() == KeyEvent.VK_F2) {
-
-                    // I believe this is meant to toggle edit mode
-                    // so I passed the conditional
-                    state.setAddBtnVisible(false);
-                    state.setEditMode(true);
-                    state.setRevertChangesBtnVisible(true);
-                    state.setUploadChangesBtnVisible(true);
-                    analysterWindow.changeTabbedPanelState(localTab);
-                    
-                }
+        int row = table.getSelectedRow();
+        int column = table.getSelectedColumn();
+        if (column != 0) {
+            table.getComponentAt(row, column).requestFocus();
+            table.editCellAt(row, column);
+            JTextField selectCom = (JTextField) table.getEditorComponent();
+            if (selectCom != null) {
+                selectCom.requestFocusInWindow();
+                selectCom.selectAll();
             }
-        });
-        
-        
+        }
+
     }
     
     protected void setTableModelListener() {
@@ -639,7 +665,7 @@ public abstract class BaseTab implements ITableConstants {
         table.getModel().addTableModelListener(new TableModelListener() {  // add tableSelected model listener every time the tableSelected model reloaded
             @Override
             public void tableChanged(TableModelEvent e) {
-
+                
                 int row = e.getFirstRow();
                 int col = e.getColumn();
 
@@ -656,8 +682,10 @@ public abstract class BaseTab implements ITableConstants {
                         String columnName = table.getColumnName(col);
                         int id = (Integer) table.getModel().getValueAt(row, 0);
 
-                        data.getNewData().add(new ModifiedData(tableName, columnName, newValue, id));
-
+                        data.addNewData(new ModifiedData(tableName, columnName, newValue, id));
+                        
+                        //enable two buttons
+                        enableChangeButtons(true);
                         // color the cell
                         cellRenderer.getCells().get(col).add(row);
                         table.getColumnModel().getColumn(col).setCellRenderer(cellRenderer);
@@ -670,6 +698,11 @@ public abstract class BaseTab implements ITableConstants {
     }
     
     
+    private void enableChangeButtons(boolean option) {
+        analysterWindow.getBtnUploadChanges().setEnabled(option);
+        analysterWindow.getBtnRevertChanges().setEnabled(option);
+    }
+    
     /*end of registering table listeners*/
    
     
@@ -679,8 +712,7 @@ public abstract class BaseTab implements ITableConstants {
         
         filter.clearColFilter(columnIndex);
         filter.applyFilter();
-        //reset recordsLabel
-        setLabelRecords();
+        
     }
     
     //filter a cell value by double click
@@ -694,8 +726,7 @@ public abstract class BaseTab implements ITableConstants {
             filter.addFilterItem(columnIndex, selectedField);
             filter.applyFilter();
             
-            //need to reset labelRecords
-            setLabelRecords();
+            
         }
     }
     
@@ -950,6 +981,17 @@ public abstract class BaseTab implements ITableConstants {
         }
         table.setRowSelectionInterval(rowNum - count, rowNum - 1);
     }
+     
+    public Object[] getRowData(int rowIndex) {
+        int columnCnt = table.getColumnModel().getColumnCount();
+        Object[] rowData = new Object[columnCnt];
+        
+        for(int i = 0; i < columnCnt; i++) {
+            rowData[i] = table.getValueAt(rowIndex, i);
+        }
+        
+        return rowData;
+    }
 
     /**
      * ************************************************************************
@@ -1063,7 +1105,7 @@ public abstract class BaseTab implements ITableConstants {
     
     
 
-}// end Tab
+
 
 
 
@@ -1096,3 +1138,5 @@ public abstract class BaseTab implements ITableConstants {
         }
 
     }
+
+}

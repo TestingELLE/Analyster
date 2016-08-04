@@ -72,30 +72,31 @@ public class AssignmentArchivedDAO extends BaseDAO implements AbstractDAO<Assign
         
     }
     
+    @Override
     public boolean insert(AssignmentArchived assignmentArchived) {
         
         boolean successful = false;
+        int id = getMaxId() + 1;
+        
         DBConnection.close();
         if(DBConnection.open()){
-            
             // set issue id
             
-            int id = getMaxId() + 1;
             assignmentArchived.setId(id);
-            String dateArchived = assignmentArchived.getDateArchived();
+            String dateArchived = format(assignmentArchived.getDateArchived());
             int aId = assignmentArchived.getaId();
-            String symbol = assignmentArchived.getSymbol();
-            String analyst = assignmentArchived.getAnalyst();
-            String priority = assignmentArchived.getPriority();
-            String dateAssigned = assignmentArchived.getDateAssigned();
-            String dateDone = assignmentArchived.getDateDone();
-            String notes = assignmentArchived.getNotes();
+            String symbol = format(assignmentArchived.getSymbol());
+            String analyst = format(assignmentArchived.getAnalyst());
+            String priority = format(assignmentArchived.getPriority());
+            String dateAssigned = format(assignmentArchived.getDateAssigned());
+            String dateDone = format(assignmentArchived.getDateDone());
+            String notes = format(assignmentArchived.getNotes());
             
            
             try {
                 
                 
-            String sql = "INSERT INTO " + DB_TABLE_NAME + " (" + COL_PK_ID + ", " 
+                String sql = "INSERT INTO " + DB_TABLE_NAME + " (" + COL_PK_ID + ", " 
                     + COL_FK_A_ID + ", " + COL_DATE_ARCHIVED + ", "
                     + COL_SYMBOL + ", " +  COL_ANALYST + ", " +  COL_PRIORITY + ", " 
                     +  COL_DATE_ASSIGNED + ", " +  COL_DATE_DONE + ", " +  COL_NOTES 
@@ -105,6 +106,7 @@ public class AssignmentArchivedDAO extends BaseDAO implements AbstractDAO<Assign
                     +   priority + ", " +  dateAssigned + ", " +  dateDone + ", " 
                     +  notes  +  ") ";
             
+       
                 Connection con = DBConnection.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(sql);
                 pstmt.execute();
@@ -127,8 +129,8 @@ public class AssignmentArchivedDAO extends BaseDAO implements AbstractDAO<Assign
 
     /**
      * update
-     * @param issue 
      */
+    @Override
     public boolean update(AssignmentArchived assignmentArchived) {
         
         boolean successful = false;

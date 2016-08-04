@@ -54,8 +54,19 @@ public class ModifiedTableData{
                 oldData[row][col]  = value.toString();
             }
         }
+        
+        clearNewData();
     }
 
+    public void clearNewData() {
+        newData.clear();
+        
+    }
+    
+    public void addNewData(ModifiedData item) {
+        newData.add(item);
+    }
+    
     public String[][] getOldData() {
         return oldData;
     }

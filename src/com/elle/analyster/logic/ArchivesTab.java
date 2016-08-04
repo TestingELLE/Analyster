@@ -32,9 +32,10 @@ public class ArchivesTab extends BaseTab {
         return dataManager.getArchives();
     }
 
+    //archives table do not support edit mode
     @Override
-    protected void uploadData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected void uploadData(List<Object[]> rowsData) {
+        dataManager.updateArchives(rowsData);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.elle.analyster.presentation;
 
 import com.elle.analyster.admissions.Authorization;
+import com.elle.analyster.controller.DataManager;
 import com.elle.analyster.database.DBConnection;
 import com.elle.analyster.database.ModifiedTableData;
 import com.elle.analyster.logic.*;
@@ -34,11 +35,13 @@ public class AddRecordsWindow extends JFrame {
     // attributes
     private String[] columnNames;
     private int numRowsAdded;           // number of rows added counter
-    private Map<String, Tab> tabs;       // used to update the records label
+    
     private Statement statement;
 
     // components
     private AnalysterWindow analyster;
+    private DataManager dataManager;
+    private BaseTab tab;
     private LogWindow logWindow;
     private DefaultTableModel model;
     private ShortCutSetting ShortCut;
@@ -54,7 +57,7 @@ public class AddRecordsWindow extends JFrame {
     /**
      * Creates new form AddRecordsWindow
      */
-    public AddRecordsWindow() {
+    public AddRecordsWindow(BaseTab tab) {
 
         rowsNotEmpty = new ArrayList<>();
         isEditing = false;
@@ -62,13 +65,14 @@ public class AddRecordsWindow extends JFrame {
         // initialize components
         initComponents();
         analyster = AnalysterWindow.getInstance();
+        dataManager = DataManager.getInstance();
+        this.tab = tab;
+        
         logWindow = analyster.getLogWindow();
-        tabs = analyster.getTabs();
+        
         statement = analyster.getStatement();
 
-        // set the selected table name
-        table.setName(analyster.getSelectedTabName());
-
+       
         // get default selected bg color
         defaultSelectedBG = table.getSelectionBackground();
 
@@ -242,6 +246,8 @@ public class AddRecordsWindow extends JFrame {
 
         try {
             submit();
+            this.dispose();
+            this.transferFocus();
         } catch (Exception ex) {
             Logger.getLogger(AddRecordsWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -270,112 +276,71 @@ public class AddRecordsWindow extends JFrame {
      */
     private void submit() throws Exception {
 
-        Object cellValue = null;                 // store cell value
-        int col = 0;                             // column index
-        int row = 0;                             // row index
-
+        int numRowsAdded = 0;
         // check if data is valid
         if (validateData()) {
-
-            // once data checked, execute sql statement
-            // first get the insert statement for the table
-            String insertInto = "INSERT INTO " + table.getName() + " (";
-
-            // this table should already not include the primary key
-            for (col = 0; col < table.getColumnCount(); col++) {
-                if (col != table.getColumnCount() - 1) {
-                    insertInto += table.getColumnName(col) + ", ";
-                } else {
-                    insertInto += table.getColumnName(col) + ") ";
+            switch(tab.getTable().getName()) {
+                case "Assignments": {
+                    ArrayList<Object[]> rowsData = getRowsData();
+                    if (rowsData.size() > 0){
+                        dataManager.insertAssignmentsFromRows(rowsData);
+                        numRowsAdded = rowsData.size();
+                    }
+                        
+                    break;
                 }
+                case "Reports" :{
+                    ArrayList<Object[]> rowsData = getRowsData();
+                    if (rowsData.size() > 0){
+                        dataManager.insertReportsFromRows(rowsData);
+                        numRowsAdded = rowsData.size();
+                    }
+                        
+                    break;
+                }
+                default: break;
             }
-
-            numRowsAdded = 0; // reset numRowsAdded counter
-
-            // Now get the values to add to the database
-            String values = "";
-            for (row = 0; row < table.getRowCount(); row++) {
-                values = "VALUES (";  // start the values statement
-                for (col = 0; col < table.getColumnCount(); col++) {
-
-                    // get cell value
-                    cellValue = table.getValueAt(row, col);
-
-                    // format the cell value for sql
-                    if (cellValue != null) {
-
-                        // if cell is empty it must be null
-                        if (cellValue.toString().equals("")) {
-                            cellValue = null;
-                        } // if the cell is not empty it must have single quotes
-                        else {
-                            cellValue = "'" + cellValue + "'";
-                        }
-                    }
-
-                    // skip empty rows
-                    // this must be after the format cell value so the "" => null
-                    if (col == 0 && cellValue == null) {
-                        break;
-                    }
-
-                    // add each value for each column to the values statement
-                    if (col != table.getColumnCount() - 1) {
-                        values += cellValue + ", ";
-                    } else {
-                        values += cellValue + ");";
-                    }
-                }
-
-                try {
-                    // execute the sql statement
-                    if (!values.equals("VALUES (")) {      //skip if nothing was added
-                        System.out.println(insertInto + values);
-                        // open connection because might time out
-                        DBConnection.close();
-                        DBConnection.open();
-                        statement = DBConnection.getStatement();
-                        statement.executeUpdate(insertInto + values);
-                        numRowsAdded++;   // increment the number of rows added
-                    }
-                } catch (SQLException sqlException) {
-                    LoggingAspect.afterThrown(sqlException);
-                }
-            }
-
+            
             if (numRowsAdded > 0) {
                 // update table and records label
-                String tabName = analyster.getSelectedTabName();              // tab name
-                Tab tab = tabs.get(tabName);                                  // selected tab
-
-                JTable table = tab.getTable();                                // selected table
-                analyster.loadTable(table);                                   // load table data from database
-
-                // reload new table data for modifiedTableData
-                ModifiedTableData data = tab.getTableData();
-                data.reloadData();
-
-                TableFilter filter = tab.getFilter();                         // table filter
-                filter.applyFilter();                                         // apply filter
-                filter.applyColorHeaders();                                   // apply color headers
-
-                ColumnPopupMenu ColumnPopupMenu = tab.getColumnPopupMenu();   // column popup menu 
-                ColumnPopupMenu.loadAllCheckBoxItems();                       // refresh the data for the column pop up
-
-                tab.addToTotalRowCount(numRowsAdded);                         // add the number of records added to the total records count
-                JLabel recordsLabel = analyster.getRecordsLabel();
-                String recordsLabelText = tab.getRecordsLabel();              // store the records label string
-                recordsLabel.setText(recordsLabelText);                       // update the records label text
-
-                analyster.setLastUpdateTime();                                // set the last update time from database
+                tab.reloadTable();
 
                 String text = numRowsAdded + " Add successfully!";
                 analyster.setInformationLabel(text, 10);                // show information label in project manager that upload was successful
-                createEmptyTable();                                           // create a new empty table with default 10 rows
+                                                         
             }
         }
+        
+        
     }
-
+    
+    
+    private ArrayList<Object[]> getRowsData() {
+        int row = 0;
+        int col = 0;
+        ArrayList<Object[]> rowsData = new ArrayList();
+        for(row = 0; row < table.getRowCount(); row++) {
+            Object[] data = new Object[table.getColumnCount()+1];
+            data[0] = -1;
+            boolean isValid = true;
+            for (col = 0; col < table.getColumnCount(); col++) {
+                //if symbol is empty, skip
+                if (table.getValueAt(row, 0).toString().equals("")) {
+                    isValid = false;
+                    break;
+                }
+                data[col+1] =  table.getValueAt(row, col);
+            }
+            
+            if (isValid) rowsData.add(data);
+                        
+        }
+        
+        
+        return rowsData;       
+           
+    }
+    
 
     /**
      * setKeyboardFocusManager Sets the Keyboard Focus Manager
@@ -478,7 +443,7 @@ public class AddRecordsWindow extends JFrame {
      */
     private void createEmptyTable() {
         // get column names for selected Analyster table
-        columnNames = analyster.getTabs().get(table.getName()).getTableColNames();
+        columnNames = tab.getTableColNames();
 
         // we don't want the ID column 
         columnNames = Arrays.copyOfRange(columnNames, 1, columnNames.length);
@@ -490,17 +455,17 @@ public class AddRecordsWindow extends JFrame {
         table.setModel(model);
 
         // get table column width format
-        float[] widths = tabs.get(table.getName()).getColWidthPercent();
+        float[] widths = tab.getColWidthPercent();
         widths = Arrays.copyOfRange(widths, 1, widths.length);
 
-        analyster.setColumnFormat(widths, table);
+        //analyster.setColumnFormat(widths, table);
+       
     }
     
     
     private void populateTableWithSelectedRow() {
-        String selectedTabName = analyster.getSelectedTabName();
-        Tab selectedTab = tabs.get(selectedTabName);
-        JTable selectedTable = selectedTab.getTable();
+        
+        JTable selectedTable = tab.getTable();
         int[] selectedRows = selectedTable.getSelectedRows();
         
         if (selectedRows.length > 0) {

@@ -80,11 +80,12 @@ public class Authorization {
     
     
     private static void setPermissions(Component c, IAdminComponent admin){
-
+        
+       
         if(c instanceof AddRecordsWindow){
             admin.setComponent((AddRecordsWindow)c);
         }
-        else if(c instanceof AnalysterWindow){
+        else if(c instanceof AnalysterWindow ){
             admin.setComponent((AnalysterWindow)c);
         }
         else if(c instanceof BackupDBTablesDialog){
@@ -105,6 +106,9 @@ public class Authorization {
         else if(c instanceof ReportWindow){
             admin.setComponent((ReportWindow)c);
         }
+            
+    
+        
     }
     
     public static String getAccessLevel() {

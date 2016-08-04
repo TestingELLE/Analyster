@@ -5,6 +5,10 @@
  */
 package com.elle.analyster.logic;
 
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -17,6 +21,7 @@ import javax.swing.JTable;
 public class ReportsTab extends BaseTab {
     public ReportsTab(JTable table) {
         super(table);
+        
     }
 
     @Override
@@ -33,8 +38,8 @@ public class ReportsTab extends BaseTab {
     }
 
     @Override
-    protected void uploadData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected void uploadData(List<Object[]> rowsData) {
+        dataManager.updateReports(rowsData);
     }
 
     @Override
@@ -47,6 +52,42 @@ public class ReportsTab extends BaseTab {
      @Override
     protected void leftCtrlMouseClick() {
         openDocumentTool();
+    }
+    
+    @Override
+    protected void setTableBodyListeners(){
+        super.setTableBodyListeners();
+        
+        //below is for hand cursor , only for reports tab
+        table.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                Point p = e.getPoint();
+
+                int row = table.rowAtPoint(e.getPoint());
+                int col = table.columnAtPoint(e.getPoint());
+
+                if (table.getLocation().y < 1 && table.getLocation().y > -8155) {
+                    if (col > 3 && col < 6) {
+                        table.clearSelection();
+                        table.setRowSelectionInterval(row, row);
+                        Cursor cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+                        table.setCursor(cursor);
+
+                    } else {
+                        Cursor cursor = Cursor.getDefaultCursor();
+                        table.setCursor(cursor);
+
+                    }
+                } else {
+                    Cursor cursor = Cursor.getDefaultCursor();
+                    table.setCursor(cursor);
+                }
+            }
+
+        });
+
+        
     }
     
     public void openDocumentTool() {

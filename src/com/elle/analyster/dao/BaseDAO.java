@@ -185,8 +185,8 @@ public class BaseDAO {
      * @return 
      */
     protected String format(String s){
-        s=processCellValue(s);
-        return (s.equals(""))?null:"'"+s+"'";
+        if (s == null || s == "") return null;
+        else return "'"+s+"'";
     }
 
     protected Object processCellValue(Object cellValue) {
@@ -197,6 +197,5 @@ public class BaseDAO {
 
         return cellValue.replaceAll("'", "''");
     }
-    
-    
+
 }

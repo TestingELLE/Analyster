@@ -358,7 +358,7 @@ public class ReportWindow extends JDialog {
             LoggingAspect.afterThrown(ex);
         }
 
-        table.setModel(new EditableTableModel(data, columnNames, columnClass));   
+        table.setModel(new EditableTableModel(data, columnNames));   
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -21,6 +21,7 @@ public class AssignmentTableController extends DBTableController<Assignment> {
        
         //load issues from db to map
         getAll();
+        
        
     }
     

@@ -21,6 +21,7 @@ public class ReportTableController extends DBTableController<Report> {
        
         //load issues from db to map
         getAll();
+        System.out.println("report has " + onlineItems.size());
     }
     
 }
