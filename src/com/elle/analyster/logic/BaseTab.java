@@ -188,8 +188,12 @@ public abstract class BaseTab implements ITableConstants {
            
       
         //make table editable 
+        //everytime ,loading will get new mode
+        //thus set up tableModel listeners each time
         EditableTableModel model = new EditableTableModel(listToVector(tableData), arrayToVector(tableColNames));
         table.setModel(model);
+        setTableModelListener();
+        
         
          // apply filter
         
@@ -298,7 +302,8 @@ public abstract class BaseTab implements ITableConstants {
        
         
         modTableData.getNewData().clear();  // clear any stored changes (new data)
-        loadTableData(); // reverts the model back
+        reloadTable();
+        makeTableEditable(true);
 
         LoggingAspect.afterReturn("Nothing has been Changed!");
 
@@ -442,7 +447,7 @@ public abstract class BaseTab implements ITableConstants {
 
         setTableHeaderListeners();
         setTableBodyListeners();
-        setTableModelListener();
+        
     }
        
     protected void setTableHeaderListeners() {
@@ -665,7 +670,7 @@ public abstract class BaseTab implements ITableConstants {
         table.getModel().addTableModelListener(new TableModelListener() {  // add tableSelected model listener every time the tableSelected model reloaded
             @Override
             public void tableChanged(TableModelEvent e) {
-                
+                System.out.println("table changed");
                 int row = e.getFirstRow();
                 int col = e.getColumn();
 

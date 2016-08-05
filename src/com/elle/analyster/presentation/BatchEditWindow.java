@@ -229,8 +229,10 @@ public class BatchEditWindow extends JFrame {
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void closeWindow(){
-        this.dispose();
+        
         analysterWindow.setEnabled(true);
+        this.dispose();
+        
     }
     
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
