@@ -670,7 +670,7 @@ public abstract class BaseTab implements ITableConstants {
         table.getModel().addTableModelListener(new TableModelListener() {  // add tableSelected model listener every time the tableSelected model reloaded
             @Override
             public void tableChanged(TableModelEvent e) {
-                System.out.println("table changed");
+                
                 int row = e.getFirstRow();
                 int col = e.getColumn();
 
