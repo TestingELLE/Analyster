@@ -11,7 +11,6 @@ import com.elle.analyster.logic.AssignmentConverter;
 import com.elle.analyster.logic.ArchiveConverter;
 import static com.elle.analyster.logic.AssignmentArchiveConverter.archiveToAssignment;
 import static com.elle.analyster.logic.AssignmentArchiveConverter.assignmentToArchive;
-
 import com.elle.analyster.logic.TableFilter;
 import com.elle.analyster.logic.LoggingAspect;
 import com.elle.analyster.logic.ShortCutSetting;
@@ -49,6 +48,7 @@ import java.util.logging.Logger;
 import javax.swing.ListCellRenderer;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 /**
  * AnalysterWindow
@@ -146,6 +146,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         BaseTab currentTab = tabs.get(tabbedPanel.getSelectedIndex()); 
         changeTabbedPanelState(currentTab);
 
+      
         // add copy+paste short cut into table and text Area
         InputMap ip = (InputMap) UIManager.get("TextField.focusInputMap");
         InputMap ip2 = this.jTextAreaSQL.getInputMap();
@@ -247,7 +248,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(900, 574));
-        setPreferredSize(new java.awt.Dimension(900, 574));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         addPanel_control.setLayout(new java.awt.GridBagLayout());
@@ -532,7 +532,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, -30, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, -15, 0, 0);
         jPanelEdit.add(btnUploadChanges, gridBagConstraints);
 
         labelEditModeState.setText("OFF");
@@ -576,6 +576,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 2, 0);
         jPanelEdit.add(informationLabel, gridBagConstraints);
