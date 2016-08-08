@@ -62,7 +62,7 @@ public class DBConnection {
      * @param userPassword
      * @return boolean true if successful and false if an error occurred
      */
-    public static boolean connect(String selectedServer, String selectedDB, String userName, String userPassword) throws Exception{
+    public static boolean connect(String selectedServer, String selectedDB, String userName, String userPassword){
         
         try {
             DBConnection.server = selectedServer;
@@ -100,7 +100,7 @@ public class DBConnection {
      * from servers.
      * @return boolean true if successful and false if an error occurred
      */
-    public static boolean open() throws Exception{
+    public static boolean open() {
         return connect(server, database, userName, userPassword);
     }
     
@@ -239,7 +239,7 @@ public class DBConnection {
      * read servers data from xml file
      * @return 
      */
-    public static ArrayList<Server> readServers() throws Exception
+    public static ArrayList<Server> readServers()
     {
         ArrayList<Server> servers = new ArrayList<>();
         Server server = null;

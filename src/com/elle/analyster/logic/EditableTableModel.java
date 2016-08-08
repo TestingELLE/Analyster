@@ -1,8 +1,5 @@
 package com.elle.analyster.logic;
 
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.Timestamp;
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
 
@@ -14,11 +11,13 @@ import java.util.Vector;
  * @author Carlos Igreja
  * @since June 10, 2015
  * @version 0.6.3
+ * Modified by Yi
+ * 07/27/2016
  */
 public class EditableTableModel extends DefaultTableModel {
 
     private boolean cellEditable;
-    private Vector columnClass;
+    //private Vector columnClass;
 
     /**
      * CONSTRUCTOR EditableTableModel
@@ -27,10 +26,10 @@ public class EditableTableModel extends DefaultTableModel {
      * @param columnNames
      * @param isCellEditable
      */
-    public EditableTableModel(Vector data, Vector columnNames, Vector colClass) {
+    public EditableTableModel(Vector data, Vector columnNames) {
         super(data, columnNames);
         cellEditable = false;
-        columnClass = colClass;
+        
     }
 
     /**
@@ -73,7 +72,6 @@ public class EditableTableModel extends DefaultTableModel {
     @Override
     public Class getColumnClass(int col) {
         if (col == 0) {
-
             return Integer.class;
         }else{
             return Object.class;

@@ -6,9 +6,9 @@ package com.elle.analyster.entities;
  * @author Carlos Igreja
  * @since  May 7, 2016
  */
-public class Report {
+public class Report extends DbEntity {
 
-    private String id;
+    private int id;
     private String symbol;
     private String analyst;
     private String analysisDate;
@@ -17,11 +17,11 @@ public class Report {
     private String decision;
     private String notes;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -79,6 +79,11 @@ public class Report {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public Object deepClone() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

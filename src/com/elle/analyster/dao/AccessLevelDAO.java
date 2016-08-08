@@ -38,6 +38,7 @@ public class AccessLevelDAO {
                 accessLevel.setAccessLevel(rs.getString(COL_ACCESS_LEVEL));
             }
             
+            
             LoggingAspect.afterReturn("Loaded access level from " + DB_ACCESS_LEVELS + " for " + accessLevel.getUser());
         } 
         catch (SQLException e) {
