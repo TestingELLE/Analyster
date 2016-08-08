@@ -24,6 +24,7 @@ import javax.swing.table.TableRowSorter;
 public class TableFilter extends RowFilter<TableModel, Integer> {
     
     // attributes
+    private BaseTab tab;
     private JTable table;                                  // table to be filtered 
     private TableRowSorter<TableModel> sorter;             // the table sorter
     private Map<Integer,ArrayList<Object>> filterItems;    // distinct items to filter
@@ -36,9 +37,9 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
      * TableFilter
      * @param table  // the table to apply the filter
      */
-    public TableFilter(JTable table){
-        
-        this.table = table;
+    public TableFilter(BaseTab tab){
+        this.tab =tab;
+        this.table = tab.getTable();
         
         // initialize the color for the table header when it is filtering
         color = Color.GREEN; // default color is green
@@ -144,6 +145,7 @@ public class TableFilter extends RowFilter<TableModel, Integer> {
         sorter = new TableRowSorter<TableModel>(table.getModel());
         table.setRowSorter(sorter);
         sorter.setRowFilter(this);
+        tab.setLabelRecords();
     }
     
     /**

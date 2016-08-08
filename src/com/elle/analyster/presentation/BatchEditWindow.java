@@ -1,6 +1,6 @@
 package com.elle.analyster.presentation;
 
-import com.elle.analyster.logic.Tab;
+import com.elle.analyster.logic.BaseTab;
 import com.elle.analyster.logic.TableFilter;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -29,7 +29,7 @@ public class BatchEditWindow extends JFrame {
     // attributes
     private AnalysterWindow analysterWindow;
     private JTable table;
-    private Tab tab;
+    private BaseTab tab;
 
     /**
      * CONSTRUCTOR Creates new BatchEditWindow
@@ -37,12 +37,10 @@ public class BatchEditWindow extends JFrame {
      * @param selectedTable
      * @param analysterWindow
      */
-    public BatchEditWindow() {
+    public BatchEditWindow(BaseTab tab) {
         initComponents();
         analysterWindow = AnalysterWindow.getInstance();
-        Map<String, Tab> tabs = analysterWindow.getTabs();
-        String tabName = analysterWindow.getSelectedTabName();
-        tab = tabs.get(tabName);
+        this.tab = tab;
         table = tab.getTable();
 
         String[] batchEditFields = tab.getBatchEditFields();
@@ -215,6 +213,8 @@ public class BatchEditWindow extends JFrame {
                 filter.addFilterItems(columnIndex, filterItems);
             }
         }
+        
+        closeWindow();
 
     }//GEN-LAST:event_btnConfirmActionPerformed
 
@@ -225,23 +225,18 @@ public class BatchEditWindow extends JFrame {
      */
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
 
-        // set the states for the editing tab
-        tab.setBatchEditWindowOpen(false);
-        tab.setBatchEditWindowVisible(false);
-        tab.setBatchEditBtnEnabled(true);
-
-        // set the batch edit button enabled
-        analysterWindow.getBtnBatchEdit().setEnabled(true);
-        this.dispose();
-
-        // this instance should dispose
-        analysterWindow.getBatchEditWindow().dispose();
+        closeWindow();
     }//GEN-LAST:event_btnCloseActionPerformed
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+    private void closeWindow(){
+        
+        analysterWindow.setEnabled(true);
         this.dispose();
-        analysterWindow.makeTableEditable(false);
-        analysterWindow.getBtnBatchEdit().setEnabled(true);
+        
+    }
+    
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        closeWindow();
     }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
