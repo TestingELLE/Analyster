@@ -750,7 +750,8 @@ public abstract class BaseTab implements ITableConstants {
     
     //set up labelRecoreds
     public void setLabelRecords() {
-        analysterWindow.getLabelRecords().setText(getRecordsLabel());
+        analysterWindow.getLabelTotalRecords().setText(getTotalRecordsLabel());
+         analysterWindow.getLabelRecordsShown().setText(getRecordsShownLabel());
     } 
     
     
@@ -866,35 +867,34 @@ public abstract class BaseTab implements ITableConstants {
     public void addToTotalRowCount(int amountOfRecordsAdded) {
         totalRecords = totalRecords + amountOfRecordsAdded;
     }
+    
+    
+    public String getRecordsShownLabel() {
+
+        String output;        
+        output =  "Number of records shown: " + getRecordsShown();
+               
+        return output;
+    }
 
     /**
      * This method returns a string that displays the records.
      *
-     * @return String This returns a string that has the records for both total
-     * and shown
+     * @return String This returns a string that has the total number of records 
      */
-    public String getRecordsLabel() {
+    public String getTotalRecordsLabel() {
 
         String output;
         
         switch (table.getName()) {
             case ASSIGNMENTS_TABLE_NAME:
-                output = "<html><pre>"
-                       + "          Number of records shown: " + getRecordsShown() 
-                  + "<br/> Number of records in Assignments: " + getTotalRecords()
-                     + "</pre></html>";
+                 output = "Number of records in Assignments: " + getTotalRecords();
                 break;
             case REPORTS_TABLE_NAME:
-                output = "<html><pre>"
-                       + "      Number of records shown: " + getRecordsShown() 
-                  + "<br/> Number of records in Reports: " + getTotalRecords() 
-                     + "</pre></html>";
+                output = "Number of records in Reports: " + getTotalRecords();
                 break;
             case ARCHIVE_TABLE_NAME:
-                output = "<html><pre>"
-                       + "      Number of records shown: " + getRecordsShown() 
-                  + "<br/> Number of records in Archive: " + getTotalRecords() 
-                     + "</pre></html>";
+                output = "Number of records in Archive: " + getTotalRecords();
                 break;
             default:
                 // this means an invalid table name constant was passed

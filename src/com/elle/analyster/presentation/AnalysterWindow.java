@@ -193,7 +193,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         btnClearAllFilter = new javax.swing.JButton();
         searchInformationLabel = new javax.swing.JLabel();
         comboBoxValue = new javax.swing.JComboBox();
-        labelRecords = new javax.swing.JLabel();
+        labelTotalRecords = new javax.swing.JLabel();
+        labelRecordsShown = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         tabbedPanel = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -255,12 +256,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         labelTimeLastUpdate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelTimeLastUpdate.setText("Last updated: ");
         labelTimeLastUpdate.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        labelTimeLastUpdate.setIconTextGap(0);
+        labelTimeLastUpdate.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(-1, 0, 0, 3);
         addPanel_control.add(labelTimeLastUpdate, gridBagConstraints);
 
         searchPanel.setLayout(new java.awt.GridBagLayout());
@@ -336,19 +338,33 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
         addPanel_control.add(searchPanel, gridBagConstraints);
 
-        labelRecords.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelRecords.setText("labelRecords");
-        labelRecords.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        labelRecords.setInheritsPopupMenu(false);
+        labelTotalRecords.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelTotalRecords.setText("labelTotalRecords");
+        labelTotalRecords.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        labelTotalRecords.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        labelTotalRecords.setIconTextGap(0);
+        labelTotalRecords.setInheritsPopupMenu(false);
+        labelTotalRecords.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(-2, 0, 0, 2);
+        addPanel_control.add(labelTotalRecords, gridBagConstraints);
+
+        labelRecordsShown.setText("labelRecordsShown");
+        labelRecordsShown.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        labelRecordsShown.setIconTextGap(0);
+        labelRecordsShown.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 2);
-        addPanel_control.add(labelRecords, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
+        addPanel_control.add(labelRecordsShown, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -578,7 +594,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(7, 3, 2, 0);
         jPanelEdit.add(informationLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1002,7 +1018,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         
             
         //labelRecords reset for # of records andn # of records shown
-        labelRecords.setText(tab.getRecordsLabel());
+        labelTotalRecords.setText(tab.getTotalRecordsLabel());
+        labelRecordsShown.setText(tab.getRecordsShownLabel());
         
         //set buttons state
         setButtonsState(tab);
@@ -1206,7 +1223,8 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     private void btnClearAllFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllFilterActionPerformed
 
-        String recordsLabel = "";
+        String totalRecordsLabel = "";
+        String recordsShownLabel = "";
         // clear all filters
         //      String tabName = getSelectedTabName();
         for (Map.Entry<Integer, BaseTab> entry : tabs.entrySet()) {
@@ -1215,12 +1233,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             filter.clearAllFilters();
             filter.applyFilter();
             filter.applyColorHeaders();
-            recordsLabel = recordsLabel + tab.getRecordsLabel() + " \n";
+            totalRecordsLabel = totalRecordsLabel + tab.getTotalRecordsLabel();
+            recordsShownLabel = tab.getRecordsShownLabel();
 
         }
 
-        labelRecords.setText(recordsLabel);
-        System.out.println(recordsLabel);
+        labelTotalRecords.setText(totalRecordsLabel);
+        labelRecordsShown.setText(recordsShownLabel);
+        System.out.println(totalRecordsLabel+ "/n" + recordsShownLabel);
     }//GEN-LAST:event_btnClearAllFilterActionPerformed
 
     /**
@@ -1955,8 +1975,12 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         return instance;
     }
 
-    public JLabel getRecordsLabel() {
-        return labelRecords;
+    public JLabel getLabelTotalRecords() {
+        return labelTotalRecords;
+    }
+    
+    public JLabel getLabelRecordsShown(){
+        return labelRecordsShown;
     }
 
     public LogWindow getLogWindow() {
@@ -2459,11 +2483,11 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     }
 
     public JLabel getLabelRecords() {
-        return labelRecords;
+        return labelTotalRecords;
     }
 
     public void setLabelRecords(JLabel labelRecords) {
-        this.labelRecords = labelRecords;
+        this.labelTotalRecords = labelRecords;
     }
 
     public JLabel getLabelTimeLastUpdate() {
@@ -2765,8 +2789,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JTextArea jTextAreaSQL;
     private javax.swing.JLabel labelEditMode;
     private javax.swing.JLabel labelEditModeState;
-    private javax.swing.JLabel labelRecords;
+    private javax.swing.JLabel labelRecordsShown;
     private javax.swing.JLabel labelTimeLastUpdate;
+    private javax.swing.JLabel labelTotalRecords;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuEdit;
     private javax.swing.JMenu menuFile;
