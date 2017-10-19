@@ -376,10 +376,19 @@ public class LoginWindow extends JFrame {
         logWindow.readMessages(); // read log messages from the log file
         
         // connect to database
-        logWindow.addMessageWithDate("Connecting to the server...");
-         jLabel6.setText("<html><b>Connecting to the server...</b></html>");
+        
+        if(userName.equals("")||userPassword.equals(""))
+        {
+            JOptionPane.showMessageDialog(this,
+                    "Username or password can not be blank",
+                    "Error Message",
+                   JOptionPane.ERROR_MESSAGE);
+       
+        }
+        else {
+         logWindow.addMessageWithDate("Connecting to the server..."+selectedServer);
+         jLabel6.setText("<html><b>Connecting to the server..."+selectedServer+"</b></html>");
         jLabel6.paintImmediately(jLabel6.getVisibleRect());
-
         if (DBConnection.connect(selectedServer, selectedDB, userName, userPassword)) {
             logWindow.addMessageWithDate("Connect successfully!");
             
@@ -445,7 +454,7 @@ public class LoginWindow extends JFrame {
        
             passwordFieldPW.setText("");
         }
-    }
+    }}
             
     public String getSelectedServer() {
         return selectedServer;
