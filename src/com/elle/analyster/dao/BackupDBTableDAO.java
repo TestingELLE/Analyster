@@ -70,9 +70,12 @@ public class BackupDBTableDAO {
         if(DBConnection.open()){
 
             // sql query to return a result set
+            /*Author:Swapna
+            Date: 17th October 2017
+            Comments: there is no cloumn named COL_APPLICATION*/
             String sql = "SELECT * " +
-                         " FROM " + DB_TABLE_NAME +
-                         " WHERE " + COL_APPLICATION + " = '" + APPLICATION_NAME + "' ;";
+                         " FROM " + DB_TABLE_NAME + "";
+                        // " WHERE " + COL_APPLICATION + " = '" + APPLICATION_NAME + "' ;";
 
             ResultSet result = null;
 
@@ -100,7 +103,10 @@ public class BackupDBTableDAO {
                         {
                             BackupDBTableRecord record = new BackupDBTableRecord();
                             record.setId(result.getInt(COL_PK_ID));
-                            record.setApplicationName(result.getString(COL_APPLICATION));
+                            /*@author;swapna
+                              @date:12th October 2017
+                              @Comment;Column name COL_APPLICATION doesnot exist*/
+                            //record.setApplicationName(result.getString(COL_APPLICATION));
                             record.setTableName(result.getString(COL_TABLE_NAME));
                             record.setBackupTableName(result.getString(COL_BACKUP_NAME));
                             records.add(record);
@@ -197,8 +203,7 @@ public class BackupDBTableDAO {
             try {
 
                 // create the backup table
-                sql = "CREATE TABLE " + backupTableName
-                        + " LIKE " + tableName + " ; ";
+                sql = "CREATE TABLE " +backupTableName + " LIKE " +tableName;
                 DBConnection.getStatement().executeUpdate(sql);
 
                 // backup the table data
@@ -207,8 +212,12 @@ public class BackupDBTableDAO {
                 DBConnection.getStatement().executeUpdate(sql);
 
                 // add record
-                sql = "INSERT INTO " + DB_TABLE_NAME + " ( " + COL_APPLICATION + ", " + COL_TABLE_NAME + ", " + COL_BACKUP_NAME + ")"
-                        + " VALUES ('" + APPLICATION_NAME + "', '" +  tableName + "', '" +  backupTableName + "');";
+                /*@Author:swapna
+                Date;12th october 2017
+                @comments: COl_APPlICATION is not present*/
+                
+                sql = "INSERT INTO " + DB_TABLE_NAME + " ( " + COL_TABLE_NAME + ", " + COL_BACKUP_NAME + ")"
+                        + " VALUES ('" +  tableName + "', '" +  backupTableName + "');";
                 DBConnection.getStatement().executeUpdate(sql);
 
                 LoggingAspect.afterReturn("Created backup " + backupTableName);

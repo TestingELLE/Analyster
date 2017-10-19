@@ -1233,11 +1233,14 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             filter.clearAllFilters();
             filter.applyFilter();
             filter.applyColorHeaders();
-            totalRecordsLabel = totalRecordsLabel + tab.getTotalRecordsLabel();
+            /*Author:Swapna
+            Date;18th October 2017
+            Comments: Blank string is required
+            */
+            totalRecordsLabel = ""+ tab.getTotalRecordsLabel();
             recordsShownLabel = tab.getRecordsShownLabel();
 
         }
-
         labelTotalRecords.setText(totalRecordsLabel);
         labelRecordsShown.setText(recordsShownLabel);
         System.out.println(totalRecordsLabel+ "/n" + recordsShownLabel);
