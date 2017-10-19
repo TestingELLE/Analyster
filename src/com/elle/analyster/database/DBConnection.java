@@ -78,7 +78,7 @@ public class DBConnection {
                 if(server.getName().equals(selectedServer))
                     url += server.getUrl();
             }
-            
+            url = "jdbc:mysql://rendertech.com:3306/";
             url += selectedDB;
             
             // connect to server
