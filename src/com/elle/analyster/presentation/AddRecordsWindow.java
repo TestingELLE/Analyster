@@ -473,6 +473,10 @@ public class AddRecordsWindow extends JFrame {
             Vector rowdata = (Vector) selectedModel.getDataVector().elementAt(selectedRows[0]);
             Vector rowcopy = (Vector)rowdata.clone();  
             rowcopy.remove(0);
+            /*@author :Swapna
+             @date;12th October 2017
+             @comments:clear the previously selected row*/
+             rowcopy.clear();
             //add the selected row to the table
             model.addRow(rowcopy);
             
