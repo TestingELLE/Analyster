@@ -2,7 +2,6 @@
 package com.elle.analyster.dao;
 
 import com.elle.analyster.database.DBConnection;
-import com.elle.analyster.database.ModifiedData;
 import com.elle.analyster.entities.Assignment;
 import com.elle.analyster.logic.LoggingAspect;
 import java.sql.Connection;
@@ -10,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.swing.text.DateFormatter;
 
 /**
  * AssignmentDAO
@@ -139,8 +140,8 @@ public class AssignmentDAO extends BaseDAO implements AbstractDAO<Assignment> {
             String symbol = format(assignment.getSymbol());
             String analyst = format(assignment.getAnalyst());
             String priority = format(assignment.getPriority());
-            String dateAssigned = format(assignment.getDateAssigned());
-            String dateDone = format(assignment.getDateDone());
+            String dateAssigned = assignment.getDateAssigned();
+            String dateDone = assignment.getDateDone();
             String notes = format(assignment.getNotes());
             
 
@@ -149,15 +150,30 @@ public class AssignmentDAO extends BaseDAO implements AbstractDAO<Assignment> {
                     + COL_SYMBOL + " = " + symbol + ", "
                     + COL_ANALYST + " = " + analyst + ", "
                     + COL_PRIORITY + " = " + priority + ", "
-                    + COL_DATE_ASSIGNED + " = " + dateAssigned + ", "
-                    + COL_DATE_DONE + " = " + dateDone + ", "
+                    + COL_DATE_ASSIGNED + " = ? ,"
+                    + COL_DATE_DONE + " = ? , "
                     + COL_NOTES + " = " + notes + " "
                     + "WHERE " + COL_PK_ID + " = " + id + ";";
                 
                 System.out.println("update : " + sql );
                 Connection con = DBConnection.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(sql);
-                
+                if((dateAssigned == null)||(dateAssigned.equals("")))
+                {
+                    pstmt.setDate(1, null);
+                }
+                else
+                {
+                    pstmt.setString(1, dateAssigned);
+                }
+                if((dateDone == null)||(dateDone.equals("")))
+                {
+                    pstmt.setDate(2, null);
+                }
+                else
+                {
+                    pstmt.setString(2, dateDone);
+                }
                 pstmt.execute();
                 
                 LoggingAspect.afterReturn("Upload Successful!");

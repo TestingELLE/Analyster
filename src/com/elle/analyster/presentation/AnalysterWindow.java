@@ -7,6 +7,7 @@ import com.elle.analyster.entities.Assignment;
 import com.elle.analyster.entities.AssignmentArchived;
 import com.elle.analyster.admissions.Authorization;
 import com.elle.analyster.controller.DataManager;
+import com.elle.analyster.dao.AccessLevelDAO;
 import com.elle.analyster.logic.AssignmentConverter;
 import com.elle.analyster.logic.ArchiveConverter;
 import static com.elle.analyster.logic.AssignmentArchiveConverter.archiveToAssignment;
@@ -102,8 +103,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
      */
     public AnalysterWindow() throws Exception {
         
-        dataManager = DataManager.getInstance();
-        
+        dataManager = DataManager.getInstance();         
         /**
          * Note: initComponents() executes the tabpaneChanged method. Thus, some
          * things need to be before or after the initComponents();
@@ -486,9 +486,31 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         archiveTable.setAutoscrolls(false);
         archiveTable.setMinimumSize(new java.awt.Dimension(10, 240));
         archiveTable.setName("Assignments_Archived"); // NOI18N
+        
         jScrollPane3.setViewportView(archiveTable);
-
-        tabbedPanel.addTab("Assignments_Archived", jScrollPane3);
+        /*
+        Author:Swapna
+        Date:29th October 2017
+        Comments:hide Assignments_Archived tab for users and viewers
+        */
+        String username = DBConnection.getUserName();
+        try
+        {
+            String accessLevel = AccessLevelDAO.get(username);
+            if(accessLevel.equalsIgnoreCase("user")||accessLevel.equalsIgnoreCase("viewer"))
+            {
+               //tabbedPanel.addTab("", jScrollPane3); 
+            }
+            else
+            {
+                tabbedPanel.addTab("Assignments_Archived", jScrollPane3);
+            }
+        }
+        catch(Exception ex)
+        {
+            System.out.println("Error");
+        }
+        
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
