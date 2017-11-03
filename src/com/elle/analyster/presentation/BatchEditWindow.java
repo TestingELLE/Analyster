@@ -5,16 +5,14 @@ import com.elle.analyster.logic.TableFilter;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 
 /**
  *
@@ -42,8 +40,7 @@ public class BatchEditWindow extends JFrame {
         analysterWindow = AnalysterWindow.getInstance();
         this.tab = tab;
         table = tab.getTable();
-
-        String[] batchEditFields = tab.getBatchEditFields();
+      String[] batchEditFields = tab.getBatchEditFields();
         DefaultComboBoxModel model = new DefaultComboBoxModel(batchEditFields);
         comboBoxFieldSelect.setModel(model);
 
@@ -180,7 +177,17 @@ public class BatchEditWindow extends JFrame {
         int columnIndex;                                                           // column index
         int rowIndex;                                                              // row index
         int rowCount = table.getSelectedRowCount();                                // number of rows
-
+        if(rowCount == 0)
+        {
+            //Show error message;
+            JOptionPane.showMessageDialog(this,
+                    "No rows selected",
+                    "Error Message",
+                   JOptionPane.ERROR_MESSAGE);
+            closeWindow();
+        }
+        else
+        {
         // get column index for the combobox selection
         for (columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++) {
             if (columnName.equals(table.getColumnName(columnIndex))) {
@@ -213,9 +220,23 @@ public class BatchEditWindow extends JFrame {
                 filter.addFilterItems(columnIndex, filterItems);
             }
         }
+        //Show error message;
+            //Show error message;
+            int result = JOptionPane.showConfirmDialog(this,
+                    "Update "+rowCount+" rows.",
+                    "Update database ",
+                   JOptionPane.YES_NO_OPTION);
+            if(result == JOptionPane.YES_OPTION)
+            {
+                tab.uploadChanges();
+                closeWindow();
+            }
+            else
+            {
+                //do nothing   
+            }
         
-        closeWindow();
-
+        }
     }//GEN-LAST:event_btnConfirmActionPerformed
 
     /**
