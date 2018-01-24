@@ -486,31 +486,9 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         archiveTable.setAutoscrolls(false);
         archiveTable.setMinimumSize(new java.awt.Dimension(10, 240));
         archiveTable.setName("Assignments_Archived"); // NOI18N
-        
         jScrollPane3.setViewportView(archiveTable);
-        /*
-        Author:Swapna
-        Date:29th October 2017
-        Comments:hide Assignments_Archived tab for users and viewers
-        */
-        String username = DBConnection.getUserName();
-        try
-        {
-            String accessLevel = AccessLevelDAO.get(username);
-            if(accessLevel.equalsIgnoreCase("user")||accessLevel.equalsIgnoreCase("viewer"))
-            {
-               //tabbedPanel.addTab("", jScrollPane3); 
-            }
-            else
-            {
-                tabbedPanel.addTab("Assignments_Archived", jScrollPane3);
-            }
-        }
-        catch(Exception ex)
-        {
-            System.out.println("Error");
-        }
-        
+
+        tabbedPanel.addTab("Assignments_Archived", jScrollPane3);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
