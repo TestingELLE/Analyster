@@ -1,7 +1,7 @@
 package com.elle.analyster;
 
 import com.elle.analyster.logic.LoggingAspect;
-import static com.elle.analyster.presentation.AnalysterWindow.creationDate;
+import static com.elle.analyster.presentation.AnalysterWindow.versionDate;
 import static com.elle.analyster.presentation.AnalysterWindow.version;
 import com.elle.analyster.presentation.LoginWindow;
 import java.awt.Dimension;
@@ -38,7 +38,7 @@ public class Analyster {
         
         UIManager.getLookAndFeelDefaults().put("ScrollBar.minimumThumbSize", new Dimension(30, 30));
 
-        // get the creation date and version from the manifest
+        // get the version date and version from the manifest
         Manifest mf = new Manifest();
         Attributes atts;
         String s = "MANIFEST.MF";
@@ -46,7 +46,7 @@ public class Analyster {
         try {
             mf.read(inputStream);
             atts = mf.getMainAttributes();
-            creationDate = atts.getValue("creation-date");
+            versionDate = atts.getValue("version-date");
             version = atts.getValue("version");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
