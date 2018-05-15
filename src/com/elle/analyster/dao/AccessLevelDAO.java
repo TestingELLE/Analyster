@@ -16,13 +16,13 @@ public class AccessLevelDAO {
 
     // database table information
 
-    public static final String DB_ACCESS_LEVELS = "accessLevels";
-    public static final String COL_USER = "user";
-    public static final String COL_ACCESS_LEVEL = "accessLevel";
+    public static final String DB_ACCOUNTS = "accounts";
+    public static final String COL_USERNAME = "username";
+    public static final String COL_TYPE = "type";
 
     public static String get(String user) throws Exception {
-        String sql = "SELECT * FROM " + DB_ACCESS_LEVELS +
-                      " WHERE " + COL_USER + " = '" + user +"';";
+        String sql = "SELECT * FROM " + DB_ACCOUNTS +
+                      " WHERE " + COL_USERNAME + " = '" + user +"';";
 
         ResultSet rs = null;
         AccessLevel accessLevel = new AccessLevel();
@@ -34,12 +34,12 @@ public class AccessLevelDAO {
             rs = DBConnection.getStatement().executeQuery(sql);
             
             while(rs.next()){
-                accessLevel.setUser(rs.getString(COL_USER));
-                accessLevel.setAccessLevel(rs.getString(COL_ACCESS_LEVEL));
+                accessLevel.setUser(rs.getString(COL_USERNAME));
+                accessLevel.setAccessLevel(rs.getString(COL_TYPE));
             }
             
             
-            LoggingAspect.afterReturn("Loaded access level from " + DB_ACCESS_LEVELS + " for " + accessLevel.getUser());
+            LoggingAspect.afterReturn("Loaded access level from " + DB_ACCOUNTS + " for " + accessLevel.getUser());
         } 
         catch (SQLException e) {
             LoggingAspect.afterThrown(e);
