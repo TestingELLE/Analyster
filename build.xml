@@ -34,6 +34,8 @@
         <zipgroupfileset dir="lib" excludes="META-INF/*" />
         <manifest>
             <attribute name="Main-Class" value="com.elle.analyster.Analyster"/>
+            <!-- added this attribute so that splash Image will show and the jar will run by Tom Tran 2018-05-15-->
+            <attribute name="SplashScreen-Image" value="com/elle/analyster/splashImage.png"/>  
         </manifest>
       </jar>
       <delete dir="dist"/>
