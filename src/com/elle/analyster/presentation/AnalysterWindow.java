@@ -32,6 +32,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -46,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ListCellRenderer;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
@@ -238,6 +241,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuView = new javax.swing.JMenu();
         menuItemLogChkBx = new javax.swing.JCheckBoxMenuItem();
         menuItemSQLCmdChkBx = new javax.swing.JCheckBoxMenuItem();
+        viewSplashScreen = new javax.swing.JMenuItem();
         menuTools = new javax.swing.JMenu();
         menuItemReloadData = new javax.swing.JMenuItem();
         menuItemTurnEditModeOff = new javax.swing.JMenuItem();
@@ -804,6 +808,15 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             }
         });
         menuView.add(menuItemSQLCmdChkBx);
+
+        viewSplashScreen.setText("View Splash Screen");
+        viewSplashScreen.setToolTipText("View Splash Screen");
+        viewSplashScreen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewSplashScreenActionPerformed(evt);
+            }
+        });
+        menuView.add(viewSplashScreen);
 
         menuBar.add(menuView);
 
@@ -1752,6 +1765,25 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
             turnOffEditMode();
         }
     }//GEN-LAST:event_labelEditModeStateMouseClicked
+
+    // Added View Splash Screen to View Menu - Tom Tran 5-16-2018
+    
+    private void viewSplashScreenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewSplashScreenActionPerformed
+      
+        try {
+            ImageIcon img = new ImageIcon(ImageIO.read(new File("src/com/elle/analyster/splashImage.png")));  //added for Splash image to show up.
+            JFrame splashScreenImage = new JFrame();
+            JLabel image = new JLabel(img);
+            splashScreenImage.add(image);
+            splashScreenImage.pack();
+            splashScreenImage.setLocationRelativeTo(this);
+            splashScreenImage.setVisible(true);
+            LoggingAspect.addLogMsgWthDate("3:" + "splash screen image show.");
+        } catch (IOException ex) {
+            LoggingAspect.addLogMsgWthDate("3:" + ex.getMessage());
+            LoggingAspect.afterThrown(ex);
+        }
+    }//GEN-LAST:event_viewSplashScreenActionPerformed
 
     
     //set the timer for information Label show
@@ -2828,6 +2860,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     public static javax.swing.JLabel searchInformationLabel;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabbedPanel;
+    private javax.swing.JMenuItem viewSplashScreen;
     // End of variables declaration//GEN-END:variables
     // @formatter:on
 
