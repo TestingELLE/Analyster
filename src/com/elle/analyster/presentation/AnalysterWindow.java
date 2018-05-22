@@ -222,7 +222,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         btnCloseSQL = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
-        menuItemVersion = new javax.swing.JMenuItem();
+        About = new javax.swing.JMenuItem();
         menuSelectConn = new javax.swing.JMenu();
         menuItemAWSAssign = new javax.swing.JMenuItem();
         menuPrint = new javax.swing.JMenu();
@@ -241,7 +241,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         menuView = new javax.swing.JMenu();
         menuItemLogChkBx = new javax.swing.JCheckBoxMenuItem();
         menuItemSQLCmdChkBx = new javax.swing.JCheckBoxMenuItem();
-        viewSplashScreen = new javax.swing.JMenuItem();
         menuTools = new javax.swing.JMenu();
         menuItemReloadData = new javax.swing.JMenuItem();
         menuItemTurnEditModeOff = new javax.swing.JMenuItem();
@@ -697,13 +696,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         menuFile.setText("File");
 
-        menuItemVersion.setText("Version");
-        menuItemVersion.addActionListener(new java.awt.event.ActionListener() {
+        About.setText("About");
+        About.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemVersionActionPerformed(evt);
+                AboutActionPerformed(evt);
             }
         });
-        menuFile.add(menuItemVersion);
+        menuFile.add(About);
 
         menuSelectConn.setText("Select Connection");
 
@@ -809,15 +808,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         });
         menuView.add(menuItemSQLCmdChkBx);
 
-        viewSplashScreen.setText("View Splash Screen");
-        viewSplashScreen.setToolTipText("View Splash Screen");
-        viewSplashScreen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewSplashScreenActionPerformed(evt);
-            }
-        });
-        menuView.add(viewSplashScreen);
-
         menuBar.add(menuView);
 
         menuTools.setText("Tools");
@@ -880,13 +870,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void menuItemVersionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemVersionActionPerformed
-
-        JOptionPane.showMessageDialog(this, "Version Date: "
-                + versionDate + "\n"
-                + "Version: " + version);
-    }//GEN-LAST:event_menuItemVersionActionPerformed
 
     /**
      * This method is called when the search button is pressed
@@ -1766,24 +1749,25 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         }
     }//GEN-LAST:event_labelEditModeStateMouseClicked
 
-    // Added View Splash Screen to View Menu - Tom Tran 5-16-2018
+   
+    /* New About Menu option found in the File menu.  
+     This will display the Splash Screen, Version Date and Version Number in a 
+     showMessageDialog box.
+     By Tom Tran
+    Date 2018-05-17
+    */
     
-    private void viewSplashScreenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewSplashScreenActionPerformed
-      
-        try {
-            ImageIcon img = new ImageIcon(ImageIO.read(new File("src/com/elle/analyster/splashImage.png")));  //added for Splash image to show up.
-            JFrame splashScreenImage = new JFrame();
-            JLabel image = new JLabel(img);
-            splashScreenImage.add(image);
-            splashScreenImage.pack();
-            splashScreenImage.setLocationRelativeTo(this);
-            splashScreenImage.setVisible(true);
-            LoggingAspect.addLogMsgWthDate("3:" + "splash screen image show.");
-        } catch (IOException ex) {
-            LoggingAspect.addLogMsgWthDate("3:" + ex.getMessage());
-            LoggingAspect.afterThrown(ex);
-        }
-    }//GEN-LAST:event_viewSplashScreenActionPerformed
+    private void AboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AboutActionPerformed
+   
+         // new image Icon object for the splash screen
+        ImageIcon bg = new ImageIcon ("src/com/elle/analyster/splashImage.png");  
+         
+        // Creates showMessageDialog box and shows the Splash Screen, Version Date and Version Number.
+        
+        JOptionPane.showMessageDialog(null,"Analyster" + "\n" + "Version Date: "
+                + versionDate + "\n"
+                + "Version: " + version, "About", JOptionPane.PLAIN_MESSAGE, bg);
+    }//GEN-LAST:event_AboutActionPerformed
 
     
     //set the timer for information Label show
@@ -2713,16 +2697,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         this.menuItemTurnEditModeOff = menuItemTurnEditModeOff;
     }
 
-    public JMenuItem getMenuItemVersion() {
-        return menuItemVersion;
-    }
-
-    public void setMenuItemVersion(JMenuItem menuItemVersion) {
-        this.menuItemVersion = menuItemVersion;
-    }
-
-    
-
     public JMenu getMenuPrint() {
         return menuPrint;
     }
@@ -2799,6 +2773,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
 
     // @formatter:off
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem About;
     private javax.swing.JPanel addPanel_control;
     private javax.swing.JTable archiveTable;
     private javax.swing.JTable assignmentTable;
@@ -2850,7 +2825,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     private javax.swing.JMenuItem menuItemSaveFile;
     private javax.swing.JMenuItem menuItemStripslash;
     private javax.swing.JMenuItem menuItemTurnEditModeOff;
-    private javax.swing.JMenuItem menuItemVersion;
     private javax.swing.JMenu menuPrint;
     private javax.swing.JMenu menuReports;
     private javax.swing.JMenu menuSelectConn;
@@ -2860,7 +2834,6 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     public static javax.swing.JLabel searchInformationLabel;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabbedPanel;
-    private javax.swing.JMenuItem viewSplashScreen;
     // End of variables declaration//GEN-END:variables
     // @formatter:on
 
