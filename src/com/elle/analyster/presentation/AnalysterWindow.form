@@ -9,12 +9,12 @@
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="menuItemVersion">
+            <MenuItem class="javax.swing.JMenuItem" name="About">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Version"/>
+                <Property name="text" type="java.lang.String" value="About"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemVersionActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AboutActionPerformed"/>
               </Events>
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="menuSelectConn">
@@ -142,15 +142,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemSQLCmdChkBxActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="viewSplashScreen">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="View Splash Screen"/>
-                <Property name="toolTipText" type="java.lang.String" value="View Splash Screen"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewSplashScreenActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
