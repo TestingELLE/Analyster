@@ -54,6 +54,10 @@ import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
+
 /**
  * AnalysterWindow
  *
@@ -1759,14 +1763,16 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
     
     private void AboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AboutActionPerformed
    
-         // new image Icon object for the splash screen
-        ImageIcon bg = new ImageIcon ("src/com/elle/analyster/splashImage.png");  
-         
+        // new image Icon object for the splash screen
+        //final ImageIcon bg = new ImageIcon ("src/com/elle/analyster/splashImage.png");  
+        
         // Creates showMessageDialog box and shows the Splash Screen, Version Date and Version Number.
         
         JOptionPane.showMessageDialog(null,"Analyster" + "\n" + "Version Date: "
                 + versionDate + "\n"
-                + "Version: " + version, "About", JOptionPane.PLAIN_MESSAGE, bg);
+                + "Version: " + version, "About", 
+                JOptionPane.PLAIN_MESSAGE, 
+                new ImageIcon(AnalysterWindow.class.getResource("splashImage.png")));       // Fixed this line to have the image show up in the jar 2018-05-29.  Ensure that image is in the classes folder for this code to work.
     }//GEN-LAST:event_AboutActionPerformed
 
     
