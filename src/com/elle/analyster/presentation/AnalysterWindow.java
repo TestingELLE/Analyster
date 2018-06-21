@@ -163,7 +163,7 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         informationLabel.setText("");
         
         
-        this.comboBoxValue.setSelectedItem("Enter here");
+        this.comboBoxValue.setSelectedItem("");
         
         
         // set title of window to Analyster
@@ -1007,13 +1007,13 @@ public class AnalysterWindow extends JFrame implements ITableConstants {
         
         //comboBoxField drop down reset
         String[] searchFields = tab.getSearchFields();
-        if (searchFields != null) {
+        /*if (searchFields != null) {
             comboBoxSearch.setModel(new DefaultComboBoxModel(searchFields));
-        }
+        }*/
         //populate comboxValue drop down
         String searchContent = comboBoxSearch.getSelectedItem().toString();
         this.updateComboList(searchContent, tab);
-        this.comboBoxValue.setSelectedItem("Enter search value here");
+        this.comboBoxValue.setSelectedItem("");
         
         
             
