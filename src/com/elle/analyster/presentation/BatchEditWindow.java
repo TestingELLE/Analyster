@@ -51,6 +51,7 @@ public class BatchEditWindow extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE); // quit button should be used
 
         this.setTitle("Batch Editor");
+        this.textFieldNewValue.setText("");
     }
 
     /**
